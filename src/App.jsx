@@ -9,13 +9,65 @@ import {
   Target,
   Sparkles,
   Search,
+  X,
 } from 'lucide-react'
 import logo from './assets/deepstudent-logo.svg'
 
 const cardHeaderClass = 'flex items-center gap-3 mb-6'
 
+const policyContent = {
+  privacy: {
+    title: '隐私政策',
+    description: '我们遵循最小化数据原则，确保每条学习记录都掌握在你手中。',
+    sections: [
+      {
+        title: '收集范围',
+        body: '仅在你使用 DeepStudent 时记录必要的错题内容、标签与复习进度，不会采集与服务无关的敏感个人信息。',
+        points: ['账号信息仅用于云端同步与登录验证。', '你可随时导出或删除本地与云端数据。'],
+      },
+      {
+        title: '使用方式',
+        body: '所有数据仅用于生成个性化学习建议与统计分析，不会出售或提供给第三方广告平台。',
+        points: ['算法训练仅使用匿名化、脱敏后的聚合数据。', '我们会定期发布透明度报告。'],
+      },
+      {
+        title: '安全措施',
+        body: '所有传输均使用 TLS 加密，云端存储采用分区隔离，敏感字段在数据库内加盐散列。',
+        points: ['核心基础设施通过 ISO/IEC 27001 安全认证。', '如遇异常访问会立即告警并支持一键冻结账号。'],
+      },
+    ],
+    footer: '更多隐私问题请发送邮件至 privacy@deepstudent.ai，我们会在 3 个工作日内回复。',
+  },
+  terms: {
+    title: '使用条款',
+    description: '使用 DeepStudent 即表示你同意以下约定，本服务为学习辅助工具，不构成绝对学习结果承诺。',
+    sections: [
+      {
+        title: '服务内容',
+        body: '我们提供错题整理、知识图谱、复习提醒等功能，能力会根据版本迭代持续更新。',
+        points: ['测试功能可能存在不稳定，请按需体验。', '我们保留随时调整或暂停服务的权利。'],
+      },
+      {
+        title: '用户责任',
+        body: '你需确保上传内容拥有合法使用权，并对账号安全负责。若出现共享或泄露行为，请立即联系我们。',
+        points: ['禁止利用 DeepStudent 传播违法或侵权内容。', '若发现异常活动，我们可能采取限制措施。'],
+      },
+      {
+        title: '免责声明',
+        body: '我们会尽力保证服务稳定，但因不可抗力或第三方原因导致的数据丢失、服务中断，我们不承担间接损失责任。',
+        points: ['建议定期导出备份重要数据。', '付费计划如需退款，请在 7 天内提交申请。'],
+      },
+    ],
+    footer: '使用本服务即视为同意上述条款。如有疑问请联系 support@deepstudent.ai。',
+  },
+}
+
 const App = () => {
   const [scrollY, setScrollY] = useState(0)
+  const [activePolicy, setActivePolicy] = useState(null)
+
+  const handlePolicyOpen = (type) => setActivePolicy(type)
+  const handlePolicyClose = () => setActivePolicy(null)
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY)
@@ -200,7 +252,8 @@ const App = () => {
         </div>
       </main>
 
-      <Footer />
+      <Footer onOpenPolicy={handlePolicyOpen} />
+      <PolicyModal type={activePolicy} onClose={handlePolicyClose} />
     </div>
   )
 }
@@ -364,7 +417,76 @@ const FeatureSection = ({ icon, title, desc, align, children }) => {
   )
 }
 
-const Footer = () => (
+const PolicyModal = ({ type, onClose }) => {
+  const data = type ? policyContent[type] : null
+
+  useEffect(() => {
+    if (!type) return
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [type, onClose])
+
+  if (!type || !data) return null
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center px-4" role="dialog" aria-modal="true">
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="relative w-full max-w-2xl max-h-[80vh] overflow-y-auto bg-white border border-zinc-100 rounded-3xl shadow-[0_25px_80px_rgba(0,0,0,0.2)] p-8"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-6 mb-8">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-zinc-400 mb-3">{type === 'privacy' ? 'PRIVACY' : 'TERMS'}</p>
+            <h3 className="text-2xl font-semibold text-zinc-900 mb-3">{data.title}</h3>
+            <p className="text-sm text-zinc-500 leading-relaxed">{data.description}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-shrink-0 w-10 h-10 rounded-full border border-zinc-200 text-zinc-500 hover:text-zinc-900 hover:border-zinc-300 flex items-center justify-center transition-colors"
+            aria-label="关闭弹窗"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="space-y-6">
+          {data.sections.map((section) => (
+            <div key={section.title} className="border border-zinc-100 rounded-2xl p-5 bg-zinc-50/60">
+              <h4 className="text-sm font-semibold text-zinc-900 mb-2">{section.title}</h4>
+              <p className="text-sm text-zinc-500 leading-relaxed">{section.body}</p>
+              {section.points?.length ? (
+                <ul className="mt-3 space-y-1.5 text-sm text-zinc-500 list-disc list-inside">
+                  {section.points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+          ))}
+        </div>
+
+        {data.footer ? <p className="mt-8 text-xs text-zinc-400 leading-relaxed">{data.footer}</p> : null}
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-6 w-full py-3.5 rounded-2xl bg-zinc-900 text-white text-sm font-semibold hover:bg-black transition-colors"
+        >
+          我已了解
+        </button>
+      </div>
+    </div>
+  )
+}
+
+const Footer = ({ onOpenPolicy = () => {} }) => (
   <footer className="border-t border-zinc-100 py-12 px-6 mt-24 bg-zinc-50/50">
     <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
       <div className="flex items-center gap-2 font-semibold text-zinc-900">
@@ -373,12 +495,20 @@ const Footer = () => (
       </div>
 
       <div className="flex gap-8 text-sm text-zinc-500 font-medium">
-        <a href="#" className="hover:text-zinc-900 transition-colors">
+        <button
+          type="button"
+          onClick={() => onOpenPolicy('privacy')}
+          className="hover:text-zinc-900 transition-colors focus:outline-none"
+        >
           Privacy
-        </a>
-        <a href="#" className="hover:text-zinc-900 transition-colors">
+        </button>
+        <button
+          type="button"
+          onClick={() => onOpenPolicy('terms')}
+          className="hover:text-zinc-900 transition-colors focus:outline-none"
+        >
           Terms
-        </a>
+        </button>
         <a
           href="https://github.com/deepstudents/ai-mistake-manager"
           className="hover:text-zinc-900 transition-colors"
