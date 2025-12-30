@@ -533,9 +533,17 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   const textOffset = heroEase * (215 + heroJuice * 16) * motionAmount
   const ctaOffset = heroEase * (240 + heroJuice * 18) * motionAmount
 
+  const previewOffset = heroEase * 80 * motionAmount
+  const previewStyle = {
+    transform: isStatic ? 'none' : `translate3d(0, ${previewOffset}px, 0)`,
+    opacity: heroFade,
+    transformStyle: 'flat',
+    willChange: isStatic ? 'auto' : 'transform, opacity',
+  }
+
   return (
     <header
-      className="relative min-h-screen min-h-[100svh] px-4 sm:px-6 pt-[4.236rem] pb-[6.854rem] sm:pt-[6.854rem] sm:pb-[11.09rem] flex flex-col items-center text-center justify-center overflow-hidden"
+      className="relative min-h-screen min-h-[100svh] px-4 sm:px-6 pt-[4.236rem] pb-[6.854rem] sm:pt-[6.854rem] sm:pb-[11.09rem] flex items-center overflow-hidden"
     >
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
         <div className="absolute -top-40 left-1/2 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.35),transparent_65%)] blur-3xl opacity-70" />
@@ -543,51 +551,126 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
         <div className="absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_0%,rgba(255,255,255,0.9),transparent_70%)]" />
       </div>
       <div
-        className={`relative z-10 flex flex-col items-center w-full ${shouldAnimate ? 'animate-fade-in' : ''}`}
+        className={`relative z-10 w-full max-w-6xl mx-auto grid items-center gap-[3.236rem] lg:grid-cols-[1.05fr_0.95fr] ${
+          shouldAnimate ? 'animate-fade-in' : ''
+        }`}
         style={shouldAnimate ? { animationDelay: '0.08s' } : undefined}
       >
-        <h1
-          className="text-[2.4rem] sm:text-[3.2rem] md:text-[4.6rem] font-semibold tracking-[-0.03em] text-[color:var(--apple-ink)] mb-[1.2rem] leading-[1.08] font-display"
-          style={layerStyle2d(titleOffset)}
-        >
-          DeepStudent
-        </h1>
-
-        <h2
-          className="text-[1.15rem] sm:text-[1.55rem] md:text-[2.05rem] font-display text-[color:var(--apple-ink)] mb-[2.2rem] max-w-2xl mx-auto leading-[1.35]"
-          style={layerStyle2d(subtitleOffset)}
-        >
-          免费开源的 AI 错题管理解决方案
-        </h2>
-
-        <p
-          className="text-[0.98rem] sm:text-[1.1rem] text-[color:var(--apple-muted)] max-w-lg mb-[3.6rem] leading-[1.7] font-display"
-          style={layerStyle2d(textOffset)}
-        >
-          让学习更高效，让知识更牢固
-        </p>
-
-        <div
-          className="flex flex-col sm:flex-row gap-[1.618rem] w-full max-w-[17.944rem] sm:max-w-[29.034rem]"
-          style={layerStyle2d(ctaOffset)}
-        >
-          <button
-            type="button"
-            onClick={onDownload}
-            className="focus-ring flex-1 py-[0.95rem] px-[1.5rem] sm:py-[1.15rem] sm:px-[2rem] md:py-[1.35rem] md:px-[2.4rem] bg-black text-white rounded-full font-medium text-sm md:text-base hover:bg-black/85 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-[0.618rem] shadow-[0_18px_40px_rgba(0,0,0,0.25)] ring-1 ring-white/10"
+        <div className="flex flex-col items-start text-left">
+          <h1
+            className="text-[2.4rem] sm:text-[3.2rem] md:text-[4.6rem] font-semibold tracking-[-0.03em] text-[color:var(--apple-ink)] mb-[1.2rem] leading-[1.08] font-display"
+            style={layerStyle2d(titleOffset)}
           >
-            <Download className="w-4 h-4" aria-hidden="true" />
-            立即下载
-          </button>
-          <button className="focus-ring flex-1 py-[0.95rem] px-[1.5rem] sm:py-[1.15rem] sm:px-[2rem] md:py-[1.35rem] md:px-[2.4rem] bg-white/80 text-[color:var(--apple-ink)] border border-white/70 rounded-full font-medium text-sm md:text-base hover:bg-white hover:border-white/80 active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-[0.618rem] shadow-[0_12px_30px_rgba(15,23,42,0.12)]">
-            <FileText className="w-4 h-4" aria-hidden="true" />
-            看看介绍
-          </button>
+            DeepStudent
+          </h1>
+
+          <h2
+            className="text-[1.15rem] sm:text-[1.55rem] md:text-[2.05rem] font-display text-[color:var(--apple-ink)] mb-[2.2rem] max-w-2xl leading-[1.35]"
+            style={layerStyle2d(subtitleOffset)}
+          >
+            免费开源的 AI 错题管理解决方案
+          </h2>
+
+          <p
+            className="text-[0.98rem] sm:text-[1.1rem] text-[color:var(--apple-muted)] max-w-lg mb-[3.6rem] leading-[1.7] font-display"
+            style={layerStyle2d(textOffset)}
+          >
+            让学习更高效，让知识更牢固
+          </p>
+
+          <div
+            className="flex flex-col sm:flex-row gap-[1.618rem] w-full max-w-[17.944rem] sm:max-w-[29.034rem]"
+            style={layerStyle2d(ctaOffset)}
+          >
+            <button
+              type="button"
+              onClick={onDownload}
+              className="focus-ring flex-1 py-[0.95rem] px-[1.5rem] sm:py-[1.15rem] sm:px-[2rem] md:py-[1.35rem] md:px-[2.4rem] bg-black text-white rounded-full font-medium text-sm md:text-base hover:bg-black/85 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-[0.618rem] shadow-[0_18px_40px_rgba(0,0,0,0.25)] ring-1 ring-white/10"
+            >
+              <Download className="w-4 h-4" aria-hidden="true" />
+              立即下载
+            </button>
+            <button className="focus-ring flex-1 py-[0.95rem] px-[1.5rem] sm:py-[1.15rem] sm:px-[2rem] md:py-[1.35rem] md:px-[2.4rem] bg-white/80 text-[color:var(--apple-ink)] border border-white/70 rounded-full font-medium text-sm md:text-base hover:bg-white hover:border-white/80 active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-[0.618rem] shadow-[0_12px_30px_rgba(15,23,42,0.12)]">
+              <FileText className="w-4 h-4" aria-hidden="true" />
+              看看介绍
+            </button>
+          </div>
+        </div>
+
+        <div className="flex justify-center lg:justify-end">
+          <HeroPreview style={previewStyle} />
         </div>
       </div>
     </header>
   )
 }
+
+const HeroPreview = ({ style }) => (
+  <div
+    className="relative w-full max-w-[22rem] sm:max-w-[28rem] lg:max-w-[30rem]"
+    style={style}
+    role="img"
+    aria-label="DeepStudent 软件界面预览"
+  >
+    <div className="absolute -inset-6 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.1),transparent_70%)] blur-3xl opacity-60" />
+    <div className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/90 backdrop-blur-xl shadow-[0_30px_80px_rgba(15,23,42,0.18)]">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-white/70 bg-white/80">
+        <div className="flex gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
+        </div>
+        <span className="text-xs font-medium text-[color:var(--apple-muted)] ml-2">DeepStudent</span>
+      </div>
+      <div className="grid grid-cols-[7.5rem_1fr]" aria-hidden="true">
+        <div className="border-r border-white/70 bg-white/80 px-4 py-4 space-y-4 text-xs text-[color:var(--apple-muted)]">
+          <div className="text-[0.6rem] uppercase tracking-[0.3em] text-[color:var(--apple-muted)]">导航</div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-[color:var(--apple-ink)] font-semibold">
+              <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+              总览
+            </div>
+            <div className="flex items-center gap-2">
+              <FileText className="w-3.5 h-3.5" aria-hidden="true" />
+              错题本
+            </div>
+            <div className="flex items-center gap-2">
+              <Target className="w-3.5 h-3.5" aria-hidden="true" />
+              复盘
+            </div>
+          </div>
+        </div>
+        <div className="p-4">
+          <div className="flex items-center justify-between text-xs text-[color:var(--apple-muted)] mb-4">
+            <span>本周进度</span>
+            <span className="text-[color:var(--apple-ink)] font-semibold">72%</span>
+          </div>
+          <div className="h-2 w-full bg-black/5 rounded-full overflow-hidden mb-5">
+            <div className="h-full w-3/4 rounded-full bg-[color:var(--apple-blue)]" />
+          </div>
+          <div className="space-y-3">
+            {[
+              { title: '导数与函数', tag: '数学', status: '待复盘' },
+              { title: '英语长难句', tag: '英语', status: '已掌握' },
+              { title: '力学受力分析', tag: '物理', status: '复习中' },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="flex items-center justify-between rounded-[0.9rem] border border-white/70 bg-white/70 px-3 py-2 text-xs"
+              >
+                <div>
+                  <div className="text-[color:var(--apple-ink)] font-semibold">{item.title}</div>
+                  <div className="text-[color:var(--apple-muted)] mt-1">{item.tag}</div>
+                </div>
+                <span className="text-[color:var(--apple-muted)]">{item.status}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)
 
 const DownloadPage = ({ onBack = () => {} }) => {
   const platformDownloads = [
