@@ -551,35 +551,35 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
         <div className="absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_0%,rgba(255,255,255,0.9),transparent_70%)]" />
       </div>
       <div
-        className={`relative z-10 w-full max-w-6xl mx-auto grid items-center gap-[3.236rem] lg:grid-cols-[1.05fr_0.95fr] ${
+        className={`relative z-10 w-full max-w-7xl mx-auto grid items-center gap-[3.618rem] lg:grid-cols-[1.05fr_0.95fr] ${
           shouldAnimate ? 'animate-fade-in' : ''
         }`}
         style={shouldAnimate ? { animationDelay: '0.08s' } : undefined}
       >
-        <div className="flex flex-col items-start text-left">
+        <div className="flex flex-col items-start text-left max-w-xl">
           <h1
-            className="text-[2.4rem] sm:text-[3.2rem] md:text-[4.6rem] font-semibold tracking-[-0.03em] text-[color:var(--apple-ink)] mb-[1.2rem] leading-[1.08] font-display"
+            className="text-[2.6rem] sm:text-[3.4rem] md:text-[4.9rem] font-semibold tracking-[-0.04em] text-[color:var(--apple-ink)] mb-[1.2rem] leading-[1.03] font-display"
             style={layerStyle2d(titleOffset)}
           >
             DeepStudent
           </h1>
 
           <h2
-            className="text-[1.15rem] sm:text-[1.55rem] md:text-[2.05rem] font-display text-[color:var(--apple-ink)] mb-[2.2rem] max-w-2xl leading-[1.35]"
+            className="text-[1.2rem] sm:text-[1.6rem] md:text-[2.1rem] font-display text-[color:var(--apple-ink)] mb-[2.2rem] max-w-[32rem] leading-[1.34]"
             style={layerStyle2d(subtitleOffset)}
           >
             免费开源的 AI 错题管理解决方案
           </h2>
 
           <p
-            className="text-[0.98rem] sm:text-[1.1rem] text-[color:var(--apple-muted)] max-w-lg mb-[3.6rem] leading-[1.7] font-display"
+            className="text-[1rem] sm:text-[1.12rem] text-[color:var(--apple-muted)] max-w-lg mb-[3.6rem] leading-[1.7] font-display"
             style={layerStyle2d(textOffset)}
           >
             让学习更高效，让知识更牢固
           </p>
 
           <div
-            className="flex flex-col sm:flex-row gap-[1.618rem] w-full max-w-[17.944rem] sm:max-w-[29.034rem]"
+            className="flex flex-col sm:flex-row gap-4 w-full max-w-[17.944rem] sm:max-w-[30rem]"
             style={layerStyle2d(ctaOffset)}
           >
             <button
@@ -607,65 +607,87 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
 
 const HeroPreview = ({ style }) => (
   <div
-    className="relative w-full max-w-[22rem] sm:max-w-[28rem] lg:max-w-[30rem]"
+    className="relative w-full max-w-[24rem] sm:max-w-[32rem] lg:max-w-[36rem]"
     style={style}
     role="img"
     aria-label="DeepStudent 软件界面预览"
   >
-    <div className="absolute -inset-6 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.1),transparent_70%)] blur-3xl opacity-60" />
-    <div className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/90 backdrop-blur-xl shadow-[0_30px_80px_rgba(15,23,42,0.18)]">
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-white/70 bg-white/80">
-        <div className="flex gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-          <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-          <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
+    <div className="absolute -inset-8 bg-[radial-gradient(circle_at_center,rgba(15,23,42,0.16),transparent_70%)] blur-3xl opacity-70" />
+    <div className="absolute -left-10 top-16 hidden sm:block">
+      <div className="h-[16rem] w-[11rem] rounded-[1.8rem] border border-white/60 bg-white/70 shadow-[0_22px_50px_rgba(15,23,42,0.12)]" />
+    </div>
+    <div className="relative p-[1px] rounded-[2.6rem] bg-gradient-to-br from-white via-white/70 to-white/30 shadow-[0_32px_90px_rgba(15,23,42,0.18)]">
+      <div className="relative overflow-hidden rounded-[2.55rem] border border-white/70 bg-white/92 backdrop-blur-xl">
+        <div className="flex items-center gap-2 px-5 py-3 border-b border-white/70 bg-white/80">
+          <div className="flex gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
+            <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
+            <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
+          </div>
+          <span className="text-xs font-medium text-[color:var(--apple-muted)] ml-2">DeepStudent</span>
         </div>
-        <span className="text-xs font-medium text-[color:var(--apple-muted)] ml-2">DeepStudent</span>
-      </div>
-      <div className="grid grid-cols-[7.5rem_1fr]" aria-hidden="true">
-        <div className="border-r border-white/70 bg-white/80 px-4 py-4 space-y-4 text-xs text-[color:var(--apple-muted)]">
-          <div className="text-[0.6rem] uppercase tracking-[0.3em] text-[color:var(--apple-muted)]">导航</div>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-[color:var(--apple-ink)] font-semibold">
-              <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-              总览
-            </div>
-            <div className="flex items-center gap-2">
-              <FileText className="w-3.5 h-3.5" aria-hidden="true" />
-              错题本
-            </div>
-            <div className="flex items-center gap-2">
-              <Target className="w-3.5 h-3.5" aria-hidden="true" />
-              复盘
-            </div>
-          </div>
-        </div>
-        <div className="p-4">
-          <div className="flex items-center justify-between text-xs text-[color:var(--apple-muted)] mb-4">
-            <span>本周进度</span>
-            <span className="text-[color:var(--apple-ink)] font-semibold">72%</span>
-          </div>
-          <div className="h-2 w-full bg-black/5 rounded-full overflow-hidden mb-5">
-            <div className="h-full w-3/4 rounded-full bg-[color:var(--apple-blue)]" />
-          </div>
-          <div className="space-y-3">
-            {[
-              { title: '导数与函数', tag: '数学', status: '待复盘' },
-              { title: '英语长难句', tag: '英语', status: '已掌握' },
-              { title: '力学受力分析', tag: '物理', status: '复习中' },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="flex items-center justify-between rounded-[0.9rem] border border-white/70 bg-white/70 px-3 py-2 text-xs"
-              >
-                <div>
-                  <div className="text-[color:var(--apple-ink)] font-semibold">{item.title}</div>
-                  <div className="text-[color:var(--apple-muted)] mt-1">{item.tag}</div>
-                </div>
-                <span className="text-[color:var(--apple-muted)]">{item.status}</span>
+        <div className="grid grid-cols-[8.5rem_1fr]" aria-hidden="true">
+          <div className="border-r border-white/70 bg-gradient-to-b from-white/90 to-white/70 px-4 py-4 space-y-4 text-xs text-[color:var(--apple-muted)]">
+            <div className="text-[0.6rem] uppercase tracking-[0.3em] text-[color:var(--apple-muted)]">导航</div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-[color:var(--apple-ink)] font-semibold">
+                <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+                总览
               </div>
-            ))}
+              <div className="flex items-center gap-2">
+                <FileText className="w-3.5 h-3.5" aria-hidden="true" />
+                错题本
+              </div>
+              <div className="flex items-center gap-2">
+                <Target className="w-3.5 h-3.5" aria-hidden="true" />
+                复盘
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="w-3.5 h-3.5" aria-hidden="true" />
+                卡片
+              </div>
+            </div>
           </div>
+          <div className="p-5">
+            <div className="flex items-center justify-between text-xs text-[color:var(--apple-muted)] mb-4">
+              <span>学习仪表盘</span>
+              <span className="rounded-full bg-black/5 px-2 py-1 text-[0.65rem] text-[color:var(--apple-ink)]">本周</span>
+            </div>
+            <div className="rounded-[1.1rem] border border-white/70 bg-white/80 px-4 py-3 mb-4">
+              <div className="text-[0.6rem] uppercase tracking-[0.3em] text-[color:var(--apple-muted)]">重点</div>
+              <div className="mt-2 text-sm font-semibold text-[color:var(--apple-ink)]">导数与函数</div>
+              <div className="mt-3 h-1.5 w-full bg-black/5 rounded-full overflow-hidden">
+                <div className="h-full w-[72%] rounded-full bg-[color:var(--apple-blue)]" />
+              </div>
+            </div>
+            <div className="space-y-3">
+              {[
+                { title: '英语长难句', tag: '英语', status: '已掌握' },
+                { title: '力学受力分析', tag: '物理', status: '复习中' },
+                { title: '数列极限', tag: '数学', status: '待复盘' },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="flex items-center justify-between rounded-[0.95rem] border border-white/70 bg-white/70 px-3 py-2 text-xs"
+                >
+                  <div>
+                    <div className="text-[color:var(--apple-ink)] font-semibold">{item.title}</div>
+                    <div className="text-[color:var(--apple-muted)] mt-1">{item.tag}</div>
+                  </div>
+                  <span className="text-[color:var(--apple-muted)]">{item.status}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="absolute -bottom-6 right-6 hidden sm:block">
+      <div className="rounded-[1.2rem] border border-white/70 bg-white/95 px-4 py-3 shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
+        <div className="text-[0.6rem] uppercase tracking-[0.3em] text-[color:var(--apple-muted)]">AI 提示</div>
+        <div className="mt-2 text-xs font-semibold text-[color:var(--apple-ink)]">复盘 3 题</div>
+        <div className="mt-2 h-1.5 w-24 bg-black/5 rounded-full overflow-hidden">
+          <div className="h-full w-[70%] rounded-full bg-[color:var(--apple-blue)]" />
         </div>
       </div>
     </div>
