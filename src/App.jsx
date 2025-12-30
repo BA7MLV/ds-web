@@ -22,6 +22,7 @@ const stretchProgress = (value, stretch = 1.3) => clamp((value - 0.5) / stretch 
 const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3)
 const easeInOutCubic = (t) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+const buildHash = import.meta.env.VITE_BUILD_HASH || 'dev'
 
 const scrollStore = (() => {
   let value = 0
@@ -968,7 +969,10 @@ const Footer = ({ onOpenPolicy = () => {} }) => (
         </a>
       </div>
 
-      <div className="text-xs text-[color:var(--apple-muted)]">© 2025 DeepStudent Team.</div>
+      <div className="text-xs text-[color:var(--apple-muted)] flex flex-col items-center md:items-end">
+        <span>© 2025 DeepStudent Team.</span>
+        <span className="mt-1 font-mono text-[0.65rem] tracking-[0.08em]">Build {buildHash}</span>
+      </div>
     </div>
   </footer>
 )
