@@ -1,14 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import {
   ArrowLeft,
-  ArrowUpRight,
-  Apple,
   Brain,
-  Check,
-  ChevronRight,
   Download,
   FileText,
-  History,
   LaptopMinimal,
   Layers,
   MonitorDot,
@@ -20,7 +15,317 @@ import {
 } from 'lucide-react'
 import logo from './assets/deepstudent-logo.svg'
 
-const cardHeaderClass = 'flex items-center gap-3 mb-6'
+const cardHeaderClass = 'flex items-center gap-3 mb-[1.618rem]'
+
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
+const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3)
+const easeInOutCubic = (t) =>
+  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+const easeOutBack = (t, overshoot = 1.12) => {
+  const u = t - 1
+  return 1 + (overshoot + 1) * u * u * u + overshoot * u * u
+}
+
+const useSpringValue = (
+  target,
+  { stiffness = 170, damping = 20, precision = 0.0004, maxDelta = 0.05 } = {},
+  enabled = true
+) => {
+  const [value, setValue] = useState(target)
+  const valueRef = useRef(target)
+  const targetRef = useRef(target)
+  const velocityRef = useRef(0)
+  const rafRef = useRef(null)
+  const lastTimeRef = useRef(0)
+  const enabledRef = useRef(enabled)
+  const configRef = useRef({ stiffness, damping, precision, maxDelta })
+
+  useEffect(() => {
+    targetRef.current = target
+  }, [target])
+
+  useEffect(() => {
+    enabledRef.current = enabled
+  }, [enabled])
+
+  useEffect(() => {
+    configRef.current = { stiffness, damping, precision, maxDelta }
+  }, [stiffness, damping, precision, maxDelta])
+
+  const stop = useCallback((snap = false) => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
+    }
+    lastTimeRef.current = 0
+    velocityRef.current = 0
+    if (snap) {
+      const nextValue = targetRef.current
+      valueRef.current = nextValue
+      setValue(nextValue)
+    }
+  }, [])
+
+  const step = useCallback((time) => {
+    if (!enabledRef.current) {
+      rafRef.current = null
+      return
+    }
+    if (!lastTimeRef.current) lastTimeRef.current = time
+    const { stiffness: k, damping: c, precision: p, maxDelta: maxStep } = configRef.current
+    const dt = Math.min(maxStep, (time - lastTimeRef.current) / 1000)
+    lastTimeRef.current = time
+
+    const targetValue = targetRef.current
+    let current = valueRef.current
+    let velocity = velocityRef.current
+
+    const displacement = targetValue - current
+    const spring = displacement * k
+    const damper = velocity * c
+
+    velocity += (spring - damper) * dt
+    current += velocity * dt
+
+    if (Math.abs(velocity) < p && Math.abs(displacement) < p) {
+      current = targetValue
+      velocity = 0
+      valueRef.current = current
+      velocityRef.current = velocity
+      setValue(current)
+      rafRef.current = null
+      lastTimeRef.current = 0
+      return
+    }
+
+    valueRef.current = current
+    velocityRef.current = velocity
+    setValue(current)
+    rafRef.current = requestAnimationFrame(step)
+  }, [])
+
+  const start = useCallback(() => {
+    if (rafRef.current) return
+    rafRef.current = requestAnimationFrame(step)
+  }, [step])
+
+  useEffect(() => {
+    if (!enabled) {
+      stop(true)
+      return
+    }
+    start()
+    return () => stop(false)
+  }, [enabled, start, stop])
+
+  useEffect(() => {
+    if (enabled && !rafRef.current) start()
+  }, [target, enabled, start])
+
+  return value
+}
+
+const scrollStore = (() => {
+  let value = 0
+  let rafId = null
+  const listeners = new Set()
+
+  const notify = () => {
+    listeners.forEach((listener) => listener())
+  }
+
+  const update = () => {
+    value = window.scrollY || window.pageYOffset || 0
+    notify()
+  }
+
+  const onScroll = () => {
+    if (rafId) return
+    rafId = window.requestAnimationFrame(() => {
+      rafId = null
+      update()
+    })
+  }
+
+  const subscribe = (listener) => {
+    listeners.add(listener)
+    if (listeners.size === 1 && typeof window !== 'undefined') {
+      update()
+      window.addEventListener('scroll', onScroll, { passive: true })
+      window.addEventListener('resize', onScroll)
+    }
+
+    return () => {
+      listeners.delete(listener)
+      if (listeners.size === 0 && typeof window !== 'undefined') {
+        window.removeEventListener('scroll', onScroll)
+        window.removeEventListener('resize', onScroll)
+        if (rafId) {
+          window.cancelAnimationFrame(rafId)
+          rafId = null
+        }
+      }
+    }
+  }
+
+  return { getSnapshot: () => value, subscribe }
+})()
+
+const viewportStore = (() => {
+  let height = 0
+  const listeners = new Set()
+
+  const update = () => {
+    height = window.innerHeight || 0
+    listeners.forEach((listener) => listener())
+  }
+
+  const subscribe = (listener) => {
+    listeners.add(listener)
+    if (listeners.size === 1 && typeof window !== 'undefined') {
+      update()
+      window.addEventListener('resize', update)
+      window.addEventListener('orientationchange', update)
+    }
+    return () => {
+      listeners.delete(listener)
+      if (listeners.size === 0 && typeof window !== 'undefined') {
+        window.removeEventListener('resize', update)
+        window.removeEventListener('orientationchange', update)
+      }
+    }
+  }
+
+  return { getSnapshot: () => height, subscribe }
+})()
+
+const useScrollY = (enabled = true) => {
+  const subscribe = useCallback(
+    (listener) => (enabled ? scrollStore.subscribe(listener) : () => {}),
+    [enabled]
+  )
+  return useSyncExternalStore(subscribe, scrollStore.getSnapshot, () => 0)
+}
+
+const useViewportHeight = (enabled = true) => {
+  const subscribe = useCallback(
+    (listener) => (enabled ? viewportStore.subscribe(listener) : () => {}),
+    [enabled]
+  )
+  return useSyncExternalStore(subscribe, viewportStore.getSnapshot, () => 0)
+}
+
+const useParallaxProgress = ({
+  rootMargin = '200px 0px',
+  freezeWhenInactive = true,
+} = {}) => {
+  const ref = useRef(null)
+  const [metrics, setMetrics] = useState({ top: 0, height: 0 })
+  const [isActive, setIsActive] = useState(false)
+  const lastProgress = useRef(0.5)
+  const scrollY = useScrollY(isActive)
+  const viewportHeight = useViewportHeight(isActive)
+
+  const updateMetrics = useCallback(() => {
+    if (!ref.current || typeof window === 'undefined') return
+    const rect = ref.current.getBoundingClientRect()
+    const scrollTop = window.scrollY || window.pageYOffset || 0
+    setMetrics({ top: rect.top + scrollTop, height: rect.height })
+  }, [])
+
+  useEffect(() => {
+    if (!ref.current || typeof window === 'undefined') return undefined
+    const element = ref.current
+    updateMetrics()
+
+    let resizeObserver = null
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => updateMetrics())
+      resizeObserver.observe(element)
+    } else {
+      window.addEventListener('resize', updateMetrics)
+    }
+
+    return () => {
+      if (resizeObserver) {
+        resizeObserver.disconnect()
+      } else {
+        window.removeEventListener('resize', updateMetrics)
+      }
+    }
+  }, [updateMetrics])
+
+  useEffect(() => {
+    if (!ref.current || typeof window === 'undefined') return undefined
+    if (typeof IntersectionObserver === 'undefined') {
+      setIsActive(true)
+      return undefined
+    }
+
+    const element = ref.current
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (!entry) return
+        const nextActive = entry.isIntersecting || entry.intersectionRatio > 0
+        setIsActive(nextActive)
+        if (nextActive) updateMetrics()
+      },
+      { rootMargin, threshold: 0.01 }
+    )
+
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [rootMargin, updateMetrics])
+
+  const progress = metrics.height
+    ? (scrollY + viewportHeight - metrics.top) / (metrics.height + viewportHeight)
+    : 0.5
+  const clamped = clamp(progress, 0, 1)
+
+  if (!freezeWhenInactive || isActive) {
+    lastProgress.current = clamped
+  }
+
+  return { ref, progress: freezeWhenInactive ? lastProgress.current : clamped, isActive }
+}
+
+const useResponsiveMotion = () => {
+  const [settings, setSettings] = useState({ motionScale: 1, isCompact: false })
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const compactQuery = window.matchMedia('(max-width: 768px)')
+
+    const update = () => {
+      const isCompact = compactQuery.matches
+      const reduceMotion = motionQuery.matches
+      const motionScale = reduceMotion ? 0 : isCompact ? 0.45 : 1
+      setSettings({ motionScale, isCompact })
+    }
+
+    update()
+
+    const attach = (query) => {
+      if (query.addEventListener) {
+        query.addEventListener('change', update)
+        return () => query.removeEventListener('change', update)
+      }
+      query.addListener(update)
+      return () => query.removeListener(update)
+    }
+
+    const detachMotion = attach(motionQuery)
+    const detachCompact = attach(compactQuery)
+    return () => {
+      detachMotion()
+      detachCompact()
+    }
+  }, [])
+
+  return settings
+}
 
 const policyContent = {
   privacy: {
@@ -35,7 +340,7 @@ const policyContent = {
       {
         title: '使用方式',
         body: '所有数据仅用于生成个性化学习建议与统计分析，不会出售或提供给第三方广告平台。',
-        points: ['算法训练仅使用匿名化、脱敏后的聚合数据。', '我们会定期发布透明度报告。'],
+        points: ['统计分析仅使用匿名化、脱敏后的聚合数据。', '我们会定期发布透明度报告。'],
       },
       {
         title: '安全措施',
@@ -70,62 +375,83 @@ const policyContent = {
 }
 
 const App = () => {
-  const [scrollY, setScrollY] = useState(0)
   const [activePolicy, setActivePolicy] = useState(null)
   const [isDownloadPage, setIsDownloadPage] = useState(false)
+  const { motionScale } = useResponsiveMotion()
+  const homeScrollRef = useRef(0)
+  const downloadScrollRef = useRef(0)
 
   const handlePolicyOpen = (type) => setActivePolicy(type)
   const handlePolicyClose = () => setActivePolicy(null)
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    if (typeof window === 'undefined') return
+    const targetScroll = isDownloadPage ? downloadScrollRef.current : homeScrollRef.current
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: targetScroll, left: 0, behavior: 'auto' })
+    })
+  }, [isDownloadPage])
 
-  const handleDownloadOpen = () => setIsDownloadPage(true)
-  const handleDownloadClose = () => setIsDownloadPage(false)
+  const handleDownloadOpen = () => {
+    homeScrollRef.current = window.scrollY || 0
+    setIsDownloadPage(true)
+  }
+  const handleDownloadClose = () => {
+    downloadScrollRef.current = window.scrollY || 0
+    setIsDownloadPage(false)
+  }
 
   return (
-    <div className="min-h-screen bg-white text-zinc-950 font-sans overflow-x-hidden selection:bg-zinc-900 selection:text-white">
+    <div className="min-h-screen min-h-[100svh] bg-transparent text-[color:var(--apple-ink)] font-sans overflow-x-hidden selection:bg-black selection:text-white">
       {isDownloadPage ? (
         <DownloadPage onBack={handleDownloadClose} />
       ) : (
         <>
-          <DynamicIsland scrollY={scrollY} onDownload={handleDownloadOpen} />
-          <HeroSection onDownload={handleDownloadOpen} />
+          <TopNav onDownload={handleDownloadOpen} />
+          <HeroSection onDownload={handleDownloadOpen} motionScale={motionScale} />
 
-          <main className="relative z-10 pb-32">
-            <div className="space-y-32 pt-12">
+          <main
+            id="features"
+            className={`relative z-10 scroll-mt-24 pb-[6.854rem] sm:pb-[11.09rem] ${
+              motionScale > 0 ? 'animate-fade-in' : ''
+            }`}
+            style={motionScale > 0 ? { animationDelay: '0.18s' } : undefined}
+          >
+            <div className="space-y-[6.854rem] sm:space-y-[11.09rem] lg:space-y-[17.944rem] pt-[4.236rem] sm:pt-[6.854rem]">
               <FeatureSection
-                icon={<Brain className="w-6 h-6" />}
-                title="智能错题分析"
-                desc="利用先进AI技术深度分析错题，找出知识薄弱点，提供个性化学习建议。"
+                icon={<Brain className="w-6 h-6" aria-hidden="true" />}
+                title="错题复盘"
+                desc="把错因写清楚、归好类，复习时一眼就知道从哪里开始。"
                 align="left"
+                motionScale={motionScale}
               >
-            <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-[0_8px_30px_rgba(0,0,0,0.04)] max-w-sm mx-auto transform transition-transform hover:scale-[1.02] duration-500">
+            <div className="bg-white/85 backdrop-blur-sm sm:backdrop-blur-xl p-[1.618rem] sm:p-[2.618rem] rounded-[1.618rem] border border-white/60 sm:border-white/70 shadow-[0_16px_40px_rgba(15,23,42,0.1)] sm:shadow-[0_25px_70px_rgba(15,23,42,0.12)] max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto transform transition-transform hover:scale-[1.02] active:scale-[1.01] duration-500">
               <div className={cardHeaderClass}>
-                <div className="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-900">
-                  <Sparkles className="w-4 h-4" />
+                <div className="w-8 h-8 rounded-full bg-black/5 ring-1 ring-white/60 flex items-center justify-center text-[color:var(--apple-ink)]">
+                  <Sparkles className="w-4 h-4" aria-hidden="true" />
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-zinc-900">深度分析中</div>
-                  <div className="text-xs text-zinc-400">刚刚</div>
+                  <div className="text-sm font-semibold text-[color:var(--apple-ink)]">深度分析中</div>
+                  <div className="text-xs text-[color:var(--apple-muted)]">刚刚</div>
                 </div>
               </div>
 
               <div className="space-y-3">
-                <div className="h-2 w-full bg-zinc-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-zinc-900 w-3/4 rounded-full animate-pulse" />
+                <div className="h-2 w-full bg-black/5 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full bg-[color:var(--apple-blue)] w-3/4 rounded-full ${
+                      motionScale > 0 ? 'animate-pulse' : ''
+                    }`}
+                  />
                 </div>
-                <div className="flex justify-between text-xs text-zinc-500 font-medium mt-1">
+                <div className="flex justify-between text-xs text-[color:var(--apple-muted)] font-medium mt-1">
                   <span>知识点掌握</span>
-                  <span className="text-zinc-900">72%</span>
+                  <span className="text-[color:var(--apple-ink)]">72%</span>
                 </div>
-                <div className="mt-6 p-4 bg-zinc-50 rounded-xl border border-zinc-100 text-sm text-zinc-600 leading-relaxed">
-                  <span className="font-semibold text-zinc-900 block mb-1">建议：</span>
+                <div className="mt-[2.618rem] p-[1.618rem] bg-white/70 rounded-[1rem] border border-white/70 text-sm text-[color:var(--apple-muted)] leading-relaxed">
+                  <span className="font-semibold text-[color:var(--apple-ink)] block mb-1">建议：</span>
                   重新复习{' '}
-                  <span className="text-zinc-900 underline decoration-zinc-300 underline-offset-2">
+                  <span className="text-[color:var(--apple-ink)] underline decoration-black/20 underline-offset-2">
                     导数定义
                   </span>{' '}
                   相关章节，并加强基础计算训练。
@@ -135,45 +461,47 @@ const App = () => {
           </FeatureSection>
 
           <FeatureSection
-            icon={<Layers className="w-6 h-6" />}
-            title="有序，不只是整理"
-            desc="集中管理所有学科错题，按知识点、难度、时间自动分类，如 Finder 般井井有条。"
-            align="right"
-          >
-            <div className="relative max-w-sm mx-auto">
-              <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 to-white z-20 pointer-events-none" />
-              <div className="bg-white rounded-2xl border border-zinc-200 shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden">
-                <div className="px-4 py-3 border-b border-zinc-100 bg-zinc-50/50 backdrop-blur flex items-center gap-2">
+            icon={<Layers className="w-6 h-6" aria-hidden="true" />}
+                title="有序，不只是整理"
+                desc="集中管理所有学科错题，按知识点、难度、时间分类，像系统文件管理器一样井井有条。"
+                align="right"
+                motionScale={motionScale}
+              >
+            <div className="relative max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto">
+              <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 to-white/80 z-20 pointer-events-none" />
+              <div className="bg-white/85 backdrop-blur-sm sm:backdrop-blur-xl rounded-[1.618rem] border border-white/60 sm:border-white/70 shadow-[0_16px_40px_rgba(15,23,42,0.1)] sm:shadow-[0_25px_70px_rgba(15,23,42,0.12)] overflow-hidden">
+                <div className="px-[1.618rem] py-[1rem] border-b border-white/60 bg-white/80 backdrop-blur-sm sm:backdrop-blur flex items-center gap-[0.618rem]">
                   <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-300" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-300" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
                   </div>
-                  <div className="text-xs font-medium text-zinc-500 ml-2">我的错题本</div>
+                  <div className="text-xs font-medium text-[color:var(--apple-muted)] ml-2">我的错题本</div>
                 </div>
-                <div className="p-2">
+                <div className="p-[1rem]">
                   {[
-                    { title: '2023 高数期末', tag: 'Math', date: 'Today' },
-                    { title: '英语阅读理解专项', tag: 'English', date: 'Yesterday' },
-                    { title: '物理力学错题集', tag: 'Physics', date: '2d ago' },
+                    { title: '2023 高数期末', tag: '数学', date: '今天' },
+                    { title: '英语阅读理解专项', tag: '英语', date: '昨天' },
+                    { title: '物理力学错题集', tag: '物理', date: '2 天前' },
                   ].map((item) => (
                     <div
                       key={item.title}
-                      className="flex items-center justify-between p-3 hover:bg-zinc-50 rounded-lg transition-colors group cursor-default"
+                      className="flex items-center justify-between p-[1rem] hover:bg-black/5 active:bg-black/5 rounded-[1rem] transition-colors group cursor-default"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-10 bg-zinc-100 rounded border border-zinc-200 flex items-center justify-center">
-                          <FileText className="w-4 h-4 text-zinc-400" />
+                        <div className="w-8 h-10 bg-black/5 rounded border border-white/60 flex items-center justify-center">
+                          <FileText className="w-4 h-4 text-[color:var(--apple-muted)]" aria-hidden="true" />
                         </div>
                         <div>
-                          <div className="text-sm font-medium text-zinc-900 group-hover:text-black transition-colors">
+                          <div className="text-sm font-medium text-[color:var(--apple-ink)] group-hover:text-black transition-colors">
                             {item.title}
                           </div>
-                          <div className="text-[10px] text-zinc-400 uppercase tracking-wider mt-0.5">
+                          <div className="text-xs text-[color:var(--apple-muted)] uppercase tracking-wider mt-0.5">
                             {item.tag}
                           </div>
                         </div>
                       </div>
-                      <span className="text-xs text-zinc-400">{item.date}</span>
+                      <span className="text-xs text-[color:var(--apple-muted)]">{item.date}</span>
                     </div>
                   ))}
                 </div>
@@ -182,27 +510,28 @@ const App = () => {
           </FeatureSection>
 
           <FeatureSection
-            icon={<Target className="w-6 h-6" />}
-            title="多题统一回顾"
-            desc="发现共性错误模式，生成综合学习报告。不再孤立地看问题。"
-            align="left"
-          >
-            <div className="bg-zinc-900 text-white p-6 rounded-2xl shadow-2xl max-w-sm mx-auto relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-6 opacity-20">
-                <Target className="w-24 h-24" />
+            icon={<Target className="w-6 h-6" aria-hidden="true" />}
+                title="多题回顾"
+                desc="把相关题目放在一起看，理解共性错误，形成自己的复习重点。"
+                align="left"
+                motionScale={motionScale}
+              >
+            <div className="bg-gradient-to-br from-[#15171c] via-[#0f1115] to-[#0b0d10] text-white p-[1.618rem] sm:p-[2.618rem] rounded-[1.618rem] shadow-[0_20px_50px_rgba(15,23,42,0.4)] sm:shadow-[0_35px_80px_rgba(15,23,42,0.45)] border border-white/10 max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-[1.618rem] opacity-30">
+                <Target className="w-24 h-24" aria-hidden="true" />
               </div>
               <div className="relative z-10">
-                <div className="text-sm text-zinc-400 mb-1">Error Pattern</div>
-                <div className="text-2xl font-bold mb-6">Calculation Error</div>
-                <div className="space-y-4">
+                <div className="text-sm text-white/60 mb-1">错误类型</div>
+                <div className="text-2xl font-bold mb-[2.618rem]">计算错误</div>
+                <div className="space-y-[1.618rem]">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-zinc-400">Frequency</span>
-                    <span className="font-mono">High (8/10)</span>
+                    <span className="text-white/60">频次</span>
+                    <span className="font-mono">高 (8/10)</span>
                   </div>
-                  <div className="w-full bg-zinc-800 h-1 rounded-full overflow-hidden">
-                    <div className="bg-white h-full w-[80%]" />
+                  <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
+                    <div className="bg-white/90 h-full w-[80%]" />
                   </div>
-                  <div className="p-3 bg-zinc-800/50 rounded-lg text-xs text-zinc-300 border border-zinc-700/50 mt-4">
+                  <div className="p-[1rem] bg-white/10 rounded-[1rem] text-xs text-white/70 border border-white/10 mt-[1.618rem]">
                     建议在进行复杂运算时，增加验算步骤，特别是符号变换环节。
                   </div>
                 </div>
@@ -211,52 +540,39 @@ const App = () => {
           </FeatureSection>
 
           <FeatureSection
-            icon={<Zap className="w-6 h-6" />}
-            title="ANKI 记忆流"
-            desc="无缝衔接间隔重复学习法 (Spaced Repetition)。一键制卡，永久记忆。"
-            align="right"
-          >
+            icon={<Zap className="w-6 h-6" aria-hidden="true" />}
+                title="间隔复习"
+                desc="对接间隔复习法，轻松生成卡片，循序巩固。"
+                align="right"
+                motionScale={motionScale}
+              >
             <div className="flex justify-center">
-              <div className="bg-white border border-zinc-200 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] rounded-2xl p-6 w-64 aspect-[3/4] flex flex-col items-center text-center justify-center relative rotate-3 transition-transform hover:rotate-0 duration-500">
-                <div className="absolute top-4 left-4 w-1.5 h-1.5 bg-zinc-900 rounded-full" />
-                <div className="mb-8">
-                  <div className="text-xs font-bold text-zinc-400 tracking-[0.2em] uppercase mb-2">
-                    Question
-                  </div>
-                  <div className="text-xl font-serif italic text-zinc-900">
-                    What is the derivative of ln(x)?
-                  </div>
-                </div>
-                <div className="w-full h-px bg-zinc-100 mb-8" />
-                <div className="opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center rounded-2xl z-10">
-                  <div className="text-2xl font-bold text-zinc-900">1 / x</div>
-                </div>
-                <div className="text-xs text-zinc-400">Tap to flip</div>
-              </div>
+              <Flashcard motionScale={motionScale} />
             </div>
           </FeatureSection>
 
           <FeatureSection
-            icon={<Search className="w-6 h-6" />}
-            title="RAG 知识增强"
-            desc="内置 AI 知识库。对错题进行追问，像与导师对话一样获取详细解释。"
-            align="left"
-          >
-            <div className="bg-zinc-50 p-4 rounded-2xl border border-zinc-200 shadow-sm max-w-sm mx-auto">
-              <div className="space-y-4">
-                <div className="flex gap-3 flex-row-reverse">
-                  <div className="w-8 h-8 rounded-full bg-zinc-900 flex-shrink-0" />
-                  <div className="bg-zinc-900 text-white px-4 py-2 rounded-2xl rounded-tr-sm text-sm">
+            icon={<Search className="w-6 h-6" aria-hidden="true" />}
+                title="知识补充"
+                desc="内置参考库。遇到卡住的题，可以直接翻到相关章节和思路。"
+                align="left"
+                motionScale={motionScale}
+              >
+            <div className="bg-white/85 backdrop-blur-sm sm:backdrop-blur-xl p-[1.618rem] rounded-[1.618rem] border border-white/60 sm:border-white/70 shadow-[0_16px_40px_rgba(15,23,42,0.1)] sm:shadow-[0_25px_70px_rgba(15,23,42,0.12)] max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto">
+              <div className="space-y-[1.618rem]">
+                <div className="flex gap-[1rem] flex-row-reverse">
+                  <div className="w-8 h-8 rounded-full bg-black flex-shrink-0" />
+                  <div className="bg-black text-white px-[1.618rem] py-[0.618rem] rounded-[1.618rem] rounded-tr-[0.618rem] text-sm">
                     这道题选 C 的原因是什么？
                   </div>
                 </div>
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <Brain className="w-4 h-4 text-zinc-900" />
+                <div className="flex gap-[1rem]">
+                  <div className="w-8 h-8 rounded-full bg-white/90 border border-white/70 flex items-center justify-center flex-shrink-0">
+                    <Brain className="w-4 h-4 text-[color:var(--apple-ink)]" aria-hidden="true" />
                   </div>
-                  <div className="bg-white border border-zinc-200 text-zinc-800 px-4 py-2 rounded-2xl rounded-tl-sm text-sm shadow-sm">
-                    <p className="mb-2 font-semibold text-xs text-zinc-400 uppercase tracking-wider">
-                      Reference: Chapter 4
+                  <div className="bg-white/90 border border-white/70 text-[color:var(--apple-ink)] px-[1.618rem] py-[0.618rem] rounded-[1.618rem] rounded-tl-[0.618rem] text-sm shadow-sm">
+                    <p className="mb-2 font-semibold text-xs text-[color:var(--apple-muted)] uppercase tracking-wider">
+                      参考：第 4 章
                     </p>
                     根据洛必达法则，当 x 趋近于 0 时，分子分母同时求导...
                   </div>
@@ -275,497 +591,439 @@ const App = () => {
 )
 }
 
-const DynamicIsland = ({ scrollY, onDownload = () => {} }) => {
-  const expandThreshold = 100
-  const vanishThreshold = 200
-
-  let scale = 1
-  let contentOpacity = 1
-
-  if (scrollY > 0) {
-    if (scrollY <= expandThreshold) {
-      const progress = scrollY / expandThreshold
-      contentOpacity = Math.max(0, 1 - progress * 4)
-    } else if (scrollY <= vanishThreshold) {
-      contentOpacity = 0
-      const vanishProgress = (scrollY - expandThreshold) / (vanishThreshold - expandThreshold)
-      scale = Math.max(0, 1 - vanishProgress)
-    } else {
-      scale = 0
-      contentOpacity = 0
-    }
-  }
-
-  const isDotMode = scrollY > expandThreshold
-
-  return (
-    <div className="fixed top-6 left-0 right-0 z-50 flex justify-center pointer-events-none">
-      <div
-        className="bg-black text-white shadow-2xl flex items-center justify-between transition-all duration-300 overflow-hidden pointer-events-auto"
-        style={{
-          height: isDotMode ? '14px' : '52px',
-          width: isDotMode ? '14px' : '240px',
-          borderRadius: isDotMode ? '999px' : '32px',
-          transform: `scale(${scale})`,
-          padding: isDotMode ? 0 : '0 8px',
-          transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-          opacity: scale,
-        }}
-      >
-        <div
-          className={`flex items-center justify-between w-full px-4 transition-opacity duration-200 ${
-            isDotMode ? 'opacity-0' : 'opacity-100'
-          }`}
-          style={{ opacity: contentOpacity }}
-        >
-          <div className="font-semibold text-sm tracking-tight flex items-center gap-2">
-            <img src={logo} alt="DeepStudent logo" className="w-4 h-4" />
-            <span>DeepStudent</span>
-          </div>
-          <div className="h-4 w-px bg-zinc-800 mx-2" />
-          <button
-            type="button"
-            onClick={onDownload}
-            className="text-xs font-medium bg-white text-black px-3 py-1.5 rounded-full hover:bg-zinc-200 transition-colors"
-          >
-            下载
-          </button>
-        </div>
+const TopNav = ({ onDownload = () => {} }) => (
+  <nav className="sticky top-0 z-40 border-b border-white/60 bg-white/75 backdrop-blur-sm sm:backdrop-blur-xl">
+    <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
+      <div className="flex items-center gap-2 font-semibold text-[color:var(--apple-ink)]">
+        <img src={logo} alt="DeepStudent logo" className="w-5 h-5" />
+        <span className="text-sm tracking-tight">DeepStudent</span>
       </div>
-    </div>
-  )
-}
-
-const HeroSection = ({ onDownload = () => {} }) => {
-  const heroTopPadding = 'clamp(3.5rem, 8vh, 5.5rem)'
-  const heroBottomPadding = 'clamp(5.6rem, 13vh, 9rem)' // 约为黄金比例，制造更高的视觉重心
-
-  return (
-    <header
-      className="relative min-h-screen px-6 flex flex-col items-center text-center justify-center"
-      style={{ paddingTop: heroTopPadding, paddingBottom: heroBottomPadding }}
-    >
-      <div className="mb-6 animate-fade-in opacity-0" style={{ animationFillMode: 'forwards' }}>
-        <div className="w-24 h-14 rounded-[1.25rem] bg-white flex items-center justify-center mx-auto">
-          <img src={logo} alt="DeepStudent logo" className="w-10 h-10" />
-        </div>
-      </div>
-
-      <div className="mb-8 animate-fade-in opacity-0" style={{ animationFillMode: 'forwards' }}>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-zinc-200 bg-zinc-50 text-zinc-600 text-xs font-medium">
-          <span className="relative flex h-2 w-2 mr-1">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black opacity-20" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-black" />
-          </span>
-          v1.0 Public Beta
-          <ChevronRight className="w-3 h-3 text-zinc-400" />
-        </div>
-      </div>
-
-      <h1
-        className="text-5xl md:text-7xl font-semibold tracking-tighter text-zinc-900 mb-4 leading-[1.1] animate-fade-in opacity-0"
-        style={{ animationDelay: '100ms', animationFillMode: 'forwards' }}
-      >
-        DeepStudent
-      </h1>
-
-      <h2
-        className="text-3xl md:text-4xl font-medium tracking-tight text-zinc-900 mb-6 animate-fade-in opacity-0"
-        style={{ animationDelay: '150ms', animationFillMode: 'forwards' }}
-      >
-        免费开源的 AI 错题管理解决方案
-      </h2>
-
-      <p
-        className="text-lg md:text-xl text-zinc-500 max-w-lg mb-10 leading-relaxed font-light animate-fade-in opacity-0"
-        style={{ animationDelay: '200ms', animationFillMode: 'forwards' }}
-      >
-        让学习更高效，让知识更牢固
-      </p>
-
-      <div
-        className="flex flex-col sm:flex-row gap-4 w-full max-w-sm animate-fade-in opacity-0"
-        style={{ animationDelay: '300ms', animationFillMode: 'forwards' }}
-      >
+      <div className="flex items-center gap-5 text-xs text-[color:var(--apple-muted)] font-medium">
+        <a href="#features" className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors">
+          功能
+        </a>
         <button
           type="button"
           onClick={onDownload}
-          className="flex-1 py-3.5 bg-zinc-900 text-white rounded-full font-medium text-sm hover:bg-black/80 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg shadow-zinc-900/20"
+          className="focus-ring rounded-full bg-black px-3 py-1.5 text-xs font-medium text-white hover:bg-black/85 active:bg-black/90 transition-colors"
         >
-          <Download className="w-4 h-4" />
-          立即下载
+          下载
         </button>
-        <button className="flex-1 py-3.5 bg-white text-zinc-900 border border-zinc-200 rounded-full font-medium text-sm hover:bg-zinc-50 hover:border-zinc-300 active:scale-95 transition-all flex items-center justify-center gap-2">
-          <FileText className="w-4 h-4" />
-          查看文档
-        </button>
+      </div>
+    </div>
+  </nav>
+)
+
+const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
+  const scrollY = useScrollY()
+  const motionAmount = Math.max(0, motionScale)
+  const isStatic = motionAmount === 0
+  const shouldAnimate = motionScale > 0
+  const heroProgress = clamp(scrollY / 360, 0, 1)
+  const heroSpring = useSpringValue(heroProgress, { stiffness: 150, damping: 18 }, shouldAnimate)
+  const heroEase = easeOutCubic(heroSpring)
+  const heroBack = easeOutBack(heroSpring, 1.06)
+  const heroMotion = heroEase + (heroBack - heroEase) * 0.5
+  const heroJuice = Math.sin(clamp(heroSpring, 0, 1) * Math.PI)
+  const heroRebound = (heroSpring - heroProgress) * 160 * motionAmount
+  const heroFade = 1 - heroEase * 0.55 * motionAmount
+  const layerStyle2d = (offsetY) => ({
+    transform: isStatic ? 'none' : `translate3d(0, ${offsetY}px, 0)`,
+    opacity: heroFade,
+    transformStyle: 'flat',
+    willChange: isStatic ? 'auto' : 'transform, opacity',
+  })
+  const titleOffset = heroMotion * (170 + heroJuice * 20) * motionAmount + heroRebound * 0.12
+  const subtitleOffset = heroMotion * (210 + heroJuice * 24) * motionAmount + heroRebound * 0.2
+  const textOffset = heroMotion * (240 + heroJuice * 28) * motionAmount + heroRebound * 0.28
+  const ctaOffset = heroMotion * (270 + heroJuice * 32) * motionAmount + heroRebound * 0.36
+
+  return (
+    <header
+      className="relative min-h-screen min-h-[100svh] px-4 sm:px-6 pt-[4.236rem] pb-[6.854rem] sm:pt-[6.854rem] sm:pb-[11.09rem] flex flex-col items-center text-center justify-center overflow-hidden"
+    >
+      <div className="absolute inset-0 pointer-events-none" aria-hidden>
+        <div className="absolute -top-40 left-1/2 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.35),transparent_65%)] blur-3xl opacity-70" />
+        <div className="absolute top-10 right-[-12%] h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.12),transparent_70%)] blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_0%,rgba(255,255,255,0.9),transparent_70%)]" />
+      </div>
+      <div
+        className={`relative z-10 flex flex-col items-center w-full ${shouldAnimate ? 'animate-fade-in' : ''}`}
+        style={shouldAnimate ? { animationDelay: '0.08s' } : undefined}
+      >
+        <h1
+          className="text-[2.4rem] sm:text-[3.2rem] md:text-[4.6rem] font-semibold tracking-[-0.03em] text-[color:var(--apple-ink)] mb-[1.2rem] leading-[1.08] font-display"
+          style={layerStyle2d(titleOffset)}
+        >
+          DeepStudent
+        </h1>
+
+        <h2
+          className="text-[1.15rem] sm:text-[1.55rem] md:text-[2.05rem] font-display text-[color:var(--apple-ink)] mb-[2.2rem] max-w-2xl mx-auto leading-[1.35]"
+          style={layerStyle2d(subtitleOffset)}
+        >
+          免费开源的 AI 错题管理解决方案
+        </h2>
+
+        <p
+          className="text-[0.98rem] sm:text-[1.1rem] text-[color:var(--apple-muted)] max-w-lg mb-[3.6rem] leading-[1.7] font-display"
+          style={layerStyle2d(textOffset)}
+        >
+          让学习更高效，让知识更牢固
+        </p>
+
+        <div
+          className="flex flex-col sm:flex-row gap-[1.618rem] w-full max-w-[17.944rem] sm:max-w-[29.034rem]"
+          style={layerStyle2d(ctaOffset)}
+        >
+          <button
+            type="button"
+            onClick={onDownload}
+            className="focus-ring flex-1 py-[0.95rem] px-[1.5rem] sm:py-[1.15rem] sm:px-[2rem] md:py-[1.35rem] md:px-[2.4rem] bg-black text-white rounded-full font-medium text-sm md:text-base hover:bg-black/85 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-[0.618rem] shadow-[0_18px_40px_rgba(0,0,0,0.25)] ring-1 ring-white/10"
+          >
+            <Download className="w-4 h-4" aria-hidden="true" />
+            立即下载
+          </button>
+          <button className="focus-ring flex-1 py-[0.95rem] px-[1.5rem] sm:py-[1.15rem] sm:px-[2rem] md:py-[1.35rem] md:px-[2.4rem] bg-white/80 text-[color:var(--apple-ink)] border border-white/70 rounded-full font-medium text-sm md:text-base hover:bg-white hover:border-white/80 active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-[0.618rem] shadow-[0_12px_30px_rgba(15,23,42,0.12)]">
+            <FileText className="w-4 h-4" aria-hidden="true" />
+            看看介绍
+          </button>
+        </div>
       </div>
     </header>
   )
 }
 
 const DownloadPage = ({ onBack = () => {} }) => {
-  const [preferredPlatform, setPreferredPlatform] = useState('mac')
-
-  useEffect(() => {
-    const detectPlatform = () => {
-      if (typeof navigator === 'undefined') return 'mac'
-      const ua = navigator.userAgent || ''
-      if (/windows/i.test(ua)) return 'windows'
-      if (/macintosh|mac os x/i.test(ua) && !/ipad|iphone|ipod/i.test(ua)) return 'mac'
-      return 'mac'
-    }
-    setPreferredPlatform(detectPlatform())
-  }, [])
-
   const platformDownloads = [
     {
       id: 'mac',
       platform: 'macOS',
-      channel: '通用 DMG 安装',
-      version: 'v1.0.2 (Build 88)',
+      channel: 'DMG 安装',
+      version: 'v1.0.2 · Build 88',
       size: '312 MB',
       requirements: 'macOS 13+，Apple Silicon 优化',
-      description: '桌面端支持菜单栏快速录入、Spotlight 搜索以及系统共享扩展。',
-      features: ['菜单栏快捷入口', 'Spotlight 搜索', 'iCloud 同步'],
+      description: '菜单栏快捷录入，支持 Spotlight 搜索。',
       ctaLabel: '下载 DMG',
       ctaHref: 'https://downloads.deepstudent.ai/macos/deepstudent-v1.0.2.dmg',
-      guideLabel: '校验签名',
-      guideHref: 'https://docs.deepstudent.ai/download/macos-signature',
-      status: '稳定',
       icon: MonitorDot,
-      brandIcon: Apple,
-      iconBg: 'bg-zinc-900 text-white',
-      accentClass: 'bg-zinc-900 text-white',
+      iconBg: 'bg-black text-white',
     },
     {
       id: 'windows',
       platform: 'Windows',
-      channel: 'Beta 安装器',
+      channel: '预览版',
       version: 'v0.9.8 Preview',
       size: '298 MB',
       requirements: 'Windows 11 / 10 22H2+',
-      description: '预览版支持 OneNote 导入与系统托盘控件，可与云端错题库实时同步。',
-      features: ['OneNote 导入', '系统托盘控件', '自动更新'],
+      description: '预览版含 OneNote 导入与系统托盘控件。',
       ctaLabel: '下载 EXE',
       ctaHref: 'https://downloads.deepstudent.ai/windows/deepstudent-setup.exe',
-      guideLabel: '阅读兼容性说明',
-      guideHref: 'https://docs.deepstudent.ai/download/windows-beta',
-      status: '预览',
       icon: LaptopMinimal,
-      iconBg: 'bg-sky-50 text-sky-800 border border-sky-100',
-      accentClass: 'bg-sky-100 text-sky-800',
+      iconBg: 'bg-white text-[color:var(--apple-ink)] border border-black/10',
     },
   ]
-
-  const releaseNotes = [
-    {
-      version: 'v1.0.3',
-      date: '2025-11-15',
-      tag: '稳定',
-      changes: [
-        '新增「学习节奏」仪表盘，可按周查看完成度与巩固建议。',
-        'iPadOS 版支持分屏拖拽题目到任意错题集，提升整理效率。',
-        '修复部分 TestFlight 用户启动后立即闪退的问题。',
-      ],
-    },
-    {
-      version: 'v1.0.2',
-      date: '2025-11-03',
-      tag: '桌面',
-      changes: [
-        'macOS 菜单栏入口支持快捷截图粘贴，自动生成题干与答案。',
-        '引入本地备份策略，断网后可自动恢复至最新云端版本。',
-        '修复 Sonoma 上通知重复推送的已知问题。',
-      ],
-    },
-    {
-      version: 'v0.9.8',
-      date: '2025-10-18',
-      tag: 'Preview',
-      changes: [
-        '首次提供 Windows 预览版，包含核心错题整理与复习提醒功能。',
-        '支持 OneNote / PDF 导入，自动识别题干、选项与解析字段。',
-      ],
-    },
-  ]
-
-  const latestVersion = releaseNotes[0]?.version ?? ''
-  const preferredLabel = preferredPlatform === 'windows' ? 'Windows' : 'macOS'
-
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-zinc-50 via-white to-white pb-32">
-      <div className="sticky top-0 z-40 border-b border-zinc-100 bg-white/80 backdrop-blur-md">
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
+    <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[6.854rem] sm:pb-[11.09rem]">
+      <div className="sticky top-0 z-40 border-b border-black/5 bg-white/80 backdrop-blur-sm">
+        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
+            className="focus-ring inline-flex items-center gap-2 text-sm font-medium text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             返回首页
           </button>
-          <span className="text-[11px] uppercase tracking-[0.4em] text-zinc-400 font-semibold">Download</span>
+          <span className="text-xs text-[color:var(--apple-muted)]">下载</span>
         </div>
       </div>
 
-      <section className="max-w-4xl mx-auto px-6 pt-16 text-center">
-        <p className="text-xs uppercase tracking-[0.5em] text-zinc-400">Release center</p>
-        <h1 className="mt-4 text-4xl md:text-5xl font-semibold text-zinc-900 tracking-tight">
-          {`立即下载 DeepStudent${latestVersion ? `+${latestVersion}` : ''}`}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-[3.236rem] sm:pt-[4.236rem] md:pt-[5.854rem] text-center">
+        <h1 className="text-[2.2rem] sm:text-[3.2rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] font-display">
+          下载 DeepStudent
         </h1>
-        <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white/90 px-4 py-2 text-sm text-zinc-600">
-          <Sparkles className="w-4 h-4 text-amber-500" />
-          <span>已根据请求头识别，你当前更适合 {preferredLabel} 安装包</span>
-        </div>
-
-        <div className="mt-8 rounded-2xl border border-dashed border-zinc-200 bg-white/70 px-4 py-3 text-sm text-zinc-500">
-          <span className="font-semibold text-zinc-900">温馨提示：</span>
-          Windows 版本仍处于 Beta 阶段，若遇到安装或同步问题，请通过 support@deepstudent.ai 联系我们。
-        </div>
+        <p className="mt-3 text-sm text-[color:var(--apple-muted)] max-w-md mx-auto">
+          选择你的平台，安装后即可开始整理。
+        </p>
       </section>
 
-      <section className="max-w-5xl mx-auto px-6 pt-12">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
-          <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-zinc-400">Platforms</p>
-            <h2 className="mt-2 text-3xl font-semibold text-zinc-900">支持平台</h2>
-          </div>
-          <span className="text-sm text-zinc-500">每 1-2 周同步增量更新</span>
-        </div>
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-[3.236rem] sm:pt-[4.236rem]">
+        <h2 className="text-[1.3rem] sm:text-[1.9rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] font-display">
+          选择平台
+        </h2>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
           {platformDownloads.map((platform) => {
             const Icon = platform.icon
-            const BrandIcon = platform.brandIcon
-            const isRecommended = platform.id === preferredPlatform
             return (
               <article
-                key={platform.platform}
-                className="h-full rounded-3xl border border-zinc-100 bg-white/90 p-6 shadow-[0_25px_80px_rgba(0,0,0,0.08)]"
+                key={platform.id}
+                className="rounded-[1.5rem] bg-white/85 border border-black/5 p-[1.5rem] sm:p-[1.75rem] shadow-[0_8px_18px_rgba(15,23,42,0.06)]"
               >
-                <div className="flex items-start justify-between gap-4 mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${platform.iconBg}`}>
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="text-base font-semibold text-zinc-900">{platform.platform}</p>
-                      <p className="text-xs text-zinc-500 flex items-center gap-1">
-                        {BrandIcon ? <BrandIcon className="w-4 h-4" /> : null}
-                        {platform.channel}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end gap-2">
-                    {platform.status ? (
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${platform.accentClass}`}>
-                        {platform.status}
-                      </span>
-                    ) : null}
-                    {isRecommended ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">
-                        <Sparkles className="w-3 h-3" />
-                        推荐
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
-
-                <p className="text-sm text-zinc-600 leading-relaxed">{platform.description}</p>
-
-                <div className="mt-6 grid grid-cols-2 gap-4 text-sm text-zinc-500">
-                  <div>
-                    <p className="text-[11px] uppercase tracking-[0.3em] text-zinc-400">版本</p>
-                    <p className="mt-1 font-semibold text-zinc-900">{platform.version}</p>
+                <div className="flex items-center gap-3">
+                  <div className={`w-11 h-11 rounded-[0.9rem] flex items-center justify-center ${platform.iconBg}`}>
+                    <Icon className="w-5 h-5" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.3em] text-zinc-400">大小</p>
-                    <p className="mt-1 font-semibold text-zinc-900">{platform.size}</p>
-                  </div>
-                  <div className="col-span-2">
-                    <p className="text-[11px] uppercase tracking-[0.3em] text-zinc-400">环境要求</p>
-                    <p className="mt-1 font-semibold text-zinc-900">{platform.requirements}</p>
+                    <p className="text-base font-semibold text-[color:var(--apple-ink)]">{platform.platform}</p>
+                    <p className="text-xs text-[color:var(--apple-muted)]">{platform.channel}</p>
                   </div>
                 </div>
 
-                <div className="mt-6">
-                  <p className="text-xs uppercase tracking-[0.3em] text-zinc-400 mb-3">特性</p>
-                  <div className="flex flex-wrap gap-2">
-                    {platform.features.map((feature) => (
-                      <span
-                        key={feature}
-                        className="px-3 py-1 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600"
-                      >
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
+                <p className="mt-3 text-sm text-[color:var(--apple-muted)] leading-relaxed">{platform.description}</p>
+
+                <div className="mt-4 text-xs text-[color:var(--apple-muted)] flex flex-wrap gap-x-3 gap-y-1">
+                  <span>版本 {platform.version}</span>
+                  <span>大小 {platform.size}</span>
+                  <span>系统 {platform.requirements}</span>
                 </div>
 
-                <div className="mt-6 flex flex-col gap-3">
+                <div className="mt-4">
                   <a
                     href={platform.ctaHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-zinc-900 py-3 text-sm font-semibold text-white hover:bg-black transition-colors"
+                    className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-black px-4 py-2 text-xs font-medium text-white hover:bg-black/85 active:bg-black/90 transition-colors shadow-[0_10px_20px_rgba(0,0,0,0.2)]"
                   >
-                    <Download className="w-4 h-4" />
+                    <Download className="w-4 h-4" aria-hidden="true" />
                     {platform.ctaLabel}
-                  </a>
-                  <a
-                    href={platform.guideHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-zinc-200 py-2.5 text-sm text-zinc-600 hover:border-zinc-300 hover:text-zinc-900 transition-colors"
-                  >
-                    <ArrowUpRight className="w-4 h-4" />
-                    {platform.guideLabel}
                   </a>
                 </div>
               </article>
             )
           })}
         </div>
-      </section>
 
-      <section className="max-w-3xl mx-auto px-6 pt-16">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-zinc-900 text-white flex items-center justify-center">
-            <History className="w-5 h-5" />
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-zinc-400">Changelog</p>
-            <h3 className="text-3xl font-semibold text-zinc-900">更新记录</h3>
-            <p className="text-sm text-zinc-500 mt-1">记录每一次版本的迭代亮点与修复说明。</p>
-          </div>
-        </div>
-
-        <div className="space-y-8">
-          {releaseNotes.map((note, index) => (
-            <div key={note.version} className="relative pl-10">
-              <span className="absolute left-2 top-2 w-3 h-3 rounded-full bg-zinc-900" />
-              {index !== releaseNotes.length - 1 ? (
-                <span className="absolute left-[14px] top-5 bottom-[-28px] w-px bg-zinc-200" aria-hidden />
-              ) : null}
-              <div className="rounded-3xl border border-zinc-100 bg-white/90 p-5 shadow-sm">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div>
-                    <p className="text-[11px] uppercase tracking-[0.3em] text-zinc-400">{note.tag}</p>
-                    <h4 className="mt-1 text-2xl font-semibold text-zinc-900">{note.version}</h4>
-                  </div>
-                  <span className="text-sm text-zinc-500">{note.date}</span>
-                </div>
-                <ul className="mt-4 space-y-2 text-sm text-zinc-600">
-                  {note.changes.map((change) => (
-                    <li key={change} className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-zinc-400 mt-0.5" />
-                      <span>{change}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
-        </div>
+        <p className="mt-6 text-xs text-[color:var(--apple-muted)]">
+          Windows 仍为预览版，如需帮助请联系 support@deepstudent.ai。
+        </p>
       </section>
     </div>
   )
 }
 
-const FeatureSection = ({ icon, title, desc, align, children }) => {
-  const ref = useRef(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const node = ref.current
-    if (!node) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.unobserve(entry.target)
-        }
-      },
-      { threshold: 0.15 },
-    )
-
-    observer.observe(node)
-
-    return () => observer.disconnect()
-  }, [])
-
+const FeatureSection = ({ icon, title, desc, align, children, motionScale = 1 }) => {
+  const { ref, progress, isActive } = useParallaxProgress()
   const contentDirection = align === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'
+  const motionAmount = Math.max(0, motionScale)
+  const isStatic = motionAmount === 0
+  const shouldAnimate = !isStatic && isActive
+  const springProgress = useSpringValue(progress, { stiffness: 175, damping: 19 }, shouldAnimate)
+  const easedProgress = easeInOutCubic(progress)
+  const focus = Math.sin(easedProgress * Math.PI)
+  const juice = Math.pow(focus, 0.65)
+  const reveal = isStatic ? 1 : easeOutCubic(clamp((progress - 0.04) / 0.36, 0, 1))
+  const offset = (springProgress - 0.5) * motionAmount
+  const springDelta = (springProgress - progress) * motionAmount
+  const reboundShift = springDelta * 140
+  const reboundTilt = springDelta * 12
+  const reboundRotate = springDelta * 10
+  const reboundDepth = springDelta * 220
+  const textShift = offset * (220 + 30 * juice) + reboundShift * 0.28
+  const mediaShift = offset * (320 + 70 * juice) + reboundShift
+  const depthBase = (0.5 - springProgress) * 230 * motionAmount
+  const depthFocus = 0.4 + juice * 0.75
+  const mediaDepth = depthBase * depthFocus + 200 * motionAmount * depthFocus + reboundDepth * 0.45
+  const mediaTilt = (0.5 - springProgress) * 14 * motionAmount * depthFocus + reboundTilt
+  const mediaRotate = offset * 5 + reboundRotate
+  const mediaScale = 1 + juice * 0.06 * motionAmount + springDelta * 0.03
+  const opacity = isStatic ? 1 : 0.12 + reveal * 0.88
 
   return (
-    <section ref={ref} className="px-6 max-w-4xl mx-auto">
-      <div
-        className={`flex flex-col ${contentDirection} items-center gap-12 md:gap-24 transition-all duration-1000 ease-out ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'
-        }`}
-      >
-        <div className="flex-1 text-center md:text-left">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-zinc-100 text-zinc-900 mb-6">
+    <section ref={ref} className="px-4 sm:px-6 max-w-4xl mx-auto py-[2.618rem] sm:py-[4.236rem] md:py-[6.854rem]">
+      <div className={`flex flex-col ${contentDirection} items-center gap-[2.618rem] sm:gap-[4.236rem] md:gap-[6.854rem]`}>
+        <div
+          className="flex-1 text-center md:text-left"
+          style={{
+            transform: isStatic ? 'none' : `translate3d(0, ${textShift}px, 0)`,
+            opacity,
+            transformStyle: 'flat',
+            willChange: shouldAnimate ? 'transform, opacity' : 'auto',
+          }}
+        >
+          <div className="inline-flex items-center justify-center w-[2.618rem] h-[2.618rem] rounded-[1.618rem] bg-white/80 border border-white/70 shadow-[0_12px_25px_rgba(15,23,42,0.1)] text-[color:var(--apple-ink)] mb-[1.618rem]">
             {icon}
           </div>
-          <h2 className="text-3xl font-semibold text-zinc-900 mb-4 tracking-tight">{title}</h2>
-          <p className="text-zinc-500 leading-relaxed text-lg font-light">{desc}</p>
+          <h2 className="text-[1.618rem] sm:text-[2.618rem] font-semibold text-[color:var(--apple-ink)] mb-[1.618rem] tracking-[-0.02em] font-display">
+            {title}
+          </h2>
+          <p className="text-[color:var(--apple-muted)] leading-[1.618] text-[1rem] sm:text-[1.618rem] font-normal">{desc}</p>
         </div>
 
-        <div className="flex-1 w-full">{children}</div>
+        <div
+          className="flex-1 w-full"
+          style={{
+            transform: isStatic
+              ? 'none'
+              : `perspective(1200px) translate3d(0, ${mediaShift}px, ${mediaDepth}px) rotateX(${mediaTilt}deg) rotateZ(${mediaRotate}deg) scale3d(${mediaScale}, ${mediaScale}, ${mediaScale})`,
+            opacity,
+            transformStyle: shouldAnimate ? 'preserve-3d' : 'flat',
+            willChange: shouldAnimate ? 'transform, opacity' : 'auto',
+          }}
+        >
+          {children}
+        </div>
       </div>
     </section>
   )
 }
 
+const Flashcard = ({ motionScale = 1 }) => {
+  const [isFlipped, setIsFlipped] = useState(false)
+  const shouldAnimate = motionScale > 0
+
+  return (
+    <div
+      className={`bg-white/85 backdrop-blur-sm sm:backdrop-blur-xl border border-white/60 sm:border-white/70 shadow-[0_16px_40px_rgba(15,23,42,0.12)] sm:shadow-[0_30px_80px_rgba(15,23,42,0.15)] rounded-[1.618rem] p-[1.618rem] sm:p-[2.618rem] w-[17.944rem] aspect-[1/1.618] flex flex-col items-center text-center justify-center relative rotate-1 ${
+        shouldAnimate ? 'transition-transform duration-500' : ''
+      } hover:rotate-0 active:rotate-0`}
+    >
+      <div className="absolute top-[1.618rem] left-[1.618rem] w-[0.618rem] h-[0.618rem] bg-black rounded-full" />
+      <div
+        className={`absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-[1.618rem] ${
+          shouldAnimate ? 'transition-opacity duration-300' : ''
+        } ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        aria-hidden={!isFlipped}
+      >
+        <div className="text-2xl font-bold text-[color:var(--apple-ink)]">1 / x</div>
+      </div>
+      <div
+        className={`relative z-10 flex flex-col items-center ${
+          shouldAnimate ? 'transition-opacity duration-300' : ''
+        } ${isFlipped ? 'opacity-0' : 'opacity-100'}`}
+        aria-hidden={isFlipped}
+      >
+        <div className="text-xs font-bold text-[color:var(--apple-muted)] tracking-[0.2em] uppercase mb-[0.618rem]">
+          题目
+        </div>
+        <div className="text-[1.618rem] font-handwritten text-[color:var(--apple-ink)]">
+          ln(x) 的导数是什么？
+        </div>
+      </div>
+      <div className="w-full h-px bg-black/10 my-[2.618rem]" />
+      <button
+        type="button"
+        onClick={() => setIsFlipped((prev) => !prev)}
+        className="focus-ring relative z-20 text-xs text-[color:var(--apple-muted)] font-medium px-3 py-1.5 rounded-full border border-white/70 bg-white/80 hover:text-[color:var(--apple-ink)] hover:border-white/90 active:text-[color:var(--apple-ink)] active:border-white/90 transition-colors"
+        aria-pressed={isFlipped}
+      >
+        {isFlipped ? '返回题目' : '点击查看答案'}
+      </button>
+    </div>
+  )
+}
+
 const PolicyModal = ({ type, onClose }) => {
   const data = type ? policyContent[type] : null
+  const dialogRef = useRef(null)
+  const closeButtonRef = useRef(null)
+  const titleId = type ? `policy-${type}-title` : undefined
+  const descriptionId = type ? `policy-${type}-description` : undefined
 
   useEffect(() => {
     if (!type) return
+    const previousActiveElement = document.activeElement
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    const getFocusableElements = () => {
+      if (!dialogRef.current) return []
+      return Array.from(
+        dialogRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+      )
+    }
+
+    const focusInitial = () => {
+      if (closeButtonRef.current) {
+        closeButtonRef.current.focus()
+        return
+      }
+      const focusables = getFocusableElements()
+      if (focusables.length) focusables[0].focus()
+    }
+
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
+        event.preventDefault()
         onClose()
+        return
+      }
+      if (event.key !== 'Tab') return
+      const focusables = getFocusableElements()
+      if (!focusables.length) return
+      const first = focusables[0]
+      const last = focusables[focusables.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
       }
     }
 
+    focusInitial()
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = previousOverflow
+      if (previousActiveElement?.focus) previousActiveElement.focus()
+    }
   }, [type, onClose])
 
   if (!type || !data) return null
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center px-4" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
+    >
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm sm:backdrop-blur-md" onClick={onClose} />
       <div
-        className="relative w-full max-w-2xl max-h-[80vh] overflow-y-auto bg-white border border-zinc-100 rounded-3xl shadow-[0_25px_80px_rgba(0,0,0,0.2)] p-8"
+        ref={dialogRef}
+        className="relative w-full max-w-2xl max-h-[80vh] max-h-[80svh] overflow-y-auto bg-white/85 backdrop-blur-sm sm:backdrop-blur-xl border border-white/60 sm:border-white/70 rounded-[2.618rem] shadow-[0_30px_90px_rgba(15,23,42,0.2)] p-[1.618rem] sm:p-[2.618rem]"
         onClick={(event) => event.stopPropagation()}
+        tabIndex={-1}
       >
-        <div className="flex items-start justify-between gap-6 mb-8">
+        <div className="flex items-start justify-between gap-[2.618rem] mb-[2.618rem]">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-zinc-400 mb-3">{type === 'privacy' ? 'PRIVACY' : 'TERMS'}</p>
-            <h3 className="text-2xl font-semibold text-zinc-900 mb-3">{data.title}</h3>
-            <p className="text-sm text-zinc-500 leading-relaxed">{data.description}</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--apple-muted)] mb-3">
+              {type === 'privacy' ? '隐私' : '条款'}
+            </p>
+            <h3
+              id={titleId}
+              className="text-2xl font-semibold text-[color:var(--apple-ink)] mb-3 font-display"
+            >
+              {data.title}
+            </h3>
+            <p id={descriptionId} className="text-sm text-[color:var(--apple-muted)] leading-relaxed">
+              {data.description}
+            </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="flex-shrink-0 w-10 h-10 rounded-full border border-zinc-200 text-zinc-500 hover:text-zinc-900 hover:border-zinc-300 flex items-center justify-center transition-colors"
+            className="focus-ring flex-shrink-0 w-[2.618rem] h-[2.618rem] rounded-full border border-white/70 text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:border-white/90 flex items-center justify-center transition-colors bg-white/80"
             aria-label="关闭弹窗"
+            ref={closeButtonRef}
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
 
         <div className="space-y-6">
           {data.sections.map((section) => (
-            <div key={section.title} className="border border-zinc-100 rounded-2xl p-5 bg-zinc-50/60">
-              <h4 className="text-sm font-semibold text-zinc-900 mb-2">{section.title}</h4>
-              <p className="text-sm text-zinc-500 leading-relaxed">{section.body}</p>
+            <div key={section.title} className="border border-white/70 rounded-[1.618rem] p-[1.618rem] bg-white/70">
+              <h4 className="text-sm font-semibold text-[color:var(--apple-ink)] mb-2 font-display">
+                {section.title}
+              </h4>
+              <p className="text-sm text-[color:var(--apple-muted)] leading-relaxed">{section.body}</p>
               {section.points?.length ? (
-                <ul className="mt-3 space-y-1.5 text-sm text-zinc-500 list-disc list-inside">
+                <ul className="mt-3 space-y-1.5 text-sm text-[color:var(--apple-muted)] list-disc list-inside">
                   {section.points.map((point) => (
                     <li key={point}>{point}</li>
                   ))}
@@ -775,11 +1033,11 @@ const PolicyModal = ({ type, onClose }) => {
           ))}
         </div>
 
-        {data.footer ? <p className="mt-8 text-xs text-zinc-400 leading-relaxed">{data.footer}</p> : null}
+        {data.footer ? <p className="mt-8 text-xs text-[color:var(--apple-muted)] leading-relaxed">{data.footer}</p> : null}
         <button
           type="button"
           onClick={onClose}
-          className="mt-6 w-full py-3.5 rounded-2xl bg-zinc-900 text-white text-sm font-semibold hover:bg-black transition-colors"
+          className="focus-ring mt-6 w-full py-[0.95rem] sm:py-[1.15rem] md:py-[1.35rem] rounded-[1.618rem] bg-black text-white text-sm md:text-base font-semibold hover:bg-black/85 active:bg-black/90 transition-colors shadow-[0_18px_40px_rgba(0,0,0,0.25)]"
         >
           我已了解
         </button>
@@ -789,31 +1047,31 @@ const PolicyModal = ({ type, onClose }) => {
 }
 
 const Footer = ({ onOpenPolicy = () => {} }) => (
-  <footer className="border-t border-zinc-100 py-12 px-6 mt-24 bg-zinc-50/50">
+  <footer className="border-t border-white/60 py-12 px-4 sm:px-6 mt-24 bg-white/75 backdrop-blur-sm sm:backdrop-blur-xl">
     <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-      <div className="flex items-center gap-2 font-semibold text-zinc-900">
+      <div className="flex items-center gap-2 font-semibold text-[color:var(--apple-ink)]">
         <img src={logo} alt="DeepStudent logo" className="w-5 h-5" />
         DeepStudent
       </div>
 
-      <div className="flex gap-8 text-sm text-zinc-500 font-medium">
+      <div className="flex gap-8 text-sm text-[color:var(--apple-muted)] font-medium">
         <button
           type="button"
           onClick={() => onOpenPolicy('privacy')}
-          className="hover:text-zinc-900 transition-colors focus:outline-none"
+          className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
         >
-          Privacy
+          隐私
         </button>
         <button
           type="button"
           onClick={() => onOpenPolicy('terms')}
-          className="hover:text-zinc-900 transition-colors focus:outline-none"
+          className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
         >
-          Terms
+          条款
         </button>
         <a
           href="https://github.com/deepstudents/ai-mistake-manager"
-          className="hover:text-zinc-900 transition-colors"
+          className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -821,7 +1079,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => (
         </a>
       </div>
 
-      <div className="text-xs text-zinc-400">© 2025 DeepStudent Team.</div>
+      <div className="text-xs text-[color:var(--apple-muted)]">© 2025 DeepStudent Team.</div>
     </div>
   </footer>
 )
