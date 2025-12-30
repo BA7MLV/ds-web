@@ -18,13 +18,10 @@ import logo from './assets/deepstudent-logo.svg'
 const cardHeaderClass = 'flex items-center gap-3 mb-[1.618rem]'
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
+const clampSigned = (value, limit) => clamp(value, -limit, limit)
 const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3)
 const easeInOutCubic = (t) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
-const easeOutBack = (t, overshoot = 1.12) => {
-  const u = t - 1
-  return 1 + (overshoot + 1) * u * u * u + overshoot * u * u
-}
 
 const useSpringValue = (
   target,
@@ -620,12 +617,16 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   const isStatic = motionAmount === 0
   const shouldAnimate = motionScale > 0
   const heroProgress = clamp(scrollY / 360, 0, 1)
-  const heroSpring = useSpringValue(heroProgress, { stiffness: 150, damping: 18 }, shouldAnimate)
+  const heroSpringRaw = useSpringValue(
+    heroProgress,
+    { stiffness: 140, damping: 26, maxDelta: 0.035 },
+    shouldAnimate
+  )
+  const heroSpring = clamp(heroSpringRaw, 0, 1)
   const heroEase = easeOutCubic(heroSpring)
-  const heroBack = easeOutBack(heroSpring, 1.06)
-  const heroMotion = heroEase + (heroBack - heroEase) * 0.5
-  const heroJuice = Math.sin(clamp(heroSpring, 0, 1) * Math.PI)
-  const heroRebound = (heroSpring - heroProgress) * 160 * motionAmount
+  const heroJuice = Math.sin(heroSpring * Math.PI)
+  const heroDelta = clampSigned(heroSpringRaw - heroProgress, 0.06)
+  const heroRebound = heroDelta * 120 * motionAmount
   const heroFade = 1 - heroEase * 0.55 * motionAmount
   const layerStyle2d = (offsetY) => ({
     transform: isStatic ? 'none' : `translate3d(0, ${offsetY}px, 0)`,
@@ -633,10 +634,10 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
     transformStyle: 'flat',
     willChange: isStatic ? 'auto' : 'transform, opacity',
   })
-  const titleOffset = heroMotion * (170 + heroJuice * 20) * motionAmount + heroRebound * 0.12
-  const subtitleOffset = heroMotion * (210 + heroJuice * 24) * motionAmount + heroRebound * 0.2
-  const textOffset = heroMotion * (240 + heroJuice * 28) * motionAmount + heroRebound * 0.28
-  const ctaOffset = heroMotion * (270 + heroJuice * 32) * motionAmount + heroRebound * 0.36
+  const titleOffset = heroEase * (170 + heroJuice * 18) * motionAmount + heroRebound * 0.08
+  const subtitleOffset = heroEase * (210 + heroJuice * 20) * motionAmount + heroRebound * 0.14
+  const textOffset = heroEase * (240 + heroJuice * 22) * motionAmount + heroRebound * 0.2
+  const ctaOffset = heroEase * (270 + heroJuice * 24) * motionAmount + heroRebound * 0.26
 
   return (
     <header
@@ -807,25 +808,26 @@ const FeatureSection = ({ icon, title, desc, align, children, motionScale = 1 })
   const motionAmount = Math.max(0, motionScale)
   const isStatic = motionAmount === 0
   const shouldAnimate = !isStatic && isActive
-  const springProgress = useSpringValue(progress, { stiffness: 175, damping: 19 }, shouldAnimate)
-  const easedProgress = easeInOutCubic(progress)
+  const springRaw = useSpringValue(progress, { stiffness: 160, damping: 23, maxDelta: 0.04 }, shouldAnimate)
+  const springProgress = clamp(springRaw, 0, 1)
+  const easedProgress = easeInOutCubic(springProgress)
   const focus = Math.sin(easedProgress * Math.PI)
-  const juice = Math.pow(focus, 0.65)
+  const juice = Math.pow(focus, 0.7)
   const reveal = isStatic ? 1 : easeOutCubic(clamp((progress - 0.04) / 0.36, 0, 1))
   const offset = (springProgress - 0.5) * motionAmount
-  const springDelta = (springProgress - progress) * motionAmount
-  const reboundShift = springDelta * 140
-  const reboundTilt = springDelta * 12
-  const reboundRotate = springDelta * 10
-  const reboundDepth = springDelta * 220
-  const textShift = offset * (220 + 30 * juice) + reboundShift * 0.28
-  const mediaShift = offset * (320 + 70 * juice) + reboundShift
-  const depthBase = (0.5 - springProgress) * 230 * motionAmount
-  const depthFocus = 0.4 + juice * 0.75
-  const mediaDepth = depthBase * depthFocus + 200 * motionAmount * depthFocus + reboundDepth * 0.45
-  const mediaTilt = (0.5 - springProgress) * 14 * motionAmount * depthFocus + reboundTilt
-  const mediaRotate = offset * 5 + reboundRotate
-  const mediaScale = 1 + juice * 0.06 * motionAmount + springDelta * 0.03
+  const springDelta = clampSigned(springRaw - progress, 0.06) * motionAmount
+  const reboundShift = springDelta * 110
+  const reboundTilt = springDelta * 7
+  const reboundRotate = springDelta * 5
+  const reboundDepth = springDelta * 160
+  const textShift = offset * (210 + 24 * juice) + reboundShift * 0.2
+  const mediaShift = offset * (300 + 60 * juice) + reboundShift
+  const depthBase = (0.5 - springProgress) * 210 * motionAmount
+  const depthFocus = 0.45 + juice * 0.55
+  const mediaDepth = depthBase * depthFocus + 175 * motionAmount * depthFocus + reboundDepth * 0.3
+  const mediaTilt = (0.5 - springProgress) * 12 * motionAmount * depthFocus + reboundTilt
+  const mediaRotate = offset * 3.5 + reboundRotate
+  const mediaScale = 1 + juice * 0.045 * motionAmount + springDelta * 0.02
   const opacity = isStatic ? 1 : 0.12 + reveal * 0.88
 
   return (
