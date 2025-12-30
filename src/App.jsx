@@ -18,108 +18,10 @@ import logo from './assets/deepstudent-logo.svg'
 const cardHeaderClass = 'flex items-center gap-3 mb-[1.618rem]'
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
+const stretchProgress = (value, stretch = 1.3) => clamp((value - 0.5) / stretch + 0.5, 0, 1)
 const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3)
 const easeInOutCubic = (t) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
-
-const useSpringValue = (
-  target,
-  { stiffness = 170, damping = 20, precision = 0.0004, maxDelta = 0.05 } = {},
-  enabled = true
-) => {
-  const [value, setValue] = useState(target)
-  const valueRef = useRef(target)
-  const targetRef = useRef(target)
-  const velocityRef = useRef(0)
-  const rafRef = useRef(null)
-  const lastTimeRef = useRef(0)
-  const enabledRef = useRef(enabled)
-  const configRef = useRef({ stiffness, damping, precision, maxDelta })
-
-  useEffect(() => {
-    targetRef.current = target
-  }, [target])
-
-  useEffect(() => {
-    enabledRef.current = enabled
-  }, [enabled])
-
-  useEffect(() => {
-    configRef.current = { stiffness, damping, precision, maxDelta }
-  }, [stiffness, damping, precision, maxDelta])
-
-  const stop = useCallback((snap = false) => {
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current)
-      rafRef.current = null
-    }
-    lastTimeRef.current = 0
-    velocityRef.current = 0
-    if (snap) {
-      const nextValue = targetRef.current
-      valueRef.current = nextValue
-      setValue(nextValue)
-    }
-  }, [])
-
-  const step = useCallback((time) => {
-    if (!enabledRef.current) {
-      rafRef.current = null
-      return
-    }
-    if (!lastTimeRef.current) lastTimeRef.current = time
-    const { stiffness: k, damping: c, precision: p, maxDelta: maxStep } = configRef.current
-    const dt = Math.min(maxStep, (time - lastTimeRef.current) / 1000)
-    lastTimeRef.current = time
-
-    const targetValue = targetRef.current
-    let current = valueRef.current
-    let velocity = velocityRef.current
-
-    const displacement = targetValue - current
-    const spring = displacement * k
-    const damper = velocity * c
-
-    velocity += (spring - damper) * dt
-    current += velocity * dt
-
-    if (Math.abs(velocity) < p && Math.abs(displacement) < p) {
-      current = targetValue
-      velocity = 0
-      valueRef.current = current
-      velocityRef.current = velocity
-      setValue(current)
-      rafRef.current = null
-      lastTimeRef.current = 0
-      return
-    }
-
-    valueRef.current = current
-    velocityRef.current = velocity
-    setValue(current)
-    rafRef.current = requestAnimationFrame(step)
-  }, [])
-
-  const start = useCallback(() => {
-    if (rafRef.current) return
-    rafRef.current = requestAnimationFrame(step)
-  }, [step])
-
-  useEffect(() => {
-    if (!enabled) {
-      stop(true)
-      return
-    }
-    start()
-    return () => stop(false)
-  }, [enabled, start, stop])
-
-  useEffect(() => {
-    if (enabled && !rafRef.current) start()
-  }, [target, enabled, start])
-
-  return value
-}
 
 const scrollStore = (() => {
   let value = 0
@@ -615,15 +517,9 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   const motionAmount = Math.max(0, motionScale)
   const isStatic = motionAmount === 0
   const shouldAnimate = motionScale > 0
-  const heroProgress = clamp(scrollY / 360, 0, 1)
-  const heroSpringRaw = useSpringValue(
-    heroProgress,
-    { stiffness: 110, damping: 30, maxDelta: 0.04 },
-    shouldAnimate
-  )
-  const heroSpring = clamp(heroSpringRaw, 0, 1)
-  const heroEase = easeOutCubic(heroSpring)
-  const heroJuice = Math.sin(heroSpring * Math.PI)
+  const heroProgress = clamp(scrollY / 640, 0, 1)
+  const heroEase = easeInOutCubic(heroProgress)
+  const heroJuice = Math.sin(heroEase * Math.PI)
   const heroFade = 1 - heroEase * 0.55 * motionAmount
   const layerStyle2d = (offsetY) => ({
     transform: isStatic ? 'none' : `translate3d(0, ${offsetY}px, 0)`,
@@ -631,10 +527,10 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
     transformStyle: 'flat',
     willChange: isStatic ? 'auto' : 'transform, opacity',
   })
-  const titleOffset = heroEase * (160 + heroJuice * 14) * motionAmount
-  const subtitleOffset = heroEase * (200 + heroJuice * 16) * motionAmount
-  const textOffset = heroEase * (225 + heroJuice * 18) * motionAmount
-  const ctaOffset = heroEase * (250 + heroJuice * 20) * motionAmount
+  const titleOffset = heroEase * (150 + heroJuice * 12) * motionAmount
+  const subtitleOffset = heroEase * (190 + heroJuice * 14) * motionAmount
+  const textOffset = heroEase * (215 + heroJuice * 16) * motionAmount
+  const ctaOffset = heroEase * (240 + heroJuice * 18) * motionAmount
 
   return (
     <header
@@ -805,22 +701,21 @@ const FeatureSection = ({ icon, title, desc, align, children, motionScale = 1 })
   const motionAmount = Math.max(0, motionScale)
   const isStatic = motionAmount === 0
   const shouldAnimate = !isStatic && isActive
-  const springRaw = useSpringValue(progress, { stiffness: 120, damping: 28, maxDelta: 0.04 }, shouldAnimate)
-  const springProgress = clamp(springRaw, 0, 1)
-  const easedProgress = easeInOutCubic(springProgress)
+  const timelineProgress = stretchProgress(progress, 1.35)
+  const easedProgress = easeInOutCubic(timelineProgress)
   const focus = Math.sin(easedProgress * Math.PI)
-  const juice = Math.pow(focus, 0.72)
+  const juice = Math.pow(focus, 0.78)
   const reveal = isStatic ? 1 : easeOutCubic(clamp((progress - 0.04) / 0.36, 0, 1))
   const offset = (easedProgress - 0.5) * motionAmount
-  const textShift = offset * (200 + 18 * juice)
-  const mediaShift = offset * (280 + 50 * juice)
-  const depthBase = (0.5 - easedProgress) * 190 * motionAmount
-  const depthFocus = 0.5 + juice * 0.5
-  const mediaDepth = depthBase * depthFocus + 160 * motionAmount * depthFocus
-  const mediaTilt = (0.5 - easedProgress) * 10 * motionAmount * depthFocus
-  const mediaRotate = offset * 2
-  const mediaScale = 1 + juice * 0.035 * motionAmount
-  const opacity = isStatic ? 1 : 0.12 + reveal * 0.88
+  const textShift = offset * (190 + 16 * juice)
+  const mediaShift = offset * (260 + 45 * juice)
+  const depthBase = (0.5 - easedProgress) * 170 * motionAmount
+  const depthFocus = 0.55 + juice * 0.45
+  const mediaDepth = depthBase * depthFocus + 150 * motionAmount * depthFocus
+  const mediaTilt = (0.5 - easedProgress) * 9 * motionAmount * depthFocus
+  const mediaRotate = offset * 1.6
+  const mediaScale = 1 + juice * 0.03 * motionAmount
+  const opacity = isStatic ? 1 : 0.14 + reveal * 0.86
 
   return (
     <section ref={ref} className="px-4 sm:px-6 max-w-4xl mx-auto py-[2.618rem] sm:py-[4.236rem] md:py-[6.854rem]">
