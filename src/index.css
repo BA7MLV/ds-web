@@ -4,24 +4,53 @@
 
 @layer base {
   :root {
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
-      'Segoe UI', sans-serif;
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-    color: #09090b;
-    background-color: #fdfdfd;
+    font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei',
+      ui-sans-serif, sans-serif;
+    font-feature-settings: 'ss01', 'ss02', 'cv11';
+    color: #1d1d1f;
+    background-color: #f5f5f7;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    --apple-ink: #1d1d1f;
+    --apple-muted: #585c63;
+    --apple-line: rgba(0, 0, 0, 0.12);
+    --apple-soft-line: rgba(255, 255, 255, 0.7);
+    --apple-surface: #f5f5f7;
+    --apple-card: rgba(255, 255, 255, 0.82);
+    --apple-blue: #0071e3;
+    --apple-glow: rgba(0, 113, 227, 0.12);
   }
 
   body {
     margin: 0;
     min-height: 100vh;
-    background-color: #f8f8f8;
+    color: var(--apple-ink);
+    background-color: var(--apple-surface);
+    background-image: radial-gradient(
+        900px 600px at 20% -10%,
+        rgba(0, 113, 227, 0.16),
+        transparent 60%
+      ),
+      radial-gradient(700px 500px at 85% 0%, rgba(120, 120, 135, 0.18), transparent 55%),
+      linear-gradient(180deg, #f5f5f7 0%, #ffffff 40%, #f5f5f7 100%);
+    background-repeat: no-repeat;
   }
 
   * {
     box-sizing: border-box;
+  }
+
+  #root {
+    min-height: 100vh;
+    position: relative;
+    isolation: isolate;
+  }
+}
+
+@layer components {
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white/80;
   }
 }

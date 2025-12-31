@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import {
   ArrowLeft,
+  ArrowDown,
   Brain,
   Download,
   FileText,
@@ -227,6 +228,27 @@ const useResponsiveMotion = () => {
 }
 
 const policyContent = {
+  about: {
+    title: '关于 DeepStudent',
+    description: '一款面向学生与自学者的开源错题管理与复盘工具，帮助你建立长期可持续的学习系统。',
+    sections: [
+      {
+        title: '我们在做什么',
+        body: '将错题整理、知识图谱、复盘计划整合在一个工作流里，让复习更有方向感。',
+        points: ['从错题出发形成可执行的复习路径。', '把学习记录沉淀成可复用的知识资产。'],
+      },
+      {
+        title: '开源与共建',
+        body: 'DeepStudent 完全开源，欢迎提交 Issue 与 PR，共同改进学习体验。',
+        points: ['保持透明的开发节奏与版本发布记录。', '持续吸收社区的真实需求反馈。'],
+      },
+      {
+        title: '联系我们',
+        body: '合作或建议请发送邮件至 team@deepstudent.ai，我们会尽快回复。',
+      },
+    ],
+    footer: '感谢你与我们一起打造更聪明、更高效的学习方式。',
+  },
   privacy: {
     title: '隐私政策',
     description: '我们遵循最小化数据原则，确保每条学习记录都掌握在你手中。',
@@ -541,6 +563,13 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
     willChange: isStatic ? 'auto' : 'transform, opacity',
   }
 
+  const handleExplore = () => {
+    if (typeof document === 'undefined') return
+    const target = document.getElementById('features')
+    if (!target) return
+    target.scrollIntoView({ behavior: shouldAnimate ? 'smooth' : 'auto', block: 'start' })
+  }
+
   return (
     <header
       className="relative min-h-screen min-h-[100svh] px-4 sm:px-6 pt-[4.236rem] pb-[6.854rem] sm:pt-[6.854rem] sm:pb-[11.09rem] flex items-center overflow-hidden"
@@ -556,7 +585,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
         }`}
         style={shouldAnimate ? { animationDelay: '0.08s' } : undefined}
       >
-        <div className="flex flex-col items-start text-left max-w-xl">
+        <div className="flex flex-col items-center text-center sm:items-start sm:text-left max-w-xl">
           <h1
             className="text-[2.6rem] sm:text-[3.4rem] md:text-[4.9rem] font-semibold tracking-[-0.04em] text-[color:var(--apple-ink)] mb-[1.2rem] leading-[1.03] font-display"
             style={layerStyle2d(titleOffset)}
@@ -590,14 +619,18 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               <Download className="w-4 h-4" aria-hidden="true" />
               立即下载
             </button>
-            <button className="focus-ring flex-1 py-[0.95rem] px-[1.5rem] sm:py-[1.15rem] sm:px-[2rem] md:py-[1.35rem] md:px-[2.4rem] bg-white/80 text-[color:var(--apple-ink)] border border-white/70 rounded-full font-medium text-sm md:text-base hover:bg-white hover:border-white/80 active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-[0.618rem] shadow-[0_12px_30px_rgba(15,23,42,0.12)]">
-              <FileText className="w-4 h-4" aria-hidden="true" />
+            <button
+              type="button"
+              onClick={handleExplore}
+              className="focus-ring flex-1 py-[0.95rem] px-[1.5rem] sm:py-[1.15rem] sm:px-[2rem] md:py-[1.35rem] md:px-[2.4rem] bg-white/80 text-[color:var(--apple-ink)] border border-white/70 rounded-full font-medium text-sm md:text-base hover:bg-white hover:border-white/80 active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-[0.618rem] shadow-[0_12px_30px_rgba(15,23,42,0.12)]"
+            >
+              <ArrowDown className="w-4 h-4" aria-hidden="true" />
               看看介绍
             </button>
           </div>
         </div>
 
-        <div className="flex justify-center lg:justify-end">
+        <div className="hidden sm:flex justify-center lg:justify-end">
           <HeroPreview style={previewStyle} />
         </div>
       </div>
@@ -607,18 +640,18 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
 
 const HeroPreview = ({ style }) => (
   <div
-    className="relative w-full max-w-[24rem] sm:max-w-[32rem] lg:max-w-[36rem]"
+    className="relative w-[92vw] max-w-[21rem] sm:w-full sm:max-w-[32rem] lg:max-w-[36rem]"
     style={style}
     role="img"
     aria-label="DeepStudent 软件界面预览"
   >
-    <div className="absolute -inset-8 bg-[radial-gradient(circle_at_center,rgba(15,23,42,0.16),transparent_70%)] blur-3xl opacity-70" />
+    <div className="absolute -inset-6 sm:-inset-8 bg-[radial-gradient(circle_at_center,rgba(15,23,42,0.16),transparent_70%)] blur-2xl sm:blur-3xl opacity-50 sm:opacity-70" />
     <div className="absolute -left-10 top-16 hidden sm:block">
       <div className="h-[16rem] w-[11rem] rounded-[1.8rem] border border-white/60 bg-white/70 shadow-[0_22px_50px_rgba(15,23,42,0.12)]" />
     </div>
     <div className="relative p-[1px] rounded-[2.6rem] bg-gradient-to-br from-white via-white/70 to-white/30 shadow-[0_32px_90px_rgba(15,23,42,0.18)]">
       <div className="relative overflow-hidden rounded-[2.55rem] border border-white/70 bg-white/92 backdrop-blur-xl">
-        <div className="flex items-center gap-2 px-5 py-3 border-b border-white/70 bg-white/80">
+        <div className="flex items-center gap-2 px-4 sm:px-5 py-3 border-b border-white/70 bg-white/80">
           <div className="flex gap-1.5">
             <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
             <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
@@ -626,8 +659,8 @@ const HeroPreview = ({ style }) => (
           </div>
           <span className="text-xs font-medium text-[color:var(--apple-muted)] ml-2">DeepStudent</span>
         </div>
-        <div className="grid grid-cols-[8.5rem_1fr]" aria-hidden="true">
-          <div className="border-r border-white/70 bg-gradient-to-b from-white/90 to-white/70 px-4 py-4 space-y-4 text-xs text-[color:var(--apple-muted)]">
+        <div className="grid grid-cols-[6.5rem_1fr] sm:grid-cols-[8.5rem_1fr]" aria-hidden="true">
+          <div className="border-r border-white/70 bg-gradient-to-b from-white/90 to-white/70 px-3 sm:px-4 py-4 space-y-4 text-xs text-[color:var(--apple-muted)]">
             <div className="text-[0.6rem] uppercase tracking-[0.3em] text-[color:var(--apple-muted)]">导航</div>
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-[color:var(--apple-ink)] font-semibold">
@@ -648,7 +681,7 @@ const HeroPreview = ({ style }) => (
               </div>
             </div>
           </div>
-          <div className="p-5">
+          <div className="p-4 sm:p-5">
             <div className="flex items-center justify-between text-xs text-[color:var(--apple-muted)] mb-4">
               <span>学习仪表盘</span>
               <span className="rounded-full bg-black/5 px-2 py-1 text-[0.65rem] text-[color:var(--apple-ink)]">本周</span>
@@ -913,6 +946,7 @@ const PolicyModal = ({ type, onClose }) => {
   const closeButtonRef = useRef(null)
   const titleId = type ? `policy-${type}-title` : undefined
   const descriptionId = type ? `policy-${type}-description` : undefined
+  const categoryLabel = type === 'privacy' ? '隐私' : type === 'terms' ? '条款' : '关于'
 
   useEffect(() => {
     if (!type) return
@@ -987,7 +1021,7 @@ const PolicyModal = ({ type, onClose }) => {
         <div className="flex items-start justify-between gap-[2.618rem] mb-[2.618rem]">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--apple-muted)] mb-3">
-              {type === 'privacy' ? '隐私' : '条款'}
+              {categoryLabel}
             </p>
             <h3
               id={titleId}
@@ -1056,6 +1090,13 @@ const Footer = ({ onOpenPolicy = () => {} }) => (
           className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
         >
           隐私
+        </button>
+        <button
+          type="button"
+          onClick={() => onOpenPolicy('about')}
+          className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
+        >
+          关于
         </button>
         <button
           type="button"

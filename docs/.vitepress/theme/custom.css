@@ -1,0 +1,131 @@
+@import 'tailwindcss';
+
+/* :root {
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #ffffff, #FFCC00);
+} */
+/* 可折叠侧边栏组样式 */
+.sidebar-group.collapsible .sidebar-group-title {
+  cursor: pointer;
+  position: relative;
+  padding-right: 1.5rem;
+}
+
+.sidebar-group.collapsible .sidebar-group-title::after {
+  content: '';
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(0deg);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid currentColor;
+  transition: transform 0.2s ease;
+}
+
+.sidebar-group.collapsible.collapsed .sidebar-group-title::after {
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.sidebar-group.collapsible .sidebar-group-items {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.sidebar-group.collapsible.collapsed .sidebar-group-items {
+  max-height: 0;
+}
+
+/* 确保图标和文字对齐 */
+.sidebar-group-title {
+  display: flex;
+  align-items: center;
+}
+
+/* 深色模式适配 */
+.dark .sidebar-group.collapsible .sidebar-group-title::after {
+  border-top-color: rgba(255, 255, 255, 0.7);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .sidebar-group.collapsible .sidebar-group-title {
+    padding-right: 1.25rem;
+  }
+  
+  .sidebar-group.collapsible .sidebar-group-title::after {
+    right: 0.25rem;
+  }
+}
+
+
+
+
+/* medium-zoom 层级修复 */
+.medium-zoom-overlay { z-index: 9999; }
+.medium-zoom-image   { z-index: 10000; }
+
+/* 图片悬停 – 亮色模式 */
+.vp-doc img {
+  cursor: zoom-in;
+  transition: transform .2s ease;
+}
+.vp-doc img:hover { transform: scale(1.02); }
+
+/* 图片悬停 – 暗色模式：缩小放大并降低亮度，防止刺眼 */
+.dark .vp-doc img:hover {
+  transform: scale(1.01);
+  filter: brightness(.9);
+}
+
+
+/* 超链接样式 */
+.vp-doc a {
+  text-decoration: none; /* 去除下划线 */
+  display: inline-flex; /* 使用 flex 布局方便添加图标 */
+  align-items: center;
+}
+
+.vp-doc a::after {
+  content: url(""); /* 添加 SVG 图标 */
+  margin-left: 4px;
+}
+
+/* 首页英雄区域居中 */
+.VPHero {
+  text-align: center !important;
+}
+
+.VPHero .container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.VPHero .main {
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+
+.VPHero .name,
+.VPHero .text,
+.VPHero .tagline {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.VPHero .actions {
+  justify-content: center !important;
+}
+
+.VPHero .VPButton {
+  margin: 0 auto !important;
+}
+
+
+
