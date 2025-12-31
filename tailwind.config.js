@@ -4,8 +4,26 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Inter"', 'system-ui', 'ui-sans-serif', 'sans-serif'],
-        serif: ['"Playfair Display"', 'serif'],
+        sans: [
+          '"Noto Sans SC"',
+          '"PingFang SC"',
+          '"Microsoft YaHei"',
+          'ui-sans-serif',
+          'sans-serif',
+        ],
+        display: [
+          '"Noto Serif SC"',
+          '"Songti SC"',
+          'serif',
+        ],
+        serif: ['"Noto Serif SC"', '"Songti SC"', 'serif'],
+        handwritten: [
+          '"Ma Shan Zheng"',
+          '"Bradley Hand"',
+          '"Segoe Print"',
+          '"Apple Chancery"',
+          'cursive',
+        ],
       },
       keyframes: {
         'fade-in': {
@@ -20,4 +38,3 @@ export default {
   },
   plugins: [],
 }
-

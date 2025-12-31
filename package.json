@@ -3,13 +3,20 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "workspaces": [
+    "docs"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "dev:docs": "npm run dev -w docs",
+    "dev:all": "node scripts/dev-all.mjs",
+    "build": "vite build && npm run build -w docs && rm -rf dist/docs && cp -R docs/.vitepress/dist dist/docs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.9.1",
     "lucide-react": "^0.462.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
