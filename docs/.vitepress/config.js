@@ -41,13 +41,23 @@ export default withMermaid(defineConfig({
   base: '/docs/',
   head: [
     ['link', { rel: 'icon', href: '/docs/favicon.ico', sizes: 'any' }],
-    ['meta', { name: 'theme-color', content: '#FFCC00' }],
+    ['meta', { name: 'theme-color', content: '#f5f5f7' }],
     ['meta', { name: 'color-scheme', content: 'light dark' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' }],
+    [
+      'link',
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap',
+      },
+    ],
   ],
   themeConfig: {
     logo: '/logo-light.svg',
     nav: [
-      { text: '指南', link: '/' }
+      { text: '指南', link: '/' },
+      { text: '官网', link: '/../', target: '_self' }
     ],
     sidebar: {
       '/': guideSidebar,

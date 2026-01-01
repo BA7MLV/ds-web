@@ -523,6 +523,12 @@ const TopNav = ({ onDownload = () => {} }) => (
         <a href="#features" className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors">
           功能
         </a>
+        <a
+          href="/docs/"
+          className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
+        >
+          文档
+        </a>
         <button
           type="button"
           onClick={onDownload}
@@ -597,7 +603,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
             className="text-[1.2rem] sm:text-[1.6rem] md:text-[2.1rem] font-display text-[color:var(--apple-ink)] mb-[2.2rem] max-w-[32rem] leading-[1.34]"
             style={layerStyle2d(subtitleOffset)}
           >
-            免费开源的 AI 错题管理解决方案
+            AI 原生学习解决方案
           </h2>
 
           <p
@@ -923,7 +929,7 @@ const Flashcard = ({ motionScale = 1 }) => {
         <div className="text-xs font-bold text-[color:var(--apple-muted)] tracking-[0.2em] uppercase mb-[0.618rem]">
           题目
         </div>
-        <div className="text-[1.618rem] font-handwritten text-[color:var(--apple-ink)]">
+        <div className="text-[1.618rem] font-sans text-[color:var(--apple-ink)]">
           ln(x) 的导数是什么？
         </div>
       </div>
