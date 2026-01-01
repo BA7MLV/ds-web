@@ -1,5 +1,5 @@
 # DeepStudent
-![主图](docs/public/deepstudent-head.png)
+![主图](/deepstudent-head.png)
 DeepStudent 是一个基于人工智能技术的个性化学习平台，旨在为学生提供智能化、个性化的学习体验。该平台通过深度学习算法和自然语言处理技术，帮助学生更高效地学习和掌握知识。
 
 ## 功能特性
