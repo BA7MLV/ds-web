@@ -152,5 +152,5 @@ DeepStudent 通过人工智能技术革新传统错题整理方式，使用户�
    - 基于 AGPL-3.0 License 可二次开发，灵活适配不同教学场景
 
 ### 获取帮助
-- 📖 [查看已知问题](./A&Q.md)
+- 📖 [查看已知问题](guide/A-Q.md)
 - 💬 [加入用户群](https://qm.qq.com/q/1lTUkKSaB6)

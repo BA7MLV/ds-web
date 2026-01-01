@@ -1,3 +1,4 @@
+````markdown
 # A&Q
 ::: warning macOS 安装显示显示“已损坏，无法打开。 您应该将它移到废纸篓”
 :::
@@ -17,3 +18,4 @@ sudo xattr -r -d com.apple.quarantine /Applications/WebStrom.app
 
 2.回到终端窗口按回车，输入系统密码回车即可。
 3.打开软件。
+````

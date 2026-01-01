@@ -24,7 +24,7 @@ const guideSidebar = [
     text: '问题&反馈',
     collapsed: false,
     items: [
-      { text: '常见问题', link: '/guide/A&Q.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
+      { text: '常见问题', link: '/guide/A-Q.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
       { text: '关于我们', link: '/guide/about.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' }
     ]
   }
