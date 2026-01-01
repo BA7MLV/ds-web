@@ -15,13 +15,13 @@ DeepStudent 是一个基于人工智能技术的个性化学习平台，旨在�
 
 ### 安装
 
-请参考[安装指南](docs/guide/download.md)了解如何安装和配置DeepStudent。
+请参考[安装指南](guide/download.md)了解如何安装和配置DeepStudent。
 
 ### 入门指南
 
-- [快速入门](docs/guide/start.md)
-- [功能介绍](docs/guide/function.md)
-- [使用说明](docs/guide/irec.md)
+- [快速入门](guide/start.md)
+- [功能介绍](guide/function.md)
+- [使用说明](guide/irec.md)
 
 
 
