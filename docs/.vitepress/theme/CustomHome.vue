@@ -7,15 +7,15 @@
           <h1 class="hero-title">
             <span class="gradient-text">DeepStudent</span>
           </h1>
-          <p class="hero-subtitle">AI驱动的错题管理</p>
-          <p class="hero-tagline">开源、智能、高效的学习伙伴</p>
+          <p class="hero-subtitle">AI 原生学习解决方案</p>
+          <p class="hero-tagline">让学习更高效，让知识更牢固</p>
           <div class="hero-actions">
             <a href="./guide/download.html" class="btn btn-primary">立即下载</a>
-            <a href="./guide/index.html" class="btn btn-secondary">查看文档</a>
+            <a href="./guide/index.html" class="btn btn-secondary">看看介绍</a>
           </div>
         </div>
         <div class="hero-image">
-          <img src="/deepstudent-head.png" alt="DeepStudent" />
+          <img src="/deepstudent-head.png" alt="DeepStudent 软件截图" />
         </div>
       </div>
     </section>
@@ -94,19 +94,20 @@ const features = [
 }
 
 .hero {
-  padding: 120px 0 90px;
+  padding: 100px 0 80px;
   position: relative;
 }
 
 .hero .container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 72px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 48px;
 }
 
 .hero-content {
-  text-align: left;
+  text-align: center;
+  max-width: 680px;
 }
 
 .hero-title {
@@ -137,20 +138,27 @@ const features = [
   line-height: 1.6;
 }
 
+.hero-image {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: center;
+}
+
 .hero-image img {
   width: 100%;
-  max-width: 520px;
   height: auto;
-  border-radius: 24px;
+  border-radius: 16px;
   border: 1px solid var(--ds-line);
   background: var(--ds-card);
-  box-shadow: var(--vp-shadow-2);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }
 
 .hero-actions {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .btn {
@@ -298,27 +306,41 @@ const features = [
 
 @media (max-width: 900px) {
   .hero .container {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    text-align: center;
-  }
-
-  .hero-content {
-    text-align: center;
+    gap: 36px;
   }
 
   .hero-title {
-    font-size: 48px;
+    font-size: 52px;
   }
 
   .hero-subtitle {
     font-size: 26px;
   }
+
+  .hero-image {
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 640px) {
   .hero {
-    padding: 88px 0 64px;
+    padding: 80px 0 56px;
+  }
+
+  .hero .container {
+    gap: 32px;
+  }
+
+  .hero-title {
+    font-size: 42px;
+  }
+
+  .hero-subtitle {
+    font-size: 22px;
+  }
+
+  .hero-tagline {
+    font-size: 16px;
   }
 
   .features {
