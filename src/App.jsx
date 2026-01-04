@@ -578,7 +578,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
 
   return (
     <header
-      className="relative min-h-screen min-h-[100svh] px-4 sm:px-6 pt-[4.236rem] pb-[6.854rem] sm:pt-[6.854rem] sm:pb-[11.09rem] flex items-center overflow-hidden"
+      className="relative min-h-screen min-h-[100svh] px-4 sm:px-6 pt-[4.236rem] pb-[4.236rem] sm:pt-[5.854rem] sm:pb-[6.854rem] flex items-center overflow-hidden"
     >
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
         <div className="absolute -top-40 left-1/2 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.35),transparent_65%)] blur-3xl opacity-70" />
@@ -586,12 +586,12 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
         <div className="absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_0%,rgba(255,255,255,0.9),transparent_70%)]" />
       </div>
       <div
-        className={`relative z-10 w-full max-w-7xl mx-auto grid items-center gap-[3.618rem] lg:grid-cols-[1.05fr_0.95fr] ${
+        className={`relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center gap-[3rem] sm:gap-[3.618rem] ${
           shouldAnimate ? 'animate-fade-in' : ''
         }`}
         style={shouldAnimate ? { animationDelay: '0.08s' } : undefined}
       >
-        <div className="flex flex-col items-center text-center sm:items-start sm:text-left max-w-xl">
+        <div className="flex flex-col items-center text-center max-w-2xl">
           <h1
             className="text-[2.6rem] sm:text-[3.4rem] md:text-[4.9rem] font-semibold tracking-[-0.04em] text-[color:var(--apple-ink)] mb-[1.2rem] leading-[1.03] font-display"
             style={layerStyle2d(titleOffset)}
@@ -600,21 +600,21 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
           </h1>
 
           <h2
-            className="text-[1.2rem] sm:text-[1.6rem] md:text-[2.1rem] font-display text-[color:var(--apple-ink)] mb-[2.2rem] max-w-[32rem] leading-[1.34]"
+            className="text-[1.2rem] sm:text-[1.6rem] md:text-[2.1rem] font-display text-[color:var(--apple-ink)] mb-[1rem] sm:mb-[1.5rem] max-w-[32rem] leading-[1.34]"
             style={layerStyle2d(subtitleOffset)}
           >
             AI 原生学习解决方案
           </h2>
 
           <p
-            className="text-[1rem] sm:text-[1.12rem] text-[color:var(--apple-muted)] max-w-lg mb-[3.6rem] leading-[1.7] font-display"
+            className="text-[1rem] sm:text-[1.12rem] text-[color:var(--apple-muted)] max-w-lg mb-[2rem] sm:mb-[2.618rem] leading-[1.7] font-display"
             style={layerStyle2d(textOffset)}
           >
             让学习更高效，让知识更牢固
           </p>
 
           <div
-            className="flex flex-col sm:flex-row gap-4 w-full max-w-[17.944rem] sm:max-w-[30rem]"
+            className="flex flex-col sm:flex-row gap-4 w-full max-w-[17.944rem] sm:max-w-[26rem] justify-center"
             style={layerStyle2d(ctaOffset)}
           >
             <button
@@ -636,7 +636,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
           </div>
         </div>
 
-        <div className="hidden sm:flex justify-center lg:justify-end">
+        <div className="w-full flex justify-center">
           <HeroPreview style={previewStyle} />
         </div>
       </div>
