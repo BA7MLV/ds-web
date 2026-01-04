@@ -25,6 +25,12 @@ const easeInOutCubic = (t) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 const buildHash = import.meta.env.VITE_BUILD_HASH || 'dev'
 
+const getIsDownloadFromLocation = () => {
+  if (typeof window === 'undefined') return false
+  const params = new URLSearchParams(window.location.search)
+  return params.get('view') === 'download'
+}
+
 const scrollStore = (() => {
   let value = 0
   let rafId = null
@@ -297,13 +303,42 @@ const policyContent = {
 
 const App = () => {
   const [activePolicy, setActivePolicy] = useState(null)
-  const [isDownloadPage, setIsDownloadPage] = useState(false)
+  const [isDownloadPage, setIsDownloadPage] = useState(() => getIsDownloadFromLocation())
   const { motionScale } = useResponsiveMotion()
   const homeScrollRef = useRef(0)
   const downloadScrollRef = useRef(0)
+  const syncHistoryWithView = useCallback(
+    (nextIsDownload, { replace = false } = {}) => {
+      if (typeof window === 'undefined') return
+      const url = new URL(window.location.href)
+      const current = url.searchParams.get('view') === 'download'
+      if (nextIsDownload) {
+        url.searchParams.set('view', 'download')
+      } else {
+        url.searchParams.delete('view')
+      }
+      const method = replace || current === nextIsDownload ? 'replaceState' : 'pushState'
+      window.history[method]({}, '', url)
+    },
+    []
+  )
 
   const handlePolicyOpen = (type) => setActivePolicy(type)
   const handlePolicyClose = () => setActivePolicy(null)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined
+    const handlePopState = () => {
+      setIsDownloadPage(getIsDownloadFromLocation())
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    syncHistoryWithView(isDownloadPage, { replace: true })
+  }, [isDownloadPage, syncHistoryWithView])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -316,10 +351,12 @@ const App = () => {
   const handleDownloadOpen = () => {
     homeScrollRef.current = window.scrollY || 0
     setIsDownloadPage(true)
+    syncHistoryWithView(true)
   }
   const handleDownloadClose = () => {
     downloadScrollRef.current = window.scrollY || 0
     setIsDownloadPage(false)
+    syncHistoryWithView(false)
   }
 
   return (
