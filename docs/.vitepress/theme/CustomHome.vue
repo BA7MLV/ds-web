@@ -115,7 +115,6 @@ const features = [
   font-weight: 600;
   margin: 0;
   line-height: 1.05;
-  letter-spacing: -0.04em;
 }
 
 .gradient-text {
@@ -151,7 +150,6 @@ const features = [
   border-radius: 16px;
   border: 1px solid var(--ds-line);
   background: var(--ds-card);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }
 
 .hero-actions {
@@ -170,19 +168,17 @@ const features = [
   border-radius: 999px;
   font-size: 15px;
   font-weight: 600;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.15s ease-out;
   border: 1px solid transparent;
 }
 
 .btn-primary {
   background: var(--vp-button-brand-bg);
   color: var(--vp-button-brand-text);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
 }
 
 .btn-primary:hover {
-  background: var(--vp-button-brand-hover-bg);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .btn-primary:active {
@@ -193,12 +189,10 @@ const features = [
   background: var(--ds-card);
   color: var(--ds-ink);
   border-color: var(--ds-line);
-  box-shadow: var(--vp-shadow-1);
 }
 
 .btn-secondary:hover {
-  background: var(--ds-card-strong);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .features {
@@ -225,14 +219,11 @@ const features = [
   border: 1px solid var(--ds-line);
   border-radius: 24px;
   padding: 28px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-  box-shadow: var(--vp-shadow-1);
+  transition: transform 0.15s ease-out;
 }
 
 .feature-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--vp-shadow-2);
-  border-color: rgba(0, 113, 227, 0.2);
+  transform: translateY(-2px);
 }
 
 .feature-icon {
