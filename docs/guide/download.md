@@ -22,11 +22,6 @@ editLink: false
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    transition: box-shadow 0.2s;
-  }
-
-  .download-box:hover {
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
   }
 
   .download-box h3 {
@@ -42,20 +37,10 @@ editLink: false
     font-weight: 500;
     color: var(--vp-c-text-1);
     text-decoration: none;
-    transition: color 0.2s, transform 0.2s;
-  }
-
-  .download-link svg {
-    transition: transform 0.2s;
   }
 
   .download-link:hover {
     color: var(--vp-c-brand-1);
-  }
-
-  .download-link:hover svg {
-    transform: translateX(4px) rotate(90deg);
-    cursor: pointer;
   }
 
   .changelog-container {
