@@ -23,7 +23,7 @@ graph TD
     F4 --> H
     
     %% ====== 独立功能模块 ======
-    classDef moduleStyle fill:none,stroke:#FFCC00,stroke-width:3px,stroke-dasharray:5,5,color:#FFCC00
+    classDef moduleStyle fill:none,stroke:#0071e3,stroke-width:3px,stroke-dasharray:5,5,color:#0071e3
     subgraph 独立功能
         G[智能制卡]
     end
@@ -31,8 +31,8 @@ graph TD
 
     %% ====== 样式定义 ======
     classDef default fill:#2C3E50,stroke:#2C3E50,color:#FFFFFF,stroke-width:2px,font-weight:bold
-    classDef highlight fill:#FFCC00,stroke:#FFCC00,color:#2C3E50,stroke-width:2px,font-weight:bold
-    classDef diamond fill:#2C3E50,stroke:#FFCC00,color:#FFFFFF,stroke-width:2px,shape:diamond
+    classDef highlight fill:#0071e3,stroke:#0071e3,color:#FFFFFF,stroke-width:2px,font-weight:bold
+    classDef diamond fill:#2C3E50,stroke:#0071e3,color:#FFFFFF,stroke-width:2px,shape:diamond
     
     %% ====== 应用样式 ======
     class H highlight
