@@ -638,7 +638,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[color:var(--apple-surface)] opacity-60" />
       </div>
       <div
-        className={`relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center gap-[3rem] sm:gap-[3.618rem] ${
+        className={`relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center gap-16 sm:gap-20 ${
           shouldAnimate ? 'animate-fade-in' : ''
         }`}
         style={shouldAnimate ? { animationDelay: '0.08s' } : undefined}
@@ -727,8 +727,10 @@ const HeroPreview = ({ style }) => {
   const imageAlt = isZh
     ? `DeepStudent ${activeItem.labelZh} 界面预览（占位图）`
     : `DeepStudent ${activeItem.labelEn} preview (placeholder)`
+  const previewRef = useRef(null)
   const segmentedControlRef = useRef(null)
   const segmentedSliderRef = useRef(null)
+  const autoplayTimerRef = useRef(null)
 
   const updateSegmentedSlider = useCallback(() => {
     const controlEl = segmentedControlRef.current
@@ -755,15 +757,56 @@ const HeroPreview = ({ style }) => {
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const intervalId = window.setInterval(() => {
-      setActiveId((prev) => {
-        const currentIndex = heroPreviewItems.findIndex((item) => item.id === prev)
-        const safeIndex = currentIndex >= 0 ? currentIndex : 0
-        const nextIndex = (safeIndex + 1) % heroPreviewItems.length
-        return heroPreviewItems[nextIndex].id
-      })
-    }, 20000)
-    return () => window.clearInterval(intervalId)
+
+    const mediaQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)')
+    const shouldReduceMotion = Boolean(mediaQuery?.matches)
+
+    const stop = () => {
+      if (!autoplayTimerRef.current) return
+      window.clearInterval(autoplayTimerRef.current)
+      autoplayTimerRef.current = null
+    }
+
+    const start = () => {
+      if (shouldReduceMotion) return
+      stop()
+      autoplayTimerRef.current = window.setInterval(() => {
+        setActiveId((prev) => {
+          const currentIndex = heroPreviewItems.findIndex((item) => item.id === prev)
+          const safeIndex = currentIndex >= 0 ? currentIndex : 0
+          const nextIndex = (safeIndex + 1) % heroPreviewItems.length
+          return heroPreviewItems[nextIndex].id
+        })
+      }, 20000)
+    }
+
+    // 默认开启动画，但在离屏时暂停（减少无意义的循环定时器）。
+    let isVisible = true
+    const el = previewRef.current
+    if (el) {
+      const rect = el.getBoundingClientRect()
+      isVisible = rect.bottom > 0 && rect.top < window.innerHeight
+    }
+    if (isVisible) start()
+
+    let observer
+    if (typeof IntersectionObserver !== 'undefined' && el) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0]
+          const nextVisible = Boolean(entry?.isIntersecting)
+          if (nextVisible) start()
+          else stop()
+        },
+        { threshold: 0.2 },
+      )
+      observer.observe(el)
+    }
+
+    return () => {
+      stop()
+      observer?.disconnect()
+    }
   }, [])
 
   useLayoutEffect(() => {
@@ -777,12 +820,13 @@ const HeroPreview = ({ style }) => {
 
   return (
     <div
+      ref={previewRef}
       className="relative w-full max-w-[24rem] sm:max-w-[52rem] lg:max-w-[60rem]"
       style={style}
     >
       <div className="relative">
-        <div className="relative rounded-[2.2rem] shadow-[var(--apple-shadow-xl)]">
-          <div className="relative overflow-hidden rounded-[2.2rem]">
+        <div className="relative rounded-[1.75rem] shadow-[var(--apple-shadow-xl)]">
+          <div className="relative overflow-hidden rounded-[1.75rem]">
             <div className="relative aspect-[16/10] bg-[color:var(--apple-card-strong)]">
               <img
                 src={activeItem.src}
@@ -794,7 +838,7 @@ const HeroPreview = ({ style }) => {
             </div>
           </div>
 
-          <div className="absolute inset-x-0 top-0 flex justify-center -translate-y-1/2 px-3 sm:px-4 z-10">
+          <div className="absolute inset-x-0 top-0 flex justify-center -translate-y-3/4 px-3 sm:px-4 z-10">
             <div
               ref={segmentedControlRef}
               className="segmented-control"
