@@ -31,6 +31,7 @@ const guideSidebar = [
 ]
 
 export default withMermaid(defineConfig({
+  appearance: true,
   markdown: {
     image: {
       lazyLoading: true
@@ -41,7 +42,8 @@ export default withMermaid(defineConfig({
   base: '/docs/',
   head: [
     ['link', { rel: 'icon', href: '/docs/favicon.ico', sizes: 'any' }],
-    ['meta', { name: 'theme-color', content: '#f5f5f7' }],
+    ['meta', { name: 'theme-color', content: '#f5f5f7', media: '(prefers-color-scheme: light)' }],
+    ['meta', { name: 'theme-color', content: '#0a0a0c', media: '(prefers-color-scheme: dark)' }],
     ['meta', { name: 'color-scheme', content: 'light dark' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' }],
@@ -55,6 +57,7 @@ export default withMermaid(defineConfig({
   ],
   themeConfig: {
     logo: '/logo-light.svg',
+    siteTitle: '', // 有 logo 时不显示标题文本
     nav: [
       { text: '指南', link: '/' },
       { text: '官网', link: '/../', target: '_self' }

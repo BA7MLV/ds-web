@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import {
   ArrowLeft,
   ArrowDown,
@@ -15,6 +15,9 @@ import {
   Zap,
 } from 'lucide-react'
 import logo from './assets/deepstudent-logo.svg'
+import logoDark from './assets/deepstudent-logo-dark.svg'
+import { ThemeToggle, useTheme } from './components/theme-toggle'
+import { LocaleToggle, useLocale } from './components/locale-toggle'
 
 const cardHeaderClass = 'flex items-center gap-3 mb-[1.618rem]'
 
@@ -383,9 +386,9 @@ const App = () => {
                 align="left"
                 motionScale={motionScale}
               >
-            <div className="bg-white/85 backdrop-blur-sm sm:backdrop-blur-xl p-[1.618rem] sm:p-[2.618rem] rounded-[1.618rem] border border-white/60 sm:border-white/70 shadow-[0_16px_40px_rgba(15,23,42,0.1)] sm:shadow-[0_25px_70px_rgba(15,23,42,0.12)] max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto transform transition-transform hover:scale-[1.02] active:scale-[1.01] duration-500">
+            <div className="bg-[color:var(--apple-card)] backdrop-blur-xl p-[1.618rem] sm:p-[2.618rem] rounded-[1.618rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-md)] max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto transform transition-transform hover:scale-[1.02] active:scale-[1.01] duration-500">
               <div className={cardHeaderClass}>
-                <div className="w-8 h-8 rounded-full bg-black/5 ring-1 ring-white/60 flex items-center justify-center text-[color:var(--apple-ink)]">
+                <div className="w-8 h-8 rounded-full bg-[color:var(--apple-card-strong)] ring-1 ring-[color:var(--apple-line)] flex items-center justify-center text-[color:var(--apple-ink)]">
                   <Sparkles className="w-4 h-4" aria-hidden="true" />
                 </div>
                 <div>
@@ -395,7 +398,7 @@ const App = () => {
               </div>
 
               <div className="space-y-3">
-                <div className="h-2 w-full bg-black/5 rounded-full overflow-hidden">
+                <div className="h-2 w-full bg-[color:var(--apple-card-strong)] rounded-full overflow-hidden">
                   <div
                     className={`h-full bg-[color:var(--apple-blue)] w-3/4 rounded-full ${
                       motionScale > 0 ? 'animate-pulse' : ''
@@ -406,10 +409,10 @@ const App = () => {
                   <span>知识点掌握</span>
                   <span className="text-[color:var(--apple-ink)]">72%</span>
                 </div>
-                <div className="mt-[2.618rem] p-[1.618rem] bg-white/70 rounded-[1rem] border border-white/70 text-sm text-[color:var(--apple-muted)] leading-relaxed">
+                <div className="mt-[2.618rem] p-[1.618rem] bg-[color:var(--apple-card-strong)] rounded-[1rem] border border-[color:var(--apple-line)] text-sm text-[color:var(--apple-muted)] leading-relaxed">
                   <span className="font-semibold text-[color:var(--apple-ink)] block mb-1">建议：</span>
                   重新复习{' '}
-                  <span className="text-[color:var(--apple-ink)] underline decoration-black/20 underline-offset-2">
+                  <span className="text-[color:var(--apple-ink)] underline decoration-[color:var(--apple-line)] underline-offset-2">
                     导数定义
                   </span>{' '}
                   相关章节，并加强基础计算训练。
@@ -426,9 +429,9 @@ const App = () => {
                 motionScale={motionScale}
               >
             <div className="relative max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto">
-              <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 to-white/80 z-20 pointer-events-none" />
-              <div className="bg-white/85 backdrop-blur-sm sm:backdrop-blur-xl rounded-[1.618rem] border border-white/60 sm:border-white/70 shadow-[0_16px_40px_rgba(15,23,42,0.1)] sm:shadow-[0_25px_70px_rgba(15,23,42,0.12)] overflow-hidden">
-                <div className="px-[1.618rem] py-[1rem] border-b border-white/60 bg-white/80 backdrop-blur-sm sm:backdrop-blur flex items-center gap-[0.618rem]">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[color:var(--apple-surface)] z-20 pointer-events-none" />
+              <div className="bg-[color:var(--apple-card)] backdrop-blur-xl rounded-[1.618rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-md)] overflow-hidden">
+                <div className="px-[1.618rem] py-[1rem] border-b border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] backdrop-blur flex items-center gap-[0.618rem]">
                   <div className="flex gap-1.5">
                     <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
                     <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
@@ -444,14 +447,14 @@ const App = () => {
                   ].map((item) => (
                     <div
                       key={item.title}
-                      className="flex items-center justify-between p-[1rem] hover:bg-black/5 active:bg-black/5 rounded-[1rem] transition-colors group cursor-default"
+                      className="flex items-center justify-between p-[1rem] hover:bg-[color:var(--apple-card-hover)] active:bg-[color:var(--apple-card-hover)] rounded-[1rem] transition-colors group cursor-default"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-10 bg-black/5 rounded border border-white/60 flex items-center justify-center">
+                        <div className="w-8 h-10 bg-[color:var(--apple-card-strong)] rounded border border-[color:var(--apple-line)] flex items-center justify-center">
                           <FileText className="w-4 h-4 text-[color:var(--apple-muted)]" aria-hidden="true" />
                         </div>
                         <div>
-                          <div className="text-sm font-medium text-[color:var(--apple-ink)] group-hover:text-black transition-colors">
+                          <div className="text-sm font-medium text-[color:var(--apple-ink)] group-hover:text-[color:var(--apple-blue)] transition-colors">
                             {item.title}
                           </div>
                           <div className="text-xs text-[color:var(--apple-muted)] uppercase tracking-wider mt-0.5">
@@ -474,7 +477,7 @@ const App = () => {
                 align="left"
                 motionScale={motionScale}
               >
-            <div className="bg-gradient-to-br from-[#15171c] via-[#0f1115] to-[#0b0d10] text-white p-[1.618rem] sm:p-[2.618rem] rounded-[1.618rem] shadow-[0_20px_50px_rgba(15,23,42,0.4)] sm:shadow-[0_35px_80px_rgba(15,23,42,0.45)] border border-white/10 max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto relative overflow-hidden">
+            <div className="bg-gradient-to-br from-[#18181b] via-[#111114] to-[#0c0c0e] dark:from-[#1c1c20] dark:via-[#151518] dark:to-[#0f0f12] text-white p-[1.618rem] sm:p-[2.618rem] rounded-[1.618rem] shadow-[var(--apple-shadow-lg)] border border-white/10 max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto relative overflow-hidden">
               <div className="absolute top-0 right-0 p-[1.618rem] opacity-30">
                 <Target className="w-24 h-24" aria-hidden="true" />
               </div>
@@ -516,19 +519,19 @@ const App = () => {
                 align="left"
                 motionScale={motionScale}
               >
-            <div className="bg-white/85 backdrop-blur-sm sm:backdrop-blur-xl p-[1.618rem] rounded-[1.618rem] border border-white/60 sm:border-white/70 shadow-[0_16px_40px_rgba(15,23,42,0.1)] sm:shadow-[0_25px_70px_rgba(15,23,42,0.12)] max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto">
+            <div className="bg-[color:var(--apple-card)] backdrop-blur-xl p-[1.618rem] rounded-[1.618rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-md)] max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto">
               <div className="space-y-[1.618rem]">
                 <div className="flex gap-[1rem] flex-row-reverse">
-                  <div className="w-8 h-8 rounded-full bg-black flex-shrink-0" />
-                  <div className="bg-black text-white px-[1.618rem] py-[0.618rem] rounded-[1.618rem] rounded-tr-[0.618rem] text-sm">
+                  <div className="w-8 h-8 rounded-full bg-[color:var(--apple-btn-primary-bg)] flex-shrink-0" />
+                  <div className="bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] px-[1.618rem] py-[0.618rem] rounded-[1.618rem] rounded-tr-[0.618rem] text-sm">
                     这道题选 C 的原因是什么？
                   </div>
                 </div>
                 <div className="flex gap-[1rem]">
-                  <div className="w-8 h-8 rounded-full bg-white/90 border border-white/70 flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] flex items-center justify-center flex-shrink-0">
                     <Brain className="w-4 h-4 text-[color:var(--apple-ink)]" aria-hidden="true" />
                   </div>
-                  <div className="bg-white/90 border border-white/70 text-[color:var(--apple-ink)] px-[1.618rem] py-[0.618rem] rounded-[1.618rem] rounded-tl-[0.618rem] text-sm shadow-sm">
+                  <div className="bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] text-[color:var(--apple-ink)] px-[1.618rem] py-[0.618rem] rounded-[1.618rem] rounded-tl-[0.618rem] text-sm shadow-sm">
                     <p className="mb-2 font-semibold text-xs text-[color:var(--apple-muted)] uppercase tracking-wider">
                       参考：第 4 章
                     </p>
@@ -538,6 +541,8 @@ const App = () => {
               </div>
             </div>
           </FeatureSection>
+
+          <FaqSection motionScale={motionScale} onOpenPolicy={handlePolicyOpen} />
         </div>
       </main>
       </>
@@ -549,37 +554,42 @@ const App = () => {
 )
 }
 
-const TopNav = ({ onDownload = () => {} }) => (
-  <nav className="sticky top-0 z-40 border-b border-white/60 bg-white/75 backdrop-blur-sm sm:backdrop-blur-xl">
-    <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
-      <div className="flex items-center gap-2 font-semibold text-[color:var(--apple-ink)]">
-        <img src={logo} alt="DeepStudent logo" className="w-5 h-5" />
-        <span className="text-sm tracking-tight">DeepStudent</span>
-      </div>
-      <div className="flex items-center gap-5 text-xs text-[color:var(--apple-muted)] font-medium">
-        <a href="#features" className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors">
-          功能
+const TopNav = ({ onDownload = () => {} }) => {
+  const { isDark } = useTheme()
+  const { t } = useLocale()
+  return (
+    <nav className="sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
+      <div className="max-w-[980px] mx-auto flex items-center justify-between px-4 sm:px-6 h-12">
+        <a href="/" className="flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] hover:opacity-80 transition-opacity">
+          <img src={isDark ? logoDark : logo} alt="DeepStudent logo" className="w-5 h-5" />
+          <span className="text-[15px] tracking-tight">DeepStudent</span>
         </a>
-        <a
-          href="/docs/"
-          className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
-        >
-          文档
-        </a>
-        <button
-          type="button"
-          onClick={onDownload}
-          className="focus-ring rounded-full bg-black px-3 py-1.5 text-xs font-medium text-white hover:bg-black/85 active:bg-black/90 transition-colors"
-        >
-          下载
-        </button>
+        <div className="flex items-center gap-4 text-[12px] text-[color:var(--apple-muted)] font-normal">
+          <a href="#features" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors hidden sm:inline">
+            {t('nav.features')}
+          </a>
+          <a
+            href="/docs/"
+            className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors hidden sm:inline"
+          >
+            {t('nav.docs')}
+          </a>
+          <a
+            href="#download"
+            onClick={(e) => { e.preventDefault(); onDownload(); }}
+            className="focus-ring text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] transition-colors font-normal"
+          >
+            {t('nav.download')}
+          </a>
+        </div>
       </div>
-    </div>
-  </nav>
-)
+    </nav>
+  )
+}
 
 const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   const scrollY = useScrollY()
+  const { t } = useLocale()
   const motionAmount = Math.max(0, motionScale)
   const isStatic = motionAmount === 0
   const shouldAnimate = motionScale > 0
@@ -593,10 +603,9 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
     transformStyle: 'flat',
     willChange: isStatic ? 'auto' : 'transform, opacity',
   })
-  const titleOffset = heroEase * (150 + heroJuice * 12) * motionAmount
-  const subtitleOffset = heroEase * (190 + heroJuice * 14) * motionAmount
-  const textOffset = heroEase * (215 + heroJuice * 16) * motionAmount
-  const ctaOffset = heroEase * (240 + heroJuice * 18) * motionAmount
+  const subtitleOffset = heroEase * (120 + heroJuice * 10) * motionAmount
+  const textOffset = heroEase * (150 + heroJuice * 12) * motionAmount
+  const ctaOffset = heroEase * (180 + heroJuice * 14) * motionAmount
 
   const previewOffset = heroEase * 80 * motionAmount
   const previewStyle = {
@@ -615,12 +624,18 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
 
   return (
     <header
-      className="relative min-h-screen min-h-[100svh] px-4 sm:px-6 pt-[4.236rem] pb-[4.236rem] sm:pt-[5.854rem] sm:pb-[6.854rem] flex items-center overflow-hidden"
+      className="relative min-h-[85vh] min-h-[85svh] px-4 sm:px-6 pt-[3rem] pb-[3rem] sm:pt-[4rem] sm:pb-[5rem] flex items-center overflow-hidden"
     >
-      <div className="absolute inset-0 pointer-events-none" aria-hidden>
-        <div className="absolute -top-40 left-1/2 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.35),transparent_65%)] blur-3xl opacity-70" />
-        <div className="absolute top-10 right-[-12%] h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.12),transparent_70%)] blur-3xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_0%,rgba(255,255,255,0.9),transparent_70%)]" />
+      {/* Apple-style dramatic background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
+        {/* Primary glow - top center */}
+        <div className="absolute -top-[30%] left-1/2 -translate-x-1/2 h-[80vh] w-[120vw] rounded-[100%] bg-[radial-gradient(ellipse_at_center,var(--apple-glow),transparent_60%)] blur-3xl opacity-80 dark:opacity-100" />
+        {/* Secondary accent - purple tint */}
+        <div className="absolute top-[10%] -right-[20%] h-[60vh] w-[60vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.08),transparent_50%)] blur-3xl dark:bg-[radial-gradient(circle_at_center,rgba(191,90,242,0.15),transparent_50%)]" />
+        {/* Tertiary accent - left side */}
+        <div className="absolute top-[20%] -left-[15%] h-[50vh] w-[50vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.06),transparent_50%)] blur-3xl dark:bg-[radial-gradient(circle_at_center,rgba(10,132,255,0.12),transparent_50%)]" />
+        {/* Subtle ambient light overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[color:var(--apple-surface)] opacity-60" />
       </div>
       <div
         className={`relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center gap-[3rem] sm:gap-[3.618rem] ${
@@ -628,26 +643,19 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
         }`}
         style={shouldAnimate ? { animationDelay: '0.08s' } : undefined}
       >
-        <div className="flex flex-col items-center text-center max-w-2xl">
+        <div className="flex flex-col items-center text-center max-w-3xl">
           <h1
-            className="text-[2.6rem] sm:text-[3.4rem] md:text-[4.9rem] font-semibold tracking-[-0.04em] text-[color:var(--apple-ink)] mb-[1.2rem] leading-[1.03] font-display"
-            style={layerStyle2d(titleOffset)}
-          >
-            DeepStudent
-          </h1>
-
-          <h2
-            className="text-[1.2rem] sm:text-[1.6rem] md:text-[2.1rem] font-display text-[color:var(--apple-ink)] mb-[1rem] sm:mb-[1.5rem] max-w-[32rem] leading-[1.34]"
+            className="text-[1.75rem] sm:text-[2.5rem] md:text-[3.2rem] font-semibold tracking-[-0.02em] mb-[1rem] sm:mb-[1.25rem] leading-[1.15] font-display text-[color:var(--apple-ink)]"
             style={layerStyle2d(subtitleOffset)}
           >
-            AI 原生学习解决方案
-          </h2>
+            {t('hero.subtitle')}
+          </h1>
 
           <p
-            className="text-[1rem] sm:text-[1.12rem] text-[color:var(--apple-muted)] max-w-lg mb-[2rem] sm:mb-[2.618rem] leading-[1.7] font-display"
+            className="text-[1rem] sm:text-[1.15rem] text-[color:var(--apple-muted)] max-w-xl mb-[2rem] sm:mb-[2.5rem] leading-[1.65] font-display"
             style={layerStyle2d(textOffset)}
           >
-            让学习更高效，让知识更牢固
+            {t('hero.tagline')}
           </p>
 
           <div
@@ -657,18 +665,18 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
             <button
               type="button"
               onClick={onDownload}
-              className="focus-ring flex-1 py-[0.95rem] px-[1.5rem] sm:py-[1.15rem] sm:px-[2rem] md:py-[1.35rem] md:px-[2.4rem] bg-black text-white rounded-full font-medium text-sm md:text-base hover:bg-black/85 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-[0.618rem] shadow-[0_18px_40px_rgba(0,0,0,0.25)] ring-1 ring-white/10"
+              className="focus-ring flex-1 py-[0.9rem] px-[1.5rem] sm:py-[1rem] sm:px-[2rem] md:py-[1.1rem] md:px-[2.2rem] bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] rounded-full font-medium text-sm md:text-[15px] hover:bg-[color:var(--apple-btn-primary-bg-hover)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 glow-blue"
             >
               <Download className="w-4 h-4" aria-hidden="true" />
-              立即下载
+              {t('hero.cta.download')}
             </button>
             <button
               type="button"
               onClick={handleExplore}
-              className="focus-ring flex-1 py-[0.95rem] px-[1.5rem] sm:py-[1.15rem] sm:px-[2rem] md:py-[1.35rem] md:px-[2.4rem] bg-white/80 text-[color:var(--apple-ink)] border border-white/70 rounded-full font-medium text-sm md:text-base hover:bg-white hover:border-white/80 active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-[0.618rem] shadow-[0_12px_30px_rgba(15,23,42,0.12)]"
+              className="focus-ring flex-1 py-[0.9rem] px-[1.5rem] sm:py-[1rem] sm:px-[2rem] md:py-[1.1rem] md:px-[2.2rem] bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-btn-secondary-text)] rounded-full font-medium text-sm md:text-[15px] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
               <ArrowDown className="w-4 h-4" aria-hidden="true" />
-              看看介绍
+              {t('hero.cta.explore')}
             </button>
           </div>
         </div>
@@ -681,127 +689,181 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   )
 }
 
-const HeroPreview = ({ style }) => (
-  <div
-    className="relative w-[92vw] max-w-[21rem] sm:w-full sm:max-w-[32rem] lg:max-w-[36rem]"
-    style={style}
-    role="img"
-    aria-label="DeepStudent 软件界面预览"
-  >
-    <div className="absolute -inset-6 sm:-inset-8 bg-[radial-gradient(circle_at_center,rgba(15,23,42,0.16),transparent_70%)] blur-2xl sm:blur-3xl opacity-50 sm:opacity-70" />
-    <div className="absolute -left-10 top-16 hidden sm:block">
-      <div className="h-[16rem] w-[11rem] rounded-[1.8rem] border border-white/60 bg-white/70 shadow-[0_22px_50px_rgba(15,23,42,0.12)]" />
-    </div>
-    <div className="relative p-[1px] rounded-[2.6rem] bg-gradient-to-br from-white via-white/70 to-white/30 shadow-[0_32px_90px_rgba(15,23,42,0.18)]">
-      <div className="relative overflow-hidden rounded-[2.55rem] border border-white/70 bg-white/92 backdrop-blur-xl">
-        <div className="flex items-center gap-2 px-4 sm:px-5 py-3 border-b border-white/70 bg-white/80">
-          <div className="flex gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-            <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-            <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-          </div>
-          <span className="text-xs font-medium text-[color:var(--apple-muted)] ml-2">DeepStudent</span>
-        </div>
-        <div className="grid grid-cols-[6.5rem_1fr] sm:grid-cols-[8.5rem_1fr]" aria-hidden="true">
-          <div className="border-r border-white/70 bg-gradient-to-b from-white/90 to-white/70 px-3 sm:px-4 py-4 space-y-4 text-xs text-[color:var(--apple-muted)]">
-            <div className="text-[0.6rem] uppercase tracking-[0.3em] text-[color:var(--apple-muted)]">导航</div>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-[color:var(--apple-ink)] font-semibold">
-                <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-                总览
-              </div>
-              <div className="flex items-center gap-2">
-                <FileText className="w-3.5 h-3.5" aria-hidden="true" />
-                错题本
-              </div>
-              <div className="flex items-center gap-2">
-                <Target className="w-3.5 h-3.5" aria-hidden="true" />
-                复盘
-              </div>
-              <div className="flex items-center gap-2">
-                <Zap className="w-3.5 h-3.5" aria-hidden="true" />
-                卡片
-              </div>
+const heroPreviewItems = [
+  {
+    id: 'chat',
+    labelZh: 'AI 对话',
+    labelEn: 'AI Chat',
+    icon: Sparkles,
+    src: '/img/hero-preview-overview.jpg',
+  },
+  {
+    id: 'skills',
+    labelZh: '技能',
+    labelEn: 'Skills',
+    icon: Zap,
+    src: '/img/hero-preview-skills.jpg',
+  },
+  {
+    id: 'knowledge',
+    labelZh: '知识管理',
+    labelEn: 'Knowledge',
+    icon: FileText,
+    src: '/img/hero-preview-mistakes.jpg',
+  },
+  {
+    id: 'providers',
+    labelZh: '多服务商',
+    labelEn: 'Providers',
+    icon: MonitorDot,
+    src: '/img/hero-preview-review.jpg',
+  },
+]
+
+const HeroPreview = ({ style }) => {
+  const { isZh } = useLocale()
+  const [activeId, setActiveId] = useState(heroPreviewItems[0].id)
+  const activeItem = heroPreviewItems.find((item) => item.id === activeId) || heroPreviewItems[0]
+  const imageAlt = isZh
+    ? `DeepStudent ${activeItem.labelZh} 界面预览（占位图）`
+    : `DeepStudent ${activeItem.labelEn} preview (placeholder)`
+  const segmentedControlRef = useRef(null)
+  const segmentedSliderRef = useRef(null)
+
+  const updateSegmentedSlider = useCallback(() => {
+    const controlEl = segmentedControlRef.current
+    const sliderEl = segmentedSliderRef.current
+    if (!controlEl || !sliderEl) return
+
+    const activeButton = controlEl.querySelector(`[data-segment-id="${activeId}"]`)
+    if (!activeButton) return
+
+    const rect = activeButton.getBoundingClientRect()
+    const parentRect = controlEl.getBoundingClientRect()
+    const paddingPx = 2
+    const offset = rect.left - parentRect.left - paddingPx
+    sliderEl.style.width = `${rect.width}px`
+    sliderEl.style.transform = `translateX(${offset}px)`
+  }, [activeId])
+
+  useEffect(() => {
+    heroPreviewItems.forEach((item) => {
+      const img = new Image()
+      img.src = item.src
+    })
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const intervalId = window.setInterval(() => {
+      setActiveId((prev) => {
+        const currentIndex = heroPreviewItems.findIndex((item) => item.id === prev)
+        const safeIndex = currentIndex >= 0 ? currentIndex : 0
+        const nextIndex = (safeIndex + 1) % heroPreviewItems.length
+        return heroPreviewItems[nextIndex].id
+      })
+    }, 20000)
+    return () => window.clearInterval(intervalId)
+  }, [])
+
+  useLayoutEffect(() => {
+    updateSegmentedSlider()
+  }, [updateSegmentedSlider, isZh])
+
+  useEffect(() => {
+    window.addEventListener('resize', updateSegmentedSlider)
+    return () => window.removeEventListener('resize', updateSegmentedSlider)
+  }, [updateSegmentedSlider])
+
+  return (
+    <div
+      className="relative w-full max-w-[24rem] sm:max-w-[52rem] lg:max-w-[60rem]"
+      style={style}
+    >
+      <div className="relative">
+        <div className="relative rounded-[2.2rem] shadow-[var(--apple-shadow-xl)]">
+          <div className="relative overflow-hidden rounded-[2.2rem]">
+            <div className="relative aspect-[16/10] bg-[color:var(--apple-card-strong)]">
+              <img
+                src={activeItem.src}
+                alt={imageAlt}
+                className="absolute inset-0 h-full w-full object-cover"
+                loading="lazy"
+                draggable="false"
+              />
             </div>
           </div>
-          <div className="p-4 sm:p-5">
-            <div className="flex items-center justify-between text-xs text-[color:var(--apple-muted)] mb-4">
-              <span>学习仪表盘</span>
-              <span className="rounded-full bg-black/5 px-2 py-1 text-[0.65rem] text-[color:var(--apple-ink)]">本周</span>
-            </div>
-            <div className="rounded-[1.1rem] border border-white/70 bg-white/80 px-4 py-3 mb-4">
-              <div className="text-[0.6rem] uppercase tracking-[0.3em] text-[color:var(--apple-muted)]">重点</div>
-              <div className="mt-2 text-sm font-semibold text-[color:var(--apple-ink)]">导数与函数</div>
-              <div className="mt-3 h-1.5 w-full bg-black/5 rounded-full overflow-hidden">
-                <div className="h-full w-[72%] rounded-full bg-[color:var(--apple-blue)]" />
-              </div>
-            </div>
-            <div className="space-y-3">
-              {[
-                { title: '英语长难句', tag: '英语', status: '已掌握' },
-                { title: '力学受力分析', tag: '物理', status: '复习中' },
-                { title: '数列极限', tag: '数学', status: '待复盘' },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  className="flex items-center justify-between rounded-[0.95rem] border border-white/70 bg-white/70 px-3 py-2 text-xs"
-                >
-                  <div>
-                    <div className="text-[color:var(--apple-ink)] font-semibold">{item.title}</div>
-                    <div className="text-[color:var(--apple-muted)] mt-1">{item.tag}</div>
-                  </div>
-                  <span className="text-[color:var(--apple-muted)]">{item.status}</span>
-                </div>
-              ))}
+
+          <div className="absolute inset-x-0 top-0 flex justify-center -translate-y-1/2 px-3 sm:px-4 z-10">
+            <div
+              ref={segmentedControlRef}
+              className="segmented-control"
+              role="group"
+              aria-label={isZh ? '界面预览切换' : 'Preview selector'}
+            >
+              <div
+                ref={segmentedSliderRef}
+                className="segmented-control__slider"
+                aria-hidden="true"
+              />
+              {heroPreviewItems.map((item) => {
+                const isActive = item.id === activeId
+                const Icon = item.icon
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setActiveId(item.id)}
+                    data-segment-id={item.id}
+                    className={`segmented-control__btn focus-ring${isActive ? ' is-active' : ''}`}
+                    aria-pressed={isActive}
+                  >
+                    <Icon className="w-4 h-4" aria-hidden="true" />
+                    {isZh ? item.labelZh : item.labelEn}
+                  </button>
+                )
+              })}
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div className="absolute -bottom-6 right-6 hidden sm:block">
-      <div className="rounded-[1.2rem] border border-white/70 bg-white/95 px-4 py-3 shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
-        <div className="text-[0.6rem] uppercase tracking-[0.3em] text-[color:var(--apple-muted)]">AI 提示</div>
-        <div className="mt-2 text-xs font-semibold text-[color:var(--apple-ink)]">复盘 3 题</div>
-        <div className="mt-2 h-1.5 w-24 bg-black/5 rounded-full overflow-hidden">
-          <div className="h-full w-[70%] rounded-full bg-[color:var(--apple-blue)]" />
-        </div>
-      </div>
-    </div>
-  </div>
-)
+  )
+}
 
 const DownloadPage = ({ onBack = () => {} }) => {
+  const { t, isZh } = useLocale()
   const platformDownloads = [
     {
       id: 'mac',
       platform: 'macOS',
-      channel: 'DMG 安装',
+      channel: isZh ? 'DMG 安装' : 'DMG Install',
       version: 'v1.0.2 · Build 88',
       size: '312 MB',
-      requirements: 'macOS 13+，Apple Silicon 优化',
-      description: '菜单栏快捷录入，支持 Spotlight 搜索。',
-      ctaLabel: '下载 DMG',
+      requirements: isZh ? 'macOS 13+，Apple Silicon 优化' : 'macOS 13+, Apple Silicon optimized',
+      description: isZh ? '菜单栏快捷录入，支持 Spotlight 搜索。' : 'Menu bar quick entry, Spotlight search support.',
+      ctaLabel: t('download.downloadDmg'),
       ctaHref: 'https://downloads.deepstudent.ai/macos/deepstudent-v1.0.2.dmg',
       icon: MonitorDot,
-      iconBg: 'bg-black text-white',
+      iconBg: 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)]',
     },
     {
       id: 'windows',
       platform: 'Windows',
-      channel: '预览版',
+      channel: isZh ? '预览版' : 'Preview',
       version: 'v0.9.8 Preview',
       size: '298 MB',
       requirements: 'Windows 11 / 10 22H2+',
-      description: '预览版含 OneNote 导入与系统托盘控件。',
-      ctaLabel: '下载 EXE',
+      description: isZh ? '预览版含 OneNote 导入与系统托盘控件。' : 'Preview includes OneNote import and system tray controls.',
+      ctaLabel: t('download.downloadExe'),
       ctaHref: 'https://downloads.deepstudent.ai/windows/deepstudent-setup.exe',
       icon: LaptopMinimal,
-      iconBg: 'bg-white text-[color:var(--apple-ink)] border border-black/10',
+      iconBg: 'bg-[color:var(--apple-card-strong)] text-[color:var(--apple-ink)] border border-[color:var(--apple-line)]',
     },
   ]
   return (
     <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[6.854rem] sm:pb-[11.09rem]">
-      <div className="sticky top-0 z-40 border-b border-black/5 bg-white/80 backdrop-blur-sm">
+      <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
           <button
             type="button"
@@ -809,24 +871,28 @@ const DownloadPage = ({ onBack = () => {} }) => {
             className="focus-ring inline-flex items-center gap-2 text-sm font-medium text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-            返回首页
+            {t('download.backHome')}
           </button>
-          <span className="text-xs text-[color:var(--apple-muted)]">下载</span>
+          <div className="flex items-center gap-3">
+            <LocaleToggle />
+            <ThemeToggle />
+            <span className="text-xs text-[color:var(--apple-muted)]">{t('nav.download')}</span>
+          </div>
         </div>
       </div>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-[3.236rem] sm:pt-[4.236rem] md:pt-[5.854rem] text-center">
         <h1 className="text-[2.2rem] sm:text-[3.2rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] font-display">
-          下载 DeepStudent
+          {t('download.title')}
         </h1>
         <p className="mt-3 text-sm text-[color:var(--apple-muted)] max-w-md mx-auto">
-          选择你的平台，安装后即可开始整理。
+          {t('download.subtitle')}
         </p>
       </section>
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-[3.236rem] sm:pt-[4.236rem]">
         <h2 className="text-[1.3rem] sm:text-[1.9rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] font-display">
-          选择平台
+          {t('download.selectPlatform')}
         </h2>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -835,7 +901,7 @@ const DownloadPage = ({ onBack = () => {} }) => {
             return (
               <article
                 key={platform.id}
-                className="rounded-[1.5rem] bg-white/85 border border-black/5 p-[1.5rem] sm:p-[1.75rem] shadow-[0_8px_18px_rgba(15,23,42,0.06)]"
+                className="rounded-[1.5rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] p-[1.5rem] sm:p-[1.75rem] shadow-[var(--apple-shadow-sm)]"
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-11 h-11 rounded-[0.9rem] flex items-center justify-center ${platform.iconBg}`}>
@@ -850,15 +916,15 @@ const DownloadPage = ({ onBack = () => {} }) => {
                 <p className="mt-3 text-sm text-[color:var(--apple-muted)] leading-relaxed">{platform.description}</p>
 
                 <div className="mt-4 text-xs text-[color:var(--apple-muted)] flex flex-wrap gap-x-3 gap-y-1">
-                  <span>版本 {platform.version}</span>
-                  <span>大小 {platform.size}</span>
-                  <span>系统 {platform.requirements}</span>
+                  <span>{t('download.version')} {platform.version}</span>
+                  <span>{t('download.size')} {platform.size}</span>
+                  <span>{t('download.system')} {platform.requirements}</span>
                 </div>
 
                 <div className="mt-4">
                   <a
                     href={platform.ctaHref}
-                    className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-black px-4 py-2 text-xs font-medium text-white hover:bg-black/85 active:bg-black/90 transition-colors shadow-[0_10px_20px_rgba(0,0,0,0.2)]"
+                    className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-primary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-95 transition-all shadow-[var(--apple-shadow-sm)]"
                   >
                     <Download className="w-4 h-4" aria-hidden="true" />
                     {platform.ctaLabel}
@@ -874,6 +940,110 @@ const DownloadPage = ({ onBack = () => {} }) => {
         </p>
       </section>
     </div>
+  )
+}
+
+const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
+  const shouldAnimate = motionScale > 0
+  const faqItems = [
+    {
+      id: 'open-source',
+      question: 'DeepStudent 是开源的吗？',
+      answer: '是的，DeepStudent 完全开源。你可以在 GitHub 查看源码并参与共建。',
+      linkHref: 'https://github.com/deepstudents/ai-mistake-manager',
+      linkLabel: '前往 GitHub',
+    },
+    {
+      id: 'privacy',
+      question: '我的数据会被如何使用？',
+      answer: '我们遵循最小化数据原则，数据仅用于生成个性化学习建议与统计分析。',
+      actionLabel: '查看隐私政策',
+      onAction: () => onOpenPolicy('privacy'),
+    },
+    {
+      id: 'macos-quarantine',
+      question: 'macOS 安装后提示“已损坏，无法打开”怎么办？',
+      answer:
+        '可以在终端执行以下命令（把 <应用路径> 替换为你的应用路径；也可以把应用图标拖进终端自动填充路径）：',
+      code: 'sudo xattr -r -d com.apple.quarantine <应用路径>',
+      linkHref: '/docs/guide/A-Q',
+      linkLabel: '查看完整步骤',
+    },
+    {
+      id: 'windows-preview',
+      question: 'Windows 版本是正式版吗？',
+      answer: '目前 Windows 仍为预览版，我们会持续迭代。遇到问题可联系 support@deepstudent.ai。',
+    },
+  ]
+
+  return (
+    <section
+      id="qa"
+      className={`px-4 sm:px-6 max-w-4xl mx-auto py-[2.618rem] sm:py-[4.236rem] md:py-[6.854rem] ${
+        shouldAnimate ? 'animate-fade-in' : ''
+      }`}
+      style={shouldAnimate ? { animationDelay: '0.12s' } : undefined}
+    >
+      <div className="text-center">
+        <h2 className="text-[1.618rem] sm:text-[2.618rem] font-semibold text-[color:var(--apple-ink)] mb-[0.618rem] tracking-[-0.02em] font-display">
+          常见问题
+        </h2>
+        <p className="text-sm sm:text-base text-[color:var(--apple-muted)] leading-relaxed">
+          关于 DeepStudent 的常见疑问解答
+        </p>
+      </div>
+
+      <div className="mt-[2.618rem] space-y-3">
+        {faqItems.map((item) => (
+          <details
+            key={item.id}
+            className="group rounded-[1.618rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)] overflow-hidden"
+          >
+            <summary className="focus-ring flex items-center justify-between gap-4 p-[1.25rem] sm:p-[1.5rem] cursor-pointer select-none [&::-webkit-details-marker]:hidden">
+              <span className="text-sm sm:text-base font-medium text-[color:var(--apple-ink)]">
+                {item.question}
+              </span>
+              <ArrowDown
+                className="w-4 h-4 text-[color:var(--apple-muted)] transition-transform duration-200 group-open:rotate-180"
+                aria-hidden="true"
+              />
+            </summary>
+
+            <div className="px-[1.25rem] sm:px-[1.5rem] pb-[1.25rem] sm:pb-[1.5rem] text-sm text-[color:var(--apple-muted)] leading-relaxed">
+              <p>{item.answer}</p>
+
+              {item.code ? (
+                <pre className="mt-3 rounded-[0.9rem] bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] p-3 overflow-x-auto text-xs">
+                  <code className="font-mono">{item.code}</code>
+                </pre>
+              ) : null}
+
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                {item.actionLabel ? (
+                  <button
+                    type="button"
+                    onClick={item.onAction}
+                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all"
+                  >
+                    {item.actionLabel}
+                  </button>
+                ) : null}
+                {item.linkHref ? (
+                  <a
+                    href={item.linkHref}
+                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all"
+                    target={item.linkHref.startsWith('http') ? '_blank' : undefined}
+                    rel={item.linkHref.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  >
+                    {item.linkLabel}
+                  </a>
+                ) : null}
+              </div>
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
   )
 }
 
@@ -911,7 +1081,7 @@ const FeatureSection = ({ icon, title, desc, align, children, motionScale = 1 })
             willChange: shouldAnimate ? 'transform, opacity' : 'auto',
           }}
         >
-          <div className="inline-flex items-center justify-center w-[2.618rem] h-[2.618rem] rounded-[1.618rem] bg-white/80 border border-white/70 shadow-[0_12px_25px_rgba(15,23,42,0.1)] text-[color:var(--apple-ink)] mb-[1.618rem]">
+          <div className="inline-flex items-center justify-center w-[2.618rem] h-[2.618rem] rounded-[1.618rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)] text-[color:var(--apple-ink)] mb-[1.618rem]">
             {icon}
           </div>
           <h2 className="text-[1.618rem] sm:text-[2.618rem] font-semibold text-[color:var(--apple-ink)] mb-[1.618rem] tracking-[-0.02em] font-display">
@@ -944,13 +1114,13 @@ const Flashcard = ({ motionScale = 1 }) => {
 
   return (
     <div
-      className={`bg-white/85 backdrop-blur-sm sm:backdrop-blur-xl border border-white/60 sm:border-white/70 shadow-[0_16px_40px_rgba(15,23,42,0.12)] sm:shadow-[0_30px_80px_rgba(15,23,42,0.15)] rounded-[1.618rem] p-[1.618rem] sm:p-[2.618rem] w-[17.944rem] aspect-[1/1.618] flex flex-col items-center text-center justify-center relative rotate-1 ${
+      className={`bg-[color:var(--apple-card)] backdrop-blur-xl border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-lg)] rounded-[1.618rem] p-[1.618rem] sm:p-[2.618rem] w-[17.944rem] aspect-[1/1.618] flex flex-col items-center text-center justify-center relative rotate-1 ${
         shouldAnimate ? 'transition-transform duration-500' : ''
       } hover:rotate-0 active:rotate-0`}
     >
-      <div className="absolute top-[1.618rem] left-[1.618rem] w-[0.618rem] h-[0.618rem] bg-black rounded-full" />
+      <div className="absolute top-[1.618rem] left-[1.618rem] w-[0.618rem] h-[0.618rem] bg-[color:var(--apple-ink)] rounded-full" />
       <div
-        className={`absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-[1.618rem] ${
+        className={`absolute inset-0 bg-[color:var(--apple-card-strong)] backdrop-blur-sm flex items-center justify-center rounded-[1.618rem] ${
           shouldAnimate ? 'transition-opacity duration-300' : ''
         } ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         aria-hidden={!isFlipped}
@@ -970,11 +1140,11 @@ const Flashcard = ({ motionScale = 1 }) => {
           ln(x) 的导数是什么？
         </div>
       </div>
-      <div className="w-full h-px bg-black/10 my-[2.618rem]" />
+      <div className="w-full h-px bg-[color:var(--apple-line)] my-[2.618rem]" />
       <button
         type="button"
         onClick={() => setIsFlipped((prev) => !prev)}
-        className="focus-ring relative z-20 text-xs text-[color:var(--apple-muted)] font-medium px-3 py-1.5 rounded-full border border-white/70 bg-white/80 hover:text-[color:var(--apple-ink)] hover:border-white/90 active:text-[color:var(--apple-ink)] active:border-white/90 transition-colors"
+        className="focus-ring relative z-20 text-xs text-[color:var(--apple-muted)] font-medium px-3 py-1.5 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] hover:text-[color:var(--apple-ink)] hover:border-[color:var(--apple-line-strong)] active:text-[color:var(--apple-ink)] transition-colors"
         aria-pressed={isFlipped}
       >
         {isFlipped ? '返回题目' : '点击查看答案'}
@@ -989,7 +1159,6 @@ const PolicyModal = ({ type, onClose }) => {
   const closeButtonRef = useRef(null)
   const titleId = type ? `policy-${type}-title` : undefined
   const descriptionId = type ? `policy-${type}-description` : undefined
-  const categoryLabel = type === 'privacy' ? '隐私' : type === 'terms' ? '条款' : '关于'
 
   useEffect(() => {
     if (!type) return
@@ -1054,18 +1223,15 @@ const PolicyModal = ({ type, onClose }) => {
       aria-labelledby={titleId}
       aria-describedby={descriptionId}
     >
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm sm:backdrop-blur-md" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-md" onClick={onClose} />
       <div
         ref={dialogRef}
-        className="relative w-full max-w-2xl max-h-[80vh] max-h-[80svh] overflow-y-auto bg-white/85 backdrop-blur-sm sm:backdrop-blur-xl border border-white/60 sm:border-white/70 rounded-[2.618rem] shadow-[0_30px_90px_rgba(15,23,42,0.2)] p-[1.618rem] sm:p-[2.618rem]"
+        className="relative w-full max-w-2xl max-h-[80vh] max-h-[80svh] overflow-y-auto bg-[color:var(--apple-card)] backdrop-blur-xl border border-[color:var(--apple-line)] rounded-[2.618rem] shadow-[var(--apple-shadow-xl)] p-[1.618rem] sm:p-[2.618rem]"
         onClick={(event) => event.stopPropagation()}
         tabIndex={-1}
       >
         <div className="flex items-start justify-between gap-[2.618rem] mb-[2.618rem]">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--apple-muted)] mb-3">
-              {categoryLabel}
-            </p>
             <h3
               id={titleId}
               className="text-2xl font-semibold text-[color:var(--apple-ink)] mb-3 font-display"
@@ -1079,7 +1245,7 @@ const PolicyModal = ({ type, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="focus-ring flex-shrink-0 w-[2.618rem] h-[2.618rem] rounded-full border border-white/70 text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:border-white/90 flex items-center justify-center transition-colors bg-white/80"
+            className="focus-ring flex-shrink-0 w-[2.618rem] h-[2.618rem] rounded-full border border-[color:var(--apple-line)] text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:border-[color:var(--apple-line-strong)] flex items-center justify-center transition-colors bg-[color:var(--apple-card-strong)]"
             aria-label="关闭弹窗"
             ref={closeButtonRef}
           >
@@ -1089,7 +1255,7 @@ const PolicyModal = ({ type, onClose }) => {
 
         <div className="space-y-6">
           {data.sections.map((section) => (
-            <div key={section.title} className="border border-white/70 rounded-[1.618rem] p-[1.618rem] bg-white/70">
+            <div key={section.title} className="border border-[color:var(--apple-line)] rounded-[1.618rem] p-[1.618rem] bg-[color:var(--apple-card-strong)]">
               <h4 className="text-sm font-semibold text-[color:var(--apple-ink)] mb-2 font-display">
                 {section.title}
               </h4>
@@ -1109,7 +1275,7 @@ const PolicyModal = ({ type, onClose }) => {
         <button
           type="button"
           onClick={onClose}
-          className="focus-ring mt-6 w-full py-[0.95rem] sm:py-[1.15rem] md:py-[1.35rem] rounded-[1.618rem] bg-black text-white text-sm md:text-base font-semibold hover:bg-black/85 active:bg-black/90 transition-colors shadow-[0_18px_40px_rgba(0,0,0,0.25)]"
+          className="focus-ring mt-6 w-full py-[0.95rem] sm:py-[1.15rem] md:py-[1.35rem] rounded-[1.618rem] bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] text-sm md:text-base font-semibold hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-[0.98] transition-all shadow-[var(--apple-shadow-md)]"
         >
           我已了解
         </button>
@@ -1118,52 +1284,77 @@ const PolicyModal = ({ type, onClose }) => {
   )
 }
 
-const Footer = ({ onOpenPolicy = () => {} }) => (
-  <footer className="border-t border-white/60 py-12 px-4 sm:px-6 mt-24 bg-white/75 backdrop-blur-sm sm:backdrop-blur-xl">
-    <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-      <div className="flex items-center gap-2 font-semibold text-[color:var(--apple-ink)]">
-        <img src={logo} alt="DeepStudent logo" className="w-5 h-5" />
-        DeepStudent
-      </div>
+const Footer = ({ onOpenPolicy = () => {} }) => {
+  const { isDark } = useTheme()
+  const { t } = useLocale()
+  return (
+    <footer className="border-t border-[color:var(--apple-line)] py-12 px-4 sm:px-6 mt-24 bg-[color:var(--apple-card)] backdrop-blur-xl">
+      <div className="max-w-4xl mx-auto w-full grid grid-cols-1 gap-8 items-center sm:grid-cols-2 sm:items-start md:grid-cols-[auto_1fr_auto] md:gap-x-10">
+        <div className="flex flex-col items-center sm:items-start gap-3">
+          <div className="flex items-center gap-2 font-semibold text-[color:var(--apple-ink)]">
+            <img src={isDark ? logoDark : logo} alt="DeepStudent logo" className="w-5 h-5" />
+            DeepStudent
+          </div>
+          <a
+            href="https://www.xiaohongshu.com/user/profile/657fb438000000001902dbcf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus-ring inline-flex items-center justify-center w-9 h-9 rounded-full bg-zinc-500 text-white hover:bg-zinc-600 transition-colors"
+            aria-label="小红书"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M6.34 14.458c.106-.231.195-.431.29-.628q.329-.607.59-1.247a.74.74 0 0 1 .88-.55c.557.039 1.116.01 1.698.01V4.794c-.391 0-.777-.014-1.16 0-.267.014-.36-.073-.353-.36.019-.685 0-1.374 0-2.091h5.428v1.664c0 .783 0 .783-.76.783h-.762v7.245h1.647c.664 0 .664 0 .664.697v1.46c0 .202-.05.305-.268.305q-3.866-.007-7.73-.006a1 1 0 0 1-.164-.034"
+              />
+              <path
+                fill="currentColor"
+                d="M7.365 9.21c-.339.7-.637 1.324-.95 1.938a.3.3 0 0 1-.228.114c-.755 0-1.514.03-2.266-.026-.753-.056-1.054-.54-.754-1.28.342-.853.753-1.678 1.134-2.514.024-.053.042-.106.088-.223-.305 0-.572.007-.84 0a3 3 0 0 1-.646-.06.76.76 0 0 1-.652-.85.8.8 0 0 1 .074-.256c.457-1.098.97-2.175 1.464-3.256q.24-.532.51-1.05c.047-.09.155-.203.238-.207.706-.017 1.414-.009 2.184-.009-.067.172-.104.29-.156.399q-.648 1.356-1.301 2.709c-.088.183-.194.373.134.512.088-.47.44-.384.75-.384h1.784c-.075.178-.123.302-.178.42-.55 1.152-1.11 2.294-1.653 3.444-.223.469-.148.583.37.588.268-.008.538-.01.894-.01m-.97 2.834c-.419.839-.792 1.593-1.175 2.343a.26.26 0 0 1-.194.11 228 228 0 0 1-3.084-.058 2 2 0 0 1-.413-.11l.575-1.162c.188-.384.37-.767.572-1.133a.35.35 0 0 1 .247-.162c.942.047 1.884.112 2.828.17.19.01.369.002.644.002"
+              />
+            </svg>
+          </a>
+        </div>
 
-      <div className="flex gap-8 text-sm text-[color:var(--apple-muted)] font-medium">
-        <button
-          type="button"
-          onClick={() => onOpenPolicy('privacy')}
-          className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
-        >
-          隐私
-        </button>
-        <button
-          type="button"
-          onClick={() => onOpenPolicy('about')}
-          className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
-        >
-          关于
-        </button>
-        <button
-          type="button"
-          onClick={() => onOpenPolicy('terms')}
-          className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
-        >
-          条款
-        </button>
-        <a
-          href="https://github.com/deepstudents/ai-mistake-manager"
-          className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub
-        </a>
-      </div>
+        <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-[color:var(--apple-muted)] font-medium sm:col-span-2 sm:row-start-2 sm:gap-x-8 md:col-span-1 md:col-start-2 md:row-start-1">
+          <button
+            type="button"
+            onClick={() => onOpenPolicy('privacy')}
+            className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
+          >
+            {t('footer.privacy')}
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenPolicy('about')}
+            className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
+          >
+            {t('footer.about')}
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenPolicy('terms')}
+            className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
+          >
+            {t('footer.terms')}
+          </button>
+          <a
+            href="https://github.com/deepstudents/ai-mistake-manager"
+            className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        </div>
 
-      <div className="text-xs text-[color:var(--apple-muted)] flex flex-col items-center md:items-end">
-        <span>© 2025 DeepStudent Team.</span>
-        <span className="mt-1 font-mono text-[0.65rem] tracking-[0.08em]">Build {buildHash}</span>
+        <div className="text-xs text-[color:var(--apple-muted)] flex flex-col items-center sm:col-start-2 sm:row-start-1 sm:items-end sm:justify-self-end md:col-start-3 md:row-start-1 gap-2">
+          <LocaleToggle />
+          <span>© 2025 DeepStudent Team.</span>
+          <span className="font-mono text-[0.65rem] tracking-[0.08em]">Build {buildHash}</span>
+        </div>
       </div>
-    </div>
-  </footer>
-)
+    </footer>
+  )
+}
 
 export default App

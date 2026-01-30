@@ -1,21 +1,57 @@
 @import 'tailwindcss';
 
+/* ===== 主题过渡基础 ===== */
+/* 定义全局过渡属性：颜色变化平滑 */
+:root,
+.light,
+.dark {
+  /* 配置颜色过渡 */
+  --theme-transition-duration: 0.3s;
+  --theme-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* 应用到颜色相关属性 */
+  transition-property: background-color, color, border-color, box-shadow, fill, stroke;
+  transition-duration: var(--theme-transition-duration);
+  transition-timing-function: var(--theme-transition-timing);
+}
+
+/* 尊重用户无动画偏好（WCAG无障碍）*/
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  .light,
+  .dark {
+    --theme-transition-duration: 0s;
+    transition: none !important;
+  }
+}
+
+/* ===== LIGHT THEME ===== */
 :root {
+  /* Design System Tokens */
   --ds-ink: #1d1d1f;
+  --ds-ink-secondary: #48484a;
   --ds-muted: #585c63;
   --ds-surface: #f5f5f7;
   --ds-surface-strong: #ffffff;
   --ds-card: rgba(255, 255, 255, 0.82);
   --ds-card-strong: rgba(255, 255, 255, 0.94);
+  --ds-card-hover: rgba(255, 255, 255, 0.92);
   --ds-line: rgba(0, 0, 0, 0.12);
   --ds-line-soft: rgba(255, 255, 255, 0.7);
+  --ds-line-strong: rgba(0, 0, 0, 0.18);
   --ds-blue: #0071e3;
+  --ds-blue-hover: #0077ed;
   --ds-blue-soft: rgba(0, 113, 227, 0.12);
+  --ds-glow: rgba(0, 113, 227, 0.16);
+  --ds-selection-bg: rgba(0, 0, 0, 0.85);
+  --ds-selection-text: #ffffff;
 
+  /* Typography */
   --vp-font-family-base: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', ui-sans-serif, sans-serif;
   --vp-font-family-mono: 'SFMono-Regular', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
     'Courier New', monospace;
 
+  /* VitePress Overrides */
   --vp-c-bg: var(--ds-surface);
   --vp-c-bg-alt: var(--ds-surface-strong);
   --vp-c-bg-elv: var(--ds-surface-strong);
@@ -58,6 +94,9 @@
   --vp-button-alt-bg: rgba(255, 255, 255, 0.72);
   --vp-button-alt-hover-bg: rgba(255, 255, 255, 0.9);
   --vp-button-alt-active-bg: rgba(255, 255, 255, 0.95);
+  --vp-button-alt-border: rgba(0, 0, 0, 0.08);
+  --vp-button-alt-text: var(--ds-ink);
+  --vp-button-alt-hover-text: var(--ds-ink);
 
   --vp-shadow-1: 0 16px 40px rgba(15, 23, 42, 0.12);
   --vp-shadow-2: 0 30px 80px rgba(15, 23, 42, 0.16);
@@ -65,67 +104,84 @@
   --vp-c-shadow-3: var(--vp-shadow-3);
 }
 
+/* ===== DARK THEME - SOTA Deep Space ===== */
 .dark {
-  --ds-ink: #f5f5f7;
-  --ds-muted: rgba(235, 235, 245, 0.65);
-  --ds-surface: #0f1115;
-  --ds-surface-strong: #151821;
-  --ds-card: rgba(18, 20, 26, 0.85);
-  --ds-card-strong: rgba(22, 24, 31, 0.95);
-  --ds-line: rgba(255, 255, 255, 0.12);
-  --ds-line-soft: rgba(255, 255, 255, 0.22);
-  --ds-blue: #5aa8ff;
-  --ds-blue-soft: rgba(90, 168, 255, 0.18);
+  color-scheme: dark;
 
+  /* Design System Tokens - Deep space aesthetic */
+  --ds-ink: #f5f5f7;
+  --ds-ink-secondary: #a1a1a6;
+  --ds-muted: rgba(235, 235, 245, 0.6);
+  --ds-surface: #0a0a0c;
+  --ds-surface-strong: #141416;
+  --ds-card: rgba(22, 22, 26, 0.85);
+  --ds-card-strong: rgba(28, 28, 33, 0.92);
+  --ds-card-hover: rgba(36, 36, 42, 0.9);
+  --ds-line: rgba(255, 255, 255, 0.1);
+  --ds-line-soft: rgba(255, 255, 255, 0.06);
+  --ds-line-strong: rgba(255, 255, 255, 0.18);
+  --ds-blue: #5aa8ff;
+  --ds-blue-hover: #78b8ff;
+  --ds-blue-soft: rgba(90, 168, 255, 0.16);
+  --ds-glow: rgba(90, 168, 255, 0.12);
+  --ds-selection-bg: rgba(90, 168, 255, 0.35);
+  --ds-selection-text: #ffffff;
+
+  /* VitePress Overrides */
   --vp-c-bg: var(--ds-surface);
   --vp-c-bg-alt: var(--ds-surface-strong);
   --vp-c-bg-elv: var(--ds-surface-strong);
-  --vp-c-bg-soft: rgba(17, 19, 25, 0.9);
-  --vp-c-bg-mute: rgba(22, 24, 30, 0.85);
+  --vp-c-bg-soft: rgba(18, 18, 22, 0.9);
+  --vp-c-bg-mute: rgba(24, 24, 28, 0.85);
 
   --vp-c-border: var(--ds-line);
-  --vp-c-divider: rgba(255, 255, 255, 0.12);
-  --vp-c-gutter: rgba(255, 255, 255, 0.12);
+  --vp-c-divider: rgba(255, 255, 255, 0.08);
+  --vp-c-gutter: rgba(255, 255, 255, 0.08);
 
   --vp-c-text-1: var(--ds-ink);
   --vp-c-text-2: var(--ds-muted);
-  --vp-c-text-3: rgba(235, 235, 245, 0.4);
+  --vp-c-text-3: rgba(235, 235, 245, 0.38);
 
-  --vp-c-default-1: rgba(255, 255, 255, 0.08);
-  --vp-c-default-2: rgba(255, 255, 255, 0.12);
-  --vp-c-default-3: rgba(255, 255, 255, 0.18);
-  --vp-c-default-soft: rgba(255, 255, 255, 0.06);
+  --vp-c-default-1: rgba(255, 255, 255, 0.06);
+  --vp-c-default-2: rgba(255, 255, 255, 0.1);
+  --vp-c-default-3: rgba(255, 255, 255, 0.14);
+  --vp-c-default-soft: rgba(255, 255, 255, 0.04);
 
   --vp-c-brand-1: var(--ds-blue);
   --vp-c-brand-2: #78b8ff;
   --vp-c-brand-3: #9dcfff;
   --vp-c-brand-soft: var(--ds-blue-soft);
 
-  --vp-code-bg: rgba(255, 255, 255, 0.08);
-  --vp-code-block-bg: rgba(20, 22, 28, 0.9);
+  --vp-code-bg: rgba(255, 255, 255, 0.06);
+  --vp-code-block-bg: rgba(14, 14, 18, 0.95);
 
-  --vp-nav-bg-color: rgba(17, 19, 25, 0.9);
-  --vp-nav-screen-bg-color: rgba(15, 17, 21, 0.96);
-  --vp-local-nav-bg-color: rgba(17, 19, 25, 0.9);
-  --vp-sidebar-bg-color: rgba(18, 20, 26, 0.92);
+  --vp-nav-bg-color: rgba(12, 12, 15, 0.92);
+  --vp-nav-screen-bg-color: rgba(10, 10, 12, 0.98);
+  --vp-local-nav-bg-color: rgba(12, 12, 15, 0.92);
+  --vp-sidebar-bg-color: rgba(14, 14, 18, 0.94);
 
+  /* Inverted buttons for dark mode */
   --vp-button-brand-bg: #f5f5f7;
   --vp-button-brand-hover-bg: #ffffff;
-  --vp-button-brand-active-bg: #e6e6e6;
-  --vp-button-brand-text: #0f1115;
-  --vp-button-brand-hover-text: #0f1115;
-  --vp-button-brand-active-text: #0f1115;
+  --vp-button-brand-active-bg: #e8e8ea;
+  --vp-button-brand-text: #0a0a0c;
+  --vp-button-brand-hover-text: #0a0a0c;
+  --vp-button-brand-active-text: #0a0a0c;
 
-  --vp-button-alt-bg: rgba(24, 26, 32, 0.9);
-  --vp-button-alt-hover-bg: rgba(24, 26, 32, 0.7);
-  --vp-button-alt-active-bg: rgba(24, 26, 32, 0.6);
+  --vp-button-alt-bg: rgba(28, 28, 33, 0.85);
+  --vp-button-alt-hover-bg: rgba(38, 38, 44, 0.9);
+  --vp-button-alt-active-bg: rgba(32, 32, 38, 0.85);
+  --vp-button-alt-border: rgba(255, 255, 255, 0.1);
+  --vp-button-alt-text: var(--ds-ink);
+  --vp-button-alt-hover-text: var(--ds-ink);
 
-  --vp-shadow-1: 0 20px 60px rgba(0, 0, 0, 0.45);
-  --vp-shadow-2: 0 35px 90px rgba(0, 0, 0, 0.5);
+  --vp-shadow-1: 0 20px 60px rgba(0, 0, 0, 0.5);
+  --vp-shadow-2: 0 35px 90px rgba(0, 0, 0, 0.55);
   --vp-shadow-3: 0 50px 140px rgba(0, 0, 0, 0.6);
   --vp-c-shadow-3: var(--vp-shadow-3);
 }
 
+/* ===== GLOBAL STYLES ===== */
 body {
   color: var(--ds-ink);
   font-feature-settings: 'ss01', 'ss02', 'cv11';
@@ -135,13 +191,32 @@ body {
   background-color: var(--ds-surface);
 }
 
-.dark body {
-  background-color: var(--ds-surface);
+/* Light mode background gradient */
+body {
+  background-image: 
+    radial-gradient(900px 600px at 20% -10%, rgba(0, 113, 227, 0.12), transparent 60%),
+    radial-gradient(700px 500px at 85% 0%, rgba(120, 120, 135, 0.12), transparent 55%),
+    linear-gradient(180deg, #f5f5f7 0%, #ffffff 40%, #f5f5f7 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
+/* Dark mode background - SOTA deep space effect */
+.dark body {
+  background-color: var(--ds-surface);
+  background-image: 
+    radial-gradient(1100px 700px at 15% -5%, rgba(90, 168, 255, 0.06), transparent 55%),
+    radial-gradient(900px 600px at 90% 5%, rgba(139, 92, 246, 0.04), transparent 50%),
+    radial-gradient(600px 400px at 50% 85%, rgba(59, 130, 246, 0.03), transparent 45%),
+    linear-gradient(180deg, #0a0a0c 0%, #0e0e11 50%, #0a0a0c 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Selection colors */
 ::selection {
-  background: rgba(0, 0, 0, 0.85);
-  color: #ffffff;
+  background: var(--ds-selection-bg);
+  color: var(--ds-selection-text);
 }
 
 .VPSite {
@@ -382,4 +457,210 @@ body {
   .VPHero .actions {
     justify-content: center !important;
   }
+}
+
+/* ===== ENHANCED DARK MODE STYLES ===== */
+
+/* Smooth theme transition */
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    --theme-transition: 0.3s ease;
+  }
+  
+  body,
+  .VPNavBar,
+  .VPSidebar,
+  .VPDoc .content-container,
+  .VPFooter,
+  .custom-block,
+  .vp-doc blockquote,
+  .vp-doc table {
+    transition: background-color var(--theme-transition), 
+                border-color var(--theme-transition), 
+                color var(--theme-transition),
+                box-shadow var(--theme-transition);
+  }
+}
+
+/* Dark mode nav enhancements */
+.dark .VPNavBar {
+  border-bottom-color: var(--ds-line);
+}
+
+.dark .VPLocalNav {
+  border-bottom-color: var(--ds-line);
+}
+
+.dark .VPSidebar {
+  border-right-color: var(--ds-line);
+}
+
+/* Code block dark mode polish */
+.dark .vp-code-group .tabs {
+  background: var(--ds-card);
+  border-bottom-color: var(--ds-line);
+}
+
+.dark .vp-code-group .tabs label {
+  color: var(--ds-muted);
+}
+
+.dark .vp-code-group .tabs label.active {
+  color: var(--ds-ink);
+}
+
+.dark div[class*='language-'] {
+  background: var(--vp-code-block-bg) !important;
+  border: 1px solid var(--ds-line);
+}
+
+.dark div[class*='language-'] code {
+  color: var(--ds-ink);
+}
+
+/* Search box dark mode */
+.dark .VPNavBarSearch .DocSearch-Button {
+  background: var(--ds-card);
+  border-color: var(--ds-line);
+}
+
+.dark .VPNavBarSearch .DocSearch-Button:hover {
+  background: var(--ds-card-hover);
+}
+
+/* Custom block dark mode polish */
+.dark .custom-block.info {
+  background: rgba(90, 168, 255, 0.08);
+  border-color: rgba(90, 168, 255, 0.25);
+}
+
+.dark .custom-block.tip {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.dark .custom-block.warning {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.dark .custom-block.danger {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+/* SVG and icon inversion for dark mode */
+.dark .vp-doc svg text {
+  fill: var(--ds-ink);
+}
+
+.dark .vp-doc svg rect[fill="#0071e3"],
+.dark .vp-doc svg rect[fill="url(#blueGrad)"] {
+  fill: var(--ds-blue);
+}
+
+.dark .vp-doc svg circle[fill="white"] {
+  fill: rgba(255, 255, 255, 0.9);
+}
+
+/* Medium zoom dark mode overlay */
+.dark .medium-zoom-overlay {
+  background: rgba(10, 10, 12, 0.95) !important;
+}
+
+/* Image border in dark mode */
+.dark .vp-doc img {
+  border: 1px solid var(--ds-line);
+  background: var(--ds-card);
+}
+
+/* Inline code dark mode */
+.dark .vp-doc :not(pre) > code {
+  background: var(--vp-code-bg);
+  color: var(--ds-blue);
+  border: 1px solid var(--ds-line);
+}
+
+/* Horizontal rule dark mode */
+.dark .vp-doc hr {
+  border-color: var(--ds-line);
+}
+
+/* Badge dark mode */
+.dark .VPBadge {
+  background: var(--ds-card);
+  border-color: var(--ds-line);
+}
+
+/* Local search dark mode polish */
+.dark .VPLocalSearchBox {
+  --vp-local-search-bg: var(--ds-surface-strong);
+  --vp-local-search-result-bg: var(--ds-card);
+  --vp-local-search-highlight-bg: var(--ds-blue-soft);
+}
+
+/* Feature card enhancements for dark mode */
+.dark .VPFeature {
+  background: var(--ds-card);
+  border-color: var(--ds-line);
+}
+
+.dark .VPFeature:hover {
+  background: var(--ds-card-hover);
+  border-color: var(--ds-line-strong);
+}
+
+/* Home page button fixes */
+.dark .VPButton.brand {
+  background: var(--vp-button-brand-bg);
+  color: var(--vp-button-brand-text);
+}
+
+.dark .VPButton.alt {
+  background: var(--vp-button-alt-bg);
+  color: var(--vp-button-alt-text);
+  border-color: var(--vp-button-alt-border);
+}
+
+/* Outline sidebar dark mode */
+.dark .VPDocOutlineItem a {
+  color: var(--ds-muted);
+}
+
+.dark .VPDocOutlineItem a:hover,
+.dark .VPDocOutlineItem a.active {
+  color: var(--ds-ink);
+}
+
+/* Edit link dark mode */
+.dark .edit-link-button {
+  color: var(--ds-muted);
+}
+
+.dark .edit-link-button:hover {
+  color: var(--ds-blue);
+}
+
+/* Last updated dark mode */
+.dark .VPLastUpdated {
+  color: var(--ds-muted);
+}
+
+/* Scrollbar dark mode */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
