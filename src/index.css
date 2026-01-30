@@ -7,20 +7,64 @@
     font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei',
       ui-sans-serif, sans-serif;
     font-feature-settings: 'ss01', 'ss02', 'cv11';
+    color-scheme: light;
     color: #1d1d1f;
     background-color: #f5f5f7;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    /* Light theme tokens */
     --apple-ink: #1d1d1f;
-    --apple-muted: #585c63;
-    --apple-line: rgba(0, 0, 0, 0.12);
-    --apple-soft-line: rgba(255, 255, 255, 0.7);
-    --apple-surface: #f5f5f7;
-    --apple-card: rgba(255, 255, 255, 0.82);
+    --apple-ink-secondary: #48484a;
+    --apple-muted: #6e6e73;
+    --apple-line: rgba(0, 0, 0, 0.1);
+    --apple-line-strong: rgba(0, 0, 0, 0.16);
+    --apple-soft-line: rgba(255, 255, 255, 0.8);
+    --apple-surface: #fbfbfd;
+    --apple-surface-elevated: #ffffff;
+    --apple-card: rgba(255, 255, 255, 0.72);
+    --apple-card-strong: rgba(255, 255, 255, 0.88);
+    --apple-card-hover: rgba(255, 255, 255, 0.95);
     --apple-blue: #0071e3;
-    --apple-glow: rgba(0, 113, 227, 0.12);
+    --apple-blue-hover: #0077ed;
+    --apple-blue-soft: rgba(0, 113, 227, 0.1);
+    --apple-glow: rgba(0, 113, 227, 0.15);
+    --apple-purple: #a855f7;
+    --apple-pink: #ec4899;
+    --apple-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+    --apple-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05), 0 16px 48px rgba(0, 0, 0, 0.08);
+    --apple-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.06), 0 32px 80px rgba(0, 0, 0, 0.12);
+    --apple-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.08), 0 48px 120px rgba(0, 0, 0, 0.16);
+
+    /* Title gradient - Apple style */
+    --apple-title-gradient: linear-gradient(
+      135deg,
+      #1d1d1f 0%,
+      #3a3a3c 50%,
+      #1d1d1f 100%
+    );
+
+    /* Button tokens */
+    --apple-btn-primary-bg: #0071e3;
+    --apple-btn-primary-bg-hover: #0077ed;
+    --apple-btn-primary-text: #ffffff;
+    --apple-btn-secondary-bg: rgba(0, 0, 0, 0.05);
+    --apple-btn-secondary-bg-hover: rgba(0, 0, 0, 0.08);
+    --apple-btn-secondary-text: #0071e3;
+    --apple-btn-secondary-border: transparent;
+
+    /* Nav tokens */
+    --apple-nav-bg: rgba(251, 251, 253, 0.8);
+    --apple-nav-border: rgba(0, 0, 0, 0.08);
+
+    /* Selection */
+    --apple-selection-bg: rgba(0, 113, 227, 0.2);
+    --apple-selection-text: inherit;
+
+    /* Noise overlay */
+    --apple-noise-opacity: 0.02;
 
     /* shadcn/ui tokens (HSL) */
     --background: 0 0% 100%;
@@ -29,8 +73,8 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 211 100% 45%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
     --muted: 240 4.8% 95.9%;
@@ -41,19 +85,75 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
+    --ring: 211 100% 45%;
     --radius: 0.75rem;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    color-scheme: dark;
+
+    /* Dark theme tokens - Apple-inspired deep space */
+    --apple-ink: #f5f5f7;
+    --apple-ink-secondary: #a1a1a6;
+    --apple-muted: rgba(235, 235, 245, 0.6);
+    --apple-line: rgba(255, 255, 255, 0.1);
+    --apple-line-strong: rgba(255, 255, 255, 0.18);
+    --apple-soft-line: rgba(255, 255, 255, 0.12);
+    --apple-surface: #000000;
+    --apple-surface-elevated: #1c1c1e;
+    --apple-card: rgba(28, 28, 30, 0.8);
+    --apple-card-strong: rgba(44, 44, 46, 0.9);
+    --apple-card-hover: rgba(58, 58, 60, 0.85);
+    --apple-blue: #0a84ff;
+    --apple-blue-hover: #409cff;
+    --apple-blue-soft: rgba(10, 132, 255, 0.2);
+    --apple-glow: rgba(10, 132, 255, 0.25);
+    --apple-purple: #bf5af2;
+    --apple-pink: #ff375f;
+    --apple-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --apple-shadow-md: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --apple-shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.6);
+    --apple-shadow-xl: 0 32px 96px rgba(0, 0, 0, 0.7);
+
+    /* Title gradient - Apple dark mode style with subtle blue highlight */
+    --apple-title-gradient: linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f5f5f7 25%,
+      rgba(10, 132, 255, 0.9) 50%,
+      #f5f5f7 75%,
+      #ffffff 100%
+    );
+
+    /* Button tokens - Apple blue primary in dark mode */
+    --apple-btn-primary-bg: #0a84ff;
+    --apple-btn-primary-bg-hover: #409cff;
+    --apple-btn-primary-text: #ffffff;
+    --apple-btn-secondary-bg: rgba(255, 255, 255, 0.1);
+    --apple-btn-secondary-bg-hover: rgba(255, 255, 255, 0.15);
+    --apple-btn-secondary-text: #0a84ff;
+    --apple-btn-secondary-border: transparent;
+
+    /* Nav tokens */
+    --apple-nav-bg: rgba(0, 0, 0, 0.85);
+    --apple-nav-border: rgba(255, 255, 255, 0.1);
+
+    /* Selection */
+    --apple-selection-bg: rgba(10, 132, 255, 0.4);
+    --apple-selection-text: #ffffff;
+
+    /* Noise overlay */
+    --apple-noise-opacity: 0.03;
+
+    /* shadcn/ui tokens (HSL) */
+    --background: 0 0% 0%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 240 6% 10%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 240 6% 10%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
+    --primary: 211 100% 52%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
@@ -64,7 +164,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --ring: 211 100% 52%;
   }
 
   body {
@@ -72,14 +172,43 @@
     min-height: 100vh;
     color: var(--apple-ink);
     background-color: var(--apple-surface);
-    background-image: radial-gradient(
-        900px 600px at 20% -10%,
-        rgba(0, 113, 227, 0.16),
-        transparent 60%
-      ),
-      radial-gradient(700px 500px at 85% 0%, rgba(120, 120, 135, 0.18), transparent 55%),
-      linear-gradient(180deg, #f5f5f7 0%, #ffffff 40%, #f5f5f7 100%);
-    background-repeat: no-repeat;
+    background-image: 
+      /* Subtle top gradient orb */
+      radial-gradient(ellipse 120% 80% at 50% -20%, rgba(0, 113, 227, 0.08), transparent 50%),
+      /* Secondary accent */
+      radial-gradient(ellipse 80% 60% at 80% 20%, rgba(168, 85, 247, 0.04), transparent 40%),
+      /* Base gradient */
+      linear-gradient(180deg, 
+        #fbfbfd 0%, 
+        #ffffff 20%, 
+        #f5f5f7 60%,
+        #fbfbfd 100%
+      );
+    background-attachment: fixed;
+    transition: background-color 0.4s ease, color 0.3s ease;
+  }
+
+  /* Dark mode body - Apple-inspired dramatic dark with color orbs */
+  .dark body {
+    background-color: #000000;
+    background-image: 
+      /* Primary blue orb - top left */
+      radial-gradient(ellipse 100% 80% at 20% -30%, rgba(10, 132, 255, 0.15), transparent 50%),
+      /* Purple accent orb - top right */
+      radial-gradient(ellipse 80% 70% at 85% -10%, rgba(191, 90, 242, 0.12), transparent 45%),
+      /* Pink subtle glow - bottom */
+      radial-gradient(ellipse 100% 50% at 50% 120%, rgba(255, 55, 95, 0.06), transparent 40%),
+      /* Ambient glow for depth */
+      radial-gradient(ellipse 150% 100% at 50% 50%, rgba(28, 28, 30, 0.5), transparent 70%),
+      /* Base black */
+      linear-gradient(180deg, #000000 0%, #000000 100%);
+    background-attachment: fixed;
+  }
+
+  /* Global selection style */
+  ::selection {
+    background: var(--apple-selection-bg);
+    color: var(--apple-selection-text);
   }
 
   * {
@@ -91,10 +220,227 @@
     position: relative;
     isolation: isolate;
   }
+
+  /* Subtle noise texture overlay */
+  #root::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: var(--apple-noise-opacity);
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: overlay;
+  }
 }
 
 @layer components {
   .focus-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white/80;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+
+  :root .focus-ring {
+    --tw-ring-color: rgba(0, 113, 227, 0.5);
+    --tw-ring-offset-color: rgba(255, 255, 255, 0.9);
+  }
+
+  .dark .focus-ring {
+    --tw-ring-color: rgba(10, 132, 255, 0.6);
+    --tw-ring-offset-color: rgba(0, 0, 0, 0.9);
+  }
+
+  /* Apple-style segmented control (gray background + white slider) */
+  .segmented-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    padding: 2px;
+    border-radius: 10px;
+    background: transparent;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .segmented-control::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(0, 0, 0, 0.08);
+    backdrop-filter: saturate(260%) blur(220px);
+    -webkit-backdrop-filter: saturate(260%) blur(220px);
+    filter: url(#ds-liquid-glass);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .segmented-control::after {
+    content: '';
+    position: absolute;
+    inset: -40%;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 22% 8%, rgba(255, 255, 255, 0.75), transparent 45%),
+      radial-gradient(circle at 78% 128%, rgba(255, 255, 255, 0.25), transparent 52%);
+    opacity: 0.28;
+    filter: blur(18px);
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .dark .segmented-control {
+    background: transparent;
+  }
+
+  .dark .segmented-control::before {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .dark .segmented-control::after {
+    opacity: 0.22;
+  }
+
+  .segmented-control__btn {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    padding: 8px 14px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    border-radius: 10px;
+    outline: none;
+    user-select: none;
+    white-space: nowrap;
+    transition: color 120ms ease;
+  }
+
+  @media (min-width: 640px) {
+    .segmented-control__btn {
+      padding: 8px 22px;
+    }
+  }
+
+  .dark .segmented-control__btn {
+    color: rgba(235, 235, 245, 0.6);
+  }
+
+  .segmented-control__btn.is-active {
+    color: #1d1d1f;
+    font-weight: 600;
+  }
+
+  .dark .segmented-control__btn.is-active {
+    color: #1d1d1f;
+  }
+
+  .segmented-control__slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    height: calc(100% - 4px);
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
+    z-index: 1;
+  }
+
+  /* Apple-style gradient text */
+  .gradient-text {
+    background: var(--apple-title-gradient);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Animated gradient for special emphasis */
+  .gradient-text-animated {
+    background: linear-gradient(
+      90deg,
+      var(--apple-ink) 0%,
+      var(--apple-blue) 25%,
+      var(--apple-purple) 50%,
+      var(--apple-blue) 75%,
+      var(--apple-ink) 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-shift 8s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Glass morphism card */
+  .glass-card {
+    background: var(--apple-card);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid var(--apple-line);
+    box-shadow: var(--apple-shadow-md);
+  }
+
+  .glass-card-strong {
+    background: var(--apple-card-strong);
+    backdrop-filter: saturate(200%) blur(30px);
+    -webkit-backdrop-filter: saturate(200%) blur(30px);
+    border: 1px solid var(--apple-line-strong);
+    box-shadow: var(--apple-shadow-lg);
+  }
+
+  /* Glow effect for interactive elements */
+  .glow-blue {
+    box-shadow: 0 0 20px var(--apple-glow), 0 0 40px rgba(0, 113, 227, 0.1);
+  }
+
+  .dark .glow-blue {
+    box-shadow: 0 0 30px var(--apple-glow), 0 0 60px rgba(10, 132, 255, 0.15);
+  }
+
+  /* Subtle hover lift effect */
+  .hover-lift {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--apple-shadow-lg);
+  }
+}
+
+/* Theme transition - respect reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    --theme-transition-duration: 0.4s;
+  }
+  
+  body,
+  .theme-transition,
+  .theme-transition * {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow, opacity;
+    transition-duration: var(--theme-transition-duration);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --theme-transition-duration: 0s;
+  }
+  
+  .gradient-text-animated {
+    animation: none;
   }
 }

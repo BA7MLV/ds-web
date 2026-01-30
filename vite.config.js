@@ -20,6 +20,7 @@ const buildHash = resolveBuildHash()
 export default defineConfig({
   plugins: [react()],
   server: {
+    port: 5180,
     proxy: {
       '/docs': {
         target: 'http://localhost:5174',
@@ -27,6 +28,9 @@ export default defineConfig({
         ws: true,
       },
     },
+  },
+  preview: {
+    port: 5180,
   },
   define: {
     'import.meta.env.VITE_BUILD_HASH': JSON.stringify(buildHash),

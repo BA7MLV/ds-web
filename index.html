@@ -2,22 +2,78 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/deepstudent-logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0c" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
     <meta
       name="description"
-      content="DeepStudent - 免费开源的错题管理工具"
+      content="DeepStudent - 免费开源的AI错题管理解决方案"
     />
+
+    <!-- 防闪烁脚本：在CSS加载前同步应用主题，确保零视觉闪烁 -->
+    <script>
+      (function() {
+        try {
+          // 1. 读取用户偏好
+          var stored = localStorage.getItem('ds-theme-preference');
+          var mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+          
+          // 2. 解析主题（遵循优先级：显式设置 > 系统偏好 > 默认浅色）
+          var resolved;
+          if (stored === 'dark') {
+            resolved = 'dark';
+          } else if (stored === 'light') {
+            resolved = 'light';
+          } else {
+            resolved = mediaQuery.matches ? 'dark' : 'light';
+          }
+          
+          // 3. 立即应用到DOM（在CSS解析前执行）
+          document.documentElement.classList.add(resolved);
+          
+          // 4. 同步更新meta theme-color
+          var metaThemeColor = document.querySelector('meta[name="theme-color"]:not([media])');
+          if (!metaThemeColor) {
+            metaThemeColor = document.createElement('meta');
+            metaThemeColor.name = 'theme-color';
+            document.head.appendChild(metaThemeColor);
+          }
+          metaThemeColor.setAttribute('content', resolved === 'dark' ? '#0a0a0c' : '#f5f5f7');
+          
+          // 5. 防止浏览器缓存导致的闪烁（强制同步）
+          document.documentElement.style.colorScheme = resolved;
+        } catch (e) {
+          // 静默失败：确保页面仍可加载
+          console.warn('[Theme] 初始化脚本异常', e);
+        }
+      })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <title>DeepStudent · 错题管理</title>
+    <title>DeepStudent · AI 原生学习解决方案</title>
   </head>
   <body>
     <div id="root"></div>
+    <svg width="0" height="0" aria-hidden="true" focusable="false">
+      <filter
+        id="ds-liquid-glass"
+        x="-20%"
+        y="-20%"
+        width="140%"
+        height="140%"
+        color-interpolation-filters="sRGB"
+      >
+        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </svg>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
