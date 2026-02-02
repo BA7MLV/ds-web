@@ -7,6 +7,8 @@ import { Switch } from './ui/switch'
 
 const ModeRow = ({ icon: Icon, title, description, checked, onCheckedChange, gradientClass }) => {
   const id = useId()
+  // Ensure the prop alias is referenced outside JSX for linting in some setups.
+  const IconComponent = Icon
 
   return (
     <Button
@@ -18,10 +20,10 @@ const ModeRow = ({ icon: Icon, title, description, checked, onCheckedChange, gra
       <span
         className={`pointer-events-none absolute inset-0 opacity-0 blur-2xl transition-opacity group-hover:opacity-100 ${gradientClass}`}
       />
-      <span className="relative flex w-full items-start gap-3">
-        <span className="mt-0.5 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background shadow-sm">
-          <Icon className="h-4 w-4 text-foreground/80" aria-hidden="true" />
-        </span>
+        <span className="relative flex w-full items-start gap-3">
+          <span className="mt-0.5 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background shadow-sm">
+          <IconComponent className="h-4 w-4 text-foreground/80" aria-hidden="true" />
+          </span>
 
         <span className="min-w-0 flex-1">
           <span className="flex items-center gap-2">

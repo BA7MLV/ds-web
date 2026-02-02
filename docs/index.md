@@ -4,14 +4,14 @@
 ---
 
 <div style="text-align: center;">
-    <p>关注我们的小红书账号：<a href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f?xsec_token=ABFtyTy-x0Maimelyl74sy1awqRq0TG5s7HwllwakTIkg%3D&xsec_source=pc_search">小红书</a></p>
+    <p>关注我们的小红书账号：<a href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f?xsec_token=ABFtyTy-x0Maimelyl74sy1an9VAHPgOOEjqScJeuijI8%3D&xsec_source=pc_search">小红书</a></p>
     <p>加入我们的社群：<a href="https://qm.qq.com/q/1lTUkKSaB6">QQ群（310134919）</a></p>
 </div>
 
 ---
 
 ::: warning 简介
-DeepStudent 是一款 Ai 原生学习解决方案，专为追求高效学习的学生和教师设计。
+DeepStudent 是一款 AI 原生学习解决方案，专为追求高效学习的学生和教师设计。
 DeepStudent 通过人工智能技术革新传统错题整理方式，使用户可以自由使用各家先进的LLM、VLM模型，进而使学习更高效，让知识更牢固。
 :::
 

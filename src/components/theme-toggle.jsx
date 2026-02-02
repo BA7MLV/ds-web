@@ -159,7 +159,7 @@ export const useTheme = () => {
 
 // Theme toggle button with three states
 export const ThemeToggle = ({ className = '' }) => {
-  const { theme, setTheme, isDark } = useTheme()
+  const { theme, setTheme } = useTheme()
 
   const cycleTheme = () => {
     const order = ['system', 'light', 'dark']
@@ -210,7 +210,7 @@ export const ThemeToggle = ({ className = '' }) => {
 
 // Dropdown theme selector for more explicit selection
 export const ThemeSelector = ({ className = '' }) => {
-  const { theme, setTheme, resolvedTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
 
   const themes = [

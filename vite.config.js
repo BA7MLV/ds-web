@@ -10,7 +10,7 @@ const resolveBuildHash = () => {
     return execSync('git rev-parse --short HEAD', { stdio: ['ignore', 'pipe', 'ignore'] })
       .toString()
       .trim()
-  } catch (error) {
+  } catch {
     return 'dev'
   }
 }

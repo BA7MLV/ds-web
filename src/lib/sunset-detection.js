@@ -337,9 +337,6 @@ export async function initSunsetThemeManager(themeStore, options = {}) {
 
   // 每小时检查一次（跨越日出/日落边界时更新）
   setInterval(() => {
-    const { isDaytime } = detector.getSunriseAndSunset();
-    const preferredTheme = isDaytime ? 'light' : 'dark';
-    
     // 仅在用户设置为"自动"时更新
     const currentPreference = localStorage.getItem('ds-theme-preference') || 'system';
     if (currentPreference === 'system') {
