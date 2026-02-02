@@ -41,15 +41,15 @@ const translations = {
     
     // ========== 笔记系统 ==========
     'feature.notes.title': '笔记系统',
-    'feature.notes.desc': 'Markdown 编辑器 + 版本历史 + AI 辅助写作。双向链接、知识图谱，打造你的第二大脑。',
+    'feature.notes.desc': 'Markdown 编辑器 + 版本历史 + AI 辅助写作。标签分类、收藏管理，打造你的第二大脑。',
     'notes.markdown': 'Markdown 编辑',
     'notes.markdownDesc': '完整 Markdown 语法支持',
     'notes.version': '版本历史',
     'notes.versionDesc': '多版本历史，随时回溯',
     'notes.ai': 'AI 辅助',
     'notes.aiDesc': 'AI 续写与浮动助手',
-    'notes.link': '双向链接',
-    'notes.linkDesc': '笔记互联，知识网络',
+    'notes.link': '标签分类',
+    'notes.linkDesc': '多标签分类管理',
     'notes.editor': 'Markdown 编辑器',
     'notes.sampleTitle': '线性代数学习笔记',
     'notes.sampleContent': '矩阵的特征值与特征向量...',
@@ -57,9 +57,9 @@ const translations = {
     
     // ========== 教材管理 ==========
     'feature.textbook.title': '教材管理',
-    'feature.textbook.desc': '支持 20+ 文档格式，PDF/Word/EPUB 一键导入。双引擎 OCR 识别扫描件，导入即自动向量化，AI 可读可检索。',
+    'feature.textbook.desc': '支持 16+ 文档格式，PDF/Word/EPUB 一键导入。双引擎 OCR 识别扫描件，导入即自动向量化，AI 可读可检索。',
     'textbook.formats': '多格式支持',
-    'textbook.formatsDesc': 'PDF、Word、EPUB、PPT 等 20+ 格式',
+    'textbook.formatsDesc': 'PDF、Word、EPUB、PPT 等 16+ 格式',
     'textbook.ocr': 'OCR 识别',
     'textbook.ocrDesc': 'DeepSeek + PaddleOCR 双引擎',
     'textbook.reader': '阅读器',
@@ -105,7 +105,7 @@ const translations = {
     
     // ========== 翻译工作台 ==========
     'feature.translate.title': '翻译工作台',
-    'feature.translate.desc': '支持 11 种语言互译，双栏同步滚动显示。OCR 识别后翻译、TTS 朗读，一站式翻译体验。',
+    'feature.translate.desc': '支持 12 种语言互译，双栏同步滚动显示。OCR 识别后翻译、TTS 朗读，一站式翻译体验。',
     'translate.languages': '多语言',
     'translate.languagesDesc': '中/英/日/韩/法/德等 11 种',
     'translate.compare': '双栏视图',
@@ -166,7 +166,7 @@ const translations = {
     'subfeature.blocks.d3': 'webSearch 网络搜索',
     'subfeature.blocks.d4': 'mcpTool 工具调用',
     'subfeature.blocks.d5': 'ankiCards 卡片生成',
-    'subfeature.blocks.d6': 'imageGen 图像生成',
+    'subfeature.blocks.d6': 'imageGen 图像生成 (开发中)',
     'subfeature.agentTools': 'Agent 工具调用',
     'subfeature.agentToolsDesc': '借助 Skills 工具组原生读写学习数据',
     'subfeature.agentTools.d1': '知识检索工具组',
@@ -201,7 +201,7 @@ const translations = {
     'subfeature.resourceTypes.d5': '翻译 tr_',
     'subfeature.resourceTypes.d6': '知识导图 mm_',
     'subfeature.docFormats': '文档格式',
-    'subfeature.docFormatsDesc': '支持 20+ 种文档格式',
+    'subfeature.docFormatsDesc': '支持 16+ 种文档格式',
     'subfeature.docFormats.d1': 'Word/Excel/PPT',
     'subfeature.docFormats.d2': 'PDF（文本+扫描）',
     'subfeature.docFormats.d3': 'EPUB 电子书',
@@ -263,7 +263,7 @@ const translations = {
     
     // Sub-features - Anki 制卡
     'subfeature.ankiParse': '文档解析',
-    'subfeature.ankiParseDesc': '支持 20+ 格式智能解析',
+    'subfeature.ankiParseDesc': '支持 16+ 格式智能解析',
     'subfeature.ankiParse.d1': '智能分段',
     'subfeature.ankiParse.d2': '长文档切割',
     'subfeature.ankiParse.d3': 'AI 知识点提取',
@@ -335,7 +335,7 @@ const translations = {
     'feature.compare.title': '技能系统 · 按需扩展',
     'feature.compare.desc': '渐进披露架构，工具按需加载。内置导师模式、制卡助手、文献综述、调研模式等技能，支持自定义与 MCP 生态集成。',
     'feature.spaced.title': 'Anki 智能制卡',
-    'feature.spaced.desc': '从学习文档智能提取知识点生成卡片。支持多模板、3D 预览、AnkiConnect 一键同步，让间隔重复触手可及。',
+    'feature.spaced.desc': '从学习文档智能分段生成卡片。支持多模板、3D 预览、AnkiConnect 一键同步，让间隔重复触手可及。',
     'feature.knowledge.title': '本地优先 · 隐私安全',
     'feature.knowledge.desc': '所有数据存储在本地：SQLite 元数据 + LanceDB 向量库。支持完整备份与审计，你的学习记录完全由你掌控。',
     
@@ -449,7 +449,7 @@ const translations = {
     'policy.terms.title': '使用条款',
     'policy.terms.description': '使用 DeepStudent 即表示你同意以下约定，本服务为学习辅助工具，不构成绝对学习结果承诺。',
     'policy.terms.section1.title': '服务内容',
-    'policy.terms.section1.body': '我们提供错题整理、知识图谱、复习提醒等功能，能力会根据版本迭代持续更新。',
+    'policy.terms.section1.body': '我们提供错题整理、智能复习、AI 辅助等功能，能力会根据版本迭代持续更新。',
     'policy.terms.section1.point1': '测试功能可能存在不稳定，请按需体验。',
     'policy.terms.section1.point2': '我们保留随时调整或暂停服务的权利。',
     'policy.terms.section2.title': '用户责任',
@@ -512,15 +512,15 @@ const translations = {
     
     // ========== 筆記系統 ==========
     'feature.notes.title': '筆記系統',
-    'feature.notes.desc': 'Markdown 編輯器 + 版本歷史 + AI 輔助寫作。雙向連結、知識圖譜，打造你的第二大腦。',
+    'feature.notes.desc': 'Markdown 編輯器 + 版本歷史 + AI 輔助寫作。標籤分類、收藏管理，打造你的第二大腦。',
     'notes.markdown': 'Markdown 編輯',
     'notes.markdownDesc': '完整 Markdown 語法支援',
     'notes.version': '版本歷史',
     'notes.versionDesc': '多版本歷史，隨時回溯',
     'notes.ai': 'AI 輔助',
     'notes.aiDesc': 'AI 續寫與浮動助手',
-    'notes.link': '雙向連結',
-    'notes.linkDesc': '筆記互聯，知識網路',
+    'notes.link': '筆記連結',
+    'notes.linkDesc': '[[連結]] 語法筆記互聯',
     'notes.editor': 'Markdown 編輯器',
     'notes.sampleTitle': '線性代數學習筆記',
     'notes.sampleContent': '矩陣的特徵值與特徵向量...',
@@ -528,9 +528,9 @@ const translations = {
     
     // ========== 教材管理 ==========
     'feature.textbook.title': '教材管理',
-    'feature.textbook.desc': '支援 20+ 文檔格式，PDF/Word/EPUB 一鍵匯入。雙引擎 OCR 識別掃描件，匯入即自動向量化，AI 可讀可檢索。',
+    'feature.textbook.desc': '支援 16+ 文檔格式，PDF/Word/EPUB 一鍵匯入。雙引擎 OCR 識別掃描件，匯入即自動向量化，AI 可讀可檢索。',
     'textbook.formats': '多格式支援',
-    'textbook.formatsDesc': 'PDF、Word、EPUB、PPT 等 20+ 格式',
+    'textbook.formatsDesc': 'PDF、Word、EPUB、PPT 等 16+ 格式',
     'textbook.ocr': 'OCR 識別',
     'textbook.ocrDesc': 'DeepSeek + PaddleOCR 雙引擎',
     'textbook.reader': '閱讀器',
@@ -576,7 +576,7 @@ const translations = {
     
     // ========== 翻譯工作台 ==========
     'feature.translate.title': '翻譯工作台',
-    'feature.translate.desc': '支援 11 種語言互譯，雙欄同步滾動顯示。OCR 識別後翻譯、TTS 朗讀，一站式翻譯體驗。',
+    'feature.translate.desc': '支援 12 種語言互譯，雙欄同步滾動顯示。OCR 識別後翻譯、TTS 朗讀，一站式翻譯體驗。',
     'translate.languages': '多語言',
     'translate.languagesDesc': '中/英/日/韓/法/德等 11 種',
     'translate.compare': '雙欄視圖',
@@ -637,7 +637,7 @@ const translations = {
     'subfeature.blocks.d3': 'webSearch 網路搜尋',
     'subfeature.blocks.d4': 'mcpTool 工具呼叫',
     'subfeature.blocks.d5': 'ankiCards 卡片生成',
-    'subfeature.blocks.d6': 'imageGen 圖像生成',
+    'subfeature.blocks.d6': 'imageGen 圖像生成 (開發中)',
     'subfeature.agentTools': 'Agent 工具調用',
     'subfeature.agentToolsDesc': '借助 Skills 工具組原生讀寫學習資料',
     'subfeature.agentTools.d1': '知識檢索工具組',
@@ -672,7 +672,7 @@ const translations = {
     'subfeature.resourceTypes.d5': '翻譯 tr_',
     'subfeature.resourceTypes.d6': '知識導圖 mm_',
     'subfeature.docFormats': '文檔格式',
-    'subfeature.docFormatsDesc': '支援 20+ 種文檔格式',
+    'subfeature.docFormatsDesc': '支援 16+ 種文檔格式',
     'subfeature.docFormats.d1': 'Word/Excel/PPT',
     'subfeature.docFormats.d2': 'PDF（文字+掃描）',
     'subfeature.docFormats.d3': 'EPUB 電子書',
@@ -734,7 +734,7 @@ const translations = {
     
     // Sub-features - Anki 製卡
     'subfeature.ankiParse': '文檔解析',
-    'subfeature.ankiParseDesc': '支援 20+ 格式智慧解析',
+    'subfeature.ankiParseDesc': '支援 16+ 格式智慧解析',
     'subfeature.ankiParse.d1': '智慧分段',
     'subfeature.ankiParse.d2': '長文檔切割',
     'subfeature.ankiParse.d3': 'AI 知識點提取',
@@ -806,7 +806,7 @@ const translations = {
     'feature.compare.title': '技能系統 · 按需擴展',
     'feature.compare.desc': '漸進披露架構，工具按需載入。內建導師模式、製卡助手、文獻綜述、調研模式等技能，支援自定義與 MCP 生態整合。',
     'feature.spaced.title': 'Anki 智慧製卡',
-    'feature.spaced.desc': '從學習文檔智慧提取知識點生成卡片。支援多模板、3D 預覽、AnkiConnect 一鍵同步，讓間隔重複觸手可及。',
+    'feature.spaced.desc': '從學習文檔智慧分段生成卡片。支援多模板、3D 預覽、AnkiConnect 一鍵同步，讓間隔重複觸手可及。',
     'feature.knowledge.title': '本地優先 · 隱私安全',
     'feature.knowledge.desc': '所有資料儲存在本地：SQLite 元資料 + LanceDB 向量庫。支援完整備份與稽核，你的學習記錄完全由你掌控。',
 
@@ -920,7 +920,7 @@ const translations = {
     'policy.terms.title': '使用條款',
     'policy.terms.description': '使用 DeepStudent 即表示你同意以下約定，本服務為學習輔助工具，不構成絕對學習結果承諾。',
     'policy.terms.section1.title': '服務內容',
-    'policy.terms.section1.body': '我們提供錯題整理、知識圖譜、複習提醒等功能，能力會根據版本迭代持續更新。',
+    'policy.terms.section1.body': '我們提供錯題整理、智慧複習、AI 輔助等功能，能力會根據版本迭代持續更新。',
     'policy.terms.section1.point1': '測試功能可能存在不穩定，請按需體驗。',
     'policy.terms.section1.point2': '我們保留隨時調整或暫停服務的權利。',
     'policy.terms.section2.title': '使用者責任',
@@ -983,15 +983,15 @@ const translations = {
     
     // ========== Notes System ==========
     'feature.notes.title': 'Notes System',
-    'feature.notes.desc': 'Markdown editor + version history + AI writing assistant. Bi-directional links, knowledge graph, build your second brain.',
+    'feature.notes.desc': 'Markdown editor + version history + AI writing assistant. Tag organization, favorites, build your second brain.',
     'notes.markdown': 'Markdown Editor',
     'notes.markdownDesc': 'Full Markdown syntax support',
     'notes.version': 'Version History',
     'notes.versionDesc': 'Multi-version history, instant rollback',
     'notes.ai': 'AI Assistant',
     'notes.aiDesc': 'AI continue & floating assistant',
-    'notes.link': 'Bi-directional Links',
-    'notes.linkDesc': 'Connected notes, knowledge network',
+    'notes.link': 'Tag Organization',
+    'notes.linkDesc': 'Multi-tag categorization',
     'notes.editor': 'Markdown Editor',
     'notes.sampleTitle': 'Linear Algebra Notes',
     'notes.sampleContent': 'Eigenvalues and eigenvectors of matrices...',
@@ -999,9 +999,9 @@ const translations = {
     
     // ========== Textbook Management ==========
     'feature.textbook.title': 'Textbook Management',
-    'feature.textbook.desc': 'Supports 20+ document formats, one-click import PDF/Word/EPUB. Dual OCR engine for scans, auto-vectorize on import, AI-readable & searchable.',
+    'feature.textbook.desc': 'Supports 16+ document formats, one-click import PDF/Word/EPUB. Dual OCR engine for scans, auto-vectorize on import, AI-readable & searchable.',
     'textbook.formats': 'Multi-format',
-    'textbook.formatsDesc': 'PDF, Word, EPUB, PPT & 20+ formats',
+    'textbook.formatsDesc': 'PDF, Word, EPUB, PPT & 16+ formats',
     'textbook.ocr': 'OCR Recognition',
     'textbook.ocrDesc': 'DeepSeek + PaddleOCR dual engine',
     'textbook.reader': 'Reader',
@@ -1047,7 +1047,7 @@ const translations = {
     
     // ========== Translation Workbench ==========
     'feature.translate.title': 'Translation Workbench',
-    'feature.translate.desc': 'Supports 11 languages with dual-pane sync scroll. OCR-then-translate, TTS - all-in-one translation experience.',
+    'feature.translate.desc': 'Supports 12 languages with dual-pane sync scroll. OCR-then-translate, TTS - all-in-one translation experience.',
     'translate.languages': 'Multi-language',
     'translate.languagesDesc': 'EN/CN/JP/KR/FR/DE & 11 more',
     'translate.compare': 'Dual-pane View',
@@ -1108,7 +1108,7 @@ const translations = {
     'subfeature.blocks.d3': 'webSearch',
     'subfeature.blocks.d4': 'mcpTool',
     'subfeature.blocks.d5': 'ankiCards',
-    'subfeature.blocks.d6': 'imageGen',
+    'subfeature.blocks.d6': 'imageGen (WIP)',
     'subfeature.agentTools': 'Agent Tool Calls',
     'subfeature.agentToolsDesc': 'Native read/write learning data via Skills toolset',
     'subfeature.agentTools.d1': 'Knowledge retrieval tools',
@@ -1143,7 +1143,7 @@ const translations = {
     'subfeature.resourceTypes.d5': 'Translations tr_',
     'subfeature.resourceTypes.d6': 'Mindmaps mm_',
     'subfeature.docFormats': 'Doc Formats',
-    'subfeature.docFormatsDesc': '20+ document formats supported',
+    'subfeature.docFormatsDesc': '16+ document formats supported',
     'subfeature.docFormats.d1': 'Word/Excel/PPT',
     'subfeature.docFormats.d2': 'PDF (text+scanned)',
     'subfeature.docFormats.d3': 'EPUB ebooks',
@@ -1205,7 +1205,7 @@ const translations = {
     
     // Sub-features - CardForge
     'subfeature.ankiParse': 'Doc Parsing',
-    'subfeature.ankiParseDesc': '20+ formats smart parsing',
+    'subfeature.ankiParseDesc': '16+ formats smart parsing',
     'subfeature.ankiParse.d1': 'Smart chunking',
     'subfeature.ankiParse.d2': 'Long doc splitting',
     'subfeature.ankiParse.d3': 'AI knowledge extraction',
@@ -1277,7 +1277,7 @@ const translations = {
     'feature.compare.title': 'Skills · On-Demand Extension',
     'feature.compare.desc': 'Progressive disclosure architecture with on-demand tool loading. Built-in tutor mode, card forge, literature review, research mode, and more. Supports custom skills and MCP ecosystem integration.',
     'feature.spaced.title': 'Anki CardForge',
-    'feature.spaced.desc': 'Intelligently extract knowledge points from documents to generate cards. Multi-template support, 3D preview, one-click AnkiConnect sync — spaced repetition at your fingertips.',
+    'feature.spaced.desc': 'Intelligently segment documents to generate cards. Multi-template support, 3D preview, one-click AnkiConnect sync — spaced repetition at your fingertips.',
     'feature.knowledge.title': 'Local-First · Privacy Safe',
     'feature.knowledge.desc': 'All data stored locally: SQLite metadata + LanceDB vector store. Full backup and audit support — your learning records stay under your control.',
     
@@ -1391,7 +1391,7 @@ const translations = {
     'policy.terms.title': 'Terms of Use',
     'policy.terms.description': 'By using DeepStudent, you agree to the terms below. DeepStudent is a learning aid and does not guarantee outcomes.',
     'policy.terms.section1.title': 'Service',
-    'policy.terms.section1.body': 'We provide mistake tracking, knowledge mapping, review reminders, and more, continuously improving with each release.',
+    'policy.terms.section1.body': 'We provide mistake tracking, smart review, AI assistance, and more, continuously improving with each release.',
     'policy.terms.section1.point1': 'Preview features may be unstable.',
     'policy.terms.section1.point2': 'We may adjust or pause the service at any time.',
     'policy.terms.section2.title': 'Your responsibilities',
