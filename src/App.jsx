@@ -380,7 +380,7 @@ const StatsHighlight = ({ motionScale = 1 }) => {
     { value: '59', labelKey: 'stats.tools', descKey: 'stats.toolsDesc' },
     { value: '17', labelKey: 'stats.providers', descKey: 'stats.providersDesc' },
     { value: '8', labelKey: 'stats.modes', descKey: 'stats.modesDesc' },
-    { value: '20+', labelKey: 'stats.formats', descKey: 'stats.formatsDesc' },
+    { value: '16+', labelKey: 'stats.formats', descKey: 'stats.formatsDesc' },
   ]
 
   return (
@@ -618,7 +618,7 @@ const App = () => {
                 align="left"
                 motionScale={motionScale}
                 subFeatures={[
-                  { labelKey: 'textbook.formats', descKey: 'textbook.formatsDesc', badge: '20+' },
+                  { labelKey: 'textbook.formats', descKey: 'textbook.formatsDesc', badge: '16+' },
                   { labelKey: 'textbook.ocr', descKey: 'textbook.ocrDesc', badge: '2' },
                   { labelKey: 'textbook.reader', descKey: 'textbook.readerDesc', badge: '✓' },
                   { labelKey: 'textbook.search', descKey: 'textbook.searchDesc', badge: '✓' },
@@ -867,7 +867,7 @@ const App = () => {
                   { 
                     labelKey: 'subfeature.ankiParse', 
                     descKey: 'subfeature.ankiParseDesc',
-                    badge: '20+',
+                    badge: '16+',
                     details: ['subfeature.ankiParse.d1', 'subfeature.ankiParse.d2', 'subfeature.ankiParse.d3']
                   },
                   { 
