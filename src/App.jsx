@@ -1,19 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
-import {
-  ArrowLeft,
-  ArrowDown,
-  Brain,
-  Download,
-  FileText,
-  LaptopMinimal,
-  Layers,
-  MonitorDot,
-  Search,
-  Sparkles,
-  Target,
-  X,
-  Zap,
-} from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import logo from './assets/deepstudent-logo.svg'
 import logoDark from './assets/deepstudent-logo-dark.svg'
 import { ThemeToggle, useTheme } from './components/theme-toggle'
@@ -405,7 +391,6 @@ const App = () => {
           >
             <div className="space-y-[6.854rem] sm:space-y-[11.09rem] lg:space-y-[17.944rem] pt-[4.236rem] sm:pt-[6.854rem]">
               <FeatureSection
-                icon={<Brain className="w-6 h-6" aria-hidden="true" />}
                 title={t('feature.review.title')}
                 desc={t('feature.review.desc')}
                 align="left"
@@ -413,9 +398,6 @@ const App = () => {
               >
             <div className="bg-[color:var(--apple-card)] backdrop-blur-xl p-[1.618rem] sm:p-[2.618rem] rounded-[1.618rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-md)] max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto transform transition-transform hover:scale-[1.02] active:scale-[1.01] duration-500">
               <div className={cardHeaderClass}>
-                <div className="w-8 h-8 rounded-full bg-[color:var(--apple-card-strong)] ring-1 ring-[color:var(--apple-line)] flex items-center justify-center text-[color:var(--apple-ink)]">
-                  <Sparkles className="w-4 h-4" aria-hidden="true" />
-                </div>
                 <div>
                   <div className="text-sm font-semibold text-[color:var(--apple-ink)]">{t('card.analyzing')}</div>
                   <div className="text-xs text-[color:var(--apple-muted)]">{t('card.justNow')}</div>
@@ -447,7 +429,6 @@ const App = () => {
           </FeatureSection>
 
           <FeatureSection
-            icon={<Layers className="w-6 h-6" aria-hidden="true" />}
                 title={t('feature.organize.title')}
                 desc={t('feature.organize.desc')}
                 align="right"
@@ -475,9 +456,6 @@ const App = () => {
                       className="flex items-center justify-between p-[1rem] hover:bg-[color:var(--apple-card-hover)] active:bg-[color:var(--apple-card-hover)] rounded-[1rem] transition-colors group cursor-default"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-10 bg-[color:var(--apple-card-strong)] rounded border border-[color:var(--apple-line)] flex items-center justify-center">
-                          <FileText className="w-4 h-4 text-[color:var(--apple-muted)]" aria-hidden="true" />
-                        </div>
                         <div>
                           <div className="text-sm font-medium text-[color:var(--apple-ink)] group-hover:text-[color:var(--apple-blue)] transition-colors">
                             {item.title}
@@ -496,16 +474,12 @@ const App = () => {
           </FeatureSection>
 
           <FeatureSection
-            icon={<Target className="w-6 h-6" aria-hidden="true" />}
                 title={t('feature.compare.title')}
                 desc={t('feature.compare.desc')}
                 align="left"
                 motionScale={motionScale}
               >
             <div className="bg-gradient-to-br from-[#18181b] via-[#111114] to-[#0c0c0e] dark:from-[#1c1c20] dark:via-[#151518] dark:to-[#0f0f12] text-white p-[1.618rem] sm:p-[2.618rem] rounded-[1.618rem] shadow-[var(--apple-shadow-lg)] border border-white/10 max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-[1.618rem] opacity-30">
-                <Target className="w-24 h-24" aria-hidden="true" />
-              </div>
               <div className="relative z-10">
                 <div className="text-sm text-white/60 mb-1">{t('card.errorType')}</div>
                 <div className="text-2xl font-bold mb-[2.618rem]">{t('card.calcError')}</div>
@@ -526,7 +500,6 @@ const App = () => {
           </FeatureSection>
 
           <FeatureSection
-            icon={<Zap className="w-6 h-6" aria-hidden="true" />}
                 title={t('feature.spaced.title')}
                 desc={t('feature.spaced.desc')}
                 align="right"
@@ -538,30 +511,34 @@ const App = () => {
           </FeatureSection>
 
           <FeatureSection
-            icon={<Search className="w-6 h-6" aria-hidden="true" />}
                 title={t('feature.knowledge.title')}
                 desc={t('feature.knowledge.desc')}
                 align="left"
                 motionScale={motionScale}
               >
-            <div className="bg-[color:var(--apple-card)] backdrop-blur-xl p-[1.618rem] rounded-[1.618rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-md)] max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto">
+            <div className="bg-[color:var(--apple-card)] backdrop-blur-xl p-[1.618rem] sm:p-[2.618rem] rounded-[1.618rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-md)] max-w-[17.944rem] sm:max-w-[29.034rem] mx-auto">
               <div className="space-y-[1.618rem]">
-                <div className="flex gap-[1rem] flex-row-reverse">
-                  <div className="w-8 h-8 rounded-full bg-[color:var(--apple-btn-primary-bg)] flex-shrink-0" />
-                  <div className="bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] px-[1.618rem] py-[0.618rem] rounded-[1.618rem] rounded-tr-[0.618rem] text-sm">
-                    {t('card.chatQuestion')}
-                  </div>
+                <div className="mb-[1.618rem]">
+                  <div className="text-sm font-semibold text-[color:var(--apple-ink)]">Local-First</div>
+                  <div className="text-xs text-[color:var(--apple-muted)]">Data Storage</div>
                 </div>
-                <div className="flex gap-[1rem]">
-                  <div className="w-8 h-8 rounded-full bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] flex items-center justify-center flex-shrink-0">
-                    <Brain className="w-4 h-4 text-[color:var(--apple-ink)]" aria-hidden="true" />
-                  </div>
-                  <div className="bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] text-[color:var(--apple-ink)] px-[1.618rem] py-[0.618rem] rounded-[1.618rem] rounded-tl-[0.618rem] text-sm shadow-sm">
-                    <p className="mb-2 font-semibold text-xs text-[color:var(--apple-muted)] uppercase tracking-wider">
-                      {t('card.reference')}
-                    </p>
-                    {t('card.chatAnswerSnippet')}
-                  </div>
+                <div className="space-y-3">
+                  {[
+                    { label: 'SQLite', desc: 'Metadata & Config', status: '✓' },
+                    { label: 'LanceDB', desc: 'Vector Store', status: '✓' },
+                    { label: 'Blob Files', desc: 'Documents & Images', status: '✓' },
+                  ].map((item) => (
+                    <div key={item.label} className="flex items-center justify-between p-[0.9rem] bg-[color:var(--apple-card-strong)] rounded-[0.9rem] border border-[color:var(--apple-line)]">
+                      <div>
+                        <div className="text-sm font-medium text-[color:var(--apple-ink)]">{item.label}</div>
+                        <div className="text-xs text-[color:var(--apple-muted)]">{item.desc}</div>
+                      </div>
+                      <span className="text-[color:var(--apple-ink)] text-sm font-medium">{item.status}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="pt-[1rem] border-t border-[color:var(--apple-line)] text-xs text-[color:var(--apple-muted)] text-center">
+                  Backup · Audit · Export · Full Control
                 </div>
               </div>
             </div>
@@ -712,16 +689,14 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               onClick={onDownload}
               className="focus-ring flex-1 py-[0.9rem] px-[1.5rem] sm:py-[1rem] sm:px-[2rem] md:py-[1.1rem] md:px-[2.2rem] bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] rounded-full font-medium text-sm md:text-[15px] hover:bg-[color:var(--apple-btn-primary-bg-hover)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 glow-blue"
             >
-              <Download className="w-4 h-4" aria-hidden="true" />
-              {t('hero.cta.download')}
+{t('hero.cta.download')}
             </button>
             <button
               type="button"
               onClick={handleExplore}
               className="focus-ring flex-1 py-[0.9rem] px-[1.5rem] sm:py-[1rem] sm:px-[2rem] md:py-[1.1rem] md:px-[2.2rem] bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-btn-secondary-text)] rounded-full font-medium text-sm md:text-[15px] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
-              <ArrowDown className="w-4 h-4" aria-hidden="true" />
-              {t('hero.cta.explore')}
+{t('hero.cta.explore')}
             </button>
           </div>
         </div>
@@ -738,28 +713,24 @@ const heroPreviewItems = [
   {
     id: 'chat',
     labelKey: 'hero.preview.chat',
-    icon: Sparkles,
     src: '/img/hero-preview-overview.jpg',
     objectPosition: 'center 38.2%',
   },
   {
     id: 'skills',
     labelKey: 'hero.preview.skills',
-    icon: Zap,
     src: '/img/hero-preview-skills.jpg',
     objectPosition: 'center 38.2%',
   },
   {
     id: 'knowledge',
     labelKey: 'hero.preview.knowledge',
-    icon: FileText,
     src: '/img/hero-preview-mistakes.jpg',
     objectPosition: 'center 38.2%',
   },
   {
     id: 'providers',
     labelKey: 'hero.preview.providers',
-    icon: MonitorDot,
     src: '/img/hero-preview-review.jpg',
     objectPosition: 'center 38.2%',
   },
@@ -901,7 +872,6 @@ const HeroPreview = ({ style, imageMaskStyle }) => {
               />
               {heroPreviewItems.map((item) => {
                 const isActive = item.id === activeId
-                const Icon = item.icon
                 return (
                   <button
                     key={item.id}
@@ -913,8 +883,7 @@ const HeroPreview = ({ style, imageMaskStyle }) => {
                     aria-label={t(item.labelKey)}
                     title={t(item.labelKey)}
                   >
-                    <Icon className="w-4 h-4" aria-hidden="true" />
-                    <span className="hidden sm:inline">{t(item.labelKey)}</span>
+                    <span>{t(item.labelKey)}</span>
                   </button>
                 )
               })}
@@ -939,8 +908,6 @@ const DownloadPage = ({ onBack = () => {} }) => {
       description: t('download.description.macos'),
       ctaLabel: t('download.downloadDmg'),
       ctaHref: 'https://downloads.deepstudent.ai/macos/deepstudent-v1.0.2.dmg',
-      icon: MonitorDot,
-      iconBg: 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)]',
     },
     {
       id: 'windows',
@@ -952,8 +919,6 @@ const DownloadPage = ({ onBack = () => {} }) => {
       description: t('download.description.windows'),
       ctaLabel: t('download.downloadExe'),
       ctaHref: 'https://downloads.deepstudent.ai/windows/deepstudent-setup.exe',
-      icon: LaptopMinimal,
-      iconBg: 'bg-[color:var(--apple-card-strong)] text-[color:var(--apple-ink)] border border-[color:var(--apple-line)]',
     },
   ]
   return (
@@ -965,8 +930,7 @@ const DownloadPage = ({ onBack = () => {} }) => {
             onClick={onBack}
             className="focus-ring inline-flex items-center gap-2 text-sm font-medium text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-            {t('download.backHome')}
+← {t('download.backHome')}
           </button>
           <div className="flex items-center gap-3">
             <LocaleToggle />
@@ -991,21 +955,14 @@ const DownloadPage = ({ onBack = () => {} }) => {
         </h2>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
-          {platformDownloads.map((platform) => {
-            const Icon = platform.icon
-            return (
+          {platformDownloads.map((platform) => (
               <article
                 key={platform.id}
                 className="rounded-[1.5rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] p-[1.5rem] sm:p-[1.75rem] shadow-[var(--apple-shadow-sm)]"
               >
-                <div className="flex items-center gap-3">
-                  <div className={`w-11 h-11 rounded-[0.9rem] flex items-center justify-center ${platform.iconBg}`}>
-                    <Icon className="w-5 h-5" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <p className="text-base font-semibold text-[color:var(--apple-ink)]">{platform.platform}</p>
-                    <p className="text-xs text-[color:var(--apple-muted)]">{platform.channel}</p>
-                  </div>
+                <div>
+                  <p className="text-base font-semibold text-[color:var(--apple-ink)]">{platform.platform}</p>
+                  <p className="text-xs text-[color:var(--apple-muted)]">{platform.channel}</p>
                 </div>
 
                 <p className="mt-3 text-sm text-[color:var(--apple-muted)] leading-relaxed">{platform.description}</p>
@@ -1021,13 +978,11 @@ const DownloadPage = ({ onBack = () => {} }) => {
                     href={platform.ctaHref}
                     className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-primary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-95 transition-all shadow-[var(--apple-shadow-sm)]"
                   >
-                    <Download className="w-4 h-4" aria-hidden="true" />
-                    {platform.ctaLabel}
+{platform.ctaLabel}
                   </a>
                 </div>
               </article>
-            )
-          })}
+          ))}
         </div>
 
         <p className="mt-6 text-xs text-[color:var(--apple-muted)]">
@@ -1098,7 +1053,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
               <span className="text-sm sm:text-base font-medium text-[color:var(--apple-ink)]">
                 {item.question}
               </span>
-              <ArrowDown
+              <ChevronDown
                 className="w-4 h-4 text-[color:var(--apple-muted)] transition-transform duration-200 group-open:rotate-180"
                 aria-hidden="true"
               />
@@ -1142,7 +1097,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
   )
 }
 
-const FeatureSection = ({ icon, title, desc, align, children, motionScale = 1 }) => {
+const FeatureSection = ({ title, desc, align, children, motionScale = 1 }) => {
   const { ref, progress, isActive } = useParallaxProgress()
   const contentDirection = align === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'
   const motionAmount = Math.max(0, motionScale)
@@ -1176,9 +1131,6 @@ const FeatureSection = ({ icon, title, desc, align, children, motionScale = 1 })
             willChange: shouldAnimate ? 'transform, opacity' : 'auto',
           }}
         >
-          <div className="inline-flex items-center justify-center w-[2.618rem] h-[2.618rem] rounded-[1.618rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)] text-[color:var(--apple-ink)] mb-[1.618rem]">
-            {icon}
-          </div>
           <h2 className="text-[1.618rem] sm:text-[2.618rem] font-semibold text-[color:var(--apple-ink)] mb-[1.618rem] tracking-[-0.02em] font-display">
             {title}
           </h2>
@@ -1346,7 +1298,7 @@ const PolicyModal = ({ type, onClose }) => {
             aria-label={t('policy.close', 'Close dialog')}
             ref={closeButtonRef}
           >
-            <X className="w-4 h-4" aria-hidden="true" />
+            <span className="text-lg leading-none" aria-hidden="true">×</span>
           </button>
         </div>
 
