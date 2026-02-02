@@ -27,12 +27,13 @@
     --apple-card: rgba(255, 255, 255, 0.72);
     --apple-card-strong: rgba(255, 255, 255, 0.88);
     --apple-card-hover: rgba(255, 255, 255, 0.95);
-    --apple-blue: #0071e3;
-    --apple-blue-hover: #0077ed;
-    --apple-blue-soft: rgba(0, 113, 227, 0.1);
-    --apple-glow: rgba(0, 113, 227, 0.15);
-    --apple-purple: #a855f7;
-    --apple-pink: #ec4899;
+    /* Monochrome premium look - replacing blue with deep ink */
+    --apple-blue: #1d1d1f;
+    --apple-blue-hover: #3a3a3c;
+    --apple-blue-soft: rgba(29, 29, 31, 0.04);
+    --apple-glow: rgba(0, 0, 0, 0.12);
+    --apple-purple: #9e9ea4;
+    --apple-pink: #d1d1d6;
     --apple-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
     --apple-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05), 0 16px 48px rgba(0, 0, 0, 0.08);
     --apple-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.06), 0 32px 80px rgba(0, 0, 0, 0.12);
@@ -47,12 +48,12 @@
     );
 
     /* Button tokens */
-    --apple-btn-primary-bg: #0071e3;
-    --apple-btn-primary-bg-hover: #0077ed;
+    --apple-btn-primary-bg: #1d1d1f;
+    --apple-btn-primary-bg-hover: #3a3a3c;
     --apple-btn-primary-text: #ffffff;
-    --apple-btn-secondary-bg: rgba(0, 0, 0, 0.05);
+    --apple-btn-secondary-bg: rgba(0, 0, 0, 0.04);
     --apple-btn-secondary-bg-hover: rgba(0, 0, 0, 0.08);
-    --apple-btn-secondary-text: #0071e3;
+    --apple-btn-secondary-text: #1d1d1f;
     --apple-btn-secondary-border: transparent;
 
     /* Nav tokens */
@@ -60,32 +61,12 @@
     --apple-nav-border: rgba(0, 0, 0, 0.08);
 
     /* Selection */
-    --apple-selection-bg: rgba(0, 113, 227, 0.2);
+    --apple-selection-bg: rgba(0, 0, 0, 0.1);
     --apple-selection-text: inherit;
 
     /* Noise overlay */
     --apple-noise-opacity: 0.02;
 
-    /* shadcn/ui tokens (HSL) */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 211 100% 45%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 211 100% 45%;
     --radius: 0.75rem;
   }
 
@@ -104,34 +85,33 @@
     --apple-card: rgba(28, 28, 30, 0.8);
     --apple-card-strong: rgba(44, 44, 46, 0.9);
     --apple-card-hover: rgba(58, 58, 60, 0.85);
-    --apple-blue: #0a84ff;
-    --apple-blue-hover: #409cff;
-    --apple-blue-soft: rgba(10, 132, 255, 0.2);
-    --apple-glow: rgba(10, 132, 255, 0.25);
-    --apple-purple: #bf5af2;
-    --apple-pink: #ff375f;
+    /* Monochrome premium look - replacing blue with white */
+    --apple-blue: #ffffff;
+    --apple-blue-hover: #e5e5e5;
+    --apple-blue-soft: rgba(255, 255, 255, 0.1);
+    --apple-glow: rgba(255, 255, 255, 0.15);
+    --apple-purple: #a1a1a6;
+    --apple-pink: #86868b;
     --apple-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
     --apple-shadow-md: 0 8px 32px rgba(0, 0, 0, 0.5);
     --apple-shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.6);
     --apple-shadow-xl: 0 32px 96px rgba(0, 0, 0, 0.7);
 
-    /* Title gradient - Apple dark mode style with subtle blue highlight */
+    /* Title gradient - Apple dark mode style with subtle silver highlight */
     --apple-title-gradient: linear-gradient(
       135deg,
       #ffffff 0%,
-      #f5f5f7 25%,
-      rgba(10, 132, 255, 0.9) 50%,
-      #f5f5f7 75%,
-      #ffffff 100%
+      #e5e5e5 50%,
+      #a1a1a6 100%
     );
 
-    /* Button tokens - Apple blue primary in dark mode */
-    --apple-btn-primary-bg: #0a84ff;
-    --apple-btn-primary-bg-hover: #409cff;
-    --apple-btn-primary-text: #ffffff;
+    /* Button tokens - White primary in dark mode */
+    --apple-btn-primary-bg: #ffffff;
+    --apple-btn-primary-bg-hover: #e5e5e5;
+    --apple-btn-primary-text: #000000;
     --apple-btn-secondary-bg: rgba(255, 255, 255, 0.1);
     --apple-btn-secondary-bg-hover: rgba(255, 255, 255, 0.15);
-    --apple-btn-secondary-text: #0a84ff;
+    --apple-btn-secondary-text: #ffffff;
     --apple-btn-secondary-border: transparent;
 
     /* Nav tokens */
@@ -139,32 +119,11 @@
     --apple-nav-border: rgba(255, 255, 255, 0.1);
 
     /* Selection */
-    --apple-selection-bg: rgba(10, 132, 255, 0.4);
+    --apple-selection-bg: rgba(255, 255, 255, 0.25);
     --apple-selection-text: #ffffff;
 
     /* Noise overlay */
     --apple-noise-opacity: 0.03;
-
-    /* shadcn/ui tokens (HSL) */
-    --background: 0 0% 0%;
-    --foreground: 0 0% 98%;
-    --card: 240 6% 10%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 6% 10%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 211 100% 52%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 211 100% 52%;
   }
 
   body {
@@ -173,10 +132,8 @@
     color: var(--apple-ink);
     background-color: var(--apple-surface);
     background-image: 
-      /* Subtle top gradient orb */
-      radial-gradient(ellipse 120% 80% at 50% -20%, rgba(0, 113, 227, 0.08), transparent 50%),
-      /* Secondary accent */
-      radial-gradient(ellipse 80% 60% at 80% 20%, rgba(168, 85, 247, 0.04), transparent 40%),
+      /* Subtle top gradient orb - Neutral/Warm */
+      radial-gradient(ellipse 120% 80% at 50% -20%, rgba(120, 119, 126, 0.05), transparent 50%),
       /* Base gradient */
       linear-gradient(180deg, 
         #fbfbfd 0%, 
@@ -188,16 +145,12 @@
     transition: background-color 0.4s ease, color 0.3s ease;
   }
 
-  /* Dark mode body - Apple-inspired dramatic dark with color orbs */
+  /* Dark mode body - Apple-inspired dramatic dark */
   .dark body {
     background-color: #000000;
     background-image: 
-      /* Primary blue orb - top left */
-      radial-gradient(ellipse 100% 80% at 20% -30%, rgba(10, 132, 255, 0.15), transparent 50%),
-      /* Purple accent orb - top right */
-      radial-gradient(ellipse 80% 70% at 85% -10%, rgba(191, 90, 242, 0.12), transparent 45%),
-      /* Pink subtle glow - bottom */
-      radial-gradient(ellipse 100% 50% at 50% 120%, rgba(255, 55, 95, 0.06), transparent 40%),
+      /* Primary neutral orb - top left */
+      radial-gradient(ellipse 100% 80% at 20% -30%, rgba(255, 255, 255, 0.08), transparent 50%),
       /* Ambient glow for depth */
       radial-gradient(ellipse 150% 100% at 50% 50%, rgba(28, 28, 30, 0.5), transparent 70%),
       /* Base black */
@@ -240,12 +193,12 @@
   }
 
   :root .focus-ring {
-    --tw-ring-color: rgba(0, 113, 227, 0.5);
+    --tw-ring-color: rgba(29, 29, 31, 0.2);
     --tw-ring-offset-color: rgba(255, 255, 255, 0.9);
   }
 
   .dark .focus-ring {
-    --tw-ring-color: rgba(10, 132, 255, 0.6);
+    --tw-ring-color: rgba(255, 255, 255, 0.3);
     --tw-ring-offset-color: rgba(0, 0, 0, 0.9);
   }
 
@@ -378,11 +331,11 @@
 
   /* Glow effect for interactive elements */
   .glow-blue {
-    box-shadow: 0 0 20px var(--apple-glow), 0 0 40px rgba(0, 113, 227, 0.1);
+    box-shadow: 0 0 20px var(--apple-glow), 0 0 40px rgba(0, 0, 0, 0.05);
   }
 
   .dark .glow-blue {
-    box-shadow: 0 0 30px var(--apple-glow), 0 0 60px rgba(10, 132, 255, 0.15);
+    box-shadow: 0 0 30px var(--apple-glow), 0 0 60px rgba(255, 255, 255, 0.05);
   }
 
   /* Subtle hover lift effect */

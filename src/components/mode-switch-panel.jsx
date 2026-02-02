@@ -1,37 +1,30 @@
-import { Brain, GraduationCap } from 'lucide-react'
 import { useId, useState } from 'react'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
 import { Switch } from './ui/switch'
 
-const ModeRow = ({ icon: Icon, title, description, checked, onCheckedChange, gradientClass }) => {
+const ModeRow = ({ title, description, checked, onCheckedChange, gradientClass }) => {
   const id = useId()
-  // Ensure the prop alias is referenced outside JSX for linting in some setups.
-  const IconComponent = Icon
 
   return (
     <Button
       type="button"
       variant="outline"
       onClick={() => onCheckedChange(!checked)}
-      className="group relative h-auto w-full justify-start overflow-hidden rounded-xl px-3 py-2.5 text-left shadow-sm"
+      className="group relative h-auto w-full justify-start overflow-hidden rounded-[1rem] px-3 py-2.5 text-left shadow-sm border border-[color:var(--apple-line)] hover:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card-strong)] hover:bg-[color:var(--apple-card-hover)]"
     >
       <span
         className={`pointer-events-none absolute inset-0 opacity-0 blur-2xl transition-opacity group-hover:opacity-100 ${gradientClass}`}
       />
         <span className="relative flex w-full items-start gap-3">
-          <span className="mt-0.5 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background shadow-sm">
-          <IconComponent className="h-4 w-4 text-foreground/80" aria-hidden="true" />
-          </span>
-
         <span className="min-w-0 flex-1">
           <span className="flex items-center gap-2">
-            <label htmlFor={id} className="text-sm font-semibold text-foreground">
+            <label htmlFor={id} className="text-sm font-semibold text-[color:var(--apple-ink)]">
               {title}
             </label>
           </span>
-          <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{description}</span>
+          <span className="mt-0.5 block text-xs leading-relaxed text-[color:var(--apple-muted)]">{description}</span>
         </span>
 
         <span
@@ -40,7 +33,7 @@ const ModeRow = ({ icon: Icon, title, description, checked, onCheckedChange, gra
           onClick={(event) => event.stopPropagation()}
         >
           <Switch id={id} checked={checked} onCheckedChange={onCheckedChange} aria-label={title} />
-          <span className="text-[11px] font-medium text-muted-foreground">
+          <span className="text-[11px] font-medium text-[color:var(--apple-muted)]">
             {title}
             {checked ? '已开启' : '已关闭'}
           </span>
@@ -58,33 +51,31 @@ export const ModeSwitchPanel = ({
   className = '',
 }) => {
   return (
-    <Card className={`bg-card/80 ${className}`.trim()}>
+    <Card className={`bg-[color:var(--apple-card)] backdrop-blur-xl ${className}`.trim()}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <CardTitle className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+            <CardTitle className="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--apple-muted)]">
               模式切换
             </CardTitle>
-            <CardDescription className="mt-1">快速切换常用模式</CardDescription>
+            <CardDescription className="mt-1 text-[color:var(--apple-ink)]">快速切换常用模式</CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="grid gap-2.5">
         <ModeRow
-          icon={Brain}
           title="深度思考"
           description="开启后模型会先进行推理思考，再给出更准确的回答。"
           checked={deepThinking}
           onCheckedChange={onDeepThinkingChange}
-          gradientClass="bg-gradient-to-br from-sky-500/25 via-indigo-500/20 to-violet-500/25"
+          gradientClass="bg-gradient-to-br from-[color:var(--apple-ink)]/5 via-[color:var(--apple-ink)]/2 to-[color:var(--apple-ink)]/5"
         />
         <ModeRow
-          icon={GraduationCap}
           title="学习模式"
           description="开启后 AI 将以苏格拉底式提问引导你思考，而非直接给出答案。"
           checked={learningMode}
           onCheckedChange={onLearningModeChange}
-          gradientClass="bg-gradient-to-br from-amber-400/30 via-orange-500/25 to-pink-500/25"
+          gradientClass="bg-gradient-to-br from-[color:var(--apple-ink)]/5 via-[color:var(--apple-ink)]/2 to-[color:var(--apple-ink)]/5"
         />
       </CardContent>
     </Card>

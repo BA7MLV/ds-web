@@ -248,7 +248,7 @@ describe('集成测试 - 完整工作流', () => {
 
     // 4. 验证CSS变量已定义
     const root = document.documentElement;
-    const bgColor = getComputedStyle(root).getPropertyValue('--ds-surface');
+    const bgColor = getComputedStyle(root).getPropertyValue('--apple-surface');
     expect(bgColor.trim()).toBeTruthy();
   });
 

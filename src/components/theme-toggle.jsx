@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
-import { Moon, Sun, Monitor } from 'lucide-react'
 import { SunsetDetector } from '../lib/sunset-detection'
 
 // Theme values: 'light' | 'dark' | 'system'
@@ -168,14 +167,10 @@ export const ThemeToggle = ({ className = '' }) => {
     setTheme(order[nextIndex])
   }
 
-  const getIcon = () => {
-    if (theme === 'system') {
-      return <Monitor className="w-4 h-4" aria-hidden="true" />
-    }
-    if (theme === 'dark') {
-      return <Moon className="w-4 h-4" aria-hidden="true" />
-    }
-    return <Sun className="w-4 h-4" aria-hidden="true" />
+  const getSymbol = () => {
+    if (theme === 'system') return 'A'
+    if (theme === 'dark') return '●'
+    return '○'
   }
 
   const getLabel = () => {
@@ -201,8 +196,8 @@ export const ThemeToggle = ({ className = '' }) => {
       aria-label={`当前：${getLabel()}，点击切换`}
       title={getLabel()}
     >
-      <span className="transition-transform duration-300 ease-out">
-        {getIcon()}
+      <span className="transition-transform duration-300 ease-out text-xs font-medium">
+        {getSymbol()}
       </span>
     </button>
   )
@@ -214,13 +209,12 @@ export const ThemeSelector = ({ className = '' }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const themes = [
-    { value: 'light', label: '浅色', icon: Sun },
-    { value: 'dark', label: '深色', icon: Moon },
-    { value: 'system', label: '系统', icon: Monitor },
+    { value: 'light', label: '浅色', symbol: '○' },
+    { value: 'dark', label: '深色', symbol: '●' },
+    { value: 'system', label: '系统', symbol: 'A' },
   ]
 
   const currentTheme = themes.find((t) => t.value === theme) || themes[2]
-  const CurrentIcon = currentTheme.icon
 
   useEffect(() => {
     if (!isOpen) return
@@ -251,7 +245,6 @@ export const ThemeSelector = ({ className = '' }) => {
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        <CurrentIcon className="w-3.5 h-3.5" aria-hidden="true" />
         <span>{currentTheme.label}</span>
       </button>
 
@@ -269,7 +262,6 @@ export const ThemeSelector = ({ className = '' }) => {
           role="listbox"
         >
           {themes.map((t) => {
-            const Icon = t.icon
             const isSelected = theme === t.value
             return (
               <button
@@ -292,13 +284,8 @@ export const ThemeSelector = ({ className = '' }) => {
                 role="option"
                 aria-selected={isSelected}
               >
-                <Icon className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>{t.label}</span>
-                {isSelected && (
-                  <svg className="w-3 h-3 ml-auto" viewBox="0 0 12 12" fill="currentColor">
-                    <path d="M10.28 2.28a.75.75 0 00-1.06-1.06L4.5 5.94 2.78 4.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.06 0l5.25-5.25z" />
-                  </svg>
-                )}
+                {isSelected && <span className="ml-auto">✓</span>}
               </button>
             )
           })}

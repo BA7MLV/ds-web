@@ -1,5 +1,4 @@
 import { useCallback, useSyncExternalStore } from 'react'
-import { ChevronDown, Languages } from 'lucide-react'
 import { cn } from '../lib/utils'
 
 // Locale values: 'zh' | 'zh-Hant' | 'en'
@@ -15,99 +14,99 @@ const translations = {
     
     // Hero
     'hero.title': 'DeepStudent',
-    'hero.subtitle': 'AI 原生学习解决方案',
-    'hero.tagline': '让学习更高效，让知识更牢固',
+    'hero.subtitle': 'AI 原生的本地优先学习系统',
+    'hero.tagline': '智能对话、知识管理、Anki 制卡与全能阅读器无缝融合，为你打造隐私安全、高度可扩展的终身学习工作台',
     'hero.cta.download': '立即下载',
-    'hero.cta.explore': '看看介绍',
+    'hero.cta.explore': '了解更多',
 
     // Hero Preview
-    'hero.preview.chat': 'AI 对话',
-    'hero.preview.skills': '技能',
-    'hero.preview.knowledge': '知识管理',
-    'hero.preview.providers': '多服务商',
+    'hero.preview.chat': '智能对话',
+    'hero.preview.skills': '技能系统',
+    'hero.preview.knowledge': '学习资源',
+    'hero.preview.providers': 'Anki 制卡',
     'hero.preview.selector': '界面预览切换',
-    'hero.preview.imageAlt': 'DeepStudent {label} 界面预览（占位图）',
+    'hero.preview.imageAlt': 'DeepStudent {label} 界面预览',
     
     // Features
-    'feature.review.title': '错题复盘',
-    'feature.review.desc': '把错因写清楚、归好类，复习时一眼就知道从哪里开始。',
-    'feature.organize.title': '有序，不只是整理',
-    'feature.organize.desc': '集中管理所有学科错题，按知识点、难度、时间分类，像系统文件管理器一样井井有条。',
-    'feature.compare.title': '多题回顾',
-    'feature.compare.desc': '把相关题目放在一起看，理解共性错误，形成自己的复习重点。',
-    'feature.spaced.title': '间隔复习',
-    'feature.spaced.desc': '对接间隔复习法，轻松生成卡片，循序巩固。',
-    'feature.knowledge.title': '知识补充',
-    'feature.knowledge.desc': '内置参考库。遇到卡住的题，可以直接翻到相关章节和思路。',
+    'feature.review.title': '智能对话 · RAG 增强',
+    'feature.review.desc': '基于 VFS 虚拟文件系统的 RAG 检索，自动搜索笔记、教材、题目集增强回答。支持引用模式上下文注入、多模态交互、深度思维链推理。',
+    'feature.organize.title': '学习资源中心',
+    'feature.organize.desc': '访达式管理所有学习资源——笔记、教材、题目集、翻译、作文、知识导图。导入即自动 OCR 识别与向量化索引，AI 可读可检索。',
+    'feature.compare.title': '技能系统 · 按需扩展',
+    'feature.compare.desc': '渐进披露架构，工具按需加载。内置导师模式、制卡助手、文献综述、调研模式等技能，支持自定义与 MCP 生态集成。',
+    'feature.spaced.title': 'Anki 智能制卡',
+    'feature.spaced.desc': '从学习文档智能提取知识点生成卡片。支持多模板、3D 预览、AnkiConnect 一键同步，让间隔重复触手可及。',
+    'feature.knowledge.title': '本地优先 · 隐私安全',
+    'feature.knowledge.desc': '所有数据存储在本地：SQLite 元数据 + LanceDB 向量库。支持完整备份与审计，你的学习记录完全由你掌控。',
     
     // Cards
-    'card.analyzing': '深度分析中',
+    'card.analyzing': 'RAG 检索中',
     'card.justNow': '刚刚',
-    'card.mastery': '知识点掌握',
-    'card.suggestion': '建议：',
-    'card.myNotebook': '我的错题本',
-    'card.errorType': '错误类型',
-    'card.calcError': '计算错误',
-    'card.frequency': '频次',
-    'card.high': '高',
-    'card.question': '题目',
+    'card.mastery': '知识库匹配度',
+    'card.suggestion': '来源：',
+    'card.myNotebook': '学习资源中心',
+    'card.errorType': '技能模式',
+    'card.calcError': '导师模式',
+    'card.frequency': '激活状态',
+    'card.high': '已启用',
+    'card.question': '问题',
     'card.clickAnswer': '点击查看答案',
-    'card.backToQuestion': '返回题目',
-    'card.reference': '参考：第 4 章',
-    'card.suggestionPrefix': '重新复习',
-    'card.suggestionTopic': '导数定义',
-    'card.suggestionSuffix': '相关章节，并加强基础计算训练。',
-    'card.calcErrorTip': '建议在进行复杂运算时，增加验算步骤，特别是符号变换环节。',
-    'card.chatQuestion': '这道题选 C 的原因是什么？',
-    'card.chatAnswerSnippet': '根据洛必达法则，当 x 趋近于 0 时，分子分母同时求导...',
+    'card.backToQuestion': '返回问题',
+    'card.reference': '来源：线性代数笔记',
+    'card.suggestionPrefix': '已检索到',
+    'card.suggestionTopic': '3 条相关内容',
+    'card.suggestionSuffix': '，可展开查看原文。',
+    'card.calcErrorTip': '苏格拉底式教学：通过提问引导你逐步理解概念，而非直接给出答案。',
+    'card.chatQuestion': '帮我理解矩阵的特征值分解',
+    'card.chatAnswerSnippet': '我来引导你思考：首先，你知道什么是特征值吗？它和矩阵有什么关系？',
     
     // Notebook sample
-    'notebook.item.calculusFinal': '2023 高数期末',
-    'notebook.item.reading': '英语阅读理解专项',
-    'notebook.item.mechanics': '物理力学错题集',
-    'subject.math': '数学',
-    'subject.english': '英语',
-    'subject.physics': '物理',
+    'notebook.item.calculusFinal': '高等数学笔记',
+    'notebook.item.reading': '线性代数教材.pdf',
+    'notebook.item.mechanics': '概率论题目集',
+    'subject.math': '笔记',
+    'subject.english': '教材',
+    'subject.physics': '题目集',
     'time.today': '今天',
     'time.yesterday': '昨天',
     'time.twoDaysAgo': '2 天前',
     
     // Flashcard
-    'flashcard.prompt': 'ln(x) 的导数是什么？',
+    'flashcard.prompt': '什么是矩阵的特征值？',
     
     // Download
     'download.title': '下载 DeepStudent',
-    'download.subtitle': '选择你的平台，安装后即可开始整理。',
+    'download.subtitle': '基于 Tauri 2.0 构建，本地优先的 AI 原生学习系统',
     'download.selectPlatform': '选择平台',
     'download.backHome': '返回首页',
-    'download.dmgInstall': 'DMG 安装',
+    'download.dmgInstall': '正式版',
     'download.preview': '预览版',
     'download.version': '版本',
     'download.size': '大小',
     'download.system': '系统',
     'download.downloadDmg': '下载 DMG',
     'download.downloadExe': '下载 EXE',
-    'download.requirements.macos': 'macOS 13+，Apple Silicon 优化',
+    'download.requirements.macos': 'macOS 13+，Apple Silicon / Intel',
     'download.requirements.windows': 'Windows 11 / 10 22H2+',
-    'download.description.macos': '菜单栏快捷录入，支持 Spotlight 搜索。',
-    'download.description.windows': '预览版含 OneNote 导入与系统托盘控件。',
-    'download.note.windowsPreview': 'Windows 仍为预览版，如需帮助请联系 support@deepstudent.ai。',
+    'download.description.macos': '支持智能对话、学习资源管理、Anki 制卡、技能系统。',
+    'download.description.windows': '功能与 macOS 版一致，Windows 版仍在优化中。',
+    'download.note.windowsPreview': 'Windows 版目前为预览版，如遇问题请在 GitHub 提交 Issue。',
     
     // FAQ
     'faq.title': '常见问题',
     'faq.subtitle': '关于 DeepStudent 的常见疑问解答',
     'faq.openSource.q': 'DeepStudent 是开源的吗？',
-    'faq.openSource.a': '是的，DeepStudent 完全开源。你可以在 GitHub 查看源码并参与共建。',
+    'faq.openSource.a': '是的，DeepStudent 遵循 AGPL-3.0 开源许可证，完全开源。你可以在 GitHub 查看源码、提交 Issue 或参与共建。',
     'faq.openSource.link': '前往 GitHub',
-    'faq.privacy.q': '我的数据会被如何使用？',
-    'faq.privacy.a': '我们遵循最小化数据原则，数据仅用于生成个性化学习建议与统计分析。',
+    'faq.privacy.q': '我的数据存储在哪里？',
+    'faq.privacy.a': 'DeepStudent 是本地优先应用。所有数据（SQLite 元数据 + LanceDB 向量库 + Blob 文件）存储在你的设备上，支持完整备份与审计。',
     'faq.privacy.action': '查看隐私政策',
     'faq.macosQuarantine.q': 'macOS 安装后提示“已损坏，无法打开”怎么办？',
     'faq.macosQuarantine.a': '可以在终端执行以下命令（把 <应用路径> 替换为你的应用路径；也可以把应用图标拖进终端自动填充路径）：',
     'faq.macosQuarantine.code': 'sudo xattr -r -d com.apple.quarantine <应用路径>',
     'faq.macosQuarantine.link': '查看完整步骤',
-    'faq.windowsPreview.q': 'Windows 版本是正式版吗？',
-    'faq.windowsPreview.a': '目前 Windows 仍为预览版，我们会持续迭代。遇到问题可联系 support@deepstudent.ai。',
+    'faq.windowsPreview.q': '如何配置 AI 模型？',
+    'faq.windowsPreview.a': '进入设置 → API 配置，添加你的 AI 服务供应商（如 OpenAI、Anthropic、硅基流动等）的 API 密钥。推荐使用硅基流动的"一键分配"功能快速完成配置。',
     
     // Footer
     'footer.privacy': '隐私',
@@ -117,11 +116,11 @@ const translations = {
     
     // Policy Content
     'policy.about.title': '关于 DeepStudent',
-    'policy.about.description': '一款面向学生与自学者的开源错题管理与复盘工具，帮助你建立长期可持续的学习系统。',
-    'policy.about.section1.title': '我们在做什么',
-    'policy.about.section1.body': '将错题整理、知识图谱、复盘计划整合在一个工作流里，让复习更有方向感。',
-    'policy.about.section1.point1': '从错题出发形成可执行的复习路径。',
-    'policy.about.section1.point2': '把学习记录沉淀成可复用的知识资产。',
+    'policy.about.description': 'AI 原生的本地优先开源学习系统，将智能对话、知识管理、Anki 制卡与全能阅读器无缝融合。',
+    'policy.about.section1.title': '核心理念',
+    'policy.about.section1.body': '构建完全 AI 原生的学习闭环，解决碎片化学习痛点。',
+    'policy.about.section1.point1': '虚拟文件系统 VFS 作为所有学习资源的单一数据源，AI 可读可检索。',
+    'policy.about.section1.point2': '本地优先，数据安全可控，支持完整审计与备份。',
     'policy.about.section2.title': '开源与共建',
     'policy.about.section2.body': 'DeepStudent 完全开源，欢迎提交 Issue 与 PR，共同改进学习体验。',
     'policy.about.section2.point1': '保持透明的开发节奏与版本发布记录。',
@@ -185,30 +184,30 @@ const translations = {
 
     // Hero
     'hero.title': 'DeepStudent',
-    'hero.subtitle': 'AI 原生學習解決方案',
-    'hero.tagline': '讓學習更高效，讓知識更牢固',
+    'hero.subtitle': 'AI 原生的本地優先學習系統',
+    'hero.tagline': '智慧對話、知識管理、Anki 製卡與全能閱讀器無縫融合，為你打造隱私安全、高度可擴展的終身學習工作台',
     'hero.cta.download': '立即下載',
-    'hero.cta.explore': '看看介紹',
+    'hero.cta.explore': '了解更多',
 
     // Hero Preview
-    'hero.preview.chat': 'AI 對話',
-    'hero.preview.skills': '技能',
-    'hero.preview.knowledge': '知識管理',
-    'hero.preview.providers': '多服務商',
+    'hero.preview.chat': '智慧對話',
+    'hero.preview.skills': '技能系統',
+    'hero.preview.knowledge': '學習資源',
+    'hero.preview.providers': 'Anki 製卡',
     'hero.preview.selector': '介面預覽切換',
-    'hero.preview.imageAlt': 'DeepStudent {label} 介面預覽（占位圖）',
+    'hero.preview.imageAlt': 'DeepStudent {label} 介面預覽',
 
     // Features
-    'feature.review.title': '錯題複盤',
-    'feature.review.desc': '把錯因寫清楚、歸好類，複習時一眼就知道從哪裡開始。',
-    'feature.organize.title': '有序，不只是整理',
-    'feature.organize.desc': '集中管理所有學科錯題，按知識點、難度、時間分類，像系統檔案管理器一樣井井有條。',
-    'feature.compare.title': '多題回顧',
-    'feature.compare.desc': '把相關題目放在一起看，理解共性錯誤，形成自己的複習重點。',
-    'feature.spaced.title': '間隔複習',
-    'feature.spaced.desc': '對接間隔複習法，輕鬆生成卡片，循序鞏固。',
-    'feature.knowledge.title': '知識補充',
-    'feature.knowledge.desc': '內建參考庫。遇到卡住的題，可以直接翻到相關章節和思路。',
+    'feature.review.title': '智慧對話 · RAG 增強',
+    'feature.review.desc': '基於 VFS 虛擬檔案系統的 RAG 檢索，自動搜尋筆記、教材、題目集增強回答。支援引用模式上下文注入、多模態互動、深度思維鏈推理。',
+    'feature.organize.title': '學習資源中心',
+    'feature.organize.desc': '訪達式管理所有學習資源——筆記、教材、題目集、翻譯、作文、知識導圖。導入即自動 OCR 識別與向量化索引，AI 可讀可檢索。',
+    'feature.compare.title': '技能系統 · 按需擴展',
+    'feature.compare.desc': '漸進披露架構，工具按需載入。內建導師模式、製卡助手、文獻綜述、調研模式等技能，支援自定義與 MCP 生態整合。',
+    'feature.spaced.title': 'Anki 智慧製卡',
+    'feature.spaced.desc': '從學習文檔智慧提取知識點生成卡片。支援多模板、3D 預覽、AnkiConnect 一鍵同步，讓間隔重複觸手可及。',
+    'feature.knowledge.title': '本地優先 · 隱私安全',
+    'feature.knowledge.desc': '所有資料儲存在本地：SQLite 元資料 + LanceDB 向量庫。支援完整備份與稽核，你的學習記錄完全由你掌控。',
 
     // Cards
     'card.analyzing': '深度分析中',
@@ -355,30 +354,30 @@ const translations = {
     
     // Hero
     'hero.title': 'DeepStudent',
-    'hero.subtitle': 'AI-Native Learning Solution',
-    'hero.tagline': 'Learn smarter, remember longer',
+    'hero.subtitle': 'AI-Native Local-First Learning System',
+    'hero.tagline': 'Seamlessly integrates AI chat, knowledge management, Anki card generation, and universal reader into a privacy-first, extensible lifelong learning workbench',
     'hero.cta.download': 'Download',
     'hero.cta.explore': 'Learn More',
 
     // Hero Preview
     'hero.preview.chat': 'AI Chat',
     'hero.preview.skills': 'Skills',
-    'hero.preview.knowledge': 'Knowledge',
-    'hero.preview.providers': 'Providers',
+    'hero.preview.knowledge': 'Learning Hub',
+    'hero.preview.providers': 'CardForge',
     'hero.preview.selector': 'Preview selector',
-    'hero.preview.imageAlt': 'DeepStudent {label} preview (placeholder)',
+    'hero.preview.imageAlt': 'DeepStudent {label} preview',
     
     // Features
-    'feature.review.title': 'Mistake Review',
-    'feature.review.desc': 'Document your mistakes clearly, categorize them well, and know exactly where to start when reviewing.',
-    'feature.organize.title': 'Organized, Not Just Sorted',
-    'feature.organize.desc': 'Centrally manage mistakes across all subjects, categorized by knowledge points, difficulty, and time.',
-    'feature.compare.title': 'Multi-Question Review',
-    'feature.compare.desc': 'Compare related questions together, understand common errors, and form your own review priorities.',
-    'feature.spaced.title': 'Spaced Repetition',
-    'feature.spaced.desc': 'Connect with spaced repetition methods, easily generate cards, and consolidate step by step.',
-    'feature.knowledge.title': 'Knowledge Reference',
-    'feature.knowledge.desc': 'Built-in reference library. When stuck, quickly find related chapters and approaches.',
+    'feature.review.title': 'AI Chat · RAG Enhanced',
+    'feature.review.desc': 'VFS-based RAG retrieval automatically searches notes, textbooks, and problem sets to enhance answers. Supports reference mode context injection, multimodal interaction, and deep chain-of-thought reasoning.',
+    'feature.organize.title': 'Learning Hub',
+    'feature.organize.desc': 'Finder-style management for all learning resources — notes, textbooks, problem sets, translations, essays, mind maps. Auto OCR and vectorization on import, making everything AI-readable and searchable.',
+    'feature.compare.title': 'Skills · On-Demand Extension',
+    'feature.compare.desc': 'Progressive disclosure architecture with on-demand tool loading. Built-in tutor mode, card forge, literature review, research mode, and more. Supports custom skills and MCP ecosystem integration.',
+    'feature.spaced.title': 'Anki CardForge',
+    'feature.spaced.desc': 'Intelligently extract knowledge points from documents to generate cards. Multi-template support, 3D preview, one-click AnkiConnect sync — spaced repetition at your fingertips.',
+    'feature.knowledge.title': 'Local-First · Privacy Safe',
+    'feature.knowledge.desc': 'All data stored locally: SQLite metadata + LanceDB vector store. Full backup and audit support — your learning records stay under your control.',
     
     // Cards
     'card.analyzing': 'Deep Analyzing',
@@ -437,17 +436,17 @@ const translations = {
     'faq.title': 'FAQ',
     'faq.subtitle': 'Common questions about DeepStudent',
     'faq.openSource.q': 'Is DeepStudent open source?',
-    'faq.openSource.a': 'Yes. DeepStudent is fully open source. You can view the code on GitHub and contribute.',
+    'faq.openSource.a': 'Yes. DeepStudent is licensed under AGPL-3.0 and fully open source. You can view the code, submit issues, or contribute on GitHub.',
     'faq.openSource.link': 'Open GitHub',
-    'faq.privacy.q': 'How is my data used?',
-    'faq.privacy.a': 'We follow data minimization. Data is only used for personalized study insights and analytics.',
+    'faq.privacy.q': 'Where is my data stored?',
+    'faq.privacy.a': 'DeepStudent is a local-first app. All data (SQLite metadata + LanceDB vector store + blob files) is stored on your device, with full backup and audit support.',
     'faq.privacy.action': 'View Privacy Policy',
     'faq.macosQuarantine.q': 'macOS says the app is "damaged". What should I do?',
     'faq.macosQuarantine.a': 'Run the following command in Terminal (replace <App Path> with your app path; you can also drag the app into Terminal to auto-fill the path):',
     'faq.macosQuarantine.code': 'sudo xattr -r -d com.apple.quarantine <App Path>',
     'faq.macosQuarantine.link': 'See full steps',
-    'faq.windowsPreview.q': 'Is the Windows version stable?',
-    'faq.windowsPreview.a': "Windows is currently in preview and we're iterating quickly. If you run into issues, contact support@deepstudent.ai.",
+    'faq.windowsPreview.q': 'How do I configure AI models?',
+    'faq.windowsPreview.a': 'Go to Settings → API Configuration and add your AI provider API key (OpenAI, Anthropic, SiliconFlow, etc.). We recommend using SiliconFlow\'s "Quick Setup" for the fastest configuration.',
     
     // Footer
     'footer.privacy': 'Privacy',
@@ -633,19 +632,12 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
       <label className="sr-only" htmlFor="ds-locale-select">
         {t('locale.select', 'Language')}
       </label>
-      {compact ? null : (
-        <Languages
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[color:var(--apple-muted)]"
-          aria-hidden="true"
-        />
-      )}
       <select
         id="ds-locale-select"
         value={locale}
         onChange={(event) => setLocale(event.target.value)}
         className={cn(
           'focus-ring appearance-none cursor-pointer',
-          // Apple-like glass pill
           compact ? 'h-8 w-full rounded-full' : 'h-9 w-full rounded-full',
           'bg-[color:var(--apple-btn-secondary-bg)] border border-[color:var(--apple-line)]',
           'backdrop-blur-xl backdrop-saturate-[180%]',
@@ -653,7 +645,7 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
           compact
             ? 'text-[color:var(--apple-ink)] text-[12px] font-medium'
             : 'text-[color:var(--apple-ink)] text-[13px] font-medium',
-          compact ? 'pl-3 pr-9 leading-none' : 'pl-9 pr-10 leading-none',
+          'px-4 leading-none text-center',
           'hover:bg-[color:var(--apple-btn-secondary-bg-hover)]',
         )}
         aria-label={t('locale.select', 'Language')}
@@ -662,13 +654,6 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
         <option value="zh-Hant">{t('locale.zhHant', '繁體中文')}</option>
         <option value="en">{t('locale.en', 'English')}</option>
       </select>
-      <ChevronDown
-        className={cn(
-          'pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[color:var(--apple-muted)]',
-          compact ? 'w-4 h-4' : 'w-4 h-4',
-        )}
-        aria-hidden="true"
-      />
     </div>
   )
 }
