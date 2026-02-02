@@ -236,77 +236,102 @@ const useResponsiveMotion = () => {
   return settings
 }
 
-const policyContent = {
+const getPolicyContent = (t) => ({
   about: {
-    title: '关于 DeepStudent',
-    description: '一款面向学生与自学者的开源错题管理与复盘工具，帮助你建立长期可持续的学习系统。',
+    title: t('policy.about.title', 'About DeepStudent'),
+    description: t('policy.about.description', ''),
     sections: [
       {
-        title: '我们在做什么',
-        body: '将错题整理、知识图谱、复盘计划整合在一个工作流里，让复习更有方向感。',
-        points: ['从错题出发形成可执行的复习路径。', '把学习记录沉淀成可复用的知识资产。'],
+        title: t('policy.about.section1.title', ''),
+        body: t('policy.about.section1.body', ''),
+        points: [
+          t('policy.about.section1.point1', ''),
+          t('policy.about.section1.point2', ''),
+        ],
       },
       {
-        title: '开源与共建',
-        body: 'DeepStudent 完全开源，欢迎提交 Issue 与 PR，共同改进学习体验。',
-        points: ['保持透明的开发节奏与版本发布记录。', '持续吸收社区的真实需求反馈。'],
+        title: t('policy.about.section2.title', ''),
+        body: t('policy.about.section2.body', ''),
+        points: [
+          t('policy.about.section2.point1', ''),
+          t('policy.about.section2.point2', ''),
+        ],
       },
       {
-        title: '联系我们',
-        body: '合作或建议请发送邮件至 team@deepstudent.ai，我们会尽快回复。',
+        title: t('policy.about.section3.title', ''),
+        body: t('policy.about.section3.body', ''),
       },
     ],
-    footer: '感谢你与我们一起打造更聪明、更高效的学习方式。',
+    footer: t('policy.about.footer', ''),
   },
   privacy: {
-    title: '隐私政策',
-    description: '我们遵循最小化数据原则，确保每条学习记录都掌握在你手中。',
+    title: t('policy.privacy.title', 'Privacy Policy'),
+    description: t('policy.privacy.description', ''),
     sections: [
       {
-        title: '收集范围',
-        body: '仅在你使用 DeepStudent 时记录必要的错题内容、标签与复习进度，不会采集与服务无关的敏感个人信息。',
-        points: ['账号信息仅用于云端同步与登录验证。', '你可随时导出或删除本地与云端数据。'],
+        title: t('policy.privacy.section1.title', ''),
+        body: t('policy.privacy.section1.body', ''),
+        points: [
+          t('policy.privacy.section1.point1', ''),
+          t('policy.privacy.section1.point2', ''),
+        ],
       },
       {
-        title: '使用方式',
-        body: '所有数据仅用于生成个性化学习建议与统计分析，不会出售或提供给第三方广告平台。',
-        points: ['统计分析仅使用匿名化、脱敏后的聚合数据。', '我们会定期发布透明度报告。'],
+        title: t('policy.privacy.section2.title', ''),
+        body: t('policy.privacy.section2.body', ''),
+        points: [
+          t('policy.privacy.section2.point1', ''),
+          t('policy.privacy.section2.point2', ''),
+        ],
       },
       {
-        title: '安全措施',
-        body: '所有传输均使用 TLS 加密，云端存储采用分区隔离，敏感字段在数据库内加盐散列。',
-        points: ['核心基础设施通过 ISO/IEC 27001 安全认证。', '如遇异常访问会立即告警并支持一键冻结账号。'],
+        title: t('policy.privacy.section3.title', ''),
+        body: t('policy.privacy.section3.body', ''),
+        points: [
+          t('policy.privacy.section3.point1', ''),
+          t('policy.privacy.section3.point2', ''),
+        ],
       },
     ],
-    footer: '更多隐私问题请发送邮件至 privacy@deepstudent.ai，我们会在 3 个工作日内回复。',
+    footer: t('policy.privacy.footer', ''),
   },
   terms: {
-    title: '使用条款',
-    description: '使用 DeepStudent 即表示你同意以下约定，本服务为学习辅助工具，不构成绝对学习结果承诺。',
+    title: t('policy.terms.title', 'Terms of Use'),
+    description: t('policy.terms.description', ''),
     sections: [
       {
-        title: '服务内容',
-        body: '我们提供错题整理、知识图谱、复习提醒等功能，能力会根据版本迭代持续更新。',
-        points: ['测试功能可能存在不稳定，请按需体验。', '我们保留随时调整或暂停服务的权利。'],
+        title: t('policy.terms.section1.title', ''),
+        body: t('policy.terms.section1.body', ''),
+        points: [
+          t('policy.terms.section1.point1', ''),
+          t('policy.terms.section1.point2', ''),
+        ],
       },
       {
-        title: '用户责任',
-        body: '你需确保上传内容拥有合法使用权，并对账号安全负责。若出现共享或泄露行为，请立即联系我们。',
-        points: ['禁止利用 DeepStudent 传播违法或侵权内容。', '若发现异常活动，我们可能采取限制措施。'],
+        title: t('policy.terms.section2.title', ''),
+        body: t('policy.terms.section2.body', ''),
+        points: [
+          t('policy.terms.section2.point1', ''),
+          t('policy.terms.section2.point2', ''),
+        ],
       },
       {
-        title: '免责声明',
-        body: '我们会尽力保证服务稳定，但因不可抗力或第三方原因导致的数据丢失、服务中断，我们不承担间接损失责任。',
-        points: ['建议定期导出备份重要数据。', '付费计划如需退款，请在 7 天内提交申请。'],
+        title: t('policy.terms.section3.title', ''),
+        body: t('policy.terms.section3.body', ''),
+        points: [
+          t('policy.terms.section3.point1', ''),
+          t('policy.terms.section3.point2', ''),
+        ],
       },
     ],
-    footer: '使用本服务即视为同意上述条款。如有疑问请联系 support@deepstudent.ai。',
+    footer: t('policy.terms.footer', ''),
   },
-}
+})
 
 const App = () => {
   const [activePolicy, setActivePolicy] = useState(null)
   const [isDownloadPage, setIsDownloadPage] = useState(() => getIsDownloadFromLocation())
+  const { t } = useLocale()
   const { motionScale } = useResponsiveMotion()
   const homeScrollRef = useRef(0)
   const downloadScrollRef = useRef(0)
@@ -381,8 +406,8 @@ const App = () => {
             <div className="space-y-[6.854rem] sm:space-y-[11.09rem] lg:space-y-[17.944rem] pt-[4.236rem] sm:pt-[6.854rem]">
               <FeatureSection
                 icon={<Brain className="w-6 h-6" aria-hidden="true" />}
-                title="错题复盘"
-                desc="把错因写清楚、归好类，复习时一眼就知道从哪里开始。"
+                title={t('feature.review.title')}
+                desc={t('feature.review.desc')}
                 align="left"
                 motionScale={motionScale}
               >
@@ -392,8 +417,8 @@ const App = () => {
                   <Sparkles className="w-4 h-4" aria-hidden="true" />
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-[color:var(--apple-ink)]">深度分析中</div>
-                  <div className="text-xs text-[color:var(--apple-muted)]">刚刚</div>
+                  <div className="text-sm font-semibold text-[color:var(--apple-ink)]">{t('card.analyzing')}</div>
+                  <div className="text-xs text-[color:var(--apple-muted)]">{t('card.justNow')}</div>
                 </div>
               </div>
 
@@ -406,16 +431,16 @@ const App = () => {
                   />
                 </div>
                 <div className="flex justify-between text-xs text-[color:var(--apple-muted)] font-medium mt-1">
-                  <span>知识点掌握</span>
+                  <span>{t('card.mastery')}</span>
                   <span className="text-[color:var(--apple-ink)]">72%</span>
                 </div>
                 <div className="mt-[2.618rem] p-[1.618rem] bg-[color:var(--apple-card-strong)] rounded-[1rem] border border-[color:var(--apple-line)] text-sm text-[color:var(--apple-muted)] leading-relaxed">
-                  <span className="font-semibold text-[color:var(--apple-ink)] block mb-1">建议：</span>
-                  重新复习{' '}
+                  <span className="font-semibold text-[color:var(--apple-ink)] block mb-1">{t('card.suggestion')}</span>
+                  {t('card.suggestionPrefix')}{' '}
                   <span className="text-[color:var(--apple-ink)] underline decoration-[color:var(--apple-line)] underline-offset-2">
-                    导数定义
+                    {t('card.suggestionTopic')}
                   </span>{' '}
-                  相关章节，并加强基础计算训练。
+                  {t('card.suggestionSuffix')}
                 </div>
               </div>
             </div>
@@ -423,8 +448,8 @@ const App = () => {
 
           <FeatureSection
             icon={<Layers className="w-6 h-6" aria-hidden="true" />}
-                title="有序，不只是整理"
-                desc="集中管理所有学科错题，按知识点、难度、时间分类，像系统文件管理器一样井井有条。"
+                title={t('feature.organize.title')}
+                desc={t('feature.organize.desc')}
                 align="right"
                 motionScale={motionScale}
               >
@@ -437,16 +462,16 @@ const App = () => {
                     <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
                     <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
                   </div>
-                  <div className="text-xs font-medium text-[color:var(--apple-muted)] ml-2">我的错题本</div>
+                  <div className="text-xs font-medium text-[color:var(--apple-muted)] ml-2">{t('card.myNotebook')}</div>
                 </div>
                 <div className="p-[1rem]">
                   {[
-                    { title: '2023 高数期末', tag: '数学', date: '今天' },
-                    { title: '英语阅读理解专项', tag: '英语', date: '昨天' },
-                    { title: '物理力学错题集', tag: '物理', date: '2 天前' },
+                    { id: 'calculus', title: t('notebook.item.calculusFinal'), tag: t('subject.math'), date: t('time.today') },
+                    { id: 'reading', title: t('notebook.item.reading'), tag: t('subject.english'), date: t('time.yesterday') },
+                    { id: 'mechanics', title: t('notebook.item.mechanics'), tag: t('subject.physics'), date: t('time.twoDaysAgo') },
                   ].map((item) => (
                     <div
-                      key={item.title}
+                      key={item.id}
                       className="flex items-center justify-between p-[1rem] hover:bg-[color:var(--apple-card-hover)] active:bg-[color:var(--apple-card-hover)] rounded-[1rem] transition-colors group cursor-default"
                     >
                       <div className="flex items-center gap-3">
@@ -472,8 +497,8 @@ const App = () => {
 
           <FeatureSection
             icon={<Target className="w-6 h-6" aria-hidden="true" />}
-                title="多题回顾"
-                desc="把相关题目放在一起看，理解共性错误，形成自己的复习重点。"
+                title={t('feature.compare.title')}
+                desc={t('feature.compare.desc')}
                 align="left"
                 motionScale={motionScale}
               >
@@ -482,18 +507,18 @@ const App = () => {
                 <Target className="w-24 h-24" aria-hidden="true" />
               </div>
               <div className="relative z-10">
-                <div className="text-sm text-white/60 mb-1">错误类型</div>
-                <div className="text-2xl font-bold mb-[2.618rem]">计算错误</div>
+                <div className="text-sm text-white/60 mb-1">{t('card.errorType')}</div>
+                <div className="text-2xl font-bold mb-[2.618rem]">{t('card.calcError')}</div>
                 <div className="space-y-[1.618rem]">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-white/60">频次</span>
-                    <span className="font-mono">高 (8/10)</span>
+                    <span className="text-white/60">{t('card.frequency')}</span>
+                    <span className="font-mono">{t('card.high')} (8/10)</span>
                   </div>
                   <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
                     <div className="bg-white/90 h-full w-[80%]" />
                   </div>
                   <div className="p-[1rem] bg-white/10 rounded-[1rem] text-xs text-white/70 border border-white/10 mt-[1.618rem]">
-                    建议在进行复杂运算时，增加验算步骤，特别是符号变换环节。
+                    {t('card.calcErrorTip')}
                   </div>
                 </div>
               </div>
@@ -502,8 +527,8 @@ const App = () => {
 
           <FeatureSection
             icon={<Zap className="w-6 h-6" aria-hidden="true" />}
-                title="间隔复习"
-                desc="对接间隔复习法，轻松生成卡片，循序巩固。"
+                title={t('feature.spaced.title')}
+                desc={t('feature.spaced.desc')}
                 align="right"
                 motionScale={motionScale}
               >
@@ -514,8 +539,8 @@ const App = () => {
 
           <FeatureSection
             icon={<Search className="w-6 h-6" aria-hidden="true" />}
-                title="知识补充"
-                desc="内置参考库。遇到卡住的题，可以直接翻到相关章节和思路。"
+                title={t('feature.knowledge.title')}
+                desc={t('feature.knowledge.desc')}
                 align="left"
                 motionScale={motionScale}
               >
@@ -524,7 +549,7 @@ const App = () => {
                 <div className="flex gap-[1rem] flex-row-reverse">
                   <div className="w-8 h-8 rounded-full bg-[color:var(--apple-btn-primary-bg)] flex-shrink-0" />
                   <div className="bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] px-[1.618rem] py-[0.618rem] rounded-[1.618rem] rounded-tr-[0.618rem] text-sm">
-                    这道题选 C 的原因是什么？
+                    {t('card.chatQuestion')}
                   </div>
                 </div>
                 <div className="flex gap-[1rem]">
@@ -533,9 +558,9 @@ const App = () => {
                   </div>
                   <div className="bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] text-[color:var(--apple-ink)] px-[1.618rem] py-[0.618rem] rounded-[1.618rem] rounded-tl-[0.618rem] text-sm shadow-sm">
                     <p className="mb-2 font-semibold text-xs text-[color:var(--apple-muted)] uppercase tracking-wider">
-                      参考：第 4 章
+                      {t('card.reference')}
                     </p>
-                    根据洛必达法则，当 x 趋近于 0 时，分子分母同时求导...
+                    {t('card.chatAnswerSnippet')}
                   </div>
                 </div>
               </div>
@@ -603,9 +628,10 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
     transformStyle: 'flat',
     willChange: isStatic ? 'auto' : 'transform, opacity',
   })
-  const subtitleOffset = heroEase * (120 + heroJuice * 10) * motionAmount
-  const textOffset = heroEase * (150 + heroJuice * 12) * motionAmount
-  const ctaOffset = heroEase * (180 + heroJuice * 14) * motionAmount
+  // Lift the hero text slightly as we scroll, so it won't visually collide with the preview segmented control.
+  const subtitleOffset = heroEase * (32 + heroJuice * 6) * motionAmount
+  const textOffset = heroEase * (44 + heroJuice * 8) * motionAmount
+  const ctaOffset = heroEase * (56 + heroJuice * 10) * motionAmount
 
   const previewOffset = heroEase * 80 * motionAmount
   const previewStyle = {
@@ -614,6 +640,25 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
     transformStyle: 'flat',
     willChange: isStatic ? 'auto' : 'transform, opacity',
   }
+  // Fade the preview image from bottom only when the hero is being "swiped away" (near the end of the scroll range).
+  // Golden ratio details:
+  // - start fading at ~85% scroll progress
+  // - fade band height is 38.2% of the image height
+  const previewMaskStart = 0.85
+  const previewMaskT = clamp((heroProgress - previewMaskStart) / (1 - previewMaskStart), 0, 1)
+  const previewMaskEase = easeInOutCubic(previewMaskT)
+  const previewMaskAlpha = clamp(1 - previewMaskEase * motionAmount, 0, 1)
+  const previewMaskImage = `linear-gradient(to top, rgba(0,0,0,${previewMaskAlpha}) 0%, rgba(0,0,0,1) 38.2%, rgba(0,0,0,1) 100%)`
+  const previewImageMaskStyle = isStatic
+    ? null
+    : {
+        WebkitMaskImage: previewMaskImage,
+        maskImage: previewMaskImage,
+        WebkitMaskRepeat: 'no-repeat',
+        maskRepeat: 'no-repeat',
+        WebkitMaskSize: '100% 100%',
+        maskSize: '100% 100%',
+      }
 
   const handleExplore = () => {
     if (typeof document === 'undefined') return
@@ -646,21 +691,21 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
         <div className="flex flex-col items-center text-center max-w-3xl">
           <h1
             className="text-[1.75rem] sm:text-[2.5rem] md:text-[3.2rem] font-semibold tracking-[-0.02em] mb-[1rem] sm:mb-[1.25rem] leading-[1.15] font-display text-[color:var(--apple-ink)]"
-            style={layerStyle2d(subtitleOffset)}
+            style={layerStyle2d(-subtitleOffset)}
           >
             {t('hero.subtitle')}
           </h1>
 
           <p
             className="text-[1rem] sm:text-[1.15rem] text-[color:var(--apple-muted)] max-w-xl mb-[2rem] sm:mb-[2.5rem] leading-[1.65] font-display"
-            style={layerStyle2d(textOffset)}
+            style={layerStyle2d(-textOffset)}
           >
             {t('hero.tagline')}
           </p>
 
           <div
             className="flex flex-col sm:flex-row gap-4 w-full max-w-[17.944rem] sm:max-w-[26rem] justify-center"
-            style={layerStyle2d(ctaOffset)}
+            style={layerStyle2d(-ctaOffset)}
           >
             <button
               type="button"
@@ -682,7 +727,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
         </div>
 
         <div className="w-full flex justify-center">
-          <HeroPreview style={previewStyle} />
+          <HeroPreview style={previewStyle} imageMaskStyle={previewImageMaskStyle} />
         </div>
       </div>
     </header>
@@ -692,41 +737,40 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
 const heroPreviewItems = [
   {
     id: 'chat',
-    labelZh: 'AI 对话',
-    labelEn: 'AI Chat',
+    labelKey: 'hero.preview.chat',
     icon: Sparkles,
     src: '/img/hero-preview-overview.jpg',
+    objectPosition: 'center 38.2%',
   },
   {
     id: 'skills',
-    labelZh: '技能',
-    labelEn: 'Skills',
+    labelKey: 'hero.preview.skills',
     icon: Zap,
     src: '/img/hero-preview-skills.jpg',
+    objectPosition: 'center 38.2%',
   },
   {
     id: 'knowledge',
-    labelZh: '知识管理',
-    labelEn: 'Knowledge',
+    labelKey: 'hero.preview.knowledge',
     icon: FileText,
     src: '/img/hero-preview-mistakes.jpg',
+    objectPosition: 'center 38.2%',
   },
   {
     id: 'providers',
-    labelZh: '多服务商',
-    labelEn: 'Providers',
+    labelKey: 'hero.preview.providers',
     icon: MonitorDot,
     src: '/img/hero-preview-review.jpg',
+    objectPosition: 'center 38.2%',
   },
 ]
 
-const HeroPreview = ({ style }) => {
-  const { isZh } = useLocale()
+const HeroPreview = ({ style, imageMaskStyle }) => {
+  const { locale, t } = useLocale()
   const [activeId, setActiveId] = useState(heroPreviewItems[0].id)
   const activeItem = heroPreviewItems.find((item) => item.id === activeId) || heroPreviewItems[0]
-  const imageAlt = isZh
-    ? `DeepStudent ${activeItem.labelZh} 界面预览（占位图）`
-    : `DeepStudent ${activeItem.labelEn} preview (placeholder)`
+  const activeLabel = t(activeItem.labelKey)
+  const imageAlt = t('hero.preview.imageAlt', 'DeepStudent {label} preview (placeholder)', { label: activeLabel })
   const previewRef = useRef(null)
   const segmentedControlRef = useRef(null)
   const segmentedSliderRef = useRef(null)
@@ -811,7 +855,7 @@ const HeroPreview = ({ style }) => {
 
   useLayoutEffect(() => {
     updateSegmentedSlider()
-  }, [updateSegmentedSlider, isZh])
+  }, [updateSegmentedSlider, locale])
 
   useEffect(() => {
     window.addEventListener('resize', updateSegmentedSlider)
@@ -827,11 +871,16 @@ const HeroPreview = ({ style }) => {
       <div className="relative">
         <div className="relative rounded-[1.75rem] shadow-[var(--apple-shadow-xl)]">
           <div className="relative overflow-hidden rounded-[1.75rem]">
-            <div className="relative aspect-[16/10] bg-[color:var(--apple-card-strong)]">
+            {/* Golden ratio (phi) ~ 1.618:1 */}
+            <div className="relative aspect-[1618/1000] bg-[color:var(--apple-card-strong)]">
               <img
                 src={activeItem.src}
                 alt={imageAlt}
                 className="absolute inset-0 h-full w-full object-cover"
+                style={{
+                  objectPosition: activeItem.objectPosition || 'center',
+                  ...(imageMaskStyle || {}),
+                }}
                 loading="lazy"
                 draggable="false"
               />
@@ -843,7 +892,7 @@ const HeroPreview = ({ style }) => {
               ref={segmentedControlRef}
               className="segmented-control"
               role="group"
-              aria-label={isZh ? '界面预览切换' : 'Preview selector'}
+              aria-label={t('hero.preview.selector', 'Preview selector')}
             >
               <div
                 ref={segmentedSliderRef}
@@ -861,9 +910,11 @@ const HeroPreview = ({ style }) => {
                     data-segment-id={item.id}
                     className={`segmented-control__btn focus-ring${isActive ? ' is-active' : ''}`}
                     aria-pressed={isActive}
+                    aria-label={t(item.labelKey)}
+                    title={t(item.labelKey)}
                   >
                     <Icon className="w-4 h-4" aria-hidden="true" />
-                    {isZh ? item.labelZh : item.labelEn}
+                    <span className="hidden sm:inline">{t(item.labelKey)}</span>
                   </button>
                 )
               })}
@@ -876,16 +927,16 @@ const HeroPreview = ({ style }) => {
 }
 
 const DownloadPage = ({ onBack = () => {} }) => {
-  const { t, isZh } = useLocale()
+  const { t } = useLocale()
   const platformDownloads = [
     {
       id: 'mac',
       platform: 'macOS',
-      channel: isZh ? 'DMG 安装' : 'DMG Install',
+      channel: t('download.dmgInstall'),
       version: 'v1.0.2 · Build 88',
       size: '312 MB',
-      requirements: isZh ? 'macOS 13+，Apple Silicon 优化' : 'macOS 13+, Apple Silicon optimized',
-      description: isZh ? '菜单栏快捷录入，支持 Spotlight 搜索。' : 'Menu bar quick entry, Spotlight search support.',
+      requirements: t('download.requirements.macos'),
+      description: t('download.description.macos'),
       ctaLabel: t('download.downloadDmg'),
       ctaHref: 'https://downloads.deepstudent.ai/macos/deepstudent-v1.0.2.dmg',
       icon: MonitorDot,
@@ -894,11 +945,11 @@ const DownloadPage = ({ onBack = () => {} }) => {
     {
       id: 'windows',
       platform: 'Windows',
-      channel: isZh ? '预览版' : 'Preview',
+      channel: t('download.preview'),
       version: 'v0.9.8 Preview',
       size: '298 MB',
-      requirements: 'Windows 11 / 10 22H2+',
-      description: isZh ? '预览版含 OneNote 导入与系统托盘控件。' : 'Preview includes OneNote import and system tray controls.',
+      requirements: t('download.requirements.windows', 'Windows 11 / 10 22H2+'),
+      description: t('download.description.windows'),
       ctaLabel: t('download.downloadExe'),
       ctaHref: 'https://downloads.deepstudent.ai/windows/deepstudent-setup.exe',
       icon: LaptopMinimal,
@@ -980,7 +1031,7 @@ const DownloadPage = ({ onBack = () => {} }) => {
         </div>
 
         <p className="mt-6 text-xs text-[color:var(--apple-muted)]">
-          Windows 仍为预览版，如需帮助请联系 support@deepstudent.ai。
+          {t('download.note.windowsPreview')}
         </p>
       </section>
     </div>
@@ -989,34 +1040,34 @@ const DownloadPage = ({ onBack = () => {} }) => {
 
 const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
   const shouldAnimate = motionScale > 0
+  const { t } = useLocale()
   const faqItems = [
     {
       id: 'open-source',
-      question: 'DeepStudent 是开源的吗？',
-      answer: '是的，DeepStudent 完全开源。你可以在 GitHub 查看源码并参与共建。',
+      question: t('faq.openSource.q'),
+      answer: t('faq.openSource.a'),
       linkHref: 'https://github.com/deepstudents/ai-mistake-manager',
-      linkLabel: '前往 GitHub',
+      linkLabel: t('faq.openSource.link'),
     },
     {
       id: 'privacy',
-      question: '我的数据会被如何使用？',
-      answer: '我们遵循最小化数据原则，数据仅用于生成个性化学习建议与统计分析。',
-      actionLabel: '查看隐私政策',
+      question: t('faq.privacy.q'),
+      answer: t('faq.privacy.a'),
+      actionLabel: t('faq.privacy.action'),
       onAction: () => onOpenPolicy('privacy'),
     },
     {
       id: 'macos-quarantine',
-      question: 'macOS 安装后提示“已损坏，无法打开”怎么办？',
-      answer:
-        '可以在终端执行以下命令（把 <应用路径> 替换为你的应用路径；也可以把应用图标拖进终端自动填充路径）：',
-      code: 'sudo xattr -r -d com.apple.quarantine <应用路径>',
+      question: t('faq.macosQuarantine.q'),
+      answer: t('faq.macosQuarantine.a'),
+      code: t('faq.macosQuarantine.code', 'sudo xattr -r -d com.apple.quarantine <App Path>'),
       linkHref: '/docs/guide/A-Q',
-      linkLabel: '查看完整步骤',
+      linkLabel: t('faq.macosQuarantine.link'),
     },
     {
       id: 'windows-preview',
-      question: 'Windows 版本是正式版吗？',
-      answer: '目前 Windows 仍为预览版，我们会持续迭代。遇到问题可联系 support@deepstudent.ai。',
+      question: t('faq.windowsPreview.q'),
+      answer: t('faq.windowsPreview.a'),
     },
   ]
 
@@ -1030,10 +1081,10 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
     >
       <div className="text-center">
         <h2 className="text-[1.618rem] sm:text-[2.618rem] font-semibold text-[color:var(--apple-ink)] mb-[0.618rem] tracking-[-0.02em] font-display">
-          常见问题
+          {t('faq.title')}
         </h2>
         <p className="text-sm sm:text-base text-[color:var(--apple-muted)] leading-relaxed">
-          关于 DeepStudent 的常见疑问解答
+          {t('faq.subtitle')}
         </p>
       </div>
 
@@ -1155,6 +1206,7 @@ const FeatureSection = ({ icon, title, desc, align, children, motionScale = 1 })
 const Flashcard = ({ motionScale = 1 }) => {
   const [isFlipped, setIsFlipped] = useState(false)
   const shouldAnimate = motionScale > 0
+  const { t } = useLocale()
 
   return (
     <div
@@ -1178,10 +1230,10 @@ const Flashcard = ({ motionScale = 1 }) => {
         aria-hidden={isFlipped}
       >
         <div className="text-xs font-bold text-[color:var(--apple-muted)] tracking-[0.2em] uppercase mb-[0.618rem]">
-          题目
+          {t('card.question')}
         </div>
         <div className="text-[1.618rem] font-sans text-[color:var(--apple-ink)]">
-          ln(x) 的导数是什么？
+          {t('flashcard.prompt')}
         </div>
       </div>
       <div className="w-full h-px bg-[color:var(--apple-line)] my-[2.618rem]" />
@@ -1191,14 +1243,15 @@ const Flashcard = ({ motionScale = 1 }) => {
         className="focus-ring relative z-20 text-xs text-[color:var(--apple-muted)] font-medium px-3 py-1.5 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] hover:text-[color:var(--apple-ink)] hover:border-[color:var(--apple-line-strong)] active:text-[color:var(--apple-ink)] transition-colors"
         aria-pressed={isFlipped}
       >
-        {isFlipped ? '返回题目' : '点击查看答案'}
+        {isFlipped ? t('card.backToQuestion') : t('card.clickAnswer')}
       </button>
     </div>
   )
 }
 
 const PolicyModal = ({ type, onClose }) => {
-  const data = type ? policyContent[type] : null
+  const { t } = useLocale()
+  const data = type ? getPolicyContent(t)[type] : null
   const dialogRef = useRef(null)
   const closeButtonRef = useRef(null)
   const titleId = type ? `policy-${type}-title` : undefined
@@ -1290,7 +1343,7 @@ const PolicyModal = ({ type, onClose }) => {
             type="button"
             onClick={onClose}
             className="focus-ring flex-shrink-0 w-[2.618rem] h-[2.618rem] rounded-full border border-[color:var(--apple-line)] text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:border-[color:var(--apple-line-strong)] flex items-center justify-center transition-colors bg-[color:var(--apple-card-strong)]"
-            aria-label="关闭弹窗"
+            aria-label={t('policy.close', 'Close dialog')}
             ref={closeButtonRef}
           >
             <X className="w-4 h-4" aria-hidden="true" />
@@ -1321,7 +1374,7 @@ const PolicyModal = ({ type, onClose }) => {
           onClick={onClose}
           className="focus-ring mt-6 w-full py-[0.95rem] sm:py-[1.15rem] md:py-[1.35rem] rounded-[1.618rem] bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] text-sm md:text-base font-semibold hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-[0.98] transition-all shadow-[var(--apple-shadow-md)]"
         >
-          我已了解
+          {t('policy.understood', 'I Understand')}
         </button>
       </div>
     </div>
@@ -1332,69 +1385,82 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
   const { isDark } = useTheme()
   const { t } = useLocale()
   return (
-    <footer className="border-t border-[color:var(--apple-line)] py-12 px-4 sm:px-6 mt-24 bg-[color:var(--apple-card)] backdrop-blur-xl">
-      <div className="max-w-4xl mx-auto w-full grid grid-cols-1 gap-8 items-center sm:grid-cols-2 sm:items-start md:grid-cols-[auto_1fr_auto] md:gap-x-10">
-        <div className="flex flex-col items-center sm:items-start gap-3">
-          <div className="flex items-center gap-2 font-semibold text-[color:var(--apple-ink)]">
-            <img src={isDark ? logoDark : logo} alt="DeepStudent logo" className="w-5 h-5" />
-            DeepStudent
+    <footer className="border-t border-[color:var(--apple-line)] mt-24 bg-[color:var(--apple-card)] backdrop-blur-xl">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+        <div className="flex flex-col gap-8 sm:gap-10">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_auto] md:gap-12 items-start">
+            <div className="flex flex-col items-center md:items-start gap-3">
+              <div className="flex items-center gap-2 font-semibold text-[color:var(--apple-ink)]">
+                <img src={isDark ? logoDark : logo} alt="DeepStudent logo" className="w-5 h-5" />
+                DeepStudent
+              </div>
+            </div>
+            <nav
+              className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-3 text-sm text-[color:var(--apple-muted)] font-medium"
+              aria-label="Footer links"
+            >
+              <button
+                type="button"
+                onClick={() => onOpenPolicy('privacy')}
+                className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
+              >
+                {t('footer.privacy')}
+              </button>
+              <button
+                type="button"
+                onClick={() => onOpenPolicy('about')}
+                className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
+              >
+                {t('footer.about')}
+              </button>
+              <button
+                type="button"
+                onClick={() => onOpenPolicy('terms')}
+                className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
+              >
+                {t('footer.terms')}
+              </button>
+              <a
+                href="https://github.com/deepstudents/ai-mistake-manager"
+                className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+              </a>
+            </nav>
           </div>
-          <a
-            href="https://www.xiaohongshu.com/user/profile/657fb438000000001902dbcf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="focus-ring inline-flex items-center justify-center w-9 h-9 rounded-full bg-zinc-500 text-white hover:bg-zinc-600 transition-colors"
-            aria-label="小红书"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
-              <path
-                fill="currentColor"
-                d="M6.34 14.458c.106-.231.195-.431.29-.628q.329-.607.59-1.247a.74.74 0 0 1 .88-.55c.557.039 1.116.01 1.698.01V4.794c-.391 0-.777-.014-1.16 0-.267.014-.36-.073-.353-.36.019-.685 0-1.374 0-2.091h5.428v1.664c0 .783 0 .783-.76.783h-.762v7.245h1.647c.664 0 .664 0 .664.697v1.46c0 .202-.05.305-.268.305q-3.866-.007-7.73-.006a1 1 0 0 1-.164-.034"
-              />
-              <path
-                fill="currentColor"
-                d="M7.365 9.21c-.339.7-.637 1.324-.95 1.938a.3.3 0 0 1-.228.114c-.755 0-1.514.03-2.266-.026-.753-.056-1.054-.54-.754-1.28.342-.853.753-1.678 1.134-2.514.024-.053.042-.106.088-.223-.305 0-.572.007-.84 0a3 3 0 0 1-.646-.06.76.76 0 0 1-.652-.85.8.8 0 0 1 .074-.256c.457-1.098.97-2.175 1.464-3.256q.24-.532.51-1.05c.047-.09.155-.203.238-.207.706-.017 1.414-.009 2.184-.009-.067.172-.104.29-.156.399q-.648 1.356-1.301 2.709c-.088.183-.194.373.134.512.088-.47.44-.384.75-.384h1.784c-.075.178-.123.302-.178.42-.55 1.152-1.11 2.294-1.653 3.444-.223.469-.148.583.37.588.268-.008.538-.01.894-.01m-.97 2.834c-.419.839-.792 1.593-1.175 2.343a.26.26 0 0 1-.194.11 228 228 0 0 1-3.084-.058 2 2 0 0 1-.413-.11l.575-1.162c.188-.384.37-.767.572-1.133a.35.35 0 0 1 .247-.162c.942.047 1.884.112 2.828.17.19.01.369.002.644.002"
-              />
-            </svg>
-          </a>
-        </div>
 
-        <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-[color:var(--apple-muted)] font-medium sm:col-span-2 sm:row-start-2 sm:gap-x-8 md:col-span-1 md:col-start-2 md:row-start-1">
-          <button
-            type="button"
-            onClick={() => onOpenPolicy('privacy')}
-            className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
-          >
-            {t('footer.privacy')}
-          </button>
-          <button
-            type="button"
-            onClick={() => onOpenPolicy('about')}
-            className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
-          >
-            {t('footer.about')}
-          </button>
-          <button
-            type="button"
-            onClick={() => onOpenPolicy('terms')}
-            className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
-          >
-            {t('footer.terms')}
-          </button>
-          <a
-            href="https://github.com/deepstudents/ai-mistake-manager"
-            className="focus-ring hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
-        </div>
+          <div className="h-px bg-[color:var(--apple-line)]" aria-hidden="true" />
 
-        <div className="text-xs text-[color:var(--apple-muted)] flex flex-col items-center sm:col-start-2 sm:row-start-1 sm:items-end sm:justify-self-end md:col-start-3 md:row-start-1 gap-2">
-          <LocaleToggle />
-          <span>© 2025 DeepStudent Team.</span>
-          <span className="font-mono text-[0.65rem] tracking-[0.08em]">Build {buildHash}</span>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <a
+              href="https://deepstudent.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring inline-flex items-center justify-center w-9 h-9 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] border border-[color:var(--apple-line)] backdrop-blur-xl transition duration-150 ease-out hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] active:scale-[0.98] self-center sm:self-auto"
+              aria-label={t('footer.xiaohongshu', 'Xiaohongshu')}
+              title={t('footer.xiaohongshu', 'Xiaohongshu')}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M6.34 14.458c.106-.231.195-.431.29-.628q.329-.607.59-1.247a.74.74 0 0 1 .88-.55c.557.039 1.116.01 1.698.01V4.794c-.391 0-.777-.014-1.16 0-.267.014-.36-.073-.353-.36.019-.685 0-1.374 0-2.091h5.428v1.664c0 .783 0 .783-.76.783h-.762v7.245h1.647c.664 0 .664 0 .664.697v1.46c0 .202-.05.305-.268.305q-3.866-.007-7.73-.006a1 1 0 0 1-.164-.034"
+                />
+                <path
+                  fill="currentColor"
+                  d="M7.365 9.21c-.339.7-.637 1.324-.95 1.938a.3.3 0 0 1-.228.114c-.755 0-1.514.03-2.266-.026-.753-.056-1.054-.54-.754-1.28.342-.853.753-1.678 1.134-2.514.024-.053.042-.106.088-.223-.305 0-.572.007-.84 0a3 3 0 0 1-.646-.06.76.76 0 0 1-.652-.85.8.8 0 0 1 .074-.256c.457-1.098.97-2.175 1.464-3.256q.24-.532.51-1.05c.047-.09.155-.203.238-.207.706-.017 1.414-.009 2.184-.009-.067.172-.104.29-.156.399q-.648 1.356-1.301 2.709c-.088.183-.194.373.134.512.088-.47.44-.384.75-.384h1.784c-.075.178-.123.302-.178.42-.55 1.152-1.11 2.294-1.653 3.444-.223.469-.148.583.37.588.268-.008.538-.01.894-.01m-.97 2.834c-.419.839-.792 1.593-1.175 2.343a.26.26 0 0 1-.194.11 228 228 0 0 1-3.084-.058 2 2 0 0 1-.413-.11l.575-1.162c.188-.384.37-.767.572-1.133a.35.35 0 0 1 .247-.162c.942.047 1.884.112 2.828.17.19.01.369.002.644.002"
+                />
+              </svg>
+            </a>
+            <div className="flex flex-col items-center sm:items-end gap-2 text-[color:var(--apple-muted)]">
+              <LocaleToggle compact className="w-[8.5rem]" />
+              <span className="font-mono text-[0.65rem] tracking-[0.08em] text-center sm:text-right">
+                Build {buildHash}
+              </span>
+              <span className="text-xs text-center sm:text-right">© 2026 DeepStudent Team.</span>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

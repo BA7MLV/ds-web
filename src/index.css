@@ -249,69 +249,27 @@
     --tw-ring-offset-color: rgba(0, 0, 0, 0.9);
   }
 
-  /* Apple-style segmented control (gray background + white slider) */
+  /* Segmented control (glass background + white slider). */
   .segmented-control {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
     position: relative;
     padding: 2px;
-    border-radius: 10px;
-    background: transparent;
-    isolation: isolate;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    box-shadow:
-      0 8px 30px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    border-radius: 12px;
+    /* Glass */
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     overflow: hidden;
   }
 
-  .segmented-control::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    /* Frosted glass: strong blur + translucency (no liquid distortion). */
-    background: rgba(0, 0, 0, 0.14);
-    backdrop-filter: blur(160px) saturate(220%) contrast(0.88) brightness(1.06);
-    -webkit-backdrop-filter: blur(160px) saturate(220%) contrast(0.88) brightness(1.06);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .segmented-control::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background:
-      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.55), transparent 55%),
-      radial-gradient(circle at 86% 128%, rgba(255, 255, 255, 0.18), transparent 60%),
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.35' numOctaves='2' seed='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity: 0.42;
-    background-repeat: no-repeat, no-repeat, repeat, repeat;
-    background-size: auto, auto, 220px 220px, 120px 120px;
-    filter: contrast(1.35) brightness(1.12);
-    mix-blend-mode: soft-light;
-    pointer-events: none;
-    z-index: 0;
-  }
-
   .dark .segmented-control {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.12);
     border-color: rgba(255, 255, 255, 0.14);
-    box-shadow:
-      0 18px 56px rgba(0, 0, 0, 0.6),
-      inset 0 1px 0 rgba(255, 255, 255, 0.16);
-  }
-
-  .dark .segmented-control::before {
-    background: rgba(255, 255, 255, 0.18);
-  }
-
-  .dark .segmented-control::after {
-    opacity: 0.18;
+    box-shadow: 0 18px 56px rgba(0, 0, 0, 0.55);
   }
 
   .segmented-control__btn {
@@ -325,13 +283,13 @@
     padding: 8px 14px;
     font-size: 15px;
     font-weight: 500;
-    color: #666;
+    color: #636366;
     cursor: pointer;
     border-radius: 10px;
     outline: none;
     user-select: none;
     white-space: nowrap;
-    transition: color 120ms ease;
+    transition: none;
   }
 
   @media (min-width: 640px) {
@@ -345,12 +303,12 @@
   }
 
   .segmented-control__btn.is-active {
-    color: #1d1d1f;
-    font-weight: 600;
+    color: #000000;
+    font-weight: 500;
   }
 
   .dark .segmented-control__btn.is-active {
-    color: #1d1d1f;
+    color: #000000;
   }
 
   .segmented-control__slider {
@@ -358,10 +316,16 @@
     top: 2px;
     left: 2px;
     height: calc(100% - 4px);
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.85);
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.5);
     z-index: 1;
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1), width 0.3s ease;
   }
 
   /* Apple-style gradient text */
