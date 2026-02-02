@@ -18,54 +18,69 @@
     /* Light theme tokens */
     --apple-ink: #1d1d1f;
     --apple-ink-secondary: #48484a;
-    --apple-muted: #6e6e73;
-    --apple-line: rgba(0, 0, 0, 0.1);
-    --apple-line-strong: rgba(0, 0, 0, 0.16);
+    --apple-muted: #86868b;
+    --apple-line: rgba(0, 0, 0, 0.08);
+    --apple-line-strong: rgba(0, 0, 0, 0.12);
     --apple-soft-line: rgba(255, 255, 255, 0.8);
     --apple-surface: #fbfbfd;
     --apple-surface-elevated: #ffffff;
-    --apple-card: rgba(255, 255, 255, 0.72);
-    --apple-card-strong: rgba(255, 255, 255, 0.88);
-    --apple-card-hover: rgba(255, 255, 255, 0.95);
+    --apple-card: rgba(255, 255, 255, 0.65);
+    --apple-card-strong: rgba(255, 255, 255, 0.85);
+    --apple-card-hover: rgba(255, 255, 255, 0.92);
     /* Monochrome premium look - replacing blue with deep ink */
-    --apple-blue: #1d1d1f;
-    --apple-blue-hover: #3a3a3c;
-    --apple-blue-soft: rgba(29, 29, 31, 0.04);
-    --apple-glow: rgba(0, 0, 0, 0.12);
-    --apple-purple: #9e9ea4;
-    --apple-pink: #d1d1d6;
-    --apple-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
-    --apple-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05), 0 16px 48px rgba(0, 0, 0, 0.08);
-    --apple-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.06), 0 32px 80px rgba(0, 0, 0, 0.12);
-    --apple-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.08), 0 48px 120px rgba(0, 0, 0, 0.16);
+    --apple-blue: #0071e3;
+    --apple-blue-hover: #0077ed;
+    --apple-blue-soft: rgba(0, 113, 227, 0.12);
+    --apple-glow: rgba(0, 113, 227, 0.15);
+    --apple-purple: #bf5af2;
+    --apple-pink: #ff375f;
+    
+    /* Advanced layered shadows for realism */
+    --apple-shadow-sm: 
+      0 1px 2px rgba(0,0,0,0.04), 
+      0 4px 8px rgba(0,0,0,0.02);
+    --apple-shadow-md: 
+      0 4px 12px rgba(0,0,0,0.03), 
+      0 12px 32px rgba(0,0,0,0.04), 
+      0 0 0 1px rgba(0,0,0,0.02); /* Subtle rim */
+    --apple-shadow-lg: 
+      0 8px 24px rgba(0,0,0,0.04), 
+      0 24px 64px rgba(0,0,0,0.06),
+      0 0 0 1px rgba(0,0,0,0.02);
+    --apple-shadow-xl: 
+      0 24px 48px rgba(0,0,0,0.08), 
+      0 48px 100px rgba(0,0,0,0.12);
+
+    /* Easing */
+    --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
     /* Title gradient - Apple style */
     --apple-title-gradient: linear-gradient(
       135deg,
       #1d1d1f 0%,
-      #3a3a3c 50%,
-      #1d1d1f 100%
+      #434344 100%
     );
 
     /* Button tokens */
     --apple-btn-primary-bg: #1d1d1f;
     --apple-btn-primary-bg-hover: #3a3a3c;
     --apple-btn-primary-text: #ffffff;
-    --apple-btn-secondary-bg: rgba(0, 0, 0, 0.04);
+    --apple-btn-secondary-bg: rgba(0, 0, 0, 0.05);
     --apple-btn-secondary-bg-hover: rgba(0, 0, 0, 0.08);
     --apple-btn-secondary-text: #1d1d1f;
     --apple-btn-secondary-border: transparent;
 
     /* Nav tokens */
-    --apple-nav-bg: rgba(251, 251, 253, 0.8);
-    --apple-nav-border: rgba(0, 0, 0, 0.08);
+    --apple-nav-bg: rgba(251, 251, 253, 0.75);
+    --apple-nav-border: rgba(0, 0, 0, 0.05);
 
     /* Selection */
-    --apple-selection-bg: rgba(0, 0, 0, 0.1);
+    --apple-selection-bg: rgba(0, 113, 227, 0.15);
     --apple-selection-text: inherit;
 
     /* Noise overlay */
-    --apple-noise-opacity: 0.02;
+    --apple-noise-opacity: 0.035;
 
     --radius: 0.75rem;
   }
@@ -75,27 +90,28 @@
 
     /* Dark theme tokens - Apple-inspired deep space */
     --apple-ink: #f5f5f7;
-    --apple-ink-secondary: #a1a1a6;
-    --apple-muted: rgba(235, 235, 245, 0.6);
-    --apple-line: rgba(255, 255, 255, 0.1);
-    --apple-line-strong: rgba(255, 255, 255, 0.18);
+    --apple-ink-secondary: #86868b;
+    --apple-muted: #86868b;
+    --apple-line: rgba(255, 255, 255, 0.08);
+    --apple-line-strong: rgba(255, 255, 255, 0.12);
     --apple-soft-line: rgba(255, 255, 255, 0.12);
     --apple-surface: #000000;
     --apple-surface-elevated: #1c1c1e;
-    --apple-card: rgba(28, 28, 30, 0.8);
-    --apple-card-strong: rgba(44, 44, 46, 0.9);
-    --apple-card-hover: rgba(58, 58, 60, 0.85);
+    --apple-card: rgba(28, 28, 30, 0.65);
+    --apple-card-strong: rgba(44, 44, 46, 0.75);
+    --apple-card-hover: rgba(44, 44, 46, 0.85);
     /* Monochrome premium look - replacing blue with white */
-    --apple-blue: #ffffff;
-    --apple-blue-hover: #e5e5e5;
-    --apple-blue-soft: rgba(255, 255, 255, 0.1);
-    --apple-glow: rgba(255, 255, 255, 0.15);
-    --apple-purple: #a1a1a6;
-    --apple-pink: #86868b;
-    --apple-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
-    --apple-shadow-md: 0 8px 32px rgba(0, 0, 0, 0.5);
-    --apple-shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.6);
-    --apple-shadow-xl: 0 32px 96px rgba(0, 0, 0, 0.7);
+    --apple-blue: #0a84ff;
+    --apple-blue-hover: #0077ed;
+    --apple-blue-soft: rgba(10, 132, 255, 0.15);
+    --apple-glow: rgba(10, 132, 255, 0.25);
+    --apple-purple: #bf5af2;
+    --apple-pink: #ff375f;
+    
+    --apple-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --apple-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.05);
+    --apple-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255,255,255,0.05);
+    --apple-shadow-xl: 0 32px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255,255,255,0.05);
 
     /* Title gradient - Apple dark mode style with subtle silver highlight */
     --apple-title-gradient: linear-gradient(
@@ -107,23 +123,23 @@
 
     /* Button tokens - White primary in dark mode */
     --apple-btn-primary-bg: #ffffff;
-    --apple-btn-primary-bg-hover: #e5e5e5;
+    --apple-btn-primary-bg-hover: #f2f2f7;
     --apple-btn-primary-text: #000000;
-    --apple-btn-secondary-bg: rgba(255, 255, 255, 0.1);
-    --apple-btn-secondary-bg-hover: rgba(255, 255, 255, 0.15);
+    --apple-btn-secondary-bg: rgba(255, 255, 255, 0.08);
+    --apple-btn-secondary-bg-hover: rgba(255, 255, 255, 0.12);
     --apple-btn-secondary-text: #ffffff;
     --apple-btn-secondary-border: transparent;
 
     /* Nav tokens */
-    --apple-nav-bg: rgba(0, 0, 0, 0.85);
-    --apple-nav-border: rgba(255, 255, 255, 0.1);
+    --apple-nav-bg: rgba(0, 0, 0, 0.75);
+    --apple-nav-border: rgba(255, 255, 255, 0.08);
 
     /* Selection */
-    --apple-selection-bg: rgba(255, 255, 255, 0.25);
+    --apple-selection-bg: rgba(10, 132, 255, 0.25);
     --apple-selection-text: #ffffff;
 
     /* Noise overlay */
-    --apple-noise-opacity: 0.03;
+    --apple-noise-opacity: 0.05;
   }
 
   body {
@@ -358,9 +374,9 @@
   body,
   .theme-transition,
   .theme-transition * {
-    transition-property: background-color, border-color, color, fill, stroke, box-shadow, opacity;
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow, opacity, transform;
     transition-duration: var(--theme-transition-duration);
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-timing-function: var(--ease-apple);
   }
 }
 
