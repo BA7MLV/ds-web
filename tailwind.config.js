@@ -43,6 +43,9 @@ export default {
       animation: {
         'fade-in': 'fade-in 0.9s ease forwards',
       },
+      transitionTimingFunction: {
+        'apple': 'cubic-bezier(0.32, 0.72, 0, 1)',
+      },
     },
   },
   plugins: [],
