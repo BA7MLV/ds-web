@@ -986,14 +986,13 @@ const App = () => {
 }
 
 const TopNav = ({ onDownload = () => {} }) => {
-  const { isDark } = useTheme()
   const { t } = useLocale()
   return (
     <nav className="sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
       <div className="max-w-[980px] mx-auto flex items-center justify-between px-4 sm:px-6 h-12">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] hover:opacity-80 transition-opacity">
-          <img src={isDark ? logoDark : logo} alt="" className="h-10 w-auto" />
-          <span className="sr-only">DeepStudent</span>
+          <img src="/logo.svg" alt="" className="h-10 w-auto dark:invert" />
+          <span className="text-[15px] tracking-tight">DeepStudent</span>
         </a>
         <div className="flex items-center gap-4 text-[12px] text-[color:var(--apple-muted)] font-normal">
           <a href="#features" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors hidden sm:inline">
