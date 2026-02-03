@@ -56,7 +56,7 @@ export default withMermaid(defineConfig({
     ],
   ],
   themeConfig: {
-    logo: '/logo-light.svg',
+    logo: { light: '/logo-r.svg', dark: '/logo-r-dark.svg' },
     siteTitle: '', // 有 logo 时不显示标题文本
     nav: [
       { text: '指南', link: '/' },

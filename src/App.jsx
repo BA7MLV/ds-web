@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
-import logo from './assets/deepstudent-logo.svg'
-import logoDark from './assets/deepstudent-logo-dark.svg'
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
+
+const logo = '/logo-r.svg'
+const logoDark = '/logo-r-dark.svg'
 
 const cardHeaderClass = 'flex items-center gap-3 mb-[1.618rem]'
 
@@ -991,8 +992,8 @@ const TopNav = ({ onDownload = () => {} }) => {
     <nav className="sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
       <div className="max-w-[980px] mx-auto flex items-center justify-between px-4 sm:px-6 h-12">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] hover:opacity-80 transition-opacity">
-          <img src={isDark ? logoDark : logo} alt="DeepStudent logo" className="w-5 h-5" />
-          <span className="text-[15px] tracking-tight">DeepStudent</span>
+          <img src={isDark ? logoDark : logo} alt="" className="h-10 w-auto" />
+          <span className="sr-only">DeepStudent</span>
         </a>
         <div className="flex items-center gap-4 text-[12px] text-[color:var(--apple-muted)] font-normal">
           <a href="#features" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors hidden sm:inline">
@@ -1102,7 +1103,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
           </h1>
 
           <p
-            className="text-[1.1rem] sm:text-[1.35rem] text-[color:var(--apple-muted)] max-w-2xl mb-[2.5rem] sm:mb-[3.25rem] leading-[1.6] font-display font-medium tracking-tight"
+            className="text-[1.1rem] sm:text-[1.35rem] text-[color:var(--apple-muted)] max-w-2xl mb-[2.5rem] sm:mb-[3.25rem] leading-[1.6] font-display font-medium tracking-tight whitespace-pre-line"
             style={layerStyle2d(-textOffset)}
           >
             {t('hero.tagline')}
@@ -1867,8 +1868,8 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-[1fr_auto] md:gap-16 items-start">
             <div className="flex flex-col items-center md:items-start gap-4">
               <div className="flex items-center gap-3 font-bold text-[color:var(--apple-ink)] text-lg tracking-tight">
-                <img src={isDark ? logoDark : logo} alt="DeepStudent logo" className="w-6 h-6" />
-                DeepStudent
+                <img src={isDark ? logoDark : logo} alt="" className="h-11 w-auto" />
+                <span className="sr-only">DeepStudent</span>
               </div>
             </div>
             <nav

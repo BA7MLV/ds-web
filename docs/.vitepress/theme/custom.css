@@ -80,6 +80,7 @@
   --vp-code-block-bg: rgba(255, 255, 255, 0.82);
 
   --vp-nav-bg-color: rgba(255, 255, 255, 0.75);
+  --vp-nav-logo-height: 40px;
   --vp-nav-screen-bg-color: rgba(245, 245, 247, 0.96);
   --vp-local-nav-bg-color: rgba(255, 255, 255, 0.75);
   --vp-sidebar-bg-color: rgba(255, 255, 255, 0.85);
@@ -156,6 +157,7 @@
   --vp-code-block-bg: rgba(14, 14, 18, 0.95);
 
   --vp-nav-bg-color: rgba(12, 12, 15, 0.92);
+  --vp-nav-logo-height: 40px;
   --vp-nav-screen-bg-color: rgba(10, 10, 12, 0.98);
   --vp-local-nav-bg-color: rgba(12, 12, 15, 0.92);
   --vp-sidebar-bg-color: rgba(14, 14, 18, 0.94);
