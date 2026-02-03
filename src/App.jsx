@@ -1282,7 +1282,7 @@ const HeroPreview = ({ style, imageMaskStyle }) => {
       className="relative w-full max-w-[24rem] sm:max-w-[52rem] lg:max-w-[64rem]"
       style={style}
     >
-      <div className="relative p-2 sm:p-3 bg-white/20 dark:bg-white/10 backdrop-blur-2xl rounded-[2.5rem] shadow-[var(--apple-shadow-2xl)] border border-white/20 dark:border-white/10">
+      <div className="relative p-2 sm:p-3 bg-white/20 dark:bg-white/10 backdrop-blur-2xl rounded-[2.5rem] shadow-[var(--apple-shadow-2xl)]">
         <div className="relative rounded-[2rem] overflow-hidden shadow-inner bg-black">
           {/* Golden ratio (phi) ~ 1.618:1 */}
           <div className="relative aspect-[1618/1000] bg-[color:var(--apple-card-strong)]">
@@ -1303,7 +1303,7 @@ const HeroPreview = ({ style, imageMaskStyle }) => {
         <div className="absolute inset-x-0 top-0 flex justify-center -translate-y-1/2 px-3 sm:px-4 z-20">
           <div
             ref={segmentedControlRef}
-            className="segmented-control shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-white/20 dark:border-white/10"
+            className="segmented-control shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
             role="group"
             aria-label={t('hero.preview.selector', 'Preview selector')}
           >
