@@ -1283,7 +1283,7 @@ const HeroPreview = ({ style, imageMaskStyle }) => {
       style={style}
     >
       <div className="relative p-2 sm:p-3 bg-white/20 dark:bg-white/10 backdrop-blur-2xl rounded-[2.5rem] shadow-[var(--apple-shadow-2xl)]">
-        <div className="relative rounded-[2rem] overflow-hidden shadow-inner bg-black">
+        <div className="relative rounded-[2rem] overflow-hidden bg-black">
           {/* Golden ratio (phi) ~ 1.618:1 */}
           <div className="relative aspect-[1618/1000] bg-[color:var(--apple-card-strong)]">
             <img
