@@ -2,8 +2,9 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExter
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
 
-const logo = '/logo-r.svg'
-const logoDark = '/logo-r-dark.svg'
+const logo = '/logo_mono_svg.svg'
+const logoFooter = '/logo-r.svg'
+const logoFooterDark = '/logo-r-dark.svg'
 
 const cardHeaderClass = 'flex items-center gap-3 mb-[1.618rem]'
 
@@ -260,7 +261,8 @@ const getPolicyContent = (t) => ({
         points: [
           t('policy.privacy.section1.point1', ''),
           t('policy.privacy.section1.point2', ''),
-        ],
+          t('policy.privacy.section1.point3', ''),
+        ].filter(Boolean),
       },
       {
         title: t('policy.privacy.section2.title', ''),
@@ -268,7 +270,10 @@ const getPolicyContent = (t) => ({
         points: [
           t('policy.privacy.section2.point1', ''),
           t('policy.privacy.section2.point2', ''),
-        ],
+          t('policy.privacy.section2.point3', ''),
+          t('policy.privacy.section2.point4', ''),
+          t('policy.privacy.section2.point5', ''),
+        ].filter(Boolean),
       },
       {
         title: t('policy.privacy.section3.title', ''),
@@ -276,7 +281,49 @@ const getPolicyContent = (t) => ({
         points: [
           t('policy.privacy.section3.point1', ''),
           t('policy.privacy.section3.point2', ''),
-        ],
+          t('policy.privacy.section3.point3', ''),
+        ].filter(Boolean),
+      },
+      {
+        title: t('policy.privacy.section4.title', ''),
+        body: t('policy.privacy.section4.body', ''),
+        points: [
+          t('policy.privacy.section4.point1', ''),
+          t('policy.privacy.section4.point2', ''),
+          t('policy.privacy.section4.point3', ''),
+          t('policy.privacy.section4.point4', ''),
+        ].filter(Boolean),
+      },
+      {
+        title: t('policy.privacy.section5.title', ''),
+        body: t('policy.privacy.section5.body', ''),
+        points: [
+          t('policy.privacy.section5.point1', ''),
+          t('policy.privacy.section5.point2', ''),
+          t('policy.privacy.section5.point3', ''),
+        ].filter(Boolean),
+      },
+      {
+        title: t('policy.privacy.section6.title', ''),
+        body: t('policy.privacy.section6.body', ''),
+        points: [
+          t('policy.privacy.section6.point1', ''),
+        ].filter(Boolean),
+      },
+      {
+        title: t('policy.privacy.section7.title', ''),
+        body: t('policy.privacy.section7.body', ''),
+        points: [
+          t('policy.privacy.section7.point1', ''),
+        ].filter(Boolean),
+      },
+      {
+        title: t('policy.privacy.section8.title', ''),
+        body: t('policy.privacy.section8.body', ''),
+        points: [
+          t('policy.privacy.section8.point1', ''),
+          t('policy.privacy.section8.point2', ''),
+        ].filter(Boolean),
       },
     ],
     footer: t('policy.privacy.footer', ''),
@@ -288,26 +335,17 @@ const getPolicyContent = (t) => ({
       {
         title: t('policy.terms.section1.title', ''),
         body: t('policy.terms.section1.body', ''),
-        points: [
-          t('policy.terms.section1.point1', ''),
-          t('policy.terms.section1.point2', ''),
-        ],
+        points: [t('policy.terms.section1.point1', '')].filter(Boolean),
       },
       {
         title: t('policy.terms.section2.title', ''),
         body: t('policy.terms.section2.body', ''),
-        points: [
-          t('policy.terms.section2.point1', ''),
-          t('policy.terms.section2.point2', ''),
-        ],
+        points: [t('policy.terms.section2.point1', '')].filter(Boolean),
       },
       {
         title: t('policy.terms.section3.title', ''),
         body: t('policy.terms.section3.body', ''),
-        points: [
-          t('policy.terms.section3.point1', ''),
-          t('policy.terms.section3.point2', ''),
-        ],
+        points: [t('policy.terms.section3.point1', '')].filter(Boolean),
       },
     ],
     footer: t('policy.terms.footer', ''),
@@ -491,9 +529,6 @@ const App = () => {
           <TopNav onDownload={handleDownloadOpen} />
           <HeroSection onDownload={handleDownloadOpen} motionScale={motionScale} />
 
-          {/* 功能标签导航 */}
-          <FeatureTabNav />
-
           {/* 数据亮点区块 */}
           <StatsHighlight motionScale={motionScale} />
 
@@ -505,6 +540,18 @@ const App = () => {
             style={motionScale > 0 ? { animationDelay: '0.18s' } : undefined}
           >
             <div className="space-y-[6.854rem] sm:space-y-[11.09rem] lg:space-y-[17.944rem] pt-[4.236rem] sm:pt-[6.854rem]">
+              <FeatureSection
+                id="feature-free-models"
+                title={t('freeModels.title', '免费模型，开箱即用')}
+                desc={t('freeModels.desc', '合作伙伴免费提供的 AI 模型，无需 API Key，下载即用。')}
+                align="right"
+                motionScale={motionScale}
+              >
+                <div className="max-w-lg mx-auto">
+                  <FreeModelsCallout />
+                </div>
+              </FeatureSection>
+
               <FeatureSection
                 id="feature-chat"
                 title={t('feature.review.title')}
@@ -991,7 +1038,7 @@ const TopNav = ({ onDownload = () => {} }) => {
     <nav className="sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
       <div className="max-w-[980px] mx-auto flex items-center justify-between px-4 sm:px-6 h-12">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] hover:opacity-80 transition-opacity">
-          <img src="/logo.svg" alt="" className="h-10 w-auto dark:invert" />
+          <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" />
           <span className="text-[15px] tracking-tight">DeepStudent</span>
         </a>
         <div className="flex items-center gap-4 text-[12px] text-[color:var(--apple-muted)] font-normal">
@@ -1041,29 +1088,19 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   const previewOffset = heroEase * 80 * motionAmount
   const previewStyle = {
     transform: isStatic ? 'none' : `translate3d(0, ${previewOffset}px, 0)`,
-    opacity: heroFade,
     transformStyle: 'flat',
-    willChange: isStatic ? 'auto' : 'transform, opacity',
+    willChange: isStatic ? 'auto' : 'transform',
   }
-  // Fade the preview image from bottom only when the hero is being "swiped away" (near the end of the scroll range).
-  // Golden ratio details:
-  // - start fading at ~85% scroll progress
-  // - fade band height is 38.2% of the image height
-  const previewMaskStart = 0.85
-  const previewMaskT = clamp((heroProgress - previewMaskStart) / (1 - previewMaskStart), 0, 1)
-  const previewMaskEase = easeInOutCubic(previewMaskT)
-  const previewMaskAlpha = clamp(1 - previewMaskEase * motionAmount, 0, 1)
-  const previewMaskImage = `linear-gradient(to top, rgba(0,0,0,${previewMaskAlpha}) 0%, rgba(0,0,0,1) 38.2%, rgba(0,0,0,1) 100%)`
-  const previewImageMaskStyle = isStatic
-    ? null
-    : {
-        WebkitMaskImage: previewMaskImage,
-        maskImage: previewMaskImage,
-        WebkitMaskRepeat: 'no-repeat',
-        maskRepeat: 'no-repeat',
-        WebkitMaskSize: '100% 100%',
-        maskSize: '100% 100%',
-      }
+  // Keep the hero preview fully visible; only soften the bottom edge with a subtle static mask.
+  const previewMaskImage = 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 100%)'
+  const previewImageMaskStyle = {
+    WebkitMaskImage: previewMaskImage,
+    maskImage: previewMaskImage,
+    WebkitMaskRepeat: 'no-repeat',
+    maskRepeat: 'no-repeat',
+    WebkitMaskSize: '100% 100%',
+    maskSize: '100% 100%',
+  }
 
   const handleExplore = () => {
     if (typeof document === 'undefined') return
@@ -1163,6 +1200,186 @@ const heroPreviewItems = [
     objectPosition: 'center 38.2%',
   },
 ]
+
+const SegmentedControlIcon = ({ id, className = 'h-4 w-4' }) => {
+  switch (id) {
+    case 'chat':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+          aria-hidden="true"
+        >
+          <path d="M7.5 19.5 3 21V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H7.5z" />
+        </svg>
+      )
+    case 'skills':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+          aria-hidden="true"
+        >
+          <rect x="4" y="4" width="7" height="7" rx="1.6" />
+          <rect x="13" y="4" width="7" height="7" rx="1.6" />
+          <rect x="4" y="13" width="7" height="7" rx="1.6" />
+          <rect x="13" y="13" width="7" height="7" rx="1.6" />
+        </svg>
+      )
+    case 'knowledge':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+          aria-hidden="true"
+        >
+          <path d="M6 3h10a3 3 0 0 1 3 3v15a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3V6a3 3 0 0 1 3-3z" />
+          <path d="M7.5 7.5h7" />
+          <path d="M7.5 10.5h7" />
+        </svg>
+      )
+    case 'providers':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+          aria-hidden="true"
+        >
+          <rect x="6" y="7" width="15" height="14" rx="2" />
+          <path d="M9 4h10a2 2 0 0 1 2 2v10" />
+        </svg>
+      )
+    default:
+      return null
+  }
+}
+
+const freeModels = [
+  { id: 'qwen3-8b', label: 'Qwen3-8B' },
+  { id: 'glm-4.1v', label: 'GLM-4.1V' },
+  { id: 'bge-m3', label: 'BGE-M3' },
+]
+
+const FreeModelLogo = ({ id, className = 'h-4 w-4' }) => {
+  switch (id) {
+    case 'qwen3-8b':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="M15.75 15.75L20 20" />
+        </svg>
+      )
+    case 'glm-4.1v':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+          aria-hidden="true"
+        >
+          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z" />
+          <circle cx="12" cy="12" r="2.5" />
+        </svg>
+      )
+    case 'bge-m3':
+      return (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+          aria-hidden="true"
+        >
+          <circle cx="7" cy="12" r="2" />
+          <circle cx="17" cy="7" r="2" />
+          <circle cx="17" cy="17" r="2" />
+          <path d="M8.7 11.2L15.3 8.2" />
+          <path d="M8.7 12.8L15.3 15.8" />
+        </svg>
+      )
+    default:
+      return null
+  }
+}
+
+const FreeModelsCallout = () => {
+  const { t } = useLocale()
+
+  const siliconflowLogo = '/siliconflow_Chinese%20and%20English%20LOGO.svg'
+  const siliconflowLogoDark = '/siliconflow_Chinese%20and%20English%20LOGO_dark.svg'
+
+  return (
+    <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] rounded-[2rem] p-6 sm:p-8">
+      <div className="flex flex-wrap gap-2 justify-center">
+        {freeModels.map((model) => (
+          <span
+            key={model.id}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] text-[12px] font-medium text-[color:var(--apple-ink)]"
+          >
+            <FreeModelLogo id={model.id} />
+            <span>{model.label}</span>
+          </span>
+        ))}
+      </div>
+
+      <div className="mt-4 flex flex-col items-center gap-2 text-[11px] text-[color:var(--apple-muted)] text-center">
+        <div>{t('freeModels.poweredBy', 'Powered by SiliconFlow')}</div>
+        <div className="flex items-center justify-center">
+          <img
+            src={siliconflowLogo}
+            alt="SiliconFlow"
+            className="h-6 w-auto dark:hidden"
+            loading="lazy"
+            draggable="false"
+          />
+          <img
+            src={siliconflowLogoDark}
+            alt="SiliconFlow"
+            className="h-6 w-auto hidden dark:block"
+            loading="lazy"
+            draggable="false"
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const HeroPreview = ({ style, imageMaskStyle }) => {
   const { locale, t } = useLocale()
@@ -1282,8 +1499,8 @@ const HeroPreview = ({ style, imageMaskStyle }) => {
       className="relative w-full max-w-[24rem] sm:max-w-[52rem] lg:max-w-[64rem]"
       style={style}
     >
-      <div className="relative p-2 sm:p-3 bg-white/20 dark:bg-white/10 backdrop-blur-2xl rounded-[2.5rem] shadow-[var(--apple-shadow-2xl)]">
-        <div className="relative rounded-[2rem] overflow-hidden bg-black">
+      <div className="relative rounded-[1.25rem] shadow-[var(--apple-shadow-2xl)]">
+        <div className="relative rounded-[1.25rem] overflow-hidden bg-black">
           {/* Golden ratio (phi) ~ 1.618:1 */}
           <div className="relative aspect-[1618/1000] bg-[color:var(--apple-card-strong)]">
             <img
@@ -1300,7 +1517,7 @@ const HeroPreview = ({ style, imageMaskStyle }) => {
           </div>
         </div>
 
-        <div className="absolute inset-x-0 top-0 flex justify-center -translate-y-1/2 px-3 sm:px-4 z-20">
+        <div className="absolute inset-x-0 top-0 flex justify-center -translate-y-3/4 px-3 sm:px-4 z-20">
           <div
             ref={segmentedControlRef}
             className="segmented-control shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
@@ -1325,7 +1542,10 @@ const HeroPreview = ({ style, imageMaskStyle }) => {
                   aria-label={t(item.labelKey)}
                   title={t(item.labelKey)}
                 >
-                  <span className="relative z-10">{t(item.labelKey)}</span>
+                  <span className="relative z-10 sm:hidden">
+                    <SegmentedControlIcon id={item.id} />
+                  </span>
+                  <span className="relative z-10 hidden sm:inline">{t(item.labelKey)}</span>
                 </button>
               )
             })}
@@ -1867,7 +2087,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-[1fr_auto] md:gap-16 items-start">
             <div className="flex flex-col items-center md:items-start gap-4">
               <div className="flex items-center gap-3 font-bold text-[color:var(--apple-ink)] text-lg tracking-tight">
-                <img src={isDark ? logoDark : logo} alt="" className="h-11 w-auto" />
+                <img src={isDark ? logoFooterDark : logoFooter} alt="" className="h-9 w-auto" />
                 <span className="sr-only">DeepStudent</span>
               </div>
             </div>
@@ -1911,7 +2131,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <a
-              href="https://deepstudent.ai"
+              href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f?xsec_token=ABFtyTy-x0Maimelyl74sy1an9VAHPgOOEjqScJeuijI8%3D&xsec_source=pc_search"
               target="_blank"
               rel="noopener noreferrer"
               className="focus-ring inline-flex items-center justify-center w-10 h-10 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] border border-[color:var(--apple-line)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:scale-105 active:scale-95 self-center sm:self-auto"
