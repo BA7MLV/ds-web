@@ -3,25 +3,35 @@ import { withMermaid } from 'vitepress-plugin-mermaid'
 
 const guideSidebar = [
   {
-    text: 'Deep Student ',
+    text: '关于 DeepStudent',
     collapsed: false,
     items: [
-      { text: '项目简介', link: '/', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 15C11.3137 15 14 12.3137 14 9C14 5.68629 11.3137 3 8 3C4.68629 3 2 5.68629 2 9C2 12.3137 4.68629 15 8 15Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 11C9.10457 11 10 10.1046 10 9C10 7.89543 9.10457 7 8 7C6.89543 7 6 7.89543 6 9C6 10.1046 6.89543 11 8 11Z" stroke="currentColor" stroke-width="1.5"/></svg>' },
+      { text: '简介', link: '/', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 15C11.3137 15 14 12.3137 14 9C14 5.68629 11.3137 3 8 3C4.68629 3 2 5.68629 2 9C2 12.3137 4.68629 15 8 15Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 11C9.10457 11 10 10.1046 10 9C10 7.89543 9.10457 7 8 7C6.89543 7 6 7.89543 6 9C6 10.1046 6.89543 11 8 11Z" stroke="currentColor" stroke-width="1.5"/></svg>' }
+    ]
+  },
+  {
+    text: '使用文档',
+    collapsed: false,
+    items: [
+      { text: '准备工作', link: '/guide/start.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
       { text: '客户端下载', link: '/guide/download.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 8H2M14 8L11 5M14 8L11 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
+      { text: '功能介绍', link: '/guide/function.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
       { text: '项目历程', link: '/guide/timeline.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2V14M15 9H1" stroke="currentColor" stroke-width="1.5"/></svg>' },
-      { text: 'IREC介绍', link: '/guide/irec.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2V14M15 9H1" stroke="currentColor" stroke-width="1.5"/></svg>' },
-      { text: '功能介绍', link: '/guide/function.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' }
+      { text: 'IREC介绍', link: '/guide/irec.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2V14M15 9H1" stroke="currentColor" stroke-width="1.5"/></svg>' }
     ]
   },
   {
-    text: '快速开始',
+    text: '最佳实践',
     collapsed: false,
-    items: [
-      { text: '准备工作', link: '/guide/start.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' }
-    ]
+    items: []
   },
   {
-    text: '问题&反馈',
+    text: 'API 参考',
+    collapsed: false,
+    items: []
+  },
+  {
+    text: '帮助中心',
     collapsed: false,
     items: [
       { text: '常见问题', link: '/guide/A-Q.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
