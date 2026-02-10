@@ -145,6 +145,7 @@
   body {
     margin: 0;
     min-height: 100vh;
+    overflow-x: hidden;
     color: var(--apple-ink);
     background-color: var(--apple-surface);
     background-image: 
@@ -388,8 +389,24 @@
   :root {
     --theme-transition-duration: 0s;
   }
-  
+
   .gradient-text-animated {
     animation: none;
   }
+
+  .scroll-reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Shimmer animation for image placeholders */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2.4s ease-in-out infinite;
 }

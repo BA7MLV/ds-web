@@ -521,7 +521,7 @@ const App = () => {
   }
 
   return (
-    <div className="min-h-screen min-h-[100svh] bg-transparent text-[color:var(--apple-ink)] font-sans overflow-x-hidden selection:bg-black selection:text-white">
+    <div className="min-h-screen min-h-[100svh] bg-transparent text-[color:var(--apple-ink)] font-sans selection:bg-black selection:text-white">
       {isDownloadPage ? (
         <DownloadPage onBack={handleDownloadClose} />
       ) : (
@@ -559,42 +559,12 @@ const App = () => {
                 align="left"
                 motionScale={motionScale}
                 subFeatures={[
-                  { 
-                    labelKey: 'subfeature.chatBase', 
-                    descKey: 'subfeature.chatBaseDesc',
-                    badge: '6',
-                    details: ['subfeature.chatBase.d1', 'subfeature.chatBase.d2', 'subfeature.chatBase.d3', 'subfeature.chatBase.d4', 'subfeature.chatBase.d5', 'subfeature.chatBase.d6']
-                  },
-                  { 
-                    labelKey: 'subfeature.blocks', 
-                    descKey: 'subfeature.blocksDesc',
-                    badge: '16',
-                    details: ['subfeature.blocks.d1', 'subfeature.blocks.d2', 'subfeature.blocks.d3', 'subfeature.blocks.d4', 'subfeature.blocks.d5', 'subfeature.blocks.d6']
-                  },
-                  { 
-                    labelKey: 'subfeature.agentTools', 
-                    descKey: 'subfeature.agentToolsDesc',
-                    badge: '6',
-                    details: ['subfeature.agentTools.d1', 'subfeature.agentTools.d2', 'subfeature.agentTools.d3', 'subfeature.agentTools.d4', 'subfeature.agentTools.d5', 'subfeature.agentTools.d6']
-                  },
-                  { 
-                    labelKey: 'subfeature.thinking', 
-                    descKey: 'subfeature.thinkingDesc',
-                    badge: '3',
-                    details: ['subfeature.thinking.d1', 'subfeature.thinking.d2', 'subfeature.thinking.d3']
-                  },
-                  { 
-                    labelKey: 'subfeature.multiModel', 
-                    descKey: 'subfeature.multiModelDesc',
-                    badge: '3',
-                    details: ['subfeature.multiModel.d1', 'subfeature.multiModel.d2', 'subfeature.multiModel.d3']
-                  },
-                  { 
-                    labelKey: 'subfeature.context', 
-                    descKey: 'subfeature.contextDesc',
-                    badge: '3',
-                    details: ['subfeature.context.d1', 'subfeature.context.d2', 'subfeature.context.d3']
-                  },
+                  { labelKey: 'subfeature.chatBase', descKey: 'subfeature.chatBaseDesc', imgSrc: null },
+                  { labelKey: 'subfeature.blocks', descKey: 'subfeature.blocksDesc', imgSrc: null },
+                  { labelKey: 'subfeature.agentTools', descKey: 'subfeature.agentToolsDesc', imgSrc: null },
+                  { labelKey: 'subfeature.thinking', descKey: 'subfeature.thinkingDesc', imgSrc: null },
+                  { labelKey: 'subfeature.multiModel', descKey: 'subfeature.multiModelDesc', imgSrc: null },
+                  { labelKey: 'subfeature.context', descKey: 'subfeature.contextDesc', imgSrc: null },
                 ]}
               >
             <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto transform transition-all hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)] duration-500 ease-apple group">
@@ -637,10 +607,10 @@ const App = () => {
                 align="right"
                 motionScale={motionScale}
                 subFeatures={[
-                  { labelKey: 'notes.markdown', descKey: 'notes.markdownDesc', badge: '✓' },
-                  { labelKey: 'notes.version', descKey: 'notes.versionDesc', badge: '20' },
-                  { labelKey: 'notes.ai', descKey: 'notes.aiDesc', badge: '✓' },
-                  { labelKey: 'notes.link', descKey: 'notes.linkDesc', badge: '✓' },
+                  { labelKey: 'notes.markdown', descKey: 'notes.markdownDesc', imgSrc: null },
+                  { labelKey: 'notes.version', descKey: 'notes.versionDesc', imgSrc: null },
+                  { labelKey: 'notes.ai', descKey: 'notes.aiDesc', imgSrc: null },
+                  { labelKey: 'notes.link', descKey: 'notes.linkDesc', imgSrc: null },
                 ]}
               >
             <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
@@ -666,10 +636,10 @@ const App = () => {
                 align="left"
                 motionScale={motionScale}
                 subFeatures={[
-                  { labelKey: 'textbook.formats', descKey: 'textbook.formatsDesc', badge: '16+' },
-                  { labelKey: 'textbook.ocr', descKey: 'textbook.ocrDesc', badge: '2' },
-                  { labelKey: 'textbook.reader', descKey: 'textbook.readerDesc', badge: '✓' },
-                  { labelKey: 'textbook.search', descKey: 'textbook.searchDesc', badge: '✓' },
+                  { labelKey: 'textbook.formats', descKey: 'textbook.formatsDesc', imgSrc: null },
+                  { labelKey: 'textbook.ocr', descKey: 'textbook.ocrDesc', imgSrc: null },
+                  { labelKey: 'textbook.reader', descKey: 'textbook.readerDesc', imgSrc: null },
+                  { labelKey: 'textbook.search', descKey: 'textbook.searchDesc', imgSrc: null },
                 ]}
               >
             <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
@@ -700,11 +670,11 @@ const App = () => {
                 align="right"
                 motionScale={motionScale}
                 subFeatures={[
-                  { labelKey: 'qbank.ocr', descKey: 'qbank.ocrDesc', badge: '✓' },
-                  { labelKey: 'qbank.modes', descKey: 'qbank.modesDesc', badge: '8' },
-                  { labelKey: 'qbank.ai', descKey: 'qbank.aiDesc', badge: '✓' },
-                  { labelKey: 'qbank.stats', descKey: 'qbank.statsDesc', badge: '✓' },
-                  { labelKey: 'qbank.daily', descKey: 'qbank.dailyDesc', badge: '✓' },
+                  { labelKey: 'qbank.ocr', descKey: 'qbank.ocrDesc', imgSrc: null },
+                  { labelKey: 'qbank.modes', descKey: 'qbank.modesDesc', imgSrc: null },
+                  { labelKey: 'qbank.ai', descKey: 'qbank.aiDesc', imgSrc: null },
+                  { labelKey: 'qbank.stats', descKey: 'qbank.statsDesc', imgSrc: null },
+                  { labelKey: 'qbank.daily', descKey: 'qbank.dailyDesc', imgSrc: null },
                 ]}
               >
             <div className="bg-gradient-to-br from-[#1c1c1e] to-[#000] text-white p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto transition-all duration-500 hover:scale-[1.02]">
@@ -735,10 +705,10 @@ const App = () => {
                 align="left"
                 motionScale={motionScale}
                 subFeatures={[
-                  { labelKey: 'essay.streaming', descKey: 'essay.streamingDesc', badge: '✓' },
-                  { labelKey: 'essay.dimensions', descKey: 'essay.dimensionsDesc', badge: '✓' },
-                  { labelKey: 'essay.suggestions', descKey: 'essay.suggestionsDesc', badge: '✓' },
-                  { labelKey: 'essay.ocr', descKey: 'essay.ocrDesc', badge: '✓' },
+                  { labelKey: 'essay.streaming', descKey: 'essay.streamingDesc', imgSrc: null },
+                  { labelKey: 'essay.dimensions', descKey: 'essay.dimensionsDesc', imgSrc: null },
+                  { labelKey: 'essay.suggestions', descKey: 'essay.suggestionsDesc', imgSrc: null },
+                  { labelKey: 'essay.ocr', descKey: 'essay.ocrDesc', imgSrc: null },
                 ]}
               >
             <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
@@ -773,10 +743,10 @@ const App = () => {
                 align="right"
                 motionScale={motionScale}
                 subFeatures={[
-                  { labelKey: 'translate.languages', descKey: 'translate.languagesDesc', badge: '11' },
-                  { labelKey: 'translate.compare', descKey: 'translate.compareDesc', badge: '✓' },
-                  { labelKey: 'translate.ocr', descKey: 'translate.ocrDesc', badge: '✓' },
-                  { labelKey: 'translate.tts', descKey: 'translate.ttsDesc', badge: '✓' },
+                  { labelKey: 'translate.languages', descKey: 'translate.languagesDesc', imgSrc: null },
+                  { labelKey: 'translate.compare', descKey: 'translate.compareDesc', imgSrc: null },
+                  { labelKey: 'translate.ocr', descKey: 'translate.ocrDesc', imgSrc: null },
+                  { labelKey: 'translate.tts', descKey: 'translate.ttsDesc', imgSrc: null },
                 ]}
               >
             <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
@@ -812,10 +782,10 @@ const App = () => {
                 align="left"
                 motionScale={motionScale}
                 subFeatures={[
-                  { labelKey: 'mindmap.layouts', descKey: 'mindmap.layoutsDesc', badge: '6' },
-                  { labelKey: 'mindmap.export', descKey: 'mindmap.exportDesc', badge: '6' },
-                  { labelKey: 'mindmap.style', descKey: 'mindmap.styleDesc', badge: '✓' },
-                  { labelKey: 'mindmap.ai', descKey: 'mindmap.aiDesc', badge: '✓' },
+                  { labelKey: 'mindmap.layouts', descKey: 'mindmap.layoutsDesc', imgSrc: null },
+                  { labelKey: 'mindmap.export', descKey: 'mindmap.exportDesc', imgSrc: null },
+                  { labelKey: 'mindmap.style', descKey: 'mindmap.styleDesc', imgSrc: null },
+                  { labelKey: 'mindmap.ai', descKey: 'mindmap.aiDesc', imgSrc: null },
                 ]}
               >
             <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
@@ -852,36 +822,11 @@ const App = () => {
                 align="left"
                 motionScale={motionScale}
                 subFeatures={[
-                  { 
-                    labelKey: 'subfeature.instructionSkills', 
-                    descKey: 'subfeature.instructionSkillsDesc',
-                    badge: '4',
-                    details: ['subfeature.instructionSkills.d1', 'subfeature.instructionSkills.d2', 'subfeature.instructionSkills.d3', 'subfeature.instructionSkills.d4']
-                  },
-                  { 
-                    labelKey: 'subfeature.toolSkills', 
-                    descKey: 'subfeature.toolSkillsDesc',
-                    badge: '12',
-                    details: ['subfeature.toolSkills.d1', 'subfeature.toolSkills.d2', 'subfeature.toolSkills.d3', 'subfeature.toolSkills.d4', 'subfeature.toolSkills.d5', 'subfeature.toolSkills.d6']
-                  },
-                  { 
-                    labelKey: 'subfeature.builtinTools', 
-                    descKey: 'subfeature.builtinToolsDesc',
-                    badge: '59',
-                    details: ['subfeature.builtinTools.d1', 'subfeature.builtinTools.d2', 'subfeature.builtinTools.d3', 'subfeature.builtinTools.d4', 'subfeature.builtinTools.d5', 'subfeature.builtinTools.d6']
-                  },
-                  { 
-                    labelKey: 'subfeature.customSkills', 
-                    descKey: 'subfeature.customSkillsDesc',
-                    badge: '3',
-                    details: ['subfeature.customSkills.d1', 'subfeature.customSkills.d2', 'subfeature.customSkills.d3']
-                  },
-                  { 
-                    labelKey: 'subfeature.mcp', 
-                    descKey: 'subfeature.mcpDesc',
-                    badge: '4',
-                    details: ['subfeature.mcp.d1', 'subfeature.mcp.d2', 'subfeature.mcp.d3', 'subfeature.mcp.d4']
-                  },
+                  { labelKey: 'subfeature.instructionSkills', descKey: 'subfeature.instructionSkillsDesc', imgSrc: null },
+                  { labelKey: 'subfeature.toolSkills', descKey: 'subfeature.toolSkillsDesc', imgSrc: null },
+                  { labelKey: 'subfeature.builtinTools', descKey: 'subfeature.builtinToolsDesc', imgSrc: null },
+                  { labelKey: 'subfeature.customSkills', descKey: 'subfeature.customSkillsDesc', imgSrc: null },
+                  { labelKey: 'subfeature.mcp', descKey: 'subfeature.mcpDesc', imgSrc: null },
                 ]}
               >
             <div className="bg-gradient-to-br from-[#1c1c1e] via-[#151516] to-[#000000] dark:from-[#2c2c2e] dark:via-[#1c1c1e] dark:to-[#000000] text-white p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] shadow-[var(--apple-shadow-xl)] border border-white/10 max-w-[18rem] sm:max-w-[30rem] mx-auto relative overflow-hidden group transition-transform duration-500 hover:scale-[1.02]">
@@ -912,36 +857,11 @@ const App = () => {
                 align="right"
                 motionScale={motionScale}
                 subFeatures={[
-                  { 
-                    labelKey: 'subfeature.ankiParse', 
-                    descKey: 'subfeature.ankiParseDesc',
-                    badge: '16+',
-                    details: ['subfeature.ankiParse.d1', 'subfeature.ankiParse.d2', 'subfeature.ankiParse.d3']
-                  },
-                  { 
-                    labelKey: 'subfeature.template', 
-                    descKey: 'subfeature.templateDesc',
-                    badge: '6+',
-                    details: ['subfeature.template.d1', 'subfeature.template.d2', 'subfeature.template.d3', 'subfeature.template.d4', 'subfeature.template.d5', 'subfeature.template.d6']
-                  },
-                  { 
-                    labelKey: 'subfeature.ankiTools', 
-                    descKey: 'subfeature.ankiToolsDesc',
-                    badge: '6',
-                    details: ['subfeature.ankiTools.d1', 'subfeature.ankiTools.d2', 'subfeature.ankiTools.d3', 'subfeature.ankiTools.d4', 'subfeature.ankiTools.d5', 'subfeature.ankiTools.d6']
-                  },
-                  { 
-                    labelKey: 'subfeature.ankiExport', 
-                    descKey: 'subfeature.ankiExportDesc',
-                    badge: '2',
-                    details: ['subfeature.ankiExport.d1', 'subfeature.ankiExport.d2']
-                  },
-                  { 
-                    labelKey: 'subfeature.preview3d', 
-                    descKey: 'subfeature.preview3dDesc',
-                    badge: '3',
-                    details: ['subfeature.preview3d.d1', 'subfeature.preview3d.d2', 'subfeature.preview3d.d3']
-                  },
+                  { labelKey: 'subfeature.ankiParse', descKey: 'subfeature.ankiParseDesc', imgSrc: null },
+                  { labelKey: 'subfeature.template', descKey: 'subfeature.templateDesc', imgSrc: null },
+                  { labelKey: 'subfeature.ankiTools', descKey: 'subfeature.ankiToolsDesc', imgSrc: null },
+                  { labelKey: 'subfeature.ankiExport', descKey: 'subfeature.ankiExportDesc', imgSrc: null },
+                  { labelKey: 'subfeature.preview3d', descKey: 'subfeature.preview3dDesc', imgSrc: null },
                 ]}
               >
             <div className="flex justify-center">
@@ -956,36 +876,11 @@ const App = () => {
                 align="left"
                 motionScale={motionScale}
                 subFeatures={[
-                  { 
-                    labelKey: 'subfeature.databases', 
-                    descKey: 'subfeature.databasesDesc',
-                    badge: '4',
-                    details: ['subfeature.databases.d1', 'subfeature.databases.d2', 'subfeature.databases.d3', 'subfeature.databases.d4']
-                  },
-                  { 
-                    labelKey: 'subfeature.chatTables', 
-                    descKey: 'subfeature.chatTablesDesc',
-                    badge: '11',
-                    details: ['subfeature.chatTables.d1', 'subfeature.chatTables.d2', 'subfeature.chatTables.d3', 'subfeature.chatTables.d4', 'subfeature.chatTables.d5', 'subfeature.chatTables.d6']
-                  },
-                  { 
-                    labelKey: 'subfeature.vfsTables', 
-                    descKey: 'subfeature.vfsTablesDesc',
-                    badge: '27',
-                    details: ['subfeature.vfsTables.d1', 'subfeature.vfsTables.d2', 'subfeature.vfsTables.d3', 'subfeature.vfsTables.d4', 'subfeature.vfsTables.d5', 'subfeature.vfsTables.d6']
-                  },
-                  { 
-                    labelKey: 'subfeature.backup', 
-                    descKey: 'subfeature.backupDesc',
-                    badge: '4',
-                    details: ['subfeature.backup.d1', 'subfeature.backup.d2', 'subfeature.backup.d3', 'subfeature.backup.d4']
-                  },
-                  { 
-                    labelKey: 'subfeature.cloudSync', 
-                    descKey: 'subfeature.cloudSyncDesc',
-                    badge: '2',
-                    details: ['subfeature.cloudSync.d1', 'subfeature.cloudSync.d2']
-                  },
+                  { labelKey: 'subfeature.databases', descKey: 'subfeature.databasesDesc', imgSrc: null },
+                  { labelKey: 'subfeature.chatTables', descKey: 'subfeature.chatTablesDesc', imgSrc: null },
+                  { labelKey: 'subfeature.vfsTables', descKey: 'subfeature.vfsTablesDesc', imgSrc: null },
+                  { labelKey: 'subfeature.backup', descKey: 'subfeature.backupDesc', imgSrc: null },
+                  { labelKey: 'subfeature.cloudSync', descKey: 'subfeature.cloudSyncDesc', imgSrc: null },
                 ]}
               >
             <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto transition-transform duration-500 hover:scale-[1.02]">
@@ -1762,65 +1657,240 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
   )
 }
 
-// 子功能卡片组件 - 支持展开详情
-const SubFeatureCard = ({ sf, t, index, shouldAnimate }) => {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const hasDetails = sf.details && sf.details.length > 0
+// 占位图组件 - shimmer 动画，后续替换为真实截图
+const ImagePlaceholder = ({ label }) => (
+  <div className="w-full aspect-video rounded-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden">
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
+    <div className="z-10 flex flex-col items-center gap-2">
+      <svg className="w-8 h-8 text-[color:var(--apple-muted)] opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+        <rect x="3" y="3" width="18" height="18" rx="3" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <path d="M21 15l-5-5L5 21" />
+      </svg>
+      <span className="text-[12px] sm:text-[13px] text-[color:var(--apple-muted)] font-medium opacity-60">{label}</span>
+    </div>
+  </div>
+)
+
+// 动画变体定义
+const revealAnimations = {
+  'fade-up':    { hidden: 'opacity-0 translate-y-10',  visible: 'opacity-100 translate-y-0' },
+  'fade-down':  { hidden: 'opacity-0 -translate-y-10', visible: 'opacity-100 translate-y-0' },
+  'fade-left':  { hidden: 'opacity-0 translate-x-12',  visible: 'opacity-100 translate-x-0' },
+  'fade-right': { hidden: 'opacity-0 -translate-x-12', visible: 'opacity-100 translate-x-0' },
+  'scale-up':   { hidden: 'opacity-0 scale-90',        visible: 'opacity-100 scale-100' },
+  'blur-in':    { hidden: 'opacity-0 blur-[6px] scale-[0.97]', visible: 'opacity-100 blur-0 scale-100' },
+}
+
+// 根据 index 自动选择动画变体，形成视觉节奏
+const getAnimationVariant = (index) => {
+  const variants = ['fade-up', 'fade-left', 'fade-right', 'scale-up', 'blur-in', 'fade-down']
+  return variants[index % variants.length]
+}
+
+// 滚动浮现的独立图文项（用于移动端回退）
+const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, animation }) => {
+  const itemRef = useRef(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const el = itemRef.current
+    if (!el) return
+    if (typeof IntersectionObserver === 'undefined') {
+      setIsVisible(true)
+      return
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.unobserve(el)
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  const variant = animation || getAnimationVariant(index)
+  const anim = revealAnimations[variant] || revealAnimations['fade-up']
+  const isLeft = align === 'left'
 
   return (
     <div
-      className={`bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] rounded-[1rem] overflow-hidden transition-all duration-300 group ${
-        isExpanded ? 'shadow-[var(--apple-shadow-lg)] border-[color:var(--apple-line-strong)]' : 'hover:border-[color:var(--apple-line-strong)] hover:shadow-sm'
-      }`}
-      style={shouldAnimate ? { animationDelay: `${index * 0.05}s` } : undefined}
+      ref={itemRef}
+      className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-6 sm:gap-8 md:gap-12 transition-all duration-700 ease-out ${isVisible ? anim.visible : anim.hidden}`}
+      style={{ transitionDelay: `${Math.min(index * 100, 400)}ms` }}
     >
-      <button
-        type="button"
-        onClick={() => hasDetails && setIsExpanded(!isExpanded)}
-        className={`w-full text-left p-3 sm:p-4 flex items-start gap-2.5 ${hasDetails ? 'cursor-pointer' : 'cursor-default'}`}
-      >
-        {/* 徽章 */}
-        {sf.badge && (
-          <span className="flex-shrink-0 min-w-[1.75rem] h-[1.375rem] px-1.5 rounded-full bg-[color:var(--apple-blue)] text-white text-[10px] font-bold flex items-center justify-center shadow-sm">
-            {sf.badge}
-          </span>
+      <div className="flex-1 w-full md:max-w-[50%]">
+        {imgSrc ? (
+          <img
+            src={imgSrc}
+            alt={title}
+            className="w-full rounded-2xl shadow-[var(--apple-shadow-md)] border border-[color:var(--apple-line)]"
+            loading="lazy"
+          />
+        ) : (
+          <ImagePlaceholder label={title} />
         )}
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <span className="text-[13px] sm:text-[14px] font-semibold text-[color:var(--apple-ink)] group-hover:text-[color:var(--apple-blue)] transition-colors">
-              {t(sf.labelKey)}
-            </span>
-            {hasDetails && (
-              <svg 
-                className={`w-3 h-3 text-[color:var(--apple-muted)] transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
-                viewBox="0 0 12 12" 
-                fill="none"
-              >
-                <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            )}
-          </div>
-          <div className="text-[11px] sm:text-[12px] text-[color:var(--apple-muted)] leading-relaxed mt-0.5">
-            {t(sf.descKey)}
+      </div>
+      <div className="flex-1 text-center md:text-left">
+        <h3 className="text-[1.125rem] sm:text-[1.25rem] font-semibold text-[color:var(--apple-ink)] mb-2 tracking-tight">
+          {title}
+        </h3>
+        <p className="text-[0.875rem] sm:text-[0.9375rem] text-[color:var(--apple-muted)] leading-relaxed max-w-md mx-auto md:mx-0">
+          {desc}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// ===== Sticky 图片切换组件 =====
+// 左侧使用原生 CSS sticky，右侧文字滚动触发图片 crossfade 切换
+const StickyImageFeatureGroup = ({ items, t }) => {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const textRefs = useRef([])
+
+  // 每个文字块独立挂载 IntersectionObserver，进入视口中心区域时激活对应图片
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return
+    const observers = []
+    textRefs.current.forEach((el, i) => {
+      if (!el) return
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setActiveIndex(i)
+          }
+        },
+        { rootMargin: '-35% 0px -35% 0px', threshold: 0.01 }
+      )
+      observer.observe(el)
+      observers.push(observer)
+    })
+    return () => observers.forEach((o) => o.disconnect())
+  }, [items.length])
+
+  return (
+    <div className="relative">
+      {/* 移动端：普通流式布局，带多样化进入动画 */}
+      <div className="md:hidden space-y-[2.5rem]">
+        {items.map((sf, index) => (
+          <ScrollRevealItem
+            key={sf.labelKey}
+            imgSrc={sf.imgSrc}
+            title={t(sf.labelKey)}
+            desc={t(sf.descKey)}
+            align={index % 2 === 0 ? 'left' : 'right'}
+            index={index}
+            animation={getAnimationVariant(index)}
+          />
+        ))}
+      </div>
+
+      {/* 桌面端：左侧 CSS sticky 图片 + 右侧滚动文字 */}
+      <div className="hidden md:grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-12 lg:gap-16">
+        {/* 左侧图片列：由原生 sticky 固定在视口顶部偏移处 */}
+        <div className="min-w-0">
+          <div className="sticky top-32 z-10 w-full">
+            <div className="relative aspect-video rounded-2xl overflow-hidden border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-lg)] bg-[color:var(--apple-card-strong)]">
+              {items.map((sf, i) => {
+                const isActive = i === activeIndex
+                return (
+                  <div
+                    key={sf.labelKey}
+                    className={`absolute inset-0 transition-all duration-500 ease-out ${
+                      isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.02]'
+                    }`}
+                    aria-hidden={!isActive}
+                  >
+                    {sf.imgSrc ? (
+                      <img
+                        src={sf.imgSrc}
+                        alt={t(sf.labelKey)}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
+                        <div className="z-10 flex flex-col items-center gap-3">
+                          <svg className="w-10 h-10 text-[color:var(--apple-muted)] opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+                            <rect x="3" y="3" width="18" height="18" rx="3" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <path d="M21 15l-5-5L5 21" />
+                          </svg>
+                          <span className="text-sm text-[color:var(--apple-muted)] opacity-50 font-medium">
+                            {t(sf.labelKey)}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+            {/* 图片下方的指示器 */}
+            <div className="flex justify-center gap-1.5 mt-4">
+              {items.map((sf, i) => (
+                <div
+                  key={sf.labelKey}
+                  className={`h-1 rounded-full transition-all duration-400 ${
+                    i === activeIndex
+                      ? 'w-6 bg-[color:var(--apple-ink)]'
+                      : 'w-1.5 bg-[color:var(--apple-line-strong)]'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </button>
-      
-      {/* 展开的详情列表 */}
-      {hasDetails && isExpanded && (
-        <div className="px-3 sm:px-4 pb-3 sm:pb-4 pt-1 border-t border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)]">
-          <div className="flex flex-wrap gap-1.5 sm:gap-2">
-            {sf.details.map((detailKey, i) => (
-              <span 
-                key={i}
-                className="inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-1 bg-[color:var(--apple-surface)] border border-[color:var(--apple-line)] rounded-full text-[10px] sm:text-[11px] text-[color:var(--apple-muted)] font-medium"
-              >
-                {t(detailKey)}
-              </span>
-            ))}
+
+        {/* 右侧滚动文字区 */}
+        <div className="min-w-0">
+          <div className="space-y-0">
+            {items.map((sf, index) => {
+              const isActive = index === activeIndex
+              return (
+                <div
+                  key={sf.labelKey}
+                  ref={(el) => { textRefs.current[index] = el }}
+                  className="min-h-[50vh] flex items-center"
+                >
+                  <div
+                    className={`py-6 transition-all duration-500 ease-out ${
+                      isActive
+                        ? 'opacity-100 translate-x-0'
+                        : 'opacity-30 translate-x-2'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-[12px] font-bold transition-colors duration-400 ${
+                        isActive
+                          ? 'bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)]'
+                          : 'bg-[color:var(--apple-line-strong)] text-[color:var(--apple-muted)]'
+                      }`}>
+                        {index + 1}
+                      </span>
+                      <div className={`h-px flex-1 transition-all duration-500 ${
+                        isActive ? 'bg-[color:var(--apple-line-strong)]' : 'bg-transparent'
+                      }`} />
+                    </div>
+                    <h3 className="text-[1.25rem] sm:text-[1.375rem] font-semibold text-[color:var(--apple-ink)] mb-2.5 tracking-tight leading-tight">
+                      {t(sf.labelKey)}
+                    </h3>
+                    <p className="text-[0.9375rem] text-[color:var(--apple-muted)] leading-relaxed">
+                      {t(sf.descKey)}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }
@@ -1864,21 +1934,6 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
             {title}
           </h2>
           <p className="text-[color:var(--apple-muted)] leading-[1.6] text-[1.1rem] sm:text-[1.35rem] font-medium tracking-tight max-w-lg mx-auto md:mx-0">{desc}</p>
-          
-          {/* 子功能列表 - 细粒度展示 */}
-          {subFeatures.length > 0 && (
-            <div className="mt-[2rem] sm:mt-[2.5rem] space-y-2 sm:space-y-3 max-w-lg mx-auto md:mx-0">
-              {subFeatures.map((sf, index) => (
-                <SubFeatureCard 
-                  key={sf.labelKey} 
-                  sf={sf} 
-                  t={t} 
-                  index={index}
-                  shouldAnimate={shouldAnimate}
-                />
-              ))}
-            </div>
-          )}
         </div>
 
         <div
@@ -1895,6 +1950,13 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
           {children}
         </div>
       </div>
+
+      {/* 子功能滚动多图展示区 - 桌面端 Sticky 图片切换，移动端独立浮现 */}
+      {subFeatures.length > 0 && (
+        <div className="mt-[3rem] sm:mt-[4rem] md:mt-[5rem]">
+          <StickyImageFeatureGroup items={subFeatures} t={t} />
+        </div>
+      )}
     </section>
   )
 }
