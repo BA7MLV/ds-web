@@ -554,6 +554,7 @@ const App = () => {
 
               <FeatureSection
                 id="feature-chat"
+                layout="sticky"
                 title={t('feature.review.title')}
                 desc={t('feature.review.desc')}
                 align="left"
@@ -1747,6 +1748,25 @@ const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, animatio
   )
 }
 
+// ===== 交错图文展示组件 =====
+const AlternatingFeatureGroup = ({ items, t }) => {
+  return (
+    <div className="space-y-[3rem] sm:space-y-[4rem] md:space-y-[6rem]">
+      {items.map((sf, index) => (
+        <ScrollRevealItem
+          key={sf.labelKey}
+          imgSrc={sf.imgSrc}
+          title={t(sf.labelKey)}
+          desc={t(sf.descKey)}
+          align={index % 2 === 0 ? 'left' : 'right'}
+          index={index}
+          animation={getAnimationVariant(index)}
+        />
+      ))}
+    </div>
+  )
+}
+
 // ===== Sticky 图片切换组件 =====
 // 左侧使用原生 CSS sticky，右侧文字滚动触发图片 crossfade 切换
 const StickyImageFeatureGroup = ({ items, t }) => {
@@ -1895,7 +1915,7 @@ const StickyImageFeatureGroup = ({ items, t }) => {
   )
 }
 
-const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, subFeatures = [] }) => {
+const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, subFeatures = [], layout = 'alternating' }) => {
   const { ref, progress, isActive } = useParallaxProgress()
   const { t } = useLocale()
   const contentDirection = align === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'
@@ -1951,10 +1971,14 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
         </div>
       </div>
 
-      {/* 子功能滚动多图展示区 - 桌面端 Sticky 图片切换，移动端独立浮现 */}
+      {/* 子功能图文展示区 - 支持 Sticky 或交错布局 */}
       {subFeatures.length > 0 && (
         <div className="mt-[3rem] sm:mt-[4rem] md:mt-[5rem]">
-          <StickyImageFeatureGroup items={subFeatures} t={t} />
+          {layout === 'sticky' ? (
+            <StickyImageFeatureGroup items={subFeatures} t={t} />
+          ) : (
+            <AlternatingFeatureGroup items={subFeatures} t={t} />
+          )}
         </div>
       )}
     </section>
