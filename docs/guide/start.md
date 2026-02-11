@@ -16,19 +16,19 @@ DeepStudent的AI功能依赖外部大模型服务。你需要从服务商获取�
 
 若您希望使用已有的API密钥或很熟悉注册流程可以跳过该步骤。
 
-![注册硅基流动账号](/docs/public/deepstudent-pic-start-register.png)
+![注册硅基流动账号](/deepstudent-pic-start-register.png)
 
 1. 访问官网：打开浏览器，访问 [硅基流动](https://cloud.siliconflow.cn/i/deadXN1B "点击跳转") 官方网站。
 2. 注册/登录：完成账户注册并登录。
 3. 创建API密钥：在"API 密钥"页面，创建一个新的密钥。
-   ![apikey](/docs/public/deepstudent-pic-start-apikey.png)
+   ![apikey](/deepstudent-pic-start-apikey.png)
    给它起个名字（如 deep_student_key），然后立即复制并妥善保管这串 `sk-` 开头的密钥。
 
 ### 1.2 在 DeepStudent 中配置密钥
 
 ⚠️这是你首次使用软件时**必须完成**的步骤。  
 ⚠️如果你对模型没有了解，只想直接使用，推荐完全按照以下默认配置来。
-![设置](/docs/public/deepstudent-pic-start-setting-new.png)
+![设置](/deepstudent-pic-start-setting-new.png)
 
 1. 启动应用，点击左侧导航栏底部的齿轮图标进入 **设置** 界面。
 2. 导航至 API 配置：在 **设置** 页面中找到 **API配置** ，输入 `sk-` 开头的密钥，点击 **一键分配** 即可。
@@ -45,16 +45,16 @@ DeepStudent的AI功能依赖外部大模型服务。你需要从服务商获取�
 ### 2.1 获取Tavily API密钥
 
 1. 访问官网：打开浏览器，访问[Tavily](https://www.tavily.com/"点击跳转")官方网站。
-  ![Tavily](/docs/public/deepstudent-pic-start-tavily.png)
+  ![Tavily](/deepstudent-pic-start-tavily.png)
 2. 注册/登录：在网站右上角点击**Login**,在跳转到的登陆页面中找到**Continue**下方的**Sign up**跳转至注册页，使用邮箱注册并登录。
-  ![Tavily register](/docs/public/deepstudent-pic-start-tavily-register.png)
+  ![Tavily register](/deepstudent-pic-start-tavily-register.png)
 3. 获取API密钥：登录后跳转到控制台，`Tavily`会自动生成一个API密钥，把它复制下来。
-  ![Tavily Overview](/docs/public/deepstudent-pic-start-tavily-apikey.png)
+  ![Tavily Overview](/deepstudent-pic-start-tavily-apikey.png)
 
 ### 2.2 在DeepStudent中配置联网搜索
 
 1. 启动应用，点击左侧导航栏底部的齿轮图标进入 **设置** 界面。
 2. 导航至 API 配置：在 **设置** 页面中找到 **外部搜索** ，找到`Tavily`的配置项输入 `tvly-` 开头的密钥即可。
-  ![联网搜索](/docs/public/deepstudent-pic-start-search.png)
+  ![联网搜索](/deepstudent-pic-start-search.png)
 
 至此，您可以使用软件的所有功能了。您还可以为软件配置多样的MCP工具和Skills以增强软件的功能。

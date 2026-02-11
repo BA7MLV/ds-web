@@ -14,8 +14,8 @@ const translations = {
     
     // Hero
     'hero.title': 'DeepStudent',
-    'hero.subtitle': 'AI 原生的本地优先学习系统',
-    'hero.tagline': '智能对话、知识管理、Anki 制卡与全能阅读器无缝融合\n为你打造隐私安全、高度可扩展的终身学习工作台',
+    'hero.subtitle': '您的终身学习空间',
+    'hero.tagline': '智能对话 · 自动制卡 · 批注阅读\n本地优先，私密可控，知识可扩展',
     'hero.cta.download': '立即下载',
     'hero.cta.explore': '了解更多',
 
@@ -516,8 +516,8 @@ const translations = {
 
     // Hero
     'hero.title': 'DeepStudent',
-    'hero.subtitle': 'AI 原生的本地優先學習系統',
-    'hero.tagline': '智慧對話、知識管理、Anki 製卡與全能閱讀器無縫融合，\n為你打造隱私安全、高度可擴展的終身學習工作台',
+    'hero.subtitle': '您的終身學習空間',
+    'hero.tagline': '智慧對話 · 自動製卡 · 批註閱讀\n本地優先，私密可控，知識可擴展',
     'hero.cta.download': '立即下載',
     'hero.cta.explore': '了解更多',
 
@@ -1018,8 +1018,8 @@ const translations = {
     
     // Hero
     'hero.title': 'DeepStudent',
-    'hero.subtitle': 'AI-Native Local-First Learning System',
-    'hero.tagline': 'Seamlessly integrates AI chat, knowledge management, Anki card generation, and universal reader.\nA privacy-first, extensible lifelong learning workbench',
+    'hero.subtitle': 'Intelligence-Driven Knowledge · Lifelong Learning Space',
+    'hero.tagline': 'AI Chat · Auto Card Generation · Annotated Reading\nLocal-first, private-by-design, and endlessly extensible knowledge.',
     'hero.cta.download': 'Download',
     'hero.cta.explore': 'Learn More',
 
