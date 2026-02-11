@@ -47,7 +47,7 @@ export default withMermaid(defineConfig({
       lazyLoading: true
     }
   },
-  title: 'DeepStudent',
+  title: 'AI 原生的本地优先学习系统｜DeepStudent',
   description: '免费开源的AI错题管理  \n解决方案',
   base: '/docs/',
   head: [

@@ -968,35 +968,6 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   const shouldAnimate = motionScale > 0
   const heroProgress = clamp(scrollY / 640, 0, 1)
   const heroEase = easeInOutCubic(heroProgress)
-  const heroJuice = Math.sin(heroEase * Math.PI)
-  const heroFade = 1 - heroEase * 0.55 * motionAmount
-  const layerStyle2d = (offsetY) => ({
-    transform: isStatic ? 'none' : `translate3d(0, ${offsetY}px, 0)`,
-    opacity: heroFade,
-    transformStyle: 'flat',
-    willChange: isStatic ? 'auto' : 'transform, opacity',
-  })
-  // Lift the hero text slightly as we scroll, so it won't visually collide with the preview segmented control.
-  const subtitleOffset = heroEase * (32 + heroJuice * 6) * motionAmount
-  const textOffset = heroEase * (44 + heroJuice * 8) * motionAmount
-  const ctaOffset = heroEase * (56 + heroJuice * 10) * motionAmount
-
-  const previewOffset = heroEase * 80 * motionAmount
-  const previewStyle = {
-    transform: isStatic ? 'none' : `translate3d(0, ${previewOffset}px, 0)`,
-    transformStyle: 'flat',
-    willChange: isStatic ? 'auto' : 'transform',
-  }
-  // Keep the hero preview fully visible; only soften the bottom edge with a subtle static mask.
-  const previewMaskImage = 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 100%)'
-  const previewImageMaskStyle = {
-    WebkitMaskImage: previewMaskImage,
-    maskImage: previewMaskImage,
-    WebkitMaskRepeat: 'no-repeat',
-    maskRepeat: 'no-repeat',
-    WebkitMaskSize: '100% 100%',
-    maskSize: '100% 100%',
-  }
 
   const handleExplore = () => {
     if (typeof document === 'undefined') return
@@ -1007,63 +978,74 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
 
   return (
     <header
-      className="relative min-h-[85vh] min-h-[85svh] px-4 sm:px-6 pt-[3rem] pb-[3rem] sm:pt-[4rem] sm:pb-[5rem] flex items-center overflow-hidden"
+      className="relative min-h-screen px-4 sm:px-6 lg:px-8 pt-20 pb-16 flex items-center overflow-hidden"
     >
-      {/* Apple-style dramatic background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
-        {/* Primary glow - top center */}
-        <div className="absolute -top-[40%] left-1/2 -translate-x-1/2 h-[90vh] w-[140vw] rounded-[100%] bg-[radial-gradient(ellipse_at_center,var(--apple-glow),transparent_70%)] blur-[120px] opacity-60 dark:opacity-80 mix-blend-screen" />
-        {/* Secondary accent - purple tint */}
-        <div className="absolute top-[5%] -right-[10%] h-[70vh] w-[70vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.06),transparent_60%)] blur-[100px] dark:bg-[radial-gradient(circle_at_center,rgba(191,90,242,0.12),transparent_60%)] mix-blend-screen" />
-        {/* Tertiary accent - left side */}
-        <div className="absolute top-[15%] -left-[10%] h-[60vh] w-[60vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.05),transparent_60%)] blur-[100px] dark:bg-[radial-gradient(circle_at_center,rgba(10,132,255,0.1),transparent_60%)] mix-blend-screen" />
-        {/* Subtle ambient light overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[color:var(--apple-surface)] opacity-80" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_center,var(--apple-glow),transparent_70%)] blur-[100px] opacity-40" />
       </div>
+      
       <div
-        className={`relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center gap-16 sm:gap-20 ${
+        className={`relative z-10 w-full max-w-6xl mx-auto ${
           shouldAnimate ? 'animate-fade-in' : ''
         }`}
         style={shouldAnimate ? { animationDelay: '0.08s' } : undefined}
       >
-        <div className="flex flex-col items-center text-center max-w-3xl">
-          <h1
-            className="text-[1.75rem] sm:text-[2.5rem] md:text-[3.2rem] font-semibold tracking-[-0.02em] mb-[1rem] sm:mb-[1.25rem] leading-[1.15] font-display text-[color:var(--apple-ink)]"
-            style={layerStyle2d(-subtitleOffset)}
-          >
-            {t('hero.subtitle')}
-          </h1>
-
-          <p
-            className="text-[1.1rem] sm:text-[1.35rem] text-[color:var(--apple-muted)] max-w-2xl mb-[2.5rem] sm:mb-[3.25rem] leading-[1.6] font-display font-medium tracking-tight whitespace-pre-line"
-            style={layerStyle2d(-textOffset)}
-          >
-            {t('hero.tagline')}
-          </p>
-
-          <div
-            className="flex flex-col sm:flex-row gap-5 w-full max-w-[18rem] sm:max-w-[28rem] justify-center"
-            style={layerStyle2d(-ctaOffset)}
-          >
-            <button
-              type="button"
-              onClick={onDownload}
-              className="focus-ring flex-1 py-[1rem] px-[1.75rem] sm:py-[1.1rem] sm:px-[2.2rem] bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] rounded-full font-semibold text-[15px] sm:text-[16px] hover:bg-[color:var(--apple-btn-primary-bg-hover)] hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 ease-apple flex items-center justify-center gap-2 shadow-[var(--apple-shadow-lg)] hover:shadow-[var(--apple-shadow-xl)]"
-            >
-{t('hero.cta.download')}
-            </button>
-            <button
-              type="button"
-              onClick={handleExplore}
-              className="focus-ring flex-1 py-[1rem] px-[1.75rem] sm:py-[1.1rem] sm:px-[2.2rem] bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-btn-secondary-text)] rounded-full font-semibold text-[15px] sm:text-[16px] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-[0.97] transition-all duration-300 ease-apple flex items-center justify-center gap-2 backdrop-blur-md"
-            >
-{t('hero.cta.explore')}
-            </button>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold tracking-[-0.02em] mb-6 leading-[1.1] text-[color:var(--apple-ink)]">
+              优化您的
+              <br />
+              <span className="text-[color:var(--apple-blue)]">终身学习空间</span>
+            </h1>
+            
+            <p className="text-lg sm:text-xl text-[color:var(--apple-ink-secondary)] mb-2 font-medium">
+              智能对话 · 自动制卡 · 批注阅读
+            </p>
+            
+            <p className="text-base text-[color:var(--apple-muted)] mb-8">
+              本地优先，私密可控，知识可扩展
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-3 mb-10 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={onDownload}
+                className="px-8 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-lg font-medium text-[15px] hover:opacity-90 active:scale-[0.98] transition-all duration-200"
+              >
+                立即下载
+              </button>
+              <button
+                type="button"
+                onClick={handleExplore}
+                className="px-8 py-3 bg-transparent text-[color:var(--apple-ink)] border border-[color:var(--apple-line-strong)] rounded-lg font-medium text-[15px] hover:bg-[color:var(--apple-card)] transition-all duration-200"
+              >
+                了解更多
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-left">
+              <div className="flex items-center gap-2.5 text-sm text-[color:var(--apple-muted)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--apple-blue)] flex-shrink-0" />
+                <span>AI 驱动的智能错题分析</span>
+              </div>
+              <div className="flex items-center gap-2.5 text-sm text-[color:var(--apple-muted)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--apple-blue)] flex-shrink-0" />
+                <span>一键生成 ANKI 记忆卡片</span>
+              </div>
+              <div className="flex items-center gap-2.5 text-sm text-[color:var(--apple-muted)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--apple-blue)] flex-shrink-0" />
+                <span>RAG 增强的知识库追问</span>
+              </div>
+              <div className="flex items-center gap-2.5 text-sm text-[color:var(--apple-muted)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--apple-blue)] flex-shrink-0" />
+                <span>本地数据，隐私安全</span>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className="w-full flex justify-center">
-          <HeroPreview style={previewStyle} imageMaskStyle={previewImageMaskStyle} />
+          
+          <div className="flex justify-center lg:justify-end order-1 lg:order-2">
+            <HeroPreview />
+          </div>
         </div>
       </div>
     </header>
@@ -1392,7 +1374,7 @@ const HeroPreview = ({ style, imageMaskStyle }) => {
   return (
     <div
       ref={previewRef}
-      className="relative w-full max-w-[24rem] sm:max-w-[52rem] lg:max-w-[64rem]"
+      className="relative w-full max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]"
       style={style}
     >
       <div className="relative rounded-[1.25rem] shadow-[var(--apple-shadow-2xl)]">
