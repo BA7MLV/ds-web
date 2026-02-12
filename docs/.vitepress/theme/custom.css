@@ -85,6 +85,13 @@
   --vp-local-nav-bg-color: #ffffff;
   --vp-sidebar-bg-color: #ffffff;
 
+  --ds-nav-bg-top: rgba(255, 255, 255, 0.9);
+  --ds-nav-bg-scrolled: #ffffff;
+  --ds-nav-bg-screen: #ffffff;
+  --ds-nav-border-top: var(--ds-line-soft);
+  --ds-nav-border-scrolled: var(--ds-line);
+  --ds-nav-shadow-scrolled: 0 8px 24px rgba(15, 23, 42, 0.06);
+
   --vp-button-brand-bg: #111111;
   --vp-button-brand-hover-bg: #000000;
   --vp-button-brand-active-bg: #000000;
@@ -162,6 +169,13 @@
   --vp-local-nav-bg-color: #0f0f11;
   --vp-sidebar-bg-color: #0f0f11;
 
+  --ds-nav-bg-top: rgba(15, 15, 17, 0.92);
+  --ds-nav-bg-scrolled: #101014;
+  --ds-nav-bg-screen: #101014;
+  --ds-nav-border-top: rgba(255, 255, 255, 0.1);
+  --ds-nav-border-scrolled: rgba(255, 255, 255, 0.16);
+  --ds-nav-shadow-scrolled: 0 10px 30px rgba(0, 0, 0, 0.38);
+
   /* Inverted buttons for dark mode */
   --vp-button-brand-bg: #f5f5f7;
   --vp-button-brand-hover-bg: #ffffff;
@@ -218,18 +232,36 @@ body {
 .VPLocalNav {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .VPNavBar {
-  border-bottom: 1px solid var(--ds-line-soft);
+  background-color: var(--ds-nav-bg-top);
+  border-bottom: 1px solid var(--ds-nav-border-top);
+  box-shadow: none;
+}
+
+.VPNavBar:not(.home.top) {
+  background-color: var(--ds-nav-bg-scrolled);
+  border-bottom-color: var(--ds-nav-border-scrolled);
+  box-shadow: var(--ds-nav-shadow-scrolled);
 }
 
 .VPNavBar.screen-open {
-  border-bottom: 1px solid var(--ds-line);
+  background-color: var(--ds-nav-bg-screen);
+  border-bottom-color: var(--ds-nav-border-scrolled);
+  box-shadow: var(--ds-nav-shadow-scrolled);
 }
 
 .VPLocalNav {
-  border-bottom: 1px solid var(--ds-line-soft);
+  background-color: var(--ds-nav-bg-top);
+  border-bottom: 1px solid var(--ds-nav-border-top);
+}
+
+@media (min-width: 960px) {
+  .VPLocalNav {
+    border-bottom-color: var(--ds-nav-border-scrolled);
+  }
 }
 
 .VPSidebar {
@@ -268,6 +300,33 @@ body {
   margin-top: 2.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--ds-line);
+  display: flex;
+  flex-direction: column;
+}
+
+.VPDocFooter .edit-info {
+  order: 1;
+  padding-bottom: 0;
+}
+
+.VPDocFooter .vp-git-editors {
+  order: 2;
+  align-self: flex-end;
+  margin-top: 4px;
+  padding-bottom: 18px;
+  font-size: 13px;
+  text-align: right;
+  color: var(--vp-c-text-2);
+}
+
+.VPDocFooter .prev-next {
+  order: 3;
+}
+
+@media (min-width: 640px) {
+  .VPDocFooter .vp-git-editors {
+    padding-bottom: 14px;
+  }
 }
 
 .VPFooter {
@@ -476,15 +535,22 @@ body {
 
 /* Dark mode nav enhancements */
 .dark .VPNavBar {
-  border-bottom-color: var(--ds-line);
+  border-bottom-color: var(--ds-nav-border-top);
 }
 
+.dark .VPNavBar:not(.home.top),
+.dark .VPNavBar.screen-open,
 .dark .VPLocalNav {
-  border-bottom-color: var(--ds-line);
+  border-bottom-color: var(--ds-nav-border-scrolled);
 }
 
 .dark .VPSidebar {
   border-right-color: var(--ds-line);
+}
+
+html.home-no-search .VPNavBar .search,
+html.home-no-search .VPNavBar .VPNavBarSearch {
+  display: none !important;
 }
 
 /* Code block dark mode polish */

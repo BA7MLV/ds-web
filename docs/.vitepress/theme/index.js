@@ -1,11 +1,13 @@
 import DefaultTheme from 'vitepress/theme'
-import { onMounted, nextTick, watch } from 'vue'
+import { onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRoute, useData } from 'vitepress'
 import './custom.css'
 import CustomHome from './CustomHome.vue'
+import Layout from './Layout.vue'
 
 export default {
   extends: DefaultTheme,
+  Layout,
   enhanceApp({ app, router, siteData }) {
     // 注册自定义首页组件
     app.component('CustomHome', CustomHome)
@@ -43,19 +45,9 @@ export default {
         
         // 隐藏主页的搜索控件
         const hideSearchOnHome = () => {
-          if (route.path === '/') {
-            // 隐藏所有搜索相关的元素
-            const searchElements = document.querySelectorAll('[class*="search"], [class*="Search"], [class*="VPNavBarSearch"]')
-            searchElements.forEach(el => {
-              el.style.display = 'none'
-            })
-          } else {
-            // 在其他页面恢复搜索控件的显示
-            const searchElements = document.querySelectorAll('[class*="search"], [class*="Search"], [class*="VPNavBarSearch"]')
-            searchElements.forEach(el => {
-              el.style.display = ''
-            })
-          }
+          if (typeof document === 'undefined') return
+          const root = document.documentElement
+          root.classList.toggle('home-no-search', route.path === '/')
         }
         
         // 立即执行一次
@@ -67,7 +59,14 @@ export default {
             hideSearchOnHome()
           })
         })
+
       })
+    })
+
+    onUnmounted(() => {
+      if (typeof document !== 'undefined') {
+        document.documentElement.classList.remove('home-no-search')
+      }
     })
 
     // 监听主题变化更新 theme-color
