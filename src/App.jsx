@@ -15,6 +15,29 @@ const easeInOutCubic = (t) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 const buildHash = import.meta.env.VITE_BUILD_HASH || 'dev'
 
+const getViewportBucket = () => {
+  if (typeof window === 'undefined') return 'unknown'
+  const width = window.innerWidth || 0
+  if (width >= 1280) return 'xl'
+  if (width >= 1024) return 'lg'
+  if (width >= 640) return 'sm'
+  return 'xs'
+}
+
+const trackUiEvent = (name, payload = {}) => {
+  if (typeof window === 'undefined') return
+  const detail = {
+    name,
+    ts: Date.now(),
+    viewport: getViewportBucket(),
+    ...payload,
+  }
+  window.dispatchEvent(new CustomEvent('ds:analytics', { detail }))
+  if (Array.isArray(window.dataLayer)) {
+    window.dataLayer.push({ event: name, ...detail })
+  }
+}
+
 const getIsDownloadFromLocation = () => {
   if (typeof window === 'undefined') return false
   const params = new URLSearchParams(window.location.search)
@@ -932,7 +955,7 @@ const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
   return (
     <nav className="sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
-      <div className="max-w-[980px] mx-auto flex items-center justify-between px-4 sm:px-6 h-12">
+      <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-12">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] hover:opacity-80 transition-opacity">
           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" />
           <span className="text-[15px] tracking-tight">DeepStudent</span>
@@ -961,13 +984,7 @@ const TopNav = ({ onDownload = () => {} }) => {
 }
 
 const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
-  const scrollY = useScrollY()
-  const { t } = useLocale()
-  const motionAmount = Math.max(0, motionScale)
-  const isStatic = motionAmount === 0
   const shouldAnimate = motionScale > 0
-  const heroProgress = clamp(scrollY / 640, 0, 1)
-  const heroEase = easeInOutCubic(heroProgress)
 
   const handleExplore = () => {
     if (typeof document === 'undefined') return
@@ -976,22 +993,32 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
     target.scrollIntoView({ behavior: shouldAnimate ? 'smooth' : 'auto', block: 'start' })
   }
 
+  const handleDownloadClick = () => {
+    trackUiEvent('hero_cta_primary_click', { location: 'hero' })
+    onDownload()
+  }
+
+  const handleExploreClick = () => {
+    trackUiEvent('hero_cta_secondary_click', { location: 'hero' })
+    handleExplore()
+  }
+
   return (
     <header
-      className="relative min-h-screen px-4 sm:px-6 lg:px-8 pt-20 pb-16 flex items-center overflow-hidden"
+      className="relative min-h-screen px-4 sm:px-6 lg:px-8 pt-20 pb-16 flex items-center overflow-hidden lg:overflow-visible"
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_center,var(--apple-glow),transparent_70%)] blur-[100px] opacity-40" />
       </div>
       
       <div
-        className={`relative z-10 w-full max-w-6xl mx-auto ${
+        className={`relative z-10 w-full max-w-[84rem] xl:max-w-[100rem] mx-auto ${
           shouldAnimate ? 'animate-fade-in' : ''
         }`}
         style={shouldAnimate ? { animationDelay: '0.08s' } : undefined}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.76fr)_minmax(0,1.9fr)] gap-8 sm:gap-10 lg:gap-8 xl:gap-12 items-center">
+          <div className="flex flex-col items-start text-left order-2 lg:order-1">
             <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold tracking-[-0.02em] mb-6 leading-[1.1] text-[color:var(--apple-ink)]">
               优化您的
               <br />
@@ -1009,42 +1036,24 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
             <div className="flex flex-col sm:flex-row gap-3 mb-10 w-full sm:w-auto">
               <button
                 type="button"
-                onClick={onDownload}
+                onClick={handleDownloadClick}
                 className="px-8 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-lg font-medium text-[15px] hover:opacity-90 active:scale-[0.98] transition-all duration-200"
               >
                 立即下载
               </button>
               <button
                 type="button"
-                onClick={handleExplore}
+                onClick={handleExploreClick}
                 className="px-8 py-3 bg-transparent text-[color:var(--apple-ink)] border border-[color:var(--apple-line-strong)] rounded-lg font-medium text-[15px] hover:bg-[color:var(--apple-card)] transition-all duration-200"
               >
                 了解更多
               </button>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-left">
-              <div className="flex items-center gap-2.5 text-sm text-[color:var(--apple-muted)]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--apple-blue)] flex-shrink-0" />
-                <span>AI 驱动的智能错题分析</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-[color:var(--apple-muted)]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--apple-blue)] flex-shrink-0" />
-                <span>一键生成 ANKI 记忆卡片</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-[color:var(--apple-muted)]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--apple-blue)] flex-shrink-0" />
-                <span>RAG 增强的知识库追问</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-[color:var(--apple-muted)]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--apple-blue)] flex-shrink-0" />
-                <span>本地数据，隐私安全</span>
-              </div>
-            </div>
           </div>
           
-          <div className="flex justify-center lg:justify-end order-1 lg:order-2">
-            <HeroPreview />
+          <div className="flex justify-center lg:justify-end order-1 lg:order-2 lg:translate-x-[6vw] xl:translate-x-[11vw]">
+            <HeroPreview className="max-w-[58rem] sm:max-w-[104rem] lg:w-[185%] xl:w-[205%] 2xl:w-[220%] lg:max-w-none" />
           </div>
         </div>
       </div>
@@ -1259,7 +1268,7 @@ const FreeModelsCallout = () => {
   )
 }
 
-const HeroPreview = ({ style, imageMaskStyle }) => {
+const HeroPreview = ({ style, imageMaskStyle, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]' }) => {
   const { locale, t } = useLocale()
   const [activeId, setActiveId] = useState(heroPreviewItems[0].id)
   const activeItem = heroPreviewItems.find((item) => item.id === activeId) || heroPreviewItems[0]
@@ -1269,6 +1278,75 @@ const HeroPreview = ({ style, imageMaskStyle }) => {
   const segmentedControlRef = useRef(null)
   const segmentedSliderRef = useRef(null)
   const autoplayTimerRef = useRef(null)
+  const exposureRef = useRef({ visible: false, lastTs: 0, firedIds: new Set() })
+
+  const emitExposure = useCallback((segmentId) => {
+    if (typeof window === 'undefined') return
+    const now = Date.now()
+    const state = exposureRef.current
+    if (!state.visible) return
+    if (state.firedIds.has(segmentId) && now - state.lastTs < 10000) return
+    state.lastTs = now
+    state.firedIds.add(segmentId)
+    trackUiEvent('hero_preview_exposure', { location: 'hero', segmentId })
+  }, [])
+
+  useEffect(() => {
+    const state = exposureRef.current
+    const el = previewRef.current
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      state.visible = true
+      emitExposure(activeId)
+      return undefined
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = Boolean(entries[0]?.isIntersecting)
+        state.visible = visible
+        if (visible) emitExposure(activeId)
+      },
+      { threshold: 0.45 },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [activeId, emitExposure])
+
+  useEffect(() => {
+    emitExposure(activeId)
+  }, [activeId, emitExposure])
+
+  const handleSegmentSwitch = useCallback((segmentId, trigger = 'click') => {
+    setActiveId(segmentId)
+    trackUiEvent('hero_preview_segment_switch', { location: 'hero', segmentId, trigger })
+  }, [])
+
+  const onSegmentKeyDown = useCallback((event, index) => {
+    const total = heroPreviewItems.length
+    if (!total) return
+    const nextBy = (delta) => {
+      const nextIndex = (index + delta + total) % total
+      handleSegmentSwitch(heroPreviewItems[nextIndex].id, 'keyboard')
+    }
+    if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      nextBy(1)
+      return
+    }
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      nextBy(-1)
+      return
+    }
+    if (event.key === 'Home') {
+      event.preventDefault()
+      handleSegmentSwitch(heroPreviewItems[0].id, 'keyboard')
+      return
+    }
+    if (event.key === 'End') {
+      event.preventDefault()
+      handleSegmentSwitch(heroPreviewItems[total - 1].id, 'keyboard')
+    }
+  }, [handleSegmentSwitch])
 
   const updateSegmentedSlider = useCallback(() => {
     const controlEl = segmentedControlRef.current
@@ -1374,13 +1452,13 @@ const HeroPreview = ({ style, imageMaskStyle }) => {
   return (
     <div
       ref={previewRef}
-      className="relative w-full max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]"
+      className={`relative w-full ${className}`}
       style={style}
     >
       <div className="relative rounded-[1.25rem] shadow-[var(--apple-shadow-2xl)]">
-        <div className="relative rounded-[1.25rem] overflow-hidden bg-black">
+        <div id="hero-preview-panel" role="tabpanel" aria-labelledby={`hero-preview-tab-${activeId}`} className="relative rounded-[1.25rem] overflow-hidden bg-black">
           {/* Golden ratio (phi) ~ 1.618:1 */}
-          <div className="relative aspect-[1618/1000] bg-[color:var(--apple-card-strong)]">
+          <div className="relative aspect-[1618/1120] bg-[color:var(--apple-card-strong)]">
             <img
               src={activeItem.src}
               alt={imageAlt}
@@ -1395,38 +1473,46 @@ const HeroPreview = ({ style, imageMaskStyle }) => {
           </div>
         </div>
 
-        <div className="absolute inset-x-0 top-0 flex justify-center -translate-y-3/4 px-3 sm:px-4 z-20">
-          <div
-            ref={segmentedControlRef}
-            className="segmented-control shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
-            role="group"
-            aria-label={t('hero.preview.selector', 'Preview selector')}
-          >
+        <div className="relative z-20 flex justify-center px-3 pt-3 sm:px-4 sm:pt-4 lg:absolute lg:left-5 lg:right-auto lg:top-4 lg:pt-0">
+          <div className="segmented-control-wrap">
             <div
-              ref={segmentedSliderRef}
-              className="segmented-control__slider shadow-sm"
-              aria-hidden="true"
-            />
-            {heroPreviewItems.map((item) => {
-              const isActive = item.id === activeId
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setActiveId(item.id)}
-                  data-segment-id={item.id}
-                  className={`segmented-control__btn focus-ring${isActive ? ' is-active' : ''}`}
-                  aria-pressed={isActive}
-                  aria-label={t(item.labelKey)}
-                  title={t(item.labelKey)}
-                >
-                  <span className="relative z-10 sm:hidden">
-                    <SegmentedControlIcon id={item.id} />
-                  </span>
-                  <span className="relative z-10 hidden sm:inline">{t(item.labelKey)}</span>
-                </button>
-              )
-            })}
+              ref={segmentedControlRef}
+              className="segmented-control shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
+              role="tablist"
+              aria-orientation="horizontal"
+              aria-label={t('hero.preview.selector', 'Preview selector')}
+            >
+              <div
+                ref={segmentedSliderRef}
+                className="segmented-control__slider shadow-sm"
+                aria-hidden="true"
+              />
+              {heroPreviewItems.map((item, index) => {
+                const isActive = item.id === activeId
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => handleSegmentSwitch(item.id, 'click')}
+                    onKeyDown={(event) => onSegmentKeyDown(event, index)}
+                    data-segment-id={item.id}
+                    id={`hero-preview-tab-${item.id}`}
+                    role="tab"
+                    tabIndex={isActive ? 0 : -1}
+                    aria-selected={isActive}
+                    aria-controls="hero-preview-panel"
+                    className={`segmented-control__btn focus-ring${isActive ? ' is-active' : ''}`}
+                    aria-label={t(item.labelKey)}
+                    title={t(item.labelKey)}
+                  >
+                    <span className="relative z-10 sm:hidden">
+                      <SegmentedControlIcon id={item.id} />
+                    </span>
+                    <span className="relative z-10 hidden sm:inline">{t(item.labelKey)}</span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>
