@@ -450,7 +450,7 @@ const StatsHighlight = ({ motionScale = 1 }) => {
       className={`py-[4rem] sm:py-[6rem] px-4 sm:px-6 ${shouldAnimate ? 'animate-fade-in' : ''}`}
       style={shouldAnimate ? { animationDelay: '0.24s' } : undefined}
     >
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-[90rem] mx-auto">
         <div className="text-center mb-[3rem] sm:mb-[4rem]">
           <h2 className="text-[1.5rem] sm:text-[2rem] font-semibold text-[color:var(--apple-ink)] tracking-tight font-display mb-3">
             {t('stats.title', '为深度学习而生')}
@@ -575,371 +575,82 @@ const App = () => {
                 </div>
               </FeatureSection>
 
-              <FeatureSection
-                id="feature-chat"
-                layout="sticky"
-                title={t('feature.review.title')}
-                desc={t('feature.review.desc')}
-                align="left"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'subfeature.chatBase', descKey: 'subfeature.chatBaseDesc', imgSrc: null },
-                  { labelKey: 'subfeature.blocks', descKey: 'subfeature.blocksDesc', imgSrc: null },
-                  { labelKey: 'subfeature.agentTools', descKey: 'subfeature.agentToolsDesc', imgSrc: null },
-                  { labelKey: 'subfeature.thinking', descKey: 'subfeature.thinkingDesc', imgSrc: null },
-                  { labelKey: 'subfeature.multiModel', descKey: 'subfeature.multiModelDesc', imgSrc: null },
-                  { labelKey: 'subfeature.context', descKey: 'subfeature.contextDesc', imgSrc: null },
-                ]}
-              >
-            <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto transform transition-all hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)] duration-500 ease-apple group">
-              <div className={cardHeaderClass}>
-                <div>
-                  <div className="text-[15px] font-semibold text-[color:var(--apple-ink)] tracking-tight">{t('card.analyzing')}</div>
-                  <div className="text-xs text-[color:var(--apple-muted)] font-medium mt-0.5">{t('card.justNow')}</div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="h-2.5 w-full bg-[color:var(--apple-line-strong)] rounded-full overflow-hidden">
-                  <div
-                    className={`h-full bg-[color:var(--apple-blue)] w-3/4 rounded-full shadow-[0_0_10px_rgba(0,113,227,0.4)] ${
-                      motionScale > 0 ? 'animate-pulse' : ''
-                    }`}
-                  />
-                </div>
-                <div className="flex justify-between text-xs text-[color:var(--apple-muted)] font-medium mt-1.5">
-                  <span className="tracking-wide uppercase opacity-80">{t('card.mastery')}</span>
-                  <span className="text-[color:var(--apple-ink)] font-bold">72%</span>
-                </div>
-                <div className="mt-[2.75rem] p-[1.5rem] bg-[color:var(--apple-card-strong)] rounded-[1.25rem] border border-[color:var(--apple-line)] text-[13px] sm:text-[14px] text-[color:var(--apple-muted)] leading-relaxed shadow-sm transition-colors group-hover:border-[color:var(--apple-line-strong)]">
-                  <span className="font-semibold text-[color:var(--apple-ink)] block mb-1.5 text-[15px]">{t('card.suggestion')}</span>
-                  {t('card.suggestionPrefix')}{' '}
-                  <span className="text-[color:var(--apple-blue)] font-medium underline decoration-[color:var(--apple-blue-soft)] underline-offset-4 decoration-2">
-                    {t('card.suggestionTopic')}
-                  </span>{' '}
-                  {t('card.suggestionSuffix')}
-                </div>
-              </div>
-            </div>
-          </FeatureSection>
-
-          {/* ========== 笔记系统 ========== */}
-          <FeatureSection
-                id="feature-notes"
-                title={t('feature.notes.title')}
-                desc={t('feature.notes.desc')}
-                align="right"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'notes.markdown', descKey: 'notes.markdownDesc', imgSrc: null },
-                  { labelKey: 'notes.version', descKey: 'notes.versionDesc', imgSrc: null },
-                  { labelKey: 'notes.ai', descKey: 'notes.aiDesc', imgSrc: null },
-                  { labelKey: 'notes.link', descKey: 'notes.linkDesc', imgSrc: null },
-                ]}
-              >
-            <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-[color:var(--apple-blue)] flex items-center justify-center text-white text-sm">📝</div>
-                <span className="text-[15px] font-semibold text-[color:var(--apple-ink)]">{t('notes.editor')}</span>
-              </div>
-              <div className="space-y-2 text-[13px] text-[color:var(--apple-muted)] font-mono bg-[color:var(--apple-card-strong)] p-4 rounded-xl border border-[color:var(--apple-line)]">
-                <div><span className="text-[color:var(--apple-blue)]">#</span> {t('notes.sampleTitle')}</div>
-                <div className="opacity-70">{t('notes.sampleContent')}</div>
-                <div className="mt-3 pt-3 border-t border-[color:var(--apple-line)]">
-                  <span className="text-[color:var(--apple-green)]">✓</span> {t('notes.autoSave')}
-                </div>
-              </div>
-            </div>
-          </FeatureSection>
-
-          {/* ========== 教材管理 ========== */}
-          <FeatureSection
-                id="feature-textbook"
-                title={t('feature.textbook.title')}
-                desc={t('feature.textbook.desc')}
-                align="left"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'textbook.formats', descKey: 'textbook.formatsDesc', imgSrc: null },
-                  { labelKey: 'textbook.ocr', descKey: 'textbook.ocrDesc', imgSrc: null },
-                  { labelKey: 'textbook.reader', descKey: 'textbook.readerDesc', imgSrc: null },
-                  { labelKey: 'textbook.search', descKey: 'textbook.searchDesc', imgSrc: null },
-                ]}
-              >
-            <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-              <div className="px-6 py-4 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-between">
-                <span className="text-[14px] font-medium text-[color:var(--apple-ink)]">{t('textbook.viewer')}</span>
-                <div className="flex gap-2 text-[11px] text-[color:var(--apple-muted)]">
-                  <span className="px-2 py-0.5 bg-[color:var(--apple-blue-soft)] text-[color:var(--apple-blue)] rounded">PDF</span>
-                  <span className="px-2 py-0.5 bg-[color:var(--apple-card)] rounded">EPUB</span>
-                </div>
-              </div>
-              <div className="p-6 space-y-4">
-                {['linear_algebra.pdf', 'calculus_notes.docx', 'physics_textbook.epub'].map((file, i) => (
-                  <div key={file} className="flex items-center gap-3 p-3 bg-[color:var(--apple-card-strong)] rounded-xl hover:bg-[color:var(--apple-card-hover)] transition-colors">
-                    <span className="text-lg">{i === 0 ? '📕' : i === 1 ? '📘' : '📗'}</span>
-                    <span className="text-[13px] text-[color:var(--apple-ink)] flex-1 truncate">{file}</span>
-                    <span className="text-[11px] text-[color:var(--apple-green)]">✓ {t('textbook.indexed')}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </FeatureSection>
-
-          {/* ========== 题目集/刷题 ========== */}
-          <FeatureSection
-                id="feature-qbank"
-                title={t('feature.qbank.title')}
-                desc={t('feature.qbank.desc')}
-                align="right"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'qbank.ocr', descKey: 'qbank.ocrDesc', imgSrc: null },
-                  { labelKey: 'qbank.modes', descKey: 'qbank.modesDesc', imgSrc: null },
-                  { labelKey: 'qbank.ai', descKey: 'qbank.aiDesc', imgSrc: null },
-                  { labelKey: 'qbank.stats', descKey: 'qbank.statsDesc', imgSrc: null },
-                  { labelKey: 'qbank.daily', descKey: 'qbank.dailyDesc', imgSrc: null },
-                ]}
-              >
-            <div className="bg-gradient-to-br from-[#1c1c1e] to-[#000] text-white p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto transition-all duration-500 hover:scale-[1.02]">
-              <div className="text-[12px] text-white/50 uppercase tracking-wider mb-2">{t('qbank.practiceMode')}</div>
-              <div className="text-[1.5rem] font-bold mb-6">{t('qbank.randomPractice')}</div>
-              <div className="grid grid-cols-4 gap-2 mb-6">
-                {['顺序', '随机', '错题', '限时'].map((mode, i) => (
-                  <div key={mode} className={`p-2 rounded-lg text-center text-[11px] ${i === 1 ? 'bg-white text-black' : 'bg-white/10'}`}>
-                    {mode}
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
-                <div>
-                  <div className="text-[14px] font-medium">{t('qbank.currentQuestion')}</div>
-                  <div className="text-[12px] text-white/60 mt-1">12 / 50</div>
-                </div>
-                <div className="text-[24px] font-bold text-[color:var(--apple-green)]">76%</div>
-              </div>
-            </div>
-          </FeatureSection>
-
-          {/* ========== 作文批改 ========== */}
-          <FeatureSection
-                id="feature-essay"
-                title={t('feature.essay.title')}
-                desc={t('feature.essay.desc')}
-                align="left"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'essay.streaming', descKey: 'essay.streamingDesc', imgSrc: null },
-                  { labelKey: 'essay.dimensions', descKey: 'essay.dimensionsDesc', imgSrc: null },
-                  { labelKey: 'essay.suggestions', descKey: 'essay.suggestionsDesc', imgSrc: null },
-                  { labelKey: 'essay.ocr', descKey: 'essay.ocrDesc', imgSrc: null },
-                ]}
-              >
-            <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-[15px] font-semibold text-[color:var(--apple-ink)]">{t('essay.grading')}</span>
-                <span className="px-3 py-1 bg-[color:var(--apple-green-soft)] text-[color:var(--apple-green)] rounded-full text-[12px] font-medium">85/100</span>
-              </div>
-              <div className="space-y-3">
-                {[
-                  { label: t('essay.grammar'), score: 90 },
-                  { label: t('essay.structure'), score: 85 },
-                  { label: t('essay.content'), score: 80 },
-                  { label: t('essay.vocabulary'), score: 88 },
-                ].map((item) => (
-                  <div key={item.label} className="flex items-center gap-3">
-                    <span className="text-[12px] text-[color:var(--apple-muted)] w-16">{item.label}</span>
-                    <div className="flex-1 h-2 bg-[color:var(--apple-line)] rounded-full overflow-hidden">
-                      <div className="h-full bg-[color:var(--apple-blue)] rounded-full" style={{ width: `${item.score}%` }} />
-                    </div>
-                    <span className="text-[12px] text-[color:var(--apple-ink)] font-medium w-8">{item.score}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </FeatureSection>
-
-          {/* ========== 翻译工作台 ========== */}
-          <FeatureSection
-                id="feature-translate"
-                title={t('feature.translate.title')}
-                desc={t('feature.translate.desc')}
-                align="right"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'translate.languages', descKey: 'translate.languagesDesc', imgSrc: null },
-                  { labelKey: 'translate.compare', descKey: 'translate.compareDesc', imgSrc: null },
-                  { labelKey: 'translate.ocr', descKey: 'translate.ocrDesc', imgSrc: null },
-                  { labelKey: 'translate.tts', descKey: 'translate.ttsDesc', imgSrc: null },
-                ]}
-              >
-            <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-              <div className="flex border-b border-[color:var(--apple-line)]">
-                <div className="flex-1 p-4 text-center border-r border-[color:var(--apple-line)]">
-                  <span className="text-[13px] text-[color:var(--apple-muted)]">🇨🇳 {t('translate.chinese')}</span>
-                </div>
-                <div className="flex-1 p-4 text-center">
-                  <span className="text-[13px] text-[color:var(--apple-muted)]">🇺🇸 {t('translate.english')}</span>
-                </div>
-              </div>
-              <div className="grid grid-cols-2">
-                <div className="p-4 border-r border-[color:var(--apple-line)] text-[13px] text-[color:var(--apple-ink)]">
-                  {t('translate.sampleSource')}
-                </div>
-                <div className="p-4 text-[13px] text-[color:var(--apple-blue)]">
-                  {t('translate.sampleTarget')}
-                </div>
-              </div>
-              <div className="p-3 bg-[color:var(--apple-card-strong)] border-t border-[color:var(--apple-line)] flex justify-center gap-4 text-[11px] text-[color:var(--apple-muted)]">
-                <span>🎤 TTS</span>
-                <span>📷 OCR</span>
-                <span>📋 {t('translate.copy')}</span>
-              </div>
-            </div>
-          </FeatureSection>
-
-          {/* ========== 知识导图 ========== */}
-          <FeatureSection
-                id="feature-mindmap"
-                title={t('feature.mindmap.title')}
-                desc={t('feature.mindmap.desc')}
-                align="left"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'mindmap.layouts', descKey: 'mindmap.layoutsDesc', imgSrc: null },
-                  { labelKey: 'mindmap.export', descKey: 'mindmap.exportDesc', imgSrc: null },
-                  { labelKey: 'mindmap.style', descKey: 'mindmap.styleDesc', imgSrc: null },
-                  { labelKey: 'mindmap.ai', descKey: 'mindmap.aiDesc', imgSrc: null },
-                ]}
-              >
-            <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-              <div className="flex items-center gap-2 mb-6">
-                <span className="text-lg">🧠</span>
-                <span className="text-[15px] font-semibold text-[color:var(--apple-ink)]">{t('mindmap.editor')}</span>
-              </div>
-              <div className="relative h-[180px] flex items-center justify-center">
-                {/* 简化的思维导图示意 */}
-                <div className="absolute w-24 h-10 bg-[color:var(--apple-blue)] rounded-xl flex items-center justify-center text-white text-[12px] font-medium">
-                  {t('mindmap.center')}
-                </div>
-                <div className="absolute top-4 right-8 w-20 h-8 bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] rounded-lg flex items-center justify-center text-[11px] text-[color:var(--apple-ink)]">
-                  {t('mindmap.branch1')}
-                </div>
-                <div className="absolute bottom-4 right-8 w-20 h-8 bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] rounded-lg flex items-center justify-center text-[11px] text-[color:var(--apple-ink)]">
-                  {t('mindmap.branch2')}
-                </div>
-                <div className="absolute top-4 left-8 w-20 h-8 bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] rounded-lg flex items-center justify-center text-[11px] text-[color:var(--apple-ink)]">
-                  {t('mindmap.branch3')}
-                </div>
-                <div className="absolute bottom-4 left-8 w-20 h-8 bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] rounded-lg flex items-center justify-center text-[11px] text-[color:var(--apple-ink)]">
-                  {t('mindmap.branch4')}
-                </div>
-              </div>
-            </div>
-          </FeatureSection>
-
-          {/* ========== 技能系统 ========== */}
-          <FeatureSection
-                id="feature-skills"
-                title={t('feature.compare.title')}
-                desc={t('feature.compare.desc')}
-                align="left"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'subfeature.instructionSkills', descKey: 'subfeature.instructionSkillsDesc', imgSrc: null },
-                  { labelKey: 'subfeature.toolSkills', descKey: 'subfeature.toolSkillsDesc', imgSrc: null },
-                  { labelKey: 'subfeature.builtinTools', descKey: 'subfeature.builtinToolsDesc', imgSrc: null },
-                  { labelKey: 'subfeature.customSkills', descKey: 'subfeature.customSkillsDesc', imgSrc: null },
-                  { labelKey: 'subfeature.mcp', descKey: 'subfeature.mcpDesc', imgSrc: null },
-                ]}
-              >
-            <div className="bg-gradient-to-br from-[#1c1c1e] via-[#151516] to-[#000000] dark:from-[#2c2c2e] dark:via-[#1c1c1e] dark:to-[#000000] text-white p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] shadow-[var(--apple-shadow-xl)] border border-white/10 max-w-[18rem] sm:max-w-[30rem] mx-auto relative overflow-hidden group transition-transform duration-500 hover:scale-[1.02]">
-              <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-white/5 blur-[80px] rounded-full pointer-events-none mix-blend-overlay" />
-              <div className="relative z-10">
-                <div className="text-[13px] text-white/50 mb-1.5 font-medium tracking-wide uppercase">{t('card.errorType')}</div>
-                <div className="text-[1.75rem] font-bold mb-[2.5rem] tracking-tight bg-gradient-to-br from-white to-white/70 bg-clip-text text-transparent">{t('card.calcError')}</div>
-                <div className="space-y-[1.75rem]">
-                  <div className="flex items-center justify-between text-[14px]">
-                    <span className="text-white/60 font-medium">{t('card.frequency')}</span>
-                    <span className="font-mono text-white/90">{t('card.high')} (8/10)</span>
-                  </div>
-                  <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-white/90 h-full w-[80%] shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
-                  </div>
-                  <div className="p-[1.25rem] bg-white/5 rounded-[1.25rem] text-[13px] text-white/80 border border-white/10 mt-[1.75rem] leading-relaxed backdrop-blur-sm">
-                    {t('card.calcErrorTip')}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </FeatureSection>
-
-          <FeatureSection
-                id="feature-anki"
-                title={t('feature.spaced.title')}
-                desc={t('feature.spaced.desc')}
-                align="right"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'subfeature.ankiParse', descKey: 'subfeature.ankiParseDesc', imgSrc: null },
-                  { labelKey: 'subfeature.template', descKey: 'subfeature.templateDesc', imgSrc: null },
-                  { labelKey: 'subfeature.ankiTools', descKey: 'subfeature.ankiToolsDesc', imgSrc: null },
-                  { labelKey: 'subfeature.ankiExport', descKey: 'subfeature.ankiExportDesc', imgSrc: null },
-                  { labelKey: 'subfeature.preview3d', descKey: 'subfeature.preview3dDesc', imgSrc: null },
-                ]}
-              >
-            <div className="flex justify-center">
-              <Flashcard motionScale={motionScale} />
-            </div>
-          </FeatureSection>
-
-          <FeatureSection
-                id="feature-privacy"
-                title={t('feature.knowledge.title')}
-                desc={t('feature.knowledge.desc')}
-                align="left"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'subfeature.databases', descKey: 'subfeature.databasesDesc', imgSrc: null },
-                  { labelKey: 'subfeature.chatTables', descKey: 'subfeature.chatTablesDesc', imgSrc: null },
-                  { labelKey: 'subfeature.vfsTables', descKey: 'subfeature.vfsTablesDesc', imgSrc: null },
-                  { labelKey: 'subfeature.backup', descKey: 'subfeature.backupDesc', imgSrc: null },
-                  { labelKey: 'subfeature.cloudSync', descKey: 'subfeature.cloudSyncDesc', imgSrc: null },
-                ]}
-              >
-            <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl p-[1.75rem] sm:p-[2.75rem] rounded-[2rem] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] max-w-[18rem] sm:max-w-[30rem] mx-auto transition-transform duration-500 hover:scale-[1.02]">
-              <div className="space-y-[1.75rem]">
-                <div className="mb-[2rem]">
-                  <div className="text-[16px] font-semibold text-[color:var(--apple-ink)] tracking-tight">Local-First</div>
-                  <div className="text-xs text-[color:var(--apple-muted)] font-medium mt-0.5">Data Storage</div>
-                </div>
-                <div className="space-y-3.5">
-                  {[
-                    { label: 'SQLite', desc: 'Metadata & Config', status: '✓' },
-                    { label: 'LanceDB', desc: 'Vector Store', status: '✓' },
-                    { label: 'Blob Files', desc: 'Documents & Images', status: '✓' },
-                  ].map((item) => (
-                    <div key={item.label} className="flex items-center justify-between p-[1.1rem] bg-[color:var(--apple-card-strong)] rounded-[1.25rem] border border-[color:var(--apple-line)] hover:border-[color:var(--apple-line-strong)] transition-colors group">
-                      <div>
-                        <div className="text-[14px] font-medium text-[color:var(--apple-ink)]">{item.label}</div>
-                        <div className="text-[11px] text-[color:var(--apple-muted)] mt-0.5">{item.desc}</div>
-                      </div>
-                      <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[color:var(--apple-blue)] text-white text-[10px] font-bold shadow-sm opacity-80 group-hover:opacity-100 transition-opacity">
-                        <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <div className="pt-[1.5rem] border-t border-[color:var(--apple-line)] text-[11px] font-medium text-[color:var(--apple-muted)] text-center tracking-wide uppercase opacity-70">
-                  Backup · Audit · Export · Full Control
-                </div>
-              </div>
-            </div>
-          </FeatureSection>
-
-          <FaqSection motionScale={motionScale} onOpenPolicy={handlePolicyOpen} />
+                            {/* Module 1: AI Agent & Ecosystem */}
+                            <FeatureSection
+                              id="feature-agent"
+                              layout="sticky"
+                              title={t('feature.agent.title')}
+                              desc={t('feature.agent.desc')}
+                              align="left"
+                              motionScale={motionScale}
+                              subFeatures={[
+                                { labelKey: 'agent.multiModel', descKey: 'agent.multiModelDesc', imgSrc: '/img/example/模型分配.png' },
+                                { labelKey: 'agent.skills', descKey: 'agent.skillsDesc', imgSrc: '/img/example/技能管理.png' },
+                                { labelKey: 'agent.mcp', descKey: 'agent.mcpDesc', imgSrc: '/img/example/mcp-1.png' },
+                                { labelKey: 'agent.session', descKey: 'agent.sessionDesc', imgSrc: '/img/example/会话浏览.png' },
+                              ]}
+                            >
+                              <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                                <img src="/img/example/主页面.png" alt="AI Agent Interface" className="w-full h-auto object-cover" />
+                              </div>
+                            </FeatureSection>
+              
+                            {/* Module 2: Deep Research & Reading */}
+                            <FeatureSection
+                              id="feature-research"
+                              title={t('feature.research.title')}
+                              desc={t('feature.research.desc')}
+                              align="right"
+                              motionScale={motionScale}
+                              subFeatures={[
+                                { labelKey: 'research.web', descKey: 'research.webDesc', imgSrc: '/img/example/调研-2.png' },
+                                { labelKey: 'research.pdf', descKey: 'research.pdfDesc', imgSrc: '/img/example/pdf阅读-1.png' },
+                                { labelKey: 'research.docx', descKey: 'research.docxDesc', imgSrc: '/img/example/docx阅读-1.png' },
+                                { labelKey: 'research.source', descKey: 'research.sourceDesc', imgSrc: '/img/example/调研-3.png' },
+                              ]}
+                            >
+                              <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                                <img src="/img/example/调研-1.png" alt="Deep Research" className="w-full h-auto object-cover" />
+                              </div>
+                            </FeatureSection>
+              
+                            {/* Module 3: Knowledge Management */}
+                            <FeatureSection
+                              id="feature-knowledge"
+                              title={t('feature.knowledge_mgmt.title')}
+                              desc={t('feature.knowledge_mgmt.desc')}
+                              align="left"
+                              motionScale={motionScale}
+                              subFeatures={[
+                                { labelKey: 'knowledge.map', descKey: 'knowledge.mapDesc', imgSrc: '/img/example/知识导图-2.png' },
+                                { labelKey: 'knowledge.note', descKey: 'knowledge.noteDesc', imgSrc: '/img/example/笔记-1.png' },
+                                { labelKey: 'knowledge.memory', descKey: 'knowledge.memoryDesc', imgSrc: '/img/example/记忆-1.png' },
+                                { labelKey: 'knowledge.graph', descKey: 'knowledge.graphDesc', imgSrc: '/img/example/知识导图-5.png' },
+                              ]}
+                            >
+                              <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                                <img src="/img/example/知识导图-1.png" alt="Knowledge Management" className="w-full h-auto object-cover" />
+                              </div>
+                            </FeatureSection>
+              
+                            {/* Module 4: Exam & Prep */}
+                            <FeatureSection
+                              id="feature-exam"
+                              title={t('feature.exam.title')}
+                              desc={t('feature.exam.desc')}
+                              align="right"
+                              motionScale={motionScale}
+                              subFeatures={[
+                                { labelKey: 'exam.qbank', descKey: 'exam.qbankDesc', imgSrc: '/img/example/题目集-2.png' },
+                                { labelKey: 'exam.essay', descKey: 'exam.essayDesc', imgSrc: '/img/example/作文-1.png' },
+                                { labelKey: 'exam.anki', descKey: 'exam.ankiDesc', imgSrc: '/img/example/anki-制卡1.png' },
+                                { labelKey: 'exam.spaced', descKey: 'exam.spacedDesc', imgSrc: '/img/example/anki-发送.png' },
+                              ]}
+                            >
+                              <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                                <img src="/img/example/题目集-1.png" alt="Exam Prep" className="w-full h-auto object-cover" />
+                              </div>
+                            </FeatureSection>          <FaqSection motionScale={motionScale} onOpenPolicy={handlePolicyOpen} />
         </div>
       </main>
       </>
@@ -1061,105 +772,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   )
 }
 
-const heroPreviewItems = [
-  {
-    id: 'chat',
-    labelKey: 'hero.preview.chat',
-    src: '/img/hero-preview-overview.jpg',
-    objectPosition: 'center 38.2%',
-  },
-  {
-    id: 'skills',
-    labelKey: 'hero.preview.skills',
-    src: '/img/hero-preview-skills.jpg',
-    objectPosition: 'center 38.2%',
-  },
-  {
-    id: 'knowledge',
-    labelKey: 'hero.preview.knowledge',
-    src: '/img/hero-preview-mistakes.jpg',
-    objectPosition: 'center 38.2%',
-  },
-  {
-    id: 'providers',
-    labelKey: 'hero.preview.providers',
-    src: '/img/hero-preview-review.jpg',
-    objectPosition: 'center 38.2%',
-  },
-]
 
-const SegmentedControlIcon = ({ id, className = 'h-4 w-4' }) => {
-  switch (id) {
-    case 'chat':
-      return (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={className}
-          aria-hidden="true"
-        >
-          <path d="M7.5 19.5 3 21V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H7.5z" />
-        </svg>
-      )
-    case 'skills':
-      return (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={className}
-          aria-hidden="true"
-        >
-          <rect x="4" y="4" width="7" height="7" rx="1.6" />
-          <rect x="13" y="4" width="7" height="7" rx="1.6" />
-          <rect x="4" y="13" width="7" height="7" rx="1.6" />
-          <rect x="13" y="13" width="7" height="7" rx="1.6" />
-        </svg>
-      )
-    case 'knowledge':
-      return (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={className}
-          aria-hidden="true"
-        >
-          <path d="M6 3h10a3 3 0 0 1 3 3v15a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3V6a3 3 0 0 1 3-3z" />
-          <path d="M7.5 7.5h7" />
-          <path d="M7.5 10.5h7" />
-        </svg>
-      )
-    case 'providers':
-      return (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={className}
-          aria-hidden="true"
-        >
-          <rect x="6" y="7" width="15" height="14" rx="2" />
-          <path d="M9 4h10a2 2 0 0 1 2 2v10" />
-        </svg>
-      )
-    default:
-      return null
-  }
-}
 
 const freeModels = [
   { id: 'qwen3-8b', label: 'Qwen3-8B' },
@@ -1268,252 +881,35 @@ const FreeModelsCallout = () => {
   )
 }
 
-const HeroPreview = ({ style, imageMaskStyle, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]' }) => {
-  const { locale, t } = useLocale()
-  const [activeId, setActiveId] = useState(heroPreviewItems[0].id)
-  const activeItem = heroPreviewItems.find((item) => item.id === activeId) || heroPreviewItems[0]
-  const activeLabel = t(activeItem.labelKey)
-  const imageAlt = t('hero.preview.imageAlt', 'DeepStudent {label} preview (placeholder)', { label: activeLabel })
-  const previewRef = useRef(null)
-  const segmentedControlRef = useRef(null)
-  const segmentedSliderRef = useRef(null)
-  const autoplayTimerRef = useRef(null)
-  const exposureRef = useRef({ visible: false, lastTs: 0, firedIds: new Set() })
-
-  const emitExposure = useCallback((segmentId) => {
-    if (typeof window === 'undefined') return
-    const now = Date.now()
-    const state = exposureRef.current
-    if (!state.visible) return
-    if (state.firedIds.has(segmentId) && now - state.lastTs < 10000) return
-    state.lastTs = now
-    state.firedIds.add(segmentId)
-    trackUiEvent('hero_preview_exposure', { location: 'hero', segmentId })
-  }, [])
-
-  useEffect(() => {
-    const state = exposureRef.current
-    const el = previewRef.current
-    if (!el || typeof IntersectionObserver === 'undefined') {
-      state.visible = true
-      emitExposure(activeId)
-      return undefined
-    }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = Boolean(entries[0]?.isIntersecting)
-        state.visible = visible
-        if (visible) emitExposure(activeId)
-      },
-      { threshold: 0.45 },
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [activeId, emitExposure])
-
-  useEffect(() => {
-    emitExposure(activeId)
-  }, [activeId, emitExposure])
-
-  const handleSegmentSwitch = useCallback((segmentId, trigger = 'click') => {
-    setActiveId(segmentId)
-    trackUiEvent('hero_preview_segment_switch', { location: 'hero', segmentId, trigger })
-  }, [])
-
-  const onSegmentKeyDown = useCallback((event, index) => {
-    const total = heroPreviewItems.length
-    if (!total) return
-    const nextBy = (delta) => {
-      const nextIndex = (index + delta + total) % total
-      handleSegmentSwitch(heroPreviewItems[nextIndex].id, 'keyboard')
-    }
-    if (event.key === 'ArrowRight') {
-      event.preventDefault()
-      nextBy(1)
-      return
-    }
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault()
-      nextBy(-1)
-      return
-    }
-    if (event.key === 'Home') {
-      event.preventDefault()
-      handleSegmentSwitch(heroPreviewItems[0].id, 'keyboard')
-      return
-    }
-    if (event.key === 'End') {
-      event.preventDefault()
-      handleSegmentSwitch(heroPreviewItems[total - 1].id, 'keyboard')
-    }
-  }, [handleSegmentSwitch])
-
-  const updateSegmentedSlider = useCallback(() => {
-    const controlEl = segmentedControlRef.current
-    const sliderEl = segmentedSliderRef.current
-    if (!controlEl || !sliderEl) return
-
-    const activeButton = controlEl.querySelector(`[data-segment-id="${activeId}"]`)
-    if (!activeButton) return
-
-    const rect = activeButton.getBoundingClientRect()
-    const parentRect = controlEl.getBoundingClientRect()
-    const paddingPx = 2
-    const offset = rect.left - parentRect.left - paddingPx
-    sliderEl.style.width = `${rect.width}px`
-    sliderEl.style.transform = `translateX(${offset}px)`
-  }, [activeId])
-
-  useEffect(() => {
-    heroPreviewItems.forEach((item) => {
-      const img = new Image()
-      img.src = item.src
-    })
-  }, [])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const mediaQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)')
-    const shouldReduceMotion = Boolean(mediaQuery?.matches)
-
-    const stop = () => {
-      if (!autoplayTimerRef.current) return
-      window.clearInterval(autoplayTimerRef.current)
-      autoplayTimerRef.current = null
-    }
-
-    const start = () => {
-      if (shouldReduceMotion) return
-      stop()
-      autoplayTimerRef.current = window.setInterval(() => {
-        setActiveId((prev) => {
-          const currentIndex = heroPreviewItems.findIndex((item) => item.id === prev)
-          const safeIndex = currentIndex >= 0 ? currentIndex : 0
-          const nextIndex = (safeIndex + 1) % heroPreviewItems.length
-          return heroPreviewItems[nextIndex].id
-        })
-      }, 20000)
-    }
-
-    // 默认开启动画，但在离屏时暂停（减少无意义的循环定时器）。
-    let isVisible = true
-    const el = previewRef.current
-    if (el) {
-      const rect = el.getBoundingClientRect()
-      isVisible = rect.bottom > 0 && rect.top < window.innerHeight
-    }
-    if (isVisible) start()
-
-    let observer
-    if (typeof IntersectionObserver !== 'undefined' && el) {
-      observer = new IntersectionObserver(
-        (entries) => {
-          const entry = entries[0]
-          const nextVisible = Boolean(entry?.isIntersecting)
-          if (nextVisible) start()
-          else stop()
-        },
-        { threshold: 0.2 },
-      )
-      observer.observe(el)
-    }
-
-    return () => {
-      stop()
-      observer?.disconnect()
-    }
-  }, [])
-
-  useLayoutEffect(() => {
-    updateSegmentedSlider()
-  }, [updateSegmentedSlider, locale])
-
-  // Fix: Re-calculate slider after initial render when fonts/layout are fully ready
-  useEffect(() => {
-    // Use requestAnimationFrame to wait for next paint cycle
-    const rafId = requestAnimationFrame(() => {
-      updateSegmentedSlider()
-    })
-    // Also handle font loading completion
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(() => {
-        updateSegmentedSlider()
-      })
-    }
-    return () => cancelAnimationFrame(rafId)
-  }, [updateSegmentedSlider])
-
-  useEffect(() => {
-    window.addEventListener('resize', updateSegmentedSlider)
-    return () => window.removeEventListener('resize', updateSegmentedSlider)
-  }, [updateSegmentedSlider])
+const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]' }) => {
+  const { t } = useLocale()
 
   return (
     <div
-      ref={previewRef}
       className={`relative w-full ${className}`}
       style={style}
     >
-      <div className="relative rounded-[1.25rem] shadow-[var(--apple-shadow-2xl)]">
-        <div id="hero-preview-panel" role="tabpanel" aria-labelledby={`hero-preview-tab-${activeId}`} className="relative rounded-[1.25rem] overflow-hidden bg-black">
-          {/* Golden ratio (phi) ~ 1.618:1 */}
-          <div className="relative aspect-[1618/1120] bg-[color:var(--apple-card-strong)]">
-            <img
-              src={activeItem.src}
-              alt={imageAlt}
-              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
-              style={{
-                objectPosition: activeItem.objectPosition || 'center',
-                ...(imageMaskStyle || {}),
-              }}
-              loading="lazy"
-              draggable="false"
-            />
-          </div>
+      <div className="relative">
+        {/* Desktop Image */}
+        <div className="relative z-10 rounded-[6px] overflow-hidden shadow-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)]">
+          <img
+            src="/img/example/主页面.png"
+            alt="DeepStudent Desktop"
+            className="w-full h-auto"
+            loading="lazy"
+            draggable="false"
+          />
         </div>
 
-        <div className="relative z-20 flex justify-center px-3 pt-3 sm:px-4 sm:pt-4 lg:absolute lg:left-5 lg:right-auto lg:top-4 lg:pt-0">
-          <div className="segmented-control-wrap">
-            <div
-              ref={segmentedControlRef}
-              className="segmented-control shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
-              role="tablist"
-              aria-orientation="horizontal"
-              aria-label={t('hero.preview.selector', 'Preview selector')}
-            >
-              <div
-                ref={segmentedSliderRef}
-                className="segmented-control__slider shadow-sm"
-                aria-hidden="true"
-              />
-              {heroPreviewItems.map((item, index) => {
-                const isActive = item.id === activeId
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => handleSegmentSwitch(item.id, 'click')}
-                    onKeyDown={(event) => onSegmentKeyDown(event, index)}
-                    data-segment-id={item.id}
-                    id={`hero-preview-tab-${item.id}`}
-                    role="tab"
-                    tabIndex={isActive ? 0 : -1}
-                    aria-selected={isActive}
-                    aria-controls="hero-preview-panel"
-                    className={`segmented-control__btn focus-ring${isActive ? ' is-active' : ''}`}
-                    aria-label={t(item.labelKey)}
-                    title={t(item.labelKey)}
-                  >
-                    <span className="relative z-10 sm:hidden">
-                      <SegmentedControlIcon id={item.id} />
-                    </span>
-                    <span className="relative z-10 hidden sm:inline">{t(item.labelKey)}</span>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
+        {/* Mobile Image - Overlapping on bottom right */}
+        <div className="absolute -bottom-12 -right-8 z-20 w-[28%] rounded-[6px] overflow-hidden shadow-2xl border-[2px] border-gray-900 bg-black">
+          <img
+            src="/img/example/移动端主页面.png"
+            alt="DeepStudent Mobile"
+            className="w-full h-auto"
+            loading="lazy"
+            draggable="false"
+          />
         </div>
       </div>
     </div>
@@ -1792,12 +1188,12 @@ const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, animatio
       className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-6 sm:gap-8 md:gap-12 transition-all duration-700 ease-out ${isVisible ? anim.visible : anim.hidden}`}
       style={{ transitionDelay: `${Math.min(index * 100, 400)}ms` }}
     >
-      <div className="flex-1 w-full md:max-w-[50%]">
+      <div className="flex-1 w-full md:max-w-[55%]">
         {imgSrc ? (
           <img
             src={imgSrc}
             alt={title}
-            className="w-full rounded-2xl shadow-[var(--apple-shadow-md)] border border-[color:var(--apple-line)]"
+            className="w-full rounded-[6px] shadow-[var(--apple-shadow-md)] border border-[color:var(--apple-line)]"
             loading="lazy"
           />
         ) : (
@@ -1879,17 +1275,17 @@ const StickyImageFeatureGroup = ({ items, t }) => {
       </div>
 
       {/* 桌面端：左侧 CSS sticky 图片 + 右侧滚动文字 */}
-      <div className="hidden md:grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-12 lg:gap-16">
+      <div className="hidden md:grid md:grid-cols-[2fr_1fr] gap-12 lg:gap-16">
         {/* 左侧图片列：由原生 sticky 固定在视口顶部偏移处 */}
         <div className="min-w-0">
           <div className="sticky top-32 z-10 w-full">
-            <div className="relative aspect-video rounded-2xl overflow-hidden border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-lg)] bg-[color:var(--apple-card-strong)]">
+            <div className="relative aspect-video rounded-[6px] flex items-center justify-center">
               {items.map((sf, i) => {
                 const isActive = i === activeIndex
                 return (
                   <div
                     key={sf.labelKey}
-                    className={`absolute inset-0 transition-all duration-500 ease-out ${
+                    className={`absolute inset-0 transition-all duration-500 ease-out flex items-center justify-center ${
                       isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.02]'
                     }`}
                     aria-hidden={!isActive}
@@ -1898,7 +1294,7 @@ const StickyImageFeatureGroup = ({ items, t }) => {
                       <img
                         src={sf.imgSrc}
                         alt={t(sf.labelKey)}
-                        className="w-full h-full object-cover"
+                        className="w-auto h-auto max-w-full max-h-full rounded-[6px] shadow-2xl"
                         loading="lazy"
                       />
                     ) : (
@@ -2007,10 +1403,10 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
   const opacity = isStatic ? 1 : 0.14 + reveal * 0.86
 
   return (
-    <section ref={ref} id={id} className="px-4 sm:px-6 max-w-5xl mx-auto py-[3rem] sm:py-[5rem] md:py-[8rem] scroll-mt-28">
-      <div className={`flex flex-col ${contentDirection} items-center gap-[3rem] sm:gap-[5rem] md:gap-[8rem]`}>
+    <section ref={ref} id={id} className="px-4 sm:px-6 max-w-[90rem] mx-auto py-[3rem] sm:py-[5rem] md:py-[8rem] scroll-mt-28">
+      <div className={`flex flex-col ${contentDirection} items-center gap-[3rem] sm:gap-[5rem] md:gap-[4rem]`}>
         <div
-          className="flex-1 text-center md:text-left"
+          className="flex-1 md:max-w-[45%] text-center md:text-left"
           style={{
             transform: isStatic ? 'none' : `translate3d(0, ${textShift}px, 0)`,
             opacity,
@@ -2021,11 +1417,11 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
           <h2 className="text-[2rem] sm:text-[3rem] font-semibold text-[color:var(--apple-ink)] mb-[1.5rem] tracking-tight font-display leading-[1.1]">
             {title}
           </h2>
-          <p className="text-[color:var(--apple-muted)] leading-[1.6] text-[1.1rem] sm:text-[1.35rem] font-medium tracking-tight max-w-lg mx-auto md:mx-0">{desc}</p>
+          <p className="text-[color:var(--apple-muted)] leading-[1.6] text-[1.1rem] sm:text-[1.35rem] font-medium tracking-tight mx-auto md:mx-0">{desc}</p>
         </div>
 
         <div
-          className="flex-1 w-full"
+          className="flex-1 w-full md:max-w-[55%]"
           style={{
             transform: isStatic
               ? 'none'
