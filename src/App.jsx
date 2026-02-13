@@ -728,8 +728,8 @@ const App = () => {
 const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
   return (
-    <nav className="sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
-      <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-12">
+    <nav className="sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%] top-nav-safe-area">
+      <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-12 pt-[env(safe-area-inset-top)]">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] hover:opacity-80 transition-opacity">
           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" />
           <span className="text-[15px] tracking-tight">DeepStudent</span>
@@ -1092,8 +1092,8 @@ const DownloadPage = ({ onBack = () => {} }) => {
   ]
   return (
     <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[6.854rem] sm:pb-[11.09rem]">
-      <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl">
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
+      <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl download-nav-safe-area">
+        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 pt-[calc(env(safe-area-inset-top)+0.75rem)]">
           <button
             type="button"
             onClick={onBack}
