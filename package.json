@@ -24,6 +24,7 @@
     "lucide-react": "^0.462.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-lazy-load-image-component": "^1.6.3",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
