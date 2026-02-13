@@ -9,11 +9,14 @@ const translations = {
   zh: {
     // Nav
     'nav.features': '功能',
+    'nav.qa': 'QA',
     'nav.docs': '文档',
     'nav.download': '下载',
     
     // Hero
     'hero.title': 'DeepStudent',
+    'hero.headline.top': '成为您的',
+    'hero.headline.bottom': '终身学习空间',
     'hero.subtitle': '您的终身学习空间',
     'hero.tagline': '智能对话 · 自动制卡 · 批注阅读\n本地优先，私密可控，知识可扩展',
     'hero.cta.download': '立即下载',
@@ -24,6 +27,10 @@ const translations = {
     'hero.preview.skills': '技能系统',
     'hero.preview.knowledge': '学习资源',
     'hero.preview.providers': 'Anki 制卡',
+    'hero.preview.subtext.chat': '智能对话，更聪明地理解你的每一步',
+    'hero.preview.subtext.skills': '按需装配，只装你此刻需要的',
+    'hero.preview.subtext.knowledge': '你的资料只在你手里',
+    'hero.preview.subtext.providers': '聊天就能制卡',
     'hero.preview.selector': '界面预览切换',
     'hero.preview.imageAlt': 'DeepStudent {label} 界面预览',
 
@@ -123,7 +130,7 @@ const translations = {
     'textbook.indexed': '已索引',
     
     // ========== 题目集/刷题 ==========
-    'feature.qbank.title': '题目集 · 刷题系统',
+    'feature.qbank.title': '技能系统，\n用练代替刷，用能力驱动成长。',
     'feature.qbank.desc': '拍照识题 + AI 解答 + 8 种练习模式。支持顺序/随机/错题优先/限时/模拟考试/每日一练，错题本自动归档。',
     'qbank.ocr': '拍照识题',
     'qbank.ocrDesc': 'OCR 识别 + 题型分类',
@@ -381,15 +388,15 @@ const translations = {
     'subfeature.cloudSync.d2': 'S3 对象存储',
 
     // Features
-    'feature.review.title': '智能对话 · Agent 化',
+    'feature.review.title': '智能对话，\n更聪明地理解你的每一步。',
     'feature.review.desc': '借助技能系统的工具组，AI 可原生检索、阅读、编辑 VFS 中的学习数据——笔记、教材、题目、翻译、作文。真正实现 AI 与学习数据的深度融合。',
     'feature.organize.title': '学习资源中心',
     'feature.organize.desc': '访达式管理所有学习资源——笔记、教材、题目集、翻译、作文、知识导图。统一存储在 VFS，Chat AI 可通过工具组原生检索、阅读、编辑。',
-    'feature.compare.title': '技能系统 · 按需扩展',
+    'feature.compare.title': '按需装配，\n只装你此刻需要的。',
     'feature.compare.desc': '渐进披露架构，工具按需加载。内置导师模式、制卡助手、文献综述、调研模式等技能，支持自定义与 MCP 生态集成。',
     'feature.spaced.title': 'Anki 智能制卡',
     'feature.spaced.desc': '从学习文档智能分段生成卡片。支持多模板、3D 预览、AnkiConnect 一键同步，让间隔重复触手可及。',
-    'feature.knowledge.title': '本地优先 · 隐私安全',
+    'feature.knowledge.title': '你的数据，由你掌控。',
     'feature.knowledge.desc': '所有数据存储在本地：SQLite 元数据 + LanceDB 向量库。支持完整备份与审计，你的学习记录完全由你掌控。',
     
     // Cards
@@ -447,7 +454,7 @@ const translations = {
     
     // FAQ
     'faq.title': '常见问题',
-    'faq.subtitle': '关于 DeepStudent 的常见疑问解答',
+    'faq.subtitle': '关于 DeepStudent 的疑问解答',
     'faq.openSource.q': 'DeepStudent 是开源的吗？',
     'faq.openSource.a': '是的，DeepStudent 遵循 AGPL-3.0 开源许可证，完全开源。你可以在 GitHub 查看源码、提交 Issue 或参与共建。',
     'faq.openSource.link': '前往 GitHub',
@@ -559,11 +566,14 @@ const translations = {
   'zh-Hant': {
     // Nav
     'nav.features': '功能',
+    'nav.qa': 'QA',
     'nav.docs': '文件',
     'nav.download': '下載',
 
     // Hero
     'hero.title': 'DeepStudent',
+    'hero.headline.top': '成為您的',
+    'hero.headline.bottom': '終身學習空間',
     'hero.subtitle': '您的終身學習空間',
     'hero.tagline': '智慧對話 · 自動製卡 · 批註閱讀\n本地優先，私密可控，知識可擴展',
     'hero.cta.download': '立即下載',
@@ -574,6 +584,10 @@ const translations = {
     'hero.preview.skills': '技能系統',
     'hero.preview.knowledge': '學習資源',
     'hero.preview.providers': 'Anki 製卡',
+    'hero.preview.subtext.chat': '智慧對話，更聰明地理解你的每一步',
+    'hero.preview.subtext.skills': '按需裝配，只裝你此刻需要的',
+    'hero.preview.subtext.knowledge': '你的資料只在你手裡',
+    'hero.preview.subtext.providers': '聊天就能製卡',
     'hero.preview.selector': '介面預覽切換',
     'hero.preview.imageAlt': 'DeepStudent {label} 介面預覽',
 
@@ -997,7 +1011,7 @@ const translations = {
 
     // FAQ
     'faq.title': '常見問題',
-    'faq.subtitle': '關於 DeepStudent 的常見疑問解答',
+    'faq.subtitle': '關於 DeepStudent 的疑問解答',
     'faq.openSource.q': 'DeepStudent 是開源的嗎？',
     'faq.openSource.a': '是的，DeepStudent 完全開源。你可以在 GitHub 查看原始碼並參與共建。',
     'faq.openSource.link': '前往 GitHub',
@@ -1109,11 +1123,14 @@ const translations = {
   en: {
     // Nav
     'nav.features': 'Features',
+    'nav.qa': 'QA',
     'nav.docs': 'Docs',
     'nav.download': 'Download',
     
     // Hero
     'hero.title': 'DeepStudent',
+    'hero.headline.top': 'Become Your',
+    'hero.headline.bottom': 'Lifelong Learning Space',
     'hero.subtitle': 'Intelligence-Driven Knowledge · Lifelong Learning Space',
     'hero.tagline': 'AI Chat · Auto Card Generation · Annotated Reading\nLocal-first, private-by-design, and endlessly extensible knowledge.',
     'hero.cta.download': 'Download',
@@ -1124,6 +1141,10 @@ const translations = {
     'hero.preview.skills': 'Skills',
     'hero.preview.knowledge': 'Learning Hub',
     'hero.preview.providers': 'CardForge',
+    'hero.preview.subtext.chat': 'Smarter chat that understands every step you take',
+    'hero.preview.subtext.skills': 'Assemble on demand—only what you need right now',
+    'hero.preview.subtext.knowledge': 'Your materials stay in your hands only',
+    'hero.preview.subtext.providers': 'Create cards directly from chat',
     'hero.preview.selector': 'Preview selector',
     'hero.preview.imageAlt': 'DeepStudent {label} preview',
 
