@@ -718,6 +718,9 @@ const TopNav = ({ onDownload = () => {} }) => {
           <a href="#features" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors hidden sm:inline">
             {t('nav.features')}
           </a>
+          <a href="#qa" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors hidden sm:inline">
+            {t('nav.qa')}
+          </a>
           <a
             href="/docs/"
             className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors hidden sm:inline"
@@ -990,8 +993,7 @@ const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max
           />
         </div>
 
-        {/* Mobile Image - Overlapping on bottom right */}
-        <div className="absolute -bottom-12 -right-8 z-20 w-[28%] rounded-[6px] overflow-hidden shadow-2xl border-[2px] border-gray-900 bg-black">
+        <div className="absolute top-[54%] -translate-y-1/2 -right-8 z-20 w-[28%] rounded-[6px] overflow-hidden shadow-2xl border-[2px] border-gray-900 bg-black">
           <img
             src="/img/example/移动端主页面.png"
             alt="DeepStudent Mobile"
