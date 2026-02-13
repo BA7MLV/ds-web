@@ -557,7 +557,7 @@ const App = () => {
 
           <main
             id="features"
-            className={`relative z-10 scroll-mt-24 pb-[6.854rem] sm:pb-[11.09rem] ${
+            className={`relative z-10 scroll-mt-24 pb-8 sm:pb-10 lg:pb-12 ${
               motionScale > 0 ? 'animate-fade-in' : ''
             }`}
             style={motionScale > 0 ? { animationDelay: '0.18s' } : undefined}
@@ -938,9 +938,9 @@ const App = () => {
               </div>
             </div>
           </FeatureSection>
-
-          <FaqSection motionScale={motionScale} onOpenPolicy={handlePolicyOpen} />
         </div>
+
+            <FaqSection motionScale={motionScale} onOpenPolicy={handlePolicyOpen} />
       </main>
       </>
     )}
@@ -984,7 +984,12 @@ const TopNav = ({ onDownload = () => {} }) => {
 }
 
 const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
+  const { t } = useLocale()
   const shouldAnimate = motionScale > 0
+  const [activePreviewId, setActivePreviewId] = useState(heroPreviewItems[0].id)
+  const activePreviewItem = heroPreviewItems.find(item => item.id === activePreviewId) || heroPreviewItems[0]
+  const scrollY = useScrollY()
+  const showScrollHint = scrollY < 100
 
   const handleExplore = () => {
     if (typeof document === 'undefined') return
@@ -1003,6 +1008,12 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
     handleExplore()
   }
 
+  const handleSubtextClick = () => {
+    const currentIndex = heroPreviewItems.findIndex(item => item.id === activePreviewId)
+    const nextIndex = (currentIndex + 1) % heroPreviewItems.length
+    setActivePreviewId(heroPreviewItems[nextIndex].id)
+  }
+
   return (
     <header
       className="relative min-h-screen px-4 sm:px-6 lg:px-8 pt-20 pb-16 flex items-center overflow-hidden lg:overflow-visible"
@@ -1010,28 +1021,31 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_center,var(--apple-glow),transparent_70%)] blur-[100px] opacity-40" />
       </div>
-      
+
       <div
-        className={`relative z-10 w-full max-w-[84rem] xl:max-w-[100rem] mx-auto ${
+        className={`relative z-10 w-full max-w-6xl mx-auto ${
           shouldAnimate ? 'animate-fade-in' : ''
         }`}
         style={shouldAnimate ? { animationDelay: '0.08s' } : undefined}
       >
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.76fr)_minmax(0,1.9fr)] gap-8 sm:gap-10 lg:gap-8 xl:gap-12 items-center">
           <div className="flex flex-col items-start text-left order-2 lg:order-1">
-            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold tracking-[-0.02em] mb-6 leading-[1.1] text-[color:var(--apple-ink)]">
-              优化您的
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold tracking-[-0.02em] mb-4 leading-[1.1] text-[color:var(--apple-ink)]">
+              成为您的
               <br />
-              <span className="text-[color:var(--apple-blue)]">终身学习空间</span>
+              <span className="whitespace-nowrap">终身学习空间</span>
             </h1>
-            
-            <p className="text-lg sm:text-xl text-[color:var(--apple-ink-secondary)] mb-2 font-medium">
-              智能对话 · 自动制卡 · 批注阅读
-            </p>
-            
-            <p className="text-base text-[color:var(--apple-muted)] mb-8">
-              本地优先，私密可控，知识可扩展
-            </p>
+
+            <button
+              type="button"
+              onClick={handleSubtextClick}
+              className="text-left mb-8 group cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <p className="text-base sm:text-lg text-[color:var(--apple-muted)] flex items-center gap-2">
+                {t(activePreviewItem.subtextKey)}
+                <span className="inline-block text-[color:var(--apple-muted)] group-hover:translate-x-0.5 transition-transform">→</span>
+              </p>
+            </button>
             
             <div className="flex flex-col sm:flex-row gap-3 mb-10 w-full sm:w-auto">
               <button
@@ -1049,11 +1063,39 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
                 了解更多
               </button>
             </div>
-            
+
+            {showScrollHint && (
+              <div
+                className="hidden lg:flex flex-col items-start gap-1.5 cursor-pointer hover:opacity-80 transition-all duration-500 mt-8"
+                onClick={handleExploreClick}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && handleExploreClick()}
+                aria-label="向下滚动"
+              >
+                <span className="text-[10px] text-[color:var(--apple-muted)] tracking-wider uppercase">向下滚动</span>
+                <svg
+                  className="w-5 h-5 text-[color:var(--apple-muted)] animate-bounce-down"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+            )}
+
           </div>
           
           <div className="flex justify-center lg:justify-end order-1 lg:order-2 lg:translate-x-[6vw] xl:translate-x-[11vw]">
-            <HeroPreview className="max-w-[58rem] sm:max-w-[104rem] lg:w-[185%] xl:w-[205%] 2xl:w-[220%] lg:max-w-none" />
+            <HeroPreview
+              className="max-w-[58rem] sm:max-w-[104rem] lg:w-[185%] xl:w-[205%] 2xl:w-[220%] lg:max-w-none"
+              activeId={activePreviewId}
+              onActiveIdChange={setActivePreviewId}
+            />
           </div>
         </div>
       </div>
@@ -1065,24 +1107,28 @@ const heroPreviewItems = [
   {
     id: 'chat',
     labelKey: 'hero.preview.chat',
+    subtextKey: 'hero.preview.subtext.chat',
     src: '/img/hero-preview-overview.jpg',
     objectPosition: 'center 38.2%',
   },
   {
     id: 'skills',
     labelKey: 'hero.preview.skills',
+    subtextKey: 'hero.preview.subtext.skills',
     src: '/img/hero-preview-skills.jpg',
     objectPosition: 'center 38.2%',
   },
   {
     id: 'knowledge',
     labelKey: 'hero.preview.knowledge',
+    subtextKey: 'hero.preview.subtext.knowledge',
     src: '/img/hero-preview-mistakes.jpg',
     objectPosition: 'center 38.2%',
   },
   {
     id: 'providers',
     labelKey: 'hero.preview.providers',
+    subtextKey: 'hero.preview.subtext.providers',
     src: '/img/hero-preview-review.jpg',
     objectPosition: 'center 38.2%',
   },
@@ -1268,15 +1314,27 @@ const FreeModelsCallout = () => {
   )
 }
 
-const HeroPreview = ({ style, imageMaskStyle, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]' }) => {
+const HeroPreview = ({
+  style,
+  imageMaskStyle,
+  className = 'max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]',
+  activeId: externalActiveId,
+  onActiveIdChange,
+}) => {
   const { locale, t } = useLocale()
-  const [activeId, setActiveId] = useState(heroPreviewItems[0].id)
+  const isControlled = externalActiveId !== undefined
+  const [internalActiveId, setInternalActiveId] = useState(heroPreviewItems[0].id)
+  const activeId = isControlled ? externalActiveId : internalActiveId
+  const setActiveId = useCallback((id) => {
+    if (!isControlled) {
+      setInternalActiveId(id)
+    }
+    onActiveIdChange?.(id)
+  }, [isControlled, onActiveIdChange])
   const activeItem = heroPreviewItems.find((item) => item.id === activeId) || heroPreviewItems[0]
   const activeLabel = t(activeItem.labelKey)
   const imageAlt = t('hero.preview.imageAlt', 'DeepStudent {label} preview (placeholder)', { label: activeLabel })
   const previewRef = useRef(null)
-  const segmentedControlRef = useRef(null)
-  const segmentedSliderRef = useRef(null)
   const autoplayTimerRef = useRef(null)
   const exposureRef = useRef({ visible: false, lastTs: 0, firedIds: new Set() })
 
@@ -1314,55 +1372,6 @@ const HeroPreview = ({ style, imageMaskStyle, className = 'max-w-[28rem] sm:max-
   useEffect(() => {
     emitExposure(activeId)
   }, [activeId, emitExposure])
-
-  const handleSegmentSwitch = useCallback((segmentId, trigger = 'click') => {
-    setActiveId(segmentId)
-    trackUiEvent('hero_preview_segment_switch', { location: 'hero', segmentId, trigger })
-  }, [])
-
-  const onSegmentKeyDown = useCallback((event, index) => {
-    const total = heroPreviewItems.length
-    if (!total) return
-    const nextBy = (delta) => {
-      const nextIndex = (index + delta + total) % total
-      handleSegmentSwitch(heroPreviewItems[nextIndex].id, 'keyboard')
-    }
-    if (event.key === 'ArrowRight') {
-      event.preventDefault()
-      nextBy(1)
-      return
-    }
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault()
-      nextBy(-1)
-      return
-    }
-    if (event.key === 'Home') {
-      event.preventDefault()
-      handleSegmentSwitch(heroPreviewItems[0].id, 'keyboard')
-      return
-    }
-    if (event.key === 'End') {
-      event.preventDefault()
-      handleSegmentSwitch(heroPreviewItems[total - 1].id, 'keyboard')
-    }
-  }, [handleSegmentSwitch])
-
-  const updateSegmentedSlider = useCallback(() => {
-    const controlEl = segmentedControlRef.current
-    const sliderEl = segmentedSliderRef.current
-    if (!controlEl || !sliderEl) return
-
-    const activeButton = controlEl.querySelector(`[data-segment-id="${activeId}"]`)
-    if (!activeButton) return
-
-    const rect = activeButton.getBoundingClientRect()
-    const parentRect = controlEl.getBoundingClientRect()
-    const paddingPx = 2
-    const offset = rect.left - parentRect.left - paddingPx
-    sliderEl.style.width = `${rect.width}px`
-    sliderEl.style.transform = `translateX(${offset}px)`
-  }, [activeId])
 
   useEffect(() => {
     heroPreviewItems.forEach((item) => {
@@ -1425,30 +1434,6 @@ const HeroPreview = ({ style, imageMaskStyle, className = 'max-w-[28rem] sm:max-
     }
   }, [])
 
-  useLayoutEffect(() => {
-    updateSegmentedSlider()
-  }, [updateSegmentedSlider, locale])
-
-  // Fix: Re-calculate slider after initial render when fonts/layout are fully ready
-  useEffect(() => {
-    // Use requestAnimationFrame to wait for next paint cycle
-    const rafId = requestAnimationFrame(() => {
-      updateSegmentedSlider()
-    })
-    // Also handle font loading completion
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(() => {
-        updateSegmentedSlider()
-      })
-    }
-    return () => cancelAnimationFrame(rafId)
-  }, [updateSegmentedSlider])
-
-  useEffect(() => {
-    window.addEventListener('resize', updateSegmentedSlider)
-    return () => window.removeEventListener('resize', updateSegmentedSlider)
-  }, [updateSegmentedSlider])
-
   return (
     <div
       ref={previewRef}
@@ -1456,7 +1441,7 @@ const HeroPreview = ({ style, imageMaskStyle, className = 'max-w-[28rem] sm:max-
       style={style}
     >
       <div className="relative rounded-[1.25rem] shadow-[var(--apple-shadow-2xl)]">
-        <div id="hero-preview-panel" role="tabpanel" aria-labelledby={`hero-preview-tab-${activeId}`} className="relative rounded-[1.25rem] overflow-hidden bg-black">
+        <div id="hero-preview-panel" className="relative rounded-[1.25rem] overflow-hidden bg-black">
           {/* Golden ratio (phi) ~ 1.618:1 */}
           <div className="relative aspect-[1618/1120] bg-[color:var(--apple-card-strong)]">
             <img
@@ -1474,45 +1459,12 @@ const HeroPreview = ({ style, imageMaskStyle, className = 'max-w-[28rem] sm:max-
         </div>
 
         <div className="relative z-20 flex justify-center px-3 pt-3 sm:px-4 sm:pt-4 lg:absolute lg:left-5 lg:right-auto lg:top-4 lg:pt-0">
-          <div className="segmented-control-wrap">
-            <div
-              ref={segmentedControlRef}
-              className="segmented-control shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
-              role="tablist"
-              aria-orientation="horizontal"
-              aria-label={t('hero.preview.selector', 'Preview selector')}
-            >
-              <div
-                ref={segmentedSliderRef}
-                className="segmented-control__slider shadow-sm"
-                aria-hidden="true"
-              />
-              {heroPreviewItems.map((item, index) => {
-                const isActive = item.id === activeId
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => handleSegmentSwitch(item.id, 'click')}
-                    onKeyDown={(event) => onSegmentKeyDown(event, index)}
-                    data-segment-id={item.id}
-                    id={`hero-preview-tab-${item.id}`}
-                    role="tab"
-                    tabIndex={isActive ? 0 : -1}
-                    aria-selected={isActive}
-                    aria-controls="hero-preview-panel"
-                    className={`segmented-control__btn focus-ring${isActive ? ' is-active' : ''}`}
-                    aria-label={t(item.labelKey)}
-                    title={t(item.labelKey)}
-                  >
-                    <span className="relative z-10 sm:hidden">
-                      <SegmentedControlIcon id={item.id} />
-                    </span>
-                    <span className="relative z-10 hidden sm:inline">{t(item.labelKey)}</span>
-                  </button>
-                )
-              })}
-            </div>
+          <div
+            className="inline-flex size-9 items-center justify-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] text-[color:var(--apple-muted)] shadow-[0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur-xl"
+            aria-label={t(activeItem.labelKey)}
+            title={t(activeItem.labelKey)}
+          >
+            <SegmentedControlIcon id={activeId} className="h-4 w-4" />
           </div>
         </div>
       </div>
@@ -1654,7 +1606,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
   return (
     <section
       id="qa"
-      className={`px-4 sm:px-6 max-w-4xl mx-auto py-[2.618rem] sm:py-[4.236rem] md:py-[6.854rem] ${
+      className={`px-4 sm:px-6 max-w-4xl mx-auto pt-2 sm:pt-3 md:pt-4 pb-3 sm:pb-4 md:pb-6 ${
         shouldAnimate ? 'animate-fade-in' : ''
       }`}
       style={shouldAnimate ? { animationDelay: '0.12s' } : undefined}
@@ -1668,7 +1620,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
         </p>
       </div>
 
-      <div className="mt-[3rem] space-y-4">
+      <div className="mt-[1.5rem] sm:mt-[2rem] space-y-4">
         {faqItems.map((item) => (
           <details
             key={item.id}
@@ -2235,10 +2187,10 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
   const { isDark } = useTheme()
   const { t } = useLocale()
   return (
-    <footer className="border-t border-[color:var(--apple-line)] mt-32 bg-[color:var(--apple-card)] backdrop-blur-2xl">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
-        <div className="flex flex-col gap-10 sm:gap-12">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-[1fr_auto] md:gap-16 items-start">
+    <footer className="border-t border-[color:var(--apple-line)] mt-4 sm:mt-6 bg-[color:var(--apple-card)] backdrop-blur-2xl">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
+        <div className="flex flex-col gap-8 sm:gap-10">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_auto] md:gap-12 items-start">
             <div className="flex flex-col items-center md:items-start gap-4">
               <div className="flex items-center gap-3 font-bold text-[color:var(--apple-ink)] text-lg tracking-tight">
                 <img src={isDark ? logoFooterDark : logoFooter} alt="" className="h-9 w-auto" />
