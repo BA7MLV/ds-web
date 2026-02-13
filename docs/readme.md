@@ -1,43 +1,48 @@
 # DeepStudent
+
 ![主图](/deepstudent-head.png)
-DeepStudent 是一个基于人工智能技术的个性化学习平台，旨在为学生提供智能化、个性化的学习体验。该平台通过深度学习算法和自然语言处理技术，帮助学生更高效地学习和掌握知识。
 
-## 功能特性
+DeepStudent 是一款基于 Tauri 2.0 构建的 **AI 原生、本地优先**开源学习系统（AGPL-3.0），以「对话即入口」的方式，把智能对话、学习资源管理、RAG 知识检索、Anki 制卡、题库练习与回顾整合为可持续的学习闭环。
 
-- **AI错题分析**：利用先进AI技术深度分析错题，找出知识薄弱点，提供个性化学习建议
-- **智能错题管理**：集中管理所有学科错题，按知识点、难度、时间自动分类，方便查找与复习
-- **多题统一回顾**：支持多道错题同时分析，发现共性错误模式，生成综合学习报告
-- **一键ANKI制卡**：将错题一键转换为ANKI记忆卡片，无缝衔接间隔重复学习法
-- **RAG知识库增强**：内置强大的RAG知识库，可对错题进行追问，获取详细解释和拓展知识
-- **错题追问分析**：对已有错题进行深度追问，获取解题思路、相关知识点和类似题目推荐
+## 核心功能
+
+- **Chat V2 智能对话**：多会话管理、流式输出、上下文引用、推理模式、多模型并行对比、工具调用可视化
+- **Skills 技能系统**：内置导师模式 / 制卡模式 / 文献综述 / 调研模式 / 深度学术；13 组工具能力按需加载（共 65 个工具）；支持自定义技能并可接入 MCP 生态
+- **VFS 学习资源中心**：笔记 / 教材 / 题目集 / 作文 / 翻译 / 导图等 8 类资源统一管理；全文检索 + 向量检索（LanceDB），导入即自动索引
+- **Anki 智能制卡（CardForge 2.0）**：长文档智能分段、多模板系统、3D 预览、任务暂停/恢复、APKG 导出与 AnkiConnect 一键推送
+- **智能题库**：OCR 识题、AI 解析、8 种练习模式、SM-2 间隔重复、多维统计、CSV 导入导出
+- **作文批改**：流式批改、多维评分与修改建议，支持手写作文 OCR，7+ 考试类型
+- **翻译工作台**：11 种语言互译、正式度调节、TTS 朗读、历史记录自动归档
+- **知识导图**：多种布局、双视图（导图/大纲）、背诵模式、导出 OPML / Markdown / JSON
+- **深度阅读**：PDF / Word 分屏阅读、AI 逐页精读、双引擎 OCR 精准识别
+- **深度调研**：联网搜索、多步任务自动规划、结构化报告、自动归档至笔记
+- **工作区（多 Agent 协作）**：主代理 / 子代理协作、任务分解与恢复、上下文共享与文档协作
 
 ## 快速开始
 
 ### 安装
 
-请参考[安装指南](guide/download.md)了解如何安装和配置DeepStudent。
+请参考 [客户端下载](guide/download.md) 了解如何下载和安装 DeepStudent。
 
 ### 入门指南
 
-- [快速入门](guide/start.md)
-- [功能介绍](guide/function.md)
-- [使用说明](guide/irec.md)
+- [快速入门](guide/start.md) — 配置 API 密钥和基本设置
+- [功能介绍](guide/function.md) — 核心功能模块使用指南
+- [功能架构](guide/feature-architecture.md) — 技术架构基准文档
 
+## 技术栈
 
-
-## 项目结构
-
-```
-.
-├── docs/                 # 文档目录
-│   ├── guide/            # 使用指南
-│   └── index.md          # 主页文档
-├── public/               # 静态资源
-├── tailwind.config.js    # Tailwind CSS 配置
-└── postcss.config.js     # PostCSS 配置
-```
-
+| 层级 | 技术 |
+|:---|:---|
+| 前端 | React 18 + TypeScript + Vite |
+| UI | Tailwind CSS + Ant Design + Radix UI |
+| 桌面运行时 | Tauri 2 (Rust) |
+| 状态管理 | Zustand + Immer |
+| 编辑器 | Milkdown (Markdown) + CodeMirror |
+| 文档处理 | PDF.js + DeepSeek/Paddle OCR |
+| 数据存储 | SQLite (Rusqlite) + LanceDB (向量检索) |
+| 加密 | AES-256-GCM |
 
 ## 致谢
 
-感谢所有为DeepStudent项目做出贡献的开发者和用户。
+感谢所有为 DeepStudent 项目做出贡献的开发者和用户。DeepStudent 遵循 AGPL-3.0 开源许可证。

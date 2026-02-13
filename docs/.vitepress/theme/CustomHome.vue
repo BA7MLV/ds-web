@@ -176,14 +176,14 @@ const highlights = [
     desc: '基于 RAG 技术，支持对错题进行智能追问，获取深度解释和拓展'
   },
   {
-    icon: '<path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5v.01"/><path d="M16 15.5v.01"/>',
-    title: '灵感图谱',
-    desc: '构建知识网络，自动关联相似内容，形成可视化知识体系'
+    icon: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/>',
+    title: '知识导图',
+    desc: '多种布局、双视图切换、背诵模式，导出 OPML/Markdown/JSON'
   },
   {
-    icon: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
-    title: '错题管理',
-    desc: '扁平化管理，多维分类，智能标签，聊天记录永久保存'
+    icon: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01"/>',
+    title: '智能题库',
+    desc: '8 种练习模式、SM-2 间隔重复、AI 解析、多维统计'
   },
   {
     icon: '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',
@@ -210,7 +210,7 @@ const advantages = [
   {
     title: '深度知识整合与可视化',
     desc: '构建完整的知识网络，实现高效关联学习',
-    points: ['灵感图谱自动构建知识关联', '相似错题智能召回', '多维分类与回归训练'],
+    points: ['知识导图自动构建知识关联', '相似题目智能召回', '多维分类与向量检索'],
     visualClass: 'visual-graph',
     visual: '<circle cx="100" cy="60" r="15" fill="currentColor"/><circle cx="60" cy="110" r="12" fill="currentColor" opacity="0.7"/><circle cx="140" cy="110" r="12" fill="currentColor" opacity="0.7"/><circle cx="80" cy="150" r="10" fill="currentColor" opacity="0.5"/><circle cx="120" cy="150" r="10" fill="currentColor" opacity="0.5"/><path d="M100 75L60 98M100 75L140 98M60 122L80 140M140 122L120 140M85 150h30" stroke="currentColor" stroke-width="2"/>'
   }
