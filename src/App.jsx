@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { LazyImage } from 'react-lazy-load-image-component'
+import 'react-lazy-load-image-component/src/effects/blur.css'
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
 
@@ -1023,24 +1025,21 @@ const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max
       style={style}
     >
       <div className="relative">
-        {/* Desktop Image */}
         <div className="relative z-10 rounded-[6px] overflow-hidden shadow-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)]">
-          <img
+          <LazyImage
             src="/img/example/主页面.png"
             alt="DeepStudent Desktop"
             className="w-full h-auto"
-            loading="lazy"
-            draggable="false"
+            effect="blur"
           />
         </div>
 
         <div className="absolute top-[54%] -translate-y-1/2 -right-8 z-20 w-[28%] rounded-[6px] overflow-hidden shadow-2xl border-[2px] border-gray-900 bg-black">
-          <img
+          <LazyImage
             src="/img/example/移动端主页面.png"
             alt="DeepStudent Mobile"
             className="w-full h-auto"
-            loading="lazy"
-            draggable="false"
+            effect="blur"
           />
         </div>
       </div>
