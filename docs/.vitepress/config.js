@@ -89,6 +89,12 @@ export default withMermaid(defineConfig({
         href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap',
       },
     ],
+    ['script', { charset: 'UTF-8', id: 'LA_COLLECT', src: '//sdk.51.la/js-sdk-pro.min.js' }],
+    [
+      'script',
+      {},
+      `LA.init({id:'L6EKwkfq9fvFA4LW',ck:'L6EKwkfq9fvFA4LW',autoTrack:true,hashMode:true})`
+    ],
   ],
   themeConfig: {
     logo: { light: '/logo-r.svg', dark: '/logo-r-dark.svg' },
