@@ -21,6 +21,7 @@ const translations = {
     'hero.tagline': '智能对话 · 自动制卡 · 批注阅读\n本地优先，私密可控，知识可扩展',
     'hero.cta.download': '立即下载',
     'hero.cta.explore': '了解更多',
+    'hero.scrollDown': '向下滚动',
 
     // Hero Preview
     'hero.preview.chat': '智能对话',
@@ -672,6 +673,7 @@ const translations = {
     'hero.tagline': '智慧對話 · 自動製卡 · 批註閱讀\n本地優先，私密可控，知識可擴展',
     'hero.cta.download': '立即下載',
     'hero.cta.explore': '了解更多',
+    'hero.scrollDown': '向下滾動',
 
     // Hero Preview
     'hero.preview.chat': '智慧對話',
@@ -1323,6 +1325,7 @@ const translations = {
     'hero.tagline': 'AI Chat · Auto Card Generation · Annotated Reading\nLocal-first, private-by-design, and endlessly extensible knowledge.',
     'hero.cta.download': 'Download',
     'hero.cta.explore': 'Learn More',
+    'hero.scrollDown': 'Scroll down',
 
     // Hero Preview
     'hero.preview.chat': 'AI Chat',
