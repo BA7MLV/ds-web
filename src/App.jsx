@@ -806,8 +806,6 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
           <div className="flex justify-center lg:justify-end order-1 lg:order-2 lg:translate-x-[6vw] xl:translate-x-[11vw]">
             <HeroPreview
               className="max-w-[58rem] sm:max-w-[104rem] lg:w-[185%] xl:w-[205%] 2xl:w-[220%] lg:max-w-none"
-              activeId={activePreviewId}
-              onActiveIdChange={setActivePreviewId}
             />
           </div>
         </div>
@@ -955,159 +953,35 @@ const FreeModelsCallout = () => {
   )
 }
 
-const HeroPreview = ({
-  style,
-  imageMaskStyle,
-  className = 'max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]',
-  activeId: externalActiveId,
-  onActiveIdChange,
-}) => {
-  const { locale, t } = useLocale()
-  const isControlled = externalActiveId !== undefined
-  const [internalActiveId, setInternalActiveId] = useState(heroPreviewItems[0].id)
-  const activeId = isControlled ? externalActiveId : internalActiveId
-  const setActiveId = useCallback((id) => {
-    if (!isControlled) {
-      setInternalActiveId(id)
-    }
-    onActiveIdChange?.(id)
-  }, [isControlled, onActiveIdChange])
-  const activeItem = heroPreviewItems.find((item) => item.id === activeId) || heroPreviewItems[0]
-  const activeLabel = t(activeItem.labelKey)
-  const imageAlt = t('hero.preview.imageAlt', 'DeepStudent {label} preview (placeholder)', { label: activeLabel })
-  const previewRef = useRef(null)
-  const autoplayTimerRef = useRef(null)
-  const exposureRef = useRef({ visible: false, lastTs: 0, firedIds: new Set() })
-
-  const emitExposure = useCallback((segmentId) => {
-    if (typeof window === 'undefined') return
-    const now = Date.now()
-    const state = exposureRef.current
-    if (!state.visible) return
-    if (state.firedIds.has(segmentId) && now - state.lastTs < 10000) return
-    state.lastTs = now
-    state.firedIds.add(segmentId)
-    trackUiEvent('hero_preview_exposure', { location: 'hero', segmentId })
-  }, [])
-
-  useEffect(() => {
-    const state = exposureRef.current
-    const el = previewRef.current
-    if (!el || typeof IntersectionObserver === 'undefined') {
-      state.visible = true
-      emitExposure(activeId)
-      return undefined
-    }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = Boolean(entries[0]?.isIntersecting)
-        state.visible = visible
-        if (visible) emitExposure(activeId)
-      },
-      { threshold: 0.45 },
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [activeId, emitExposure])
-
-  useEffect(() => {
-    emitExposure(activeId)
-  }, [activeId, emitExposure])
-
-  useEffect(() => {
-    heroPreviewItems.forEach((item) => {
-      const img = new Image()
-      img.src = item.src
-    })
-  }, [])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const mediaQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)')
-    const shouldReduceMotion = Boolean(mediaQuery?.matches)
-
-    const stop = () => {
-      if (!autoplayTimerRef.current) return
-      window.clearInterval(autoplayTimerRef.current)
-      autoplayTimerRef.current = null
-    }
-
-    const start = () => {
-      if (shouldReduceMotion) return
-      stop()
-      autoplayTimerRef.current = window.setInterval(() => {
-        setActiveId((prev) => {
-          const currentIndex = heroPreviewItems.findIndex((item) => item.id === prev)
-          const safeIndex = currentIndex >= 0 ? currentIndex : 0
-          const nextIndex = (safeIndex + 1) % heroPreviewItems.length
-          return heroPreviewItems[nextIndex].id
-        })
-      }, 20000)
-    }
-
-    // 默认开启动画，但在离屏时暂停（减少无意义的循环定时器）。
-    let isVisible = true
-    const el = previewRef.current
-    if (el) {
-      const rect = el.getBoundingClientRect()
-      isVisible = rect.bottom > 0 && rect.top < window.innerHeight
-    }
-    if (isVisible) start()
-
-    let observer
-    if (typeof IntersectionObserver !== 'undefined' && el) {
-      observer = new IntersectionObserver(
-        (entries) => {
-          const entry = entries[0]
-          const nextVisible = Boolean(entry?.isIntersecting)
-          if (nextVisible) start()
-          else stop()
-        },
-        { threshold: 0.2 },
-      )
-      observer.observe(el)
-    }
-
-    return () => {
-      stop()
-      observer?.disconnect()
-    }
-  }, [])
+const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]' }) => {
+  const { t } = useLocale()
 
   return (
     <div
       className={`relative w-full ${className}`}
       style={style}
     >
-      <div className="relative rounded-[1.25rem] shadow-[var(--apple-shadow-2xl)]">
-        <div id="hero-preview-panel" className="relative rounded-[1.25rem] overflow-hidden bg-black">
-          {/* Golden ratio (phi) ~ 1.618:1 */}
-          <div className="relative aspect-[1618/1120] bg-[color:var(--apple-card-strong)]">
-            <img
-              src={activeItem.src}
-              alt={imageAlt}
-              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
-              style={{
-                objectPosition: activeItem.objectPosition || 'center',
-                ...(imageMaskStyle || {}),
-              }}
-              loading="lazy"
-              draggable="false"
-            />
-          </div>
+      <div className="relative">
+        {/* Desktop Image */}
+        <div className="relative z-10 rounded-[6px] overflow-hidden shadow-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)]">
+          <img
+            src="/img/example/主页面.png"
+            alt="DeepStudent Desktop"
+            className="w-full h-auto"
+            loading="lazy"
+            draggable="false"
+          />
         </div>
 
-        <div className="relative z-20 flex justify-center px-3 pt-3 sm:px-4 sm:pt-4 lg:absolute lg:left-5 lg:right-auto lg:top-4 lg:pt-0">
-          <div
-            className="inline-flex size-9 items-center justify-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] text-[color:var(--apple-muted)] shadow-[0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur-xl"
-            aria-label={t(activeItem.labelKey)}
-            title={t(activeItem.labelKey)}
-          >
-            <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="8" cy="8" r="3" />
-            </svg>
-          </div>
+        {/* Mobile Image - Overlapping on bottom right */}
+        <div className="absolute -bottom-12 -right-8 z-20 w-[28%] rounded-[6px] overflow-hidden shadow-2xl border-[2px] border-gray-900 bg-black">
+          <img
+            src="/img/example/移动端主页面.png"
+            alt="DeepStudent Mobile"
+            className="w-full h-auto"
+            loading="lazy"
+            draggable="false"
+          />
         </div>
       </div>
     </div>
