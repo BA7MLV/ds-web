@@ -39,7 +39,7 @@ const translations = {
     
     // ========== AI Agent ==========
     'feature.agent.title': 'AI 智能体 · 全能助手',
-    'feature.agent.desc': '多模型协作、技能扩展、MCP 生态。你的全能 AI 助手，连接一切学习工具。',
+    'feature.agent.desc': '65 个内置工具按需加载，13+ 家 LLM 供应商。渐进披露架构，连接一切学习工具。',
     'agent.multiModel': '多模型协作',
     'agent.multiModelDesc': '同时调用多个大模型',
     'agent.skills': '技能管理',
@@ -127,11 +127,23 @@ const translations = {
 
     // ========== 作文批改 expanded ==========
     'feature.essay_full.title': '作文批改',
-    'feature.essay_full.desc': '支持 7+ 考试类型，流式多维评分。精准标注优秀段落，给出针对性修改建议。',
+    'feature.essay_full.desc': '支持 7+ 考试类型，流式多维评分。精准标注优秀段落，给出针对性修改建议。支持手写作文 OCR 识别。',
     'essay.types': '多类型支持',
     'essay.typesDesc': '高考/雅思/考研/四六级等',
     'essay.detail': '修改建议',
     'essay.detailDesc': '逐句批注与替换推荐',
+
+    // ========== 翻译工作台 ==========
+    'feature.translation.title': '翻译工作台',
+    'feature.translation.desc': '支持 11 种语言互译，文本/图片/文档多模式输入。流式翻译、正式度调节、TTS 朗读，历史记录自动归档至 VFS。',
+    'translation.multiInput': '多模式输入',
+    'translation.multiInputDesc': '文本、图片 OCR、文档上传',
+    'translation.streaming': '流式翻译',
+    'translation.streamingDesc': '实时翻译输出，支持打断',
+    'translation.tone': '正式度调节',
+    'translation.toneDesc': '正式 / 休闲 / 自动风格切换',
+    'translation.tts': 'TTS 朗读',
+    'translation.ttsDesc': '高质量语音朗读辅助听力',
 
     // ========== Anki 智能制卡 ==========
     'feature.anki_full.title': 'Anki 智能制卡',
@@ -160,7 +172,7 @@ const translations = {
     'stats.title': '为深度学习而生',
     'stats.subtitle': '渐进披露架构，工具按需加载，覆盖学习全场景',
     'stats.tools': '内置工具',
-    'stats.toolsDesc': '知识检索、笔记、Anki、题库等',
+    'stats.toolsDesc': '知识检索、笔记、Anki、题库、导图等',
     'stats.providers': 'API 供应商',
     'stats.providersDesc': 'OpenAI、Claude、硅基流动等',
     'stats.modes': '练习模式',
@@ -200,8 +212,8 @@ const translations = {
     'download.downloadExe': '下载 EXE',
     'download.requirements.macos': 'macOS 13+，Apple Silicon / Intel',
     'download.requirements.windows': 'Windows 11 / 10 22H2+',
-    'download.description.macos': '支持智能对话、学习资源管理、Anki 制卡、技能系统。',
-    'download.description.windows': '功能与 macOS 版一致，Windows 版仍在优化中。',
+    'download.description.macos': '全功能版本：智能对话、学习资源管理、Anki 制卡、题库练习、作文批改、知识导图、翻译工作台等。Apple Silicon 与 Intel 双架构优化。',
+    'download.description.windows': '功能与 macOS 版一致。基于 NSIS 安装程序，部分功能仍在持续优化中。',
     'download.note.windowsPreview': 'Windows 版目前为预览版，如遇问题请在 GitHub 提交 Issue。',
     
     // FAQ
@@ -290,7 +302,7 @@ const translations = {
     'policy.terms.title': '使用条款',
     'policy.terms.description': '',
     'policy.terms.section1.title': '服务内容',
-    'policy.terms.section1.body': '我们提供错题整理、智能复习、AI 辅助等功能，能力会根据版本迭代持续更新。',
+    'policy.terms.section1.body': '我们提供 AI 智能对话、学习资源管理、知识检索、Anki 制卡、题库练习、作文批改、翻译工作台、知识导图等功能，能力会根据版本迭代持续更新。',
     'policy.terms.section1.point1': '测试功能可能存在不稳定，或者更新版本带来的不确定性。',
     'policy.terms.section2.title': '用户责任',
     'policy.terms.section2.body': '你需确保上传内容拥有合法使用权，并对信息安全负责。',
@@ -345,7 +357,7 @@ const translations = {
     
     // ========== AI Agent ==========
     'feature.agent.title': 'AI 智慧體 · 全能助手',
-    'feature.agent.desc': '多模型協作、技能擴展、MCP 生態。你的全能 AI 助手，連接一切學習工具。',
+    'feature.agent.desc': '65 個內建工具按需載入，13+ 家 LLM 供應商。漸進披露架構，連接一切學習工具。',
     'agent.multiModel': '多模型協作',
     'agent.multiModelDesc': '同時調用多個大模型',
     'agent.skills': '技能管理',
@@ -433,11 +445,23 @@ const translations = {
 
     // ========== 作文批改 expanded ==========
     'feature.essay_full.title': '作文批改',
-    'feature.essay_full.desc': '支援 7+ 考試類型，串流多維評分。精準標注優秀段落，給出針對性修改建議。',
+    'feature.essay_full.desc': '支援 7+ 考試類型，串流多維評分。精準標注優秀段落，給出針對性修改建議。支援手寫作文 OCR 識別。',
     'essay.types': '多類型支援',
     'essay.typesDesc': '高考/雅思/考研/四六級等',
     'essay.detail': '修改建議',
     'essay.detailDesc': '逐句批註與替換推薦',
+
+    // ========== 翻譯工作台 ==========
+    'feature.translation.title': '翻譯工作台',
+    'feature.translation.desc': '支援 11 種語言互譯，文字/圖片/文件多模式輸入。串流翻譯、正式度調節、TTS 朗讀，歷史記錄自動歸檔至 VFS。',
+    'translation.multiInput': '多模式輸入',
+    'translation.multiInputDesc': '文字、圖片 OCR、文件上傳',
+    'translation.streaming': '串流翻譯',
+    'translation.streamingDesc': '即時翻譯輸出，支援打斷',
+    'translation.tone': '正式度調節',
+    'translation.toneDesc': '正式 / 休閒 / 自動風格切換',
+    'translation.tts': 'TTS 朗讀',
+    'translation.ttsDesc': '高品質語音朗讀輔助聽力',
 
     // ========== Anki 智慧製卡 ==========
     'feature.anki_full.title': 'Anki 智慧製卡',
@@ -466,7 +490,7 @@ const translations = {
     'stats.title': '為深度學習而生',
     'stats.subtitle': '漸進披露架構，工具按需載入，覆蓋學習全場景',
     'stats.tools': '內建工具',
-    'stats.toolsDesc': '知識檢索、筆記、Anki、題庫等',
+    'stats.toolsDesc': '知識檢索、筆記、Anki、題庫、導圖等',
     'stats.providers': 'API 供應商',
     'stats.providersDesc': 'OpenAI、Claude、硅基流動等',
     'stats.modes': '練習模式',
@@ -494,37 +518,37 @@ const translations = {
 
     // Download
     'download.title': '下載 DeepStudent',
-    'download.subtitle': '選擇你的平台，安裝後即可開始整理。',
+    'download.subtitle': '基於 Tauri 2.0 建構，本地優先的 AI 原生學習系統',
     'download.selectPlatform': '選擇平台',
     'download.backHome': '返回首頁',
-    'download.dmgInstall': 'DMG 安裝',
+    'download.dmgInstall': '正式版',
     'download.preview': '預覽版',
     'download.version': '版本',
     'download.size': '大小',
     'download.system': '系統',
     'download.downloadDmg': '下載 DMG',
     'download.downloadExe': '下載 EXE',
-    'download.requirements.macos': 'macOS 13+，Apple Silicon 優化',
+    'download.requirements.macos': 'macOS 13+，Apple Silicon / Intel',
     'download.requirements.windows': 'Windows 11 / 10 22H2+',
-    'download.description.macos': '選單列快捷輸入，支援 Spotlight 搜尋。',
-    'download.description.windows': '預覽版含 OneNote 匯入與系統托盤控制項。',
-    'download.note.windowsPreview': 'Windows 仍為預覽版，如需協助請聯絡 support@deepstudent.cn。',
+    'download.description.macos': '全功能版本：智慧對話、學習資源管理、Anki 製卡、題庫練習、作文批改、知識導圖、翻譯工作台等。Apple Silicon 與 Intel 雙架構優化。',
+    'download.description.windows': '功能與 macOS 版一致。基於 NSIS 安裝程式，部分功能仍在持續優化中。',
+    'download.note.windowsPreview': 'Windows 版目前為預覽版，如遇問題請在 GitHub 提交 Issue。',
 
     // FAQ
     'faq.title': '常見問題',
     'faq.subtitle': '關於 DeepStudent 的疑問解答',
     'faq.openSource.q': 'DeepStudent 是開源的嗎？',
-    'faq.openSource.a': '是的，DeepStudent 完全開源。你可以在 GitHub 查看原始碼並參與共建。',
+    'faq.openSource.a': '是的，DeepStudent 遵循 AGPL-3.0 開源授權，完全開源。你可以在 GitHub 查看原始碼、提交 Issue 或參與共建。',
     'faq.openSource.link': '前往 GitHub',
-    'faq.privacy.q': '我的資料會被如何使用？',
-    'faq.privacy.a': '我們遵循最小化資料原則，資料僅用於生成個人化學習建議與統計分析。',
+    'faq.privacy.q': '我的資料儲存在哪裡？',
+    'faq.privacy.a': 'DeepStudent 是本地優先應用。所有資料（SQLite 元資料 + LanceDB 向量庫 + Blob 檔案）儲存在你的裝置上，支援完整備份與稽核。',
     'faq.privacy.action': '查看隱私政策',
     'faq.macosQuarantine.q': 'macOS 安裝後提示「已損壞，無法打開」怎麼辦？',
     'faq.macosQuarantine.a': '可以在終端執行以下命令（把 <應用路徑> 替換為你的應用路徑；也可以把應用圖示拖進終端自動填充路徑）：',
     'faq.macosQuarantine.code': 'sudo xattr -r -d com.apple.quarantine <應用路徑>',
     'faq.macosQuarantine.link': '查看完整步驟',
-    'faq.windowsPreview.q': 'Windows 版本是正式版嗎？',
-    'faq.windowsPreview.a': '目前 Windows 仍為預覽版，我們會持續迭代。遇到問題可聯絡 support@deepstudent.cn。',
+    'faq.windowsPreview.q': '如何配置 AI 模型？',
+    'faq.windowsPreview.a': '進入設定 → API 配置，新增你的 AI 服務供應商（如 OpenAI、Anthropic、硅基流動等）的 API 金鑰。推薦使用硅基流動的「一鍵分配」功能快速完成配置。',
 
     // Footer
     'footer.privacy': '隱私',
@@ -534,7 +558,7 @@ const translations = {
     
     // Policy Content
     'policy.about.title': '關於 DeepStudent',
-    'policy.about.description': '一款面向學生與自學者的開源錯題管理與複盤工具，幫助你建立長期可持續的學習系統。',
+    'policy.about.description': 'AI 原生的本地優先開源學習系統，將智慧對話、知識管理、Anki 製卡與全能閱讀器無縫融合。',
     'policy.about.section1.title': '核心理念',
     'policy.about.section1.body': '構建完全 AI 原生的學習閉環，解決碎片化學習痛點。',
     'policy.about.section1.point1': '虛擬檔案系統 VFS 作為所有學習資源的單一資料源，AI 可讀可檢索。',
@@ -596,7 +620,7 @@ const translations = {
     'policy.terms.title': '使用條款',
     'policy.terms.description': '',
     'policy.terms.section1.title': '服務內容',
-    'policy.terms.section1.body': '我們提供錯題整理、智慧複習、AI 輔助等功能，能力會根據版本迭代持續更新。',
+    'policy.terms.section1.body': '我們提供 AI 智慧對話、學習資源管理、知識檢索、Anki 製卡、題庫練習、作文批改、翻譯工作台、知識導圖等功能，能力會根據版本迭代持續更新。',
     'policy.terms.section1.point1': '測試功能可能存在不穩定，或因版本更新帶來不確定性。',
     'policy.terms.section2.title': '使用者責任',
     'policy.terms.section2.body': '你需確保上傳內容擁有合法使用權，並對資訊安全負責。',
@@ -651,7 +675,7 @@ const translations = {
     
     // ========== AI Agent ==========
     'feature.agent.title': 'AI Agent · All-in-One Assistant',
-    'feature.agent.desc': 'Multi-model collaboration, skill extensions, MCP ecosystem. Your all-in-one AI assistant, connecting all learning tools.',
+    'feature.agent.desc': '65 built-in tools loaded on demand, 13+ LLM providers. Progressive disclosure architecture connecting all your learning tools.',
     'agent.multiModel': 'Multi-Model',
     'agent.multiModelDesc': 'Call multiple LLMs at once',
     'agent.skills': 'Skill Mgmt',
@@ -739,11 +763,23 @@ const translations = {
 
     // ========== Essay Grading expanded ==========
     'feature.essay_full.title': 'Essay Grading',
-    'feature.essay_full.desc': 'Supports 7+ exam types with streaming multi-dimensional scoring. Precisely annotate excellent passages with targeted improvement suggestions.',
+    'feature.essay_full.desc': 'Supports 7+ exam types with streaming multi-dimensional scoring. Precisely annotate excellent passages with targeted improvement suggestions. Handwriting OCR supported.',
     'essay.types': 'Multi-type Support',
     'essay.typesDesc': 'Gaokao/IELTS/GRE/CET-4/6 & more',
     'essay.detail': 'Suggestions',
     'essay.detailDesc': 'Line-by-line annotation & replacement',
+
+    // ========== Translation Workbench ==========
+    'feature.translation.title': 'Translation Workbench',
+    'feature.translation.desc': '11 languages supported, with text/image/document multi-mode input. Streaming translation, formality adjustment, TTS, and auto-archiving to VFS.',
+    'translation.multiInput': 'Multi-mode Input',
+    'translation.multiInputDesc': 'Text, image OCR, document upload',
+    'translation.streaming': 'Streaming Translation',
+    'translation.streamingDesc': 'Real-time output, interruptible',
+    'translation.tone': 'Formality Control',
+    'translation.toneDesc': 'Formal / Casual / Auto style toggle',
+    'translation.tts': 'TTS Playback',
+    'translation.ttsDesc': 'High-quality voice for listening practice',
 
     // ========== Anki CardForge ==========
     'feature.anki_full.title': 'Anki Smart CardForge',
@@ -772,7 +808,7 @@ const translations = {
     'stats.title': 'Built for Deep Learning',
     'stats.subtitle': 'Progressive disclosure architecture with on-demand tool loading',
     'stats.tools': 'Built-in Tools',
-    'stats.toolsDesc': 'RAG, notes, Anki, Q-bank & more',
+    'stats.toolsDesc': 'RAG, notes, Anki, Q-bank, mindmap & more',
     'stats.providers': 'API Providers',
     'stats.providersDesc': 'OpenAI, Claude, SiliconFlow & more',
     'stats.modes': 'Practice Modes',
@@ -800,21 +836,21 @@ const translations = {
     
     // Download
     'download.title': 'Download DeepStudent',
-    'download.subtitle': 'Choose your platform and start organizing.',
+    'download.subtitle': 'Built on Tauri 2.0, a local-first AI-native learning system',
     'download.selectPlatform': 'Select Platform',
     'download.backHome': 'Back to Home',
-    'download.dmgInstall': 'DMG Install',
+    'download.dmgInstall': 'Release',
     'download.preview': 'Preview',
     'download.version': 'Version',
     'download.size': 'Size',
     'download.system': 'System',
     'download.downloadDmg': 'Download DMG',
     'download.downloadExe': 'Download EXE',
-    'download.requirements.macos': 'macOS 13+, Apple Silicon optimized',
+    'download.requirements.macos': 'macOS 13+, Apple Silicon / Intel',
     'download.requirements.windows': 'Windows 11 / 10 22H2+',
-    'download.description.macos': 'Menu bar quick entry, Spotlight search support.',
-    'download.description.windows': 'Preview includes OneNote import and system tray controls.',
-    'download.note.windowsPreview': 'Windows is still in preview. If you need help, contact support@deepstudent.cn.',
+    'download.description.macos': 'Full-featured: AI Chat, Learning Hub, Anki CardForge, Q-Bank, Essay Grading, Knowledge Mindmap, Translation Workbench & more. Optimized for Apple Silicon & Intel.',
+    'download.description.windows': 'Same features as macOS. NSIS installer, some features still being optimized.',
+    'download.note.windowsPreview': 'Windows is still in preview. If you encounter issues, please submit an Issue on GitHub.',
     
     // FAQ
     'faq.title': 'FAQ',
@@ -840,7 +876,7 @@ const translations = {
     
     // Policy Content
     'policy.about.title': 'About DeepStudent',
-    'policy.about.description': 'An open-source mistake tracking and review tool for students and self-learners, built for long-term, sustainable learning.',
+    'policy.about.description': 'An AI-native, local-first open-source learning system that seamlessly integrates intelligent chat, knowledge management, Anki card generation, and a versatile document reader.',
     'policy.about.section1.title': 'Core Philosophy',
     'policy.about.section1.body': 'Build a fully AI-native learning loop, solving fragmented learning pain points.',
     'policy.about.section1.point1': 'VFS as single source of truth for all learning resources, AI-readable and searchable.',
@@ -900,7 +936,7 @@ const translations = {
     'policy.terms.title': 'Terms of Use',
     'policy.terms.description': '',
     'policy.terms.section1.title': 'Service',
-    'policy.terms.section1.body': 'We provide mistake tracking, smart review, AI assistance, and more, continuously improving with each release.',
+    'policy.terms.section1.body': 'We provide AI chat, learning resource management, knowledge retrieval, Anki card generation, Q-bank practice, essay grading, translation workbench, knowledge mindmap, and more, continuously improving with each release.',
     'policy.terms.section1.point1': 'Preview features may be unstable, and updates may introduce uncertainty.',
     'policy.terms.section2.title': 'Your responsibilities',
     'policy.terms.section2.body': 'You must have the legal rights to any content you upload and are responsible for keeping your information secure.',

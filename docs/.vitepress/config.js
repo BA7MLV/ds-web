@@ -20,18 +20,8 @@ const guideSidebar = [
       { text: '客户端下载', link: '/guide/download.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 8H2M14 8L11 5M14 8L11 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
       { text: '功能介绍', link: '/guide/function.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
       { text: '项目历程', link: '/guide/timeline.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2V14M15 9H1" stroke="currentColor" stroke-width="1.5"/></svg>' },
-      { text: 'IREC介绍', link: '/guide/irec.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2V14M15 9H1" stroke="currentColor" stroke-width="1.5"/></svg>' }
+      { text: '功能架构', link: '/guide/feature-architecture.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' }
     ]
-  },
-  {
-    text: '最佳实践',
-    collapsed: false,
-    items: []
-  },
-  {
-    text: 'API 参考',
-    collapsed: false,
-    items: []
   },
   {
     text: '帮助中心',
@@ -81,7 +71,7 @@ export default withMermaid(defineConfig({
   },
   title: 'DeepStudent｜Documentation',
   titleTemplate: ':title｜DeepStudent｜Documentation',
-  description: '免费开源的AI错题管理  \n解决方案',
+  description: 'AI 原生、本地优先的开源学习系统',
   base: '/docs/',
   head: [
     // 与主站共用同一个 favicon（根目录 /public/favicon.ico）
@@ -117,7 +107,7 @@ export default withMermaid(defineConfig({
     ],
     footer: {
       message: 'Released under the AGPL-3.0 License.',
-      copyright: 'Copyright © 2025 DeepStudent Team'
+      copyright: 'Copyright © 2025-2026 DeepStudent Team'
     },
     // 添加搜索功能
     search: {

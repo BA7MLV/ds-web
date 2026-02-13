@@ -10,7 +10,7 @@ DeepStudent的AI功能依赖外部大模型服务。你需要从服务商获取�
 <p><a href="https://cloud.siliconflow.cn/i/deadXN1B">https://cloud.siliconflow.cn/i/deadXN1B</a></p>
 </div>
 
-当前`DeepStudent`支持调用基于`OpenAI`兼容接口的大模型，原生`Gemini`和`Claude`将在未来适配。
+当前`DeepStudent`支持 13+ 家 API 供应商，包括 OpenAI、Anthropic (Claude)、Google (Gemini)、SiliconFlow、DeepSeek、Ollama、Qwen、智谱、豆包、Minimax、Moonshot、Grok、Mistral 等。
 
 ### 1.1 获取硅基流动 (SiliconFlow) API 密钥
 
@@ -58,3 +58,27 @@ DeepStudent的AI功能依赖外部大模型服务。你需要从服务商获取�
   ![联网搜索](/deepstudent-pic-start-search.png)
 
 至此，您可以使用软件的所有功能了。您还可以为软件配置多样的MCP工具和Skills以增强软件的功能。
+
+## 快速体验核心功能
+
+### 3.1 体验技能系统
+
+在智能对话中输入以下命令来激活不同技能：
+
+- `/skill tutor-mode` — 苏格拉底式导师模式，引导你深度思考
+- `/skill chatanki` — 上传文档或发送文本，AI 自动生成 Anki 卡片
+- `/skill research-mode` — 联网搜索，多步调研，生成结构化报告
+
+### 3.2 管理学习资源
+
+1. 点击左侧导航栏的「学习资源」
+2. 创建第一个笔记，或导入一份 PDF 教材
+3. 导入的资源会自动进行 OCR 识别和向量化索引
+4. 回到对话中，AI 即可通过 RAG 检索引用你的学习资料
+
+### 3.3 更多功能
+
+- **知识导图**：在学习资源中创建思维导图，或在对话中让 AI 生成
+- **题库练习**：上传试卷照片，AI 自动识题、拆分、生成解析
+- **作文批改**：在学习资源中创建作文，AI 流式多维评分
+- **翻译工作台**：11 种语言互译，正式度调节，TTS 朗读

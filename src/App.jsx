@@ -381,7 +381,7 @@ const StatsHighlight = ({ motionScale = 1 }) => {
   const shouldAnimate = motionScale > 0
 
   const stats = [
-    { value: '59', labelKey: 'stats.tools', descKey: 'stats.toolsDesc' },
+    { value: '65', labelKey: 'stats.tools', descKey: 'stats.toolsDesc' },
     { value: '17', labelKey: 'stats.providers', descKey: 'stats.providersDesc' },
     { value: '8', labelKey: 'stats.modes', descKey: 'stats.modesDesc' },
     { value: '16+', labelKey: 'stats.formats', descKey: 'stats.formatsDesc' },
@@ -690,6 +690,23 @@ const App = () => {
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
                   <img src="/img/example/作文-1.png" alt="Essay Grading" className="w-full h-auto object-cover" />
                 </div>
+              </FeatureSection>
+
+              {/* Module 10: 翻译工作台 */}
+              <FeatureSection
+                id="feature-translation"
+                title={t('feature.translation.title')}
+                desc={t('feature.translation.desc')}
+                align="left"
+                motionScale={motionScale}
+                subFeatures={[
+                  { labelKey: 'translation.multiInput', descKey: 'translation.multiInputDesc' },
+                  { labelKey: 'translation.streaming', descKey: 'translation.streamingDesc' },
+                  { labelKey: 'translation.tone', descKey: 'translation.toneDesc' },
+                  { labelKey: 'translation.tts', descKey: 'translation.ttsDesc' },
+                ]}
+              >
+                <ImagePlaceholder label="Translation Workbench" />
               </FeatureSection>
 
             </div>
