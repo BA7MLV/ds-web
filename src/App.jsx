@@ -1482,12 +1482,6 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
   const offset = (easedProgress - 0.5) * motionAmount
   const textShift = offset * (190 + 16 * juice)
   const mediaShift = offset * (260 + 45 * juice)
-  const depthBase = (0.5 - easedProgress) * 170 * motionAmount
-  const depthFocus = 0.55 + juice * 0.45
-  const mediaDepth = depthBase * depthFocus + 150 * motionAmount * depthFocus
-  const mediaTilt = (0.5 - easedProgress) * 9 * motionAmount * depthFocus
-  const mediaRotate = offset * 1.6
-  const mediaScale = 1 + juice * 0.03 * motionAmount
   const opacity = isStatic ? 1 : 0.14 + reveal * 0.86
 
   return (
@@ -1496,9 +1490,8 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
         <div
           className="flex-1 md:max-w-[45%] text-center md:text-left"
           style={{
-            transform: isStatic ? 'none' : `translate3d(0, ${textShift}px, 0)`,
+            transform: isStatic ? 'none' : `translateY(${Math.round(textShift)}px)`,
             opacity,
-            transformStyle: 'flat',
             willChange: shouldAnimate ? 'transform, opacity' : 'auto',
           }}
         >
@@ -1511,11 +1504,8 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
         <div
           className="flex-1 w-full md:max-w-[55%]"
           style={{
-            transform: isStatic
-              ? 'none'
-              : `perspective(1200px) translate3d(0, ${mediaShift}px, ${mediaDepth}px) rotateX(${mediaTilt}deg) rotateZ(${mediaRotate}deg) scale3d(${mediaScale}, ${mediaScale}, ${mediaScale})`,
+            transform: isStatic ? 'none' : `translateY(${Math.round(mediaShift)}px)`,
             opacity,
-            transformStyle: shouldAnimate ? 'preserve-3d' : 'flat',
             willChange: shouldAnimate ? 'transform, opacity' : 'auto',
           }}
         >
