@@ -575,82 +575,180 @@ const App = () => {
                 </div>
               </FeatureSection>
 
-                            {/* Module 1: AI Agent & Ecosystem */}
-                            <FeatureSection
-                              id="feature-agent"
-                              layout="sticky"
-                              title={t('feature.agent.title')}
-                              desc={t('feature.agent.desc')}
-                              align="left"
-                              motionScale={motionScale}
-                              subFeatures={[
-                                { labelKey: 'agent.multiModel', descKey: 'agent.multiModelDesc', imgSrc: '/img/example/模型分配.png' },
-                                { labelKey: 'agent.skills', descKey: 'agent.skillsDesc', imgSrc: '/img/example/技能管理.png' },
-                                { labelKey: 'agent.mcp', descKey: 'agent.mcpDesc', imgSrc: '/img/example/mcp-1.png' },
-                                { labelKey: 'agent.session', descKey: 'agent.sessionDesc', imgSrc: '/img/example/会话浏览.png' },
-                              ]}
-                            >
-                              <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                                <img src="/img/example/主页面.png" alt="AI Agent Interface" className="w-full h-auto object-cover" />
-                              </div>
-                            </FeatureSection>
-              
-                            {/* Module 2: Deep Research & Reading */}
-                            <FeatureSection
-                              id="feature-research"
-                              title={t('feature.research.title')}
-                              desc={t('feature.research.desc')}
-                              align="right"
-                              motionScale={motionScale}
-                              subFeatures={[
-                                { labelKey: 'research.web', descKey: 'research.webDesc', imgSrc: '/img/example/调研-2.png' },
-                                { labelKey: 'research.pdf', descKey: 'research.pdfDesc', imgSrc: '/img/example/pdf阅读-1.png' },
-                                { labelKey: 'research.docx', descKey: 'research.docxDesc', imgSrc: '/img/example/docx阅读-1.png' },
-                                { labelKey: 'research.source', descKey: 'research.sourceDesc', imgSrc: '/img/example/调研-3.png' },
-                              ]}
-                            >
-                              <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                                <img src="/img/example/调研-1.png" alt="Deep Research" className="w-full h-auto object-cover" />
-                              </div>
-                            </FeatureSection>
-              
-                            {/* Module 3: Knowledge Management */}
-                            <FeatureSection
-                              id="feature-knowledge"
-                              title={t('feature.knowledge_mgmt.title')}
-                              desc={t('feature.knowledge_mgmt.desc')}
-                              align="left"
-                              motionScale={motionScale}
-                              subFeatures={[
-                                { labelKey: 'knowledge.map', descKey: 'knowledge.mapDesc', imgSrc: '/img/example/知识导图-2.png' },
-                                { labelKey: 'knowledge.note', descKey: 'knowledge.noteDesc', imgSrc: '/img/example/笔记-1.png' },
-                                { labelKey: 'knowledge.memory', descKey: 'knowledge.memoryDesc', imgSrc: '/img/example/记忆-1.png' },
-                                { labelKey: 'knowledge.graph', descKey: 'knowledge.graphDesc', imgSrc: '/img/example/知识导图-5.png' },
-                              ]}
-                            >
-                              <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                                <img src="/img/example/知识导图-1.png" alt="Knowledge Management" className="w-full h-auto object-cover" />
-                              </div>
-                            </FeatureSection>
-              
-                            {/* Module 4: Exam & Prep */}
-                            <FeatureSection
-                              id="feature-exam"
-                              title={t('feature.exam.title')}
-                              desc={t('feature.exam.desc')}
-                              align="right"
-                              motionScale={motionScale}
-                              subFeatures={[
-                                { labelKey: 'exam.qbank', descKey: 'exam.qbankDesc', imgSrc: '/img/example/题目集-2.png' },
-                                { labelKey: 'exam.essay', descKey: 'exam.essayDesc', imgSrc: '/img/example/作文-1.png' },
-                                { labelKey: 'exam.anki', descKey: 'exam.ankiDesc', imgSrc: '/img/example/anki-制卡1.png' },
-                                { labelKey: 'exam.spaced', descKey: 'exam.spacedDesc', imgSrc: '/img/example/anki-发送.png' },
-                              ]}
-                            >
-                              <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                                <img src="/img/example/题目集-1.png" alt="Exam Prep" className="w-full h-auto object-cover" />
-                              </div>
-                            </FeatureSection>
+              {/* Module 1: AI 智能体 · 全能助手 */}
+              <FeatureSection
+                id="feature-agent"
+                layout="sticky"
+                title={t('feature.agent.title')}
+                desc={t('feature.agent.desc')}
+                align="left"
+                motionScale={motionScale}
+                subFeatures={[
+                  { labelKey: 'agent.multiModel', descKey: 'agent.multiModelDesc', imgSrc: '/img/example/模型分配.png' },
+                  { labelKey: 'agent.skills', descKey: 'agent.skillsDesc', imgSrc: '/img/example/技能管理.png' },
+                  { labelKey: 'agent.group', descKey: 'agent.groupDesc', imgSrc: '/img/example/分组.png' },
+                  { labelKey: 'agent.session', descKey: 'agent.sessionDesc', imgSrc: '/img/example/会话浏览.png' },
+                ]}
+              >
+                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <img src="/img/example/主页面.png" alt="AI Agent Interface" className="w-full h-auto object-cover" />
+                </div>
+              </FeatureSection>
+
+              {/* Module 2: MCP 工具生态 */}
+              <FeatureSection
+                id="feature-mcp"
+                title={t('feature.mcp.title')}
+                desc={t('feature.mcp.desc')}
+                align="right"
+                motionScale={motionScale}
+                subFeatures={[
+                  { labelKey: 'mcp.context7', descKey: 'mcp.context7Desc', imgSrc: '/img/example/mcp-1.png' },
+                  { labelKey: 'mcp.arxiv', descKey: 'mcp.arxivDesc', imgSrc: '/img/example/mcp-3.png' },
+                  { labelKey: 'mcp.output', descKey: 'mcp.outputDesc', imgSrc: '/img/example/mcp-4.png' },
+                ]}
+              >
+                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <img src="/img/example/mcp-2.png" alt="MCP Tool Ecosystem" className="w-full h-auto object-cover" />
+                </div>
+              </FeatureSection>
+
+              {/* Module 3: 深度调研 */}
+              <FeatureSection
+                id="feature-research"
+                layout="sticky"
+                title={t('feature.research.title')}
+                desc={t('feature.research.desc')}
+                align="left"
+                motionScale={motionScale}
+                subFeatures={[
+                  { labelKey: 'research.execute', descKey: 'research.executeDesc', imgSrc: '/img/example/调研-2.png' },
+                  { labelKey: 'research.progress', descKey: 'research.progressDesc', imgSrc: '/img/example/调研-3.png' },
+                  { labelKey: 'research.report', descKey: 'research.reportDesc', imgSrc: '/img/example/调研-4.png' },
+                  { labelKey: 'research.save', descKey: 'research.saveDesc', imgSrc: '/img/example/调研-5.png' },
+                ]}
+              >
+                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <img src="/img/example/调研-1.png" alt="Deep Research" className="w-full h-auto object-cover" />
+                </div>
+              </FeatureSection>
+
+              {/* Module 4: 深度阅读 */}
+              <FeatureSection
+                id="feature-reading"
+                title={t('feature.reading.title')}
+                desc={t('feature.reading.desc')}
+                align="right"
+                motionScale={motionScale}
+                subFeatures={[
+                  { labelKey: 'reading.pdfSelect', descKey: 'reading.pdfSelectDesc', imgSrc: '/img/example/pdf阅读-2.png' },
+                  { labelKey: 'reading.pdfDeep', descKey: 'reading.pdfDeepDesc', imgSrc: '/img/example/pdf阅读-3.png' },
+                  { labelKey: 'reading.docx', descKey: 'reading.docxDesc', imgSrc: '/img/example/docx阅读-1.png' },
+                ]}
+              >
+                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <img src="/img/example/pdf阅读-1.png" alt="Deep Reading" className="w-full h-auto object-cover" />
+                </div>
+              </FeatureSection>
+
+              {/* Module 5: 知识导图 */}
+              <FeatureSection
+                id="feature-mindmap"
+                layout="sticky"
+                title={t('feature.mindmap.title')}
+                desc={t('feature.mindmap.desc')}
+                align="left"
+                motionScale={motionScale}
+                subFeatures={[
+                  { labelKey: 'mindmap.iterate', descKey: 'mindmap.iterateDesc', imgSrc: '/img/example/知识导图-2.png' },
+                  { labelKey: 'mindmap.complete', descKey: 'mindmap.completeDesc', imgSrc: '/img/example/知识导图-3.png' },
+                  { labelKey: 'mindmap.editView', descKey: 'mindmap.editViewDesc', imgSrc: '/img/example/知识导图-4.png' },
+                  { labelKey: 'mindmap.outline', descKey: 'mindmap.outlineDesc', imgSrc: '/img/example/知识导图-5.png' },
+                  { labelKey: 'mindmap.recite', descKey: 'mindmap.reciteDesc', imgSrc: '/img/example/知识导图-6.png' },
+                ]}
+              >
+                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <img src="/img/example/知识导图-1.png" alt="Knowledge Mindmap" className="w-full h-auto object-cover" />
+                </div>
+              </FeatureSection>
+
+              {/* Module 6: 笔记 & 记忆管理 */}
+              <FeatureSection
+                id="feature-notes-memory"
+                title={t('feature.notes_memory.title')}
+                desc={t('feature.notes_memory.desc')}
+                align="right"
+                motionScale={motionScale}
+                subFeatures={[
+                  { labelKey: 'memory.generate', descKey: 'memory.generateDesc', imgSrc: '/img/example/记忆-1.png' },
+                  { labelKey: 'memory.list', descKey: 'memory.listDesc', imgSrc: '/img/example/记忆-2.png' },
+                  { labelKey: 'memory.detail', descKey: 'memory.detailDesc', imgSrc: '/img/example/记忆-3.png' },
+                  { labelKey: 'memory.files', descKey: 'memory.filesDesc', imgSrc: '/img/example/记忆-4.png' },
+                  { labelKey: 'memory.vector', descKey: 'memory.vectorDesc', imgSrc: '/img/example/向量化状态.png' },
+                ]}
+              >
+                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <img src="/img/example/笔记-1.png" alt="Notes & Memory Management" className="w-full h-auto object-cover" />
+                </div>
+              </FeatureSection>
+
+              {/* Module 7: 智能题库 */}
+              <FeatureSection
+                id="feature-qbank"
+                layout="sticky"
+                title={t('feature.qbank_full.title')}
+                desc={t('feature.qbank_full.desc')}
+                align="left"
+                motionScale={motionScale}
+                subFeatures={[
+                  { labelKey: 'qbank.browse', descKey: 'qbank.browseDesc', imgSrc: '/img/example/题目集-2.png' },
+                  { labelKey: 'qbank.practice', descKey: 'qbank.practiceDesc', imgSrc: '/img/example/题目集-3.png' },
+                  { labelKey: 'qbank.analysis', descKey: 'qbank.analysisDesc', imgSrc: '/img/example/题目集-4.png' },
+                  { labelKey: 'qbank.knowledge', descKey: 'qbank.knowledgeDesc', imgSrc: '/img/example/题目集-5.png' },
+                ]}
+              >
+                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <img src="/img/example/题目集-1.png" alt="Smart Q-Bank" className="w-full h-auto object-cover" />
+                </div>
+              </FeatureSection>
+
+              {/* Module 8: 作文批改 */}
+              <FeatureSection
+                id="feature-essay"
+                title={t('feature.essay_full.title')}
+                desc={t('feature.essay_full.desc')}
+                align="right"
+                motionScale={motionScale}
+                subFeatures={[
+                  { labelKey: 'essay.types', descKey: 'essay.typesDesc', imgSrc: '/img/example/作文批改-1.png' },
+                  { labelKey: 'essay.detail', descKey: 'essay.detailDesc', imgSrc: '/img/example/作文-2.png' },
+                ]}
+              >
+                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <img src="/img/example/作文-1.png" alt="Essay Grading" className="w-full h-auto object-cover" />
+                </div>
+              </FeatureSection>
+
+              {/* Module 9: Anki 智能制卡 */}
+              <FeatureSection
+                id="feature-anki"
+                layout="sticky"
+                title={t('feature.anki_full.title')}
+                desc={t('feature.anki_full.desc')}
+                align="left"
+                motionScale={motionScale}
+                subFeatures={[
+                  { labelKey: 'anki.upload', descKey: 'anki.uploadDesc', imgSrc: '/img/example/anki-发送.png' },
+                  { labelKey: 'anki.preview', descKey: 'anki.previewDesc', imgSrc: '/img/example/anki-制卡2.png' },
+                  { labelKey: 'anki.import', descKey: 'anki.importDesc', imgSrc: '/img/example/anki-制卡3.png' },
+                  { labelKey: 'anki.tasks', descKey: 'anki.tasksDesc', imgSrc: '/img/example/制卡任务.png' },
+                  { labelKey: 'anki.templates', descKey: 'anki.templatesDesc', imgSrc: '/img/example/模板管理.png' },
+                ]}
+              >
+                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <img src="/img/example/anki-制卡1.png" alt="Anki Smart CardForge" className="w-full h-auto object-cover" />
+                </div>
+              </FeatureSection>
         </div>
 
             <FaqSection motionScale={motionScale} onOpenPolicy={handlePolicyOpen} />
