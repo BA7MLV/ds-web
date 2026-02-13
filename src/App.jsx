@@ -735,26 +735,30 @@ const TopNav = ({ onDownload = () => {} }) => {
           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" />
           <span className="text-[15px] tracking-tight">DeepStudent</span>
         </a>
-        <div className="hidden md:flex items-center gap-4 text-[12px] text-[color:var(--apple-muted)] font-normal">
-          <a href="#features" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors">
-            {t('nav.features')}
-          </a>
-          <a href="#qa" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors">
-            {t('nav.qa')}
-          </a>
-          <a
-            href="/docs/"
-            className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors"
-          >
-            {t('nav.docs')}
-          </a>
-          <a
-            href="#download"
-            onClick={(e) => { e.preventDefault(); onDownload(); }}
-            className="focus-ring text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] transition-colors font-normal"
-          >
-            {t('nav.download')}
-          </a>
+        <div className="flex items-center gap-4">
+          {/* Desktop navigation links */}
+          <div className="hidden md:flex items-center gap-4 text-[12px] text-[color:var(--apple-muted)] font-normal">
+            <a href="#features" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors">
+              {t('nav.features')}
+            </a>
+            <a href="#qa" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors">
+              {t('nav.qa')}
+            </a>
+            <a
+              href="/docs/"
+              className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors"
+            >
+              {t('nav.docs')}
+            </a>
+            <a
+              href="#download"
+              onClick={(e) => { e.preventDefault(); onDownload(); }}
+              className="focus-ring text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] transition-colors font-normal"
+            >
+              {t('nav.download')}
+            </a>
+          </div>
+          {/* Mobile hamburger menu */}
           <MobileNavMenu onDownload={onDownload} />
         </div>
       </div>
