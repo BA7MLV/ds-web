@@ -757,26 +757,51 @@ html.home-no-search .VPNavBar .VPNavBarSearch {
 }
 
 /* ===== Dynamic Island / Notch Safe Area Support ===== */
-/* iPhone 14 Pro+ 灵动岛及刘海屏适配 */
-.VPNavBar,
-.VPLocalNav,
-.VPSidebar {
-  padding-top: env(safe-area-inset-top);
-}
+/* iPhone 14 Pro+ 灵动岛及刘海屏沉浸式适配 */
+/* 导航栏延伸到刘海屏下方，背景色延续形成沉浸式效果 */
 
-/* 移动端屏幕菜单 */
-.VPNavBar.screen-open {
-  padding-top: env(safe-area-inset-top);
-}
-
-/* 侧边栏安全区域适配 */
-.VPSidebar {
+/* 主导航栏：向上延伸至刘海屏区域，背景色延续 */
+.VPNavBar {
+  /* 负边距让背景延伸到刘海屏下方 */
+  margin-top: calc(-1 * env(safe-area-inset-top));
+  /* 增加总高度以覆盖刘海区域 + 原有高度 */
   padding-top: calc(env(safe-area-inset-top));
 }
 
-/* 移动端横屏时侧边栏的内边距 */
+/* 导航栏内部容器需要额外的顶部内边距来避开刘海 */
+.VPNavBar .container {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 本地导航同样处理 */
+.VPLocalNav {
+  margin-top: calc(-1 * env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 移动端屏幕菜单状态 */
+.VPNavBar.screen-open {
+  margin-top: calc(-1 * env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 侧边栏延伸到刘海屏区域 */
+.VPSidebar {
+  margin-top: calc(-1 * env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+  /* 确保侧边栏有足够的高度覆盖 */
+  min-height: calc(100vh + env(safe-area-inset-top));
+}
+
+/* 侧边栏内部内容区域 */
+.VPSidebar .VPSidebarItem {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 移动端侧边栏适配 */
 @media (max-width: 768px) {
   .VPSidebar {
+    margin-top: calc(-1 * env(safe-area-inset-top));
     padding-top: env(safe-area-inset-top);
   }
 }
