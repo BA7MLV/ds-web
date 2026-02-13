@@ -3,6 +3,7 @@ import { LazyLoadImage as LazyImage } from 'react-lazy-load-image-component'
 import 'react-lazy-load-image-component/src/effects/blur.css'
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
+import { MobileNavMenu } from './components/mobile-nav-menu'
 
 const logo = '/logo_mono_svg.svg'
 const logoFooter = '/logo-r.svg'
@@ -734,16 +735,16 @@ const TopNav = ({ onDownload = () => {} }) => {
           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" />
           <span className="text-[15px] tracking-tight">DeepStudent</span>
         </a>
-        <div className="flex items-center gap-4 text-[12px] text-[color:var(--apple-muted)] font-normal">
-          <a href="#features" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors hidden sm:inline">
+        <div className="hidden md:flex items-center gap-4 text-[12px] text-[color:var(--apple-muted)] font-normal">
+          <a href="#features" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors">
             {t('nav.features')}
           </a>
-          <a href="#qa" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors hidden sm:inline">
+          <a href="#qa" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors">
             {t('nav.qa')}
           </a>
           <a
             href="/docs/"
-            className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors hidden sm:inline"
+            className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors"
           >
             {t('nav.docs')}
           </a>
@@ -754,6 +755,7 @@ const TopNav = ({ onDownload = () => {} }) => {
           >
             {t('nav.download')}
           </a>
+          <MobileNavMenu onDownload={onDownload} />
         </div>
       </div>
     </nav>
