@@ -1047,7 +1047,7 @@ const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max
             src="/img/example/主页面.png"
             alt="DeepStudent Desktop"
             className="w-full h-auto"
-            effect="blur"
+            placeholder={<div className="skeleton w-full aspect-[16/10]" />}
           />
         </div>
 
@@ -1056,7 +1056,7 @@ const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max
             src="/img/example/移动端主页面.png"
             alt="DeepStudent Mobile"
             className="w-full h-auto"
-            effect="blur"
+            placeholder={<div className="skeleton w-full aspect-[9/16]" />}
           />
         </div>
       </div>
