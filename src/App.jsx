@@ -537,7 +537,28 @@ const App = () => {
                 </div>
               </FeatureSection>
 
-              {/* Module 2: MCP 工具生态 */}
+              {/* Module 2: Anki 智能制卡 */}
+              <FeatureSection
+                id="feature-anki"
+                layout="sticky"
+                title={t('feature.anki_full.title')}
+                desc={t('feature.anki_full.desc')}
+                align="right"
+                motionScale={motionScale}
+                subFeatures={[
+                  { labelKey: 'anki.upload', descKey: 'anki.uploadDesc', imgSrc: '/img/example/anki-发送.png' },
+                  { labelKey: 'anki.preview', descKey: 'anki.previewDesc', imgSrc: '/img/example/anki-制卡2.png' },
+                  { labelKey: 'anki.import', descKey: 'anki.importDesc', imgSrc: '/img/example/anki-制卡3.png' },
+                  { labelKey: 'anki.tasks', descKey: 'anki.tasksDesc', imgSrc: '/img/example/制卡任务.png' },
+                  { labelKey: 'anki.templates', descKey: 'anki.templatesDesc', imgSrc: '/img/example/模板管理.png' },
+                ]}
+              >
+                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <img src="/img/example/anki-制卡1.png" alt="Anki Smart CardForge" className="w-full h-auto object-cover" />
+                </div>
+              </FeatureSection>
+
+              {/* Module 3: MCP 工具生态 */}
               <FeatureSection
                 id="feature-mcp"
                 title={t('feature.mcp.title')}
@@ -555,7 +576,7 @@ const App = () => {
                 </div>
               </FeatureSection>
 
-              {/* Module 3: 深度调研 */}
+              {/* Module 4: 深度调研 */}
               <FeatureSection
                 id="feature-research"
                 layout="sticky"
@@ -575,7 +596,7 @@ const App = () => {
                 </div>
               </FeatureSection>
 
-              {/* Module 4: 深度阅读 */}
+              {/* Module 5: 深度阅读 */}
               <FeatureSection
                 id="feature-reading"
                 title={t('feature.reading.title')}
@@ -593,7 +614,7 @@ const App = () => {
                 </div>
               </FeatureSection>
 
-              {/* Module 5: 知识导图 */}
+              {/* Module 6: 知识导图 */}
               <FeatureSection
                 id="feature-mindmap"
                 layout="sticky"
@@ -614,7 +635,7 @@ const App = () => {
                 </div>
               </FeatureSection>
 
-              {/* Module 6: 笔记 & 记忆管理 */}
+              {/* Module 7: 笔记 & 记忆管理 */}
               <FeatureSection
                 id="feature-notes-memory"
                 title={t('feature.notes_memory.title')}
@@ -634,7 +655,7 @@ const App = () => {
                 </div>
               </FeatureSection>
 
-              {/* Module 7: 智能题库 */}
+              {/* Module 8: 智能题库 */}
               <FeatureSection
                 id="feature-qbank"
                 layout="sticky"
@@ -654,7 +675,7 @@ const App = () => {
                 </div>
               </FeatureSection>
 
-              {/* Module 8: 作文批改 */}
+              {/* Module 9: 作文批改 */}
               <FeatureSection
                 id="feature-essay"
                 title={t('feature.essay_full.title')}
@@ -671,26 +692,6 @@ const App = () => {
                 </div>
               </FeatureSection>
 
-              {/* Module 9: Anki 智能制卡 */}
-              <FeatureSection
-                id="feature-anki"
-                layout="sticky"
-                title={t('feature.anki_full.title')}
-                desc={t('feature.anki_full.desc')}
-                align="left"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'anki.upload', descKey: 'anki.uploadDesc', imgSrc: '/img/example/anki-发送.png' },
-                  { labelKey: 'anki.preview', descKey: 'anki.previewDesc', imgSrc: '/img/example/anki-制卡2.png' },
-                  { labelKey: 'anki.import', descKey: 'anki.importDesc', imgSrc: '/img/example/anki-制卡3.png' },
-                  { labelKey: 'anki.tasks', descKey: 'anki.tasksDesc', imgSrc: '/img/example/制卡任务.png' },
-                  { labelKey: 'anki.templates', descKey: 'anki.templatesDesc', imgSrc: '/img/example/模板管理.png' },
-                ]}
-              >
-                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <img src="/img/example/anki-制卡1.png" alt="Anki Smart CardForge" className="w-full h-auto object-cover" />
-                </div>
-              </FeatureSection>
             </div>
 
             <FaqSection motionScale={motionScale} onOpenPolicy={handlePolicyOpen} />
