@@ -74,6 +74,7 @@ export default withMermaid(defineConfig({
   description: 'AI 原生、本地优先的开源学习系统',
   base: '/docs/',
   head: [
+    ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover' }],
     // 与主站共用同一个 favicon（根目录 /public/favicon.ico）
     ['link', { rel: 'icon', href: '/favicon.ico', sizes: 'any' }],
     ['link', { rel: 'apple-touch-icon', href: '/docs/apple-touch-icon.png?v=20260212-2' }],
