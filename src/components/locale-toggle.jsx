@@ -64,8 +64,8 @@ const translations = {
     'agent.sessionDesc': '高效管理多任务会话',
 
     // ========== Deep Research ==========
-    'feature.research.title': '深度阅读与调研',
-    'feature.research.desc': '联网搜索最新信息，深度解析 PDF/Word 文档。从信息获取到整理，一步到位。',
+    'feature.research.title': '深度调研',
+    'feature.research.desc': '联网搜索最新信息，多步任务自动规划执行。从信息获取到报告生成，一步到位。',
     'research.web': '联网调研',
     'research.webDesc': '实时搜索，深度挖掘',
     'research.pdf': 'PDF 阅读',
@@ -98,6 +98,100 @@ const translations = {
     'exam.ankiDesc': '一键生成 Anki 卡片',
     'exam.spaced': '间隔复习',
     'exam.spacedDesc': '科学记忆曲线',
+
+    // ========== Module 1 extras ==========
+    'agent.group': '分组配置',
+    'agent.groupDesc': '个性化分组与技能预设',
+
+    // ========== MCP 工具生态 ==========
+    'feature.mcp.title': 'MCP 工具生态',
+    'feature.mcp.desc': '支持 MCP 协议，无缝集成 Context7、Arxiv 等外部工具。一键调用，无限扩展 AI 能力边界。',
+    'mcp.context7': 'Context7 文档',
+    'mcp.context7Desc': '实时查询技术文档',
+    'mcp.arxiv': 'Arxiv 论文',
+    'mcp.arxivDesc': '搜索最新学术论文',
+    'mcp.output': '结构化输出',
+    'mcp.outputDesc': '自动整理调研结果',
+
+    // ========== 深度调研 subs ==========
+    'research.execute': '任务执行',
+    'research.executeDesc': '多步搜索，自动规划',
+    'research.progress': '进度追踪',
+    'research.progressDesc': '实时任务状态反馈',
+    'research.report': '报告输出',
+    'research.reportDesc': '结构化调研报告',
+    'research.save': '自动归档',
+    'research.saveDesc': '报告自动保存至笔记',
+
+    // ========== 深度阅读 ==========
+    'feature.reading.title': '深度阅读',
+    'feature.reading.desc': 'PDF/Word 分屏阅读，AI 逐页精读解析。选择页码追问，双引擎 OCR 精准识别。',
+    'reading.pdfSelect': '选页追问',
+    'reading.pdfSelectDesc': '选择页面范围精准提问',
+    'reading.pdfDeep': 'AI 精读',
+    'reading.pdfDeepDesc': '逐页内容深度解析',
+    'reading.docx': 'Word 解析',
+    'reading.docxDesc': '试卷/文档结构化分析',
+
+    // ========== 知识导图 subs ==========
+    'mindmap.iterate': '多轮完善',
+    'mindmap.iterateDesc': 'AI 分步展开细化节点',
+    'mindmap.complete': '完整导图',
+    'mindmap.completeDesc': '30→110 节点全景图',
+    'mindmap.editView': '导图编辑',
+    'mindmap.editViewDesc': '可视化节点拖拽编辑',
+    'mindmap.outline': '大纲视图',
+    'mindmap.outlineDesc': '层级文本快速浏览',
+    'mindmap.recite': '背诵模式',
+    'mindmap.reciteDesc': '遮盖节点自测复习',
+
+    // ========== 笔记 & 记忆管理 ==========
+    'feature.notes_memory.title': '笔记 & 记忆管理',
+    'feature.notes_memory.desc': '富文本笔记编辑，向量化记忆系统。AI 自动生成记忆条目，本地 RAG 永不遗忘。',
+    'memory.generate': 'AI 生成记忆',
+    'memory.generateDesc': '对话中自动提取关键知识',
+    'memory.list': '记忆管理',
+    'memory.listDesc': '按主题分类浏览记忆',
+    'memory.detail': '记忆详情',
+    'memory.detailDesc': '富文本内容与关联笔记',
+    'memory.files': '文件浏览',
+    'memory.filesDesc': '记忆文档可视化管理',
+    'memory.vector': '向量化索引',
+    'memory.vectorDesc': '全量资源自动向量化',
+
+    // ========== 智能题库 ==========
+    'feature.qbank_full.title': '智能题库',
+    'feature.qbank_full.desc': 'AI 根据教材自动生成题目集，支持做题、解析、知识点统计。错题自动归档，科学练习。',
+    'qbank.browse': '题库浏览',
+    'qbank.browseDesc': '难度分布与知识点覆盖',
+    'qbank.practice': '做题解析',
+    'qbank.practiceDesc': 'AI 实时解题思路分析',
+    'qbank.analysis': '解题过程',
+    'qbank.analysisDesc': '多步推理详细解析',
+    'qbank.knowledge': '知识点视图',
+    'qbank.knowledgeDesc': '知识点分类与掌握率',
+
+    // ========== 作文批改 expanded ==========
+    'feature.essay_full.title': '作文批改',
+    'feature.essay_full.desc': '支持 7+ 考试类型，流式多维评分。精准标注优秀段落，给出针对性修改建议。',
+    'essay.types': '多类型支持',
+    'essay.typesDesc': '高考/雅思/考研/四六级等',
+    'essay.detail': '修改建议',
+    'essay.detailDesc': '逐句批注与替换推荐',
+
+    // ========== Anki 智能制卡 ==========
+    'feature.anki_full.title': 'Anki 智能制卡',
+    'feature.anki_full.desc': '上传文档自动分析生成卡片，支持多模板、卡片预览、AnkiConnect 一键同步到 Anki 桌面端。',
+    'anki.upload': '文档上传',
+    'anki.uploadDesc': '选择文件添加到对话',
+    'anki.preview': '卡片预览',
+    'anki.previewDesc': '60 张卡片轮播预览',
+    'anki.import': 'Anki 导入',
+    'anki.importDesc': 'AnkiConnect 一键推送',
+    'anki.tasks': '任务管理',
+    'anki.tasksDesc': '制卡进度与统计看板',
+    'anki.templates': '模板管理',
+    'anki.templatesDesc': '10+ 内置卡片模板',
 
     // ========== 笔记系统 ==========
     'feature.notes.title': '笔记系统',
@@ -621,8 +715,8 @@ const translations = {
     'agent.sessionDesc': '高效管理多任務會話',
 
     // ========== Deep Research ==========
-    'feature.research.title': '深度閱讀與調研',
-    'feature.research.desc': '聯網搜尋最新資訊，深度解析 PDF/Word 文檔。從資訊獲取到整理，一步到位。',
+    'feature.research.title': '深度調研',
+    'feature.research.desc': '聯網搜尋最新資訊，多步任務自動規劃執行。從資訊獲取到報告生成，一步到位。',
     'research.web': '聯網調研',
     'research.webDesc': '即時搜尋，深度挖掘',
     'research.pdf': 'PDF 閱讀',
@@ -655,6 +749,100 @@ const translations = {
     'exam.ankiDesc': '一鍵生成 Anki 卡片',
     'exam.spaced': '間隔複習',
     'exam.spacedDesc': '科學記憶曲線',
+
+    // ========== Module 1 extras ==========
+    'agent.group': '分組配置',
+    'agent.groupDesc': '個性化分組與技能預設',
+
+    // ========== MCP 工具生態 ==========
+    'feature.mcp.title': 'MCP 工具生態',
+    'feature.mcp.desc': '支援 MCP 協定，無縫整合 Context7、Arxiv 等外部工具。一鍵呼叫，無限擴展 AI 能力邊界。',
+    'mcp.context7': 'Context7 文件',
+    'mcp.context7Desc': '即時查詢技術文件',
+    'mcp.arxiv': 'Arxiv 論文',
+    'mcp.arxivDesc': '搜尋最新學術論文',
+    'mcp.output': '結構化輸出',
+    'mcp.outputDesc': '自動整理調研結果',
+
+    // ========== 深度調研 subs ==========
+    'research.execute': '任務執行',
+    'research.executeDesc': '多步搜尋，自動規劃',
+    'research.progress': '進度追蹤',
+    'research.progressDesc': '即時任務狀態回饋',
+    'research.report': '報告輸出',
+    'research.reportDesc': '結構化調研報告',
+    'research.save': '自動歸檔',
+    'research.saveDesc': '報告自動儲存至筆記',
+
+    // ========== 深度閱讀 ==========
+    'feature.reading.title': '深度閱讀',
+    'feature.reading.desc': 'PDF/Word 分屏閱讀，AI 逐頁精讀解析。選擇頁碼追問，雙引擎 OCR 精準識別。',
+    'reading.pdfSelect': '選頁追問',
+    'reading.pdfSelectDesc': '選擇頁面範圍精準提問',
+    'reading.pdfDeep': 'AI 精讀',
+    'reading.pdfDeepDesc': '逐頁內容深度解析',
+    'reading.docx': 'Word 解析',
+    'reading.docxDesc': '試卷/文檔結構化分析',
+
+    // ========== 知識導圖 subs ==========
+    'mindmap.iterate': '多輪完善',
+    'mindmap.iterateDesc': 'AI 分步展開細化節點',
+    'mindmap.complete': '完整導圖',
+    'mindmap.completeDesc': '30→110 節點全景圖',
+    'mindmap.editView': '導圖編輯',
+    'mindmap.editViewDesc': '視覺化節點拖拽編輯',
+    'mindmap.outline': '大綱視圖',
+    'mindmap.outlineDesc': '層級文字快速瀏覽',
+    'mindmap.recite': '背誦模式',
+    'mindmap.reciteDesc': '遮蓋節點自測複習',
+
+    // ========== 筆記 & 記憶管理 ==========
+    'feature.notes_memory.title': '筆記 & 記憶管理',
+    'feature.notes_memory.desc': '富文字筆記編輯，向量化記憶系統。AI 自動生成記憶條目，本地 RAG 永不遺忘。',
+    'memory.generate': 'AI 生成記憶',
+    'memory.generateDesc': '對話中自動提取關鍵知識',
+    'memory.list': '記憶管理',
+    'memory.listDesc': '按主題分類瀏覽記憶',
+    'memory.detail': '記憶詳情',
+    'memory.detailDesc': '富文字內容與關聯筆記',
+    'memory.files': '檔案瀏覽',
+    'memory.filesDesc': '記憶文檔視覺化管理',
+    'memory.vector': '向量化索引',
+    'memory.vectorDesc': '全量資源自動向量化',
+
+    // ========== 智慧題庫 ==========
+    'feature.qbank_full.title': '智慧題庫',
+    'feature.qbank_full.desc': 'AI 根據教材自動生成題目集，支援做題、解析、知識點統計。錯題自動歸檔，科學練習。',
+    'qbank.browse': '題庫瀏覽',
+    'qbank.browseDesc': '難度分佈與知識點覆蓋',
+    'qbank.practice': '做題解析',
+    'qbank.practiceDesc': 'AI 即時解題思路分析',
+    'qbank.analysis': '解題過程',
+    'qbank.analysisDesc': '多步推理詳細解析',
+    'qbank.knowledge': '知識點視圖',
+    'qbank.knowledgeDesc': '知識點分類與掌握率',
+
+    // ========== 作文批改 expanded ==========
+    'feature.essay_full.title': '作文批改',
+    'feature.essay_full.desc': '支援 7+ 考試類型，串流多維評分。精準標注優秀段落，給出針對性修改建議。',
+    'essay.types': '多類型支援',
+    'essay.typesDesc': '高考/雅思/考研/四六級等',
+    'essay.detail': '修改建議',
+    'essay.detailDesc': '逐句批註與替換推薦',
+
+    // ========== Anki 智慧製卡 ==========
+    'feature.anki_full.title': 'Anki 智慧製卡',
+    'feature.anki_full.desc': '上傳文檔自動分析生成卡片，支援多模板、卡片預覽、AnkiConnect 一鍵同步到 Anki 桌面端。',
+    'anki.upload': '文檔上傳',
+    'anki.uploadDesc': '選擇檔案新增到對話',
+    'anki.preview': '卡片預覽',
+    'anki.previewDesc': '60 張卡片輪播預覽',
+    'anki.import': 'Anki 匯入',
+    'anki.importDesc': 'AnkiConnect 一鍵推送',
+    'anki.tasks': '任務管理',
+    'anki.tasksDesc': '製卡進度與統計看板',
+    'anki.templates': '模板管理',
+    'anki.templatesDesc': '10+ 內建卡片模板',
 
     // ========== 筆記系統 ==========
     'feature.notes.title': '筆記系統',
@@ -1178,8 +1366,8 @@ const translations = {
     'agent.sessionDesc': 'Manage multi-task chats',
 
     // ========== Deep Research ==========
-    'feature.research.title': 'Deep Reading & Research',
-    'feature.research.desc': 'Web search for latest info, deep parsing of PDF/Word docs. From acquisition to synthesis, all in one step.',
+    'feature.research.title': 'Deep Research',
+    'feature.research.desc': 'Web search for latest info, multi-step tasks with auto planning and execution. From information to report generation, all in one step.',
     'research.web': 'Web Research',
     'research.webDesc': 'Real-time search & mining',
     'research.pdf': 'PDF Reader',
@@ -1212,6 +1400,100 @@ const translations = {
     'exam.ankiDesc': 'One-click Anki generation',
     'exam.spaced': 'Spaced Repetition',
     'exam.spacedDesc': 'Scientific memory curve',
+
+    // ========== Module 1 extras ==========
+    'agent.group': 'Group Config',
+    'agent.groupDesc': 'Personalized groups & skill presets',
+
+    // ========== MCP Ecosystem ==========
+    'feature.mcp.title': 'MCP Tool Ecosystem',
+    'feature.mcp.desc': 'MCP protocol support for seamless integration with Context7, Arxiv, and more external tools. One-click invocation, infinitely extensible AI capabilities.',
+    'mcp.context7': 'Context7 Docs',
+    'mcp.context7Desc': 'Real-time tech doc queries',
+    'mcp.arxiv': 'Arxiv Papers',
+    'mcp.arxivDesc': 'Search latest academic papers',
+    'mcp.output': 'Structured Output',
+    'mcp.outputDesc': 'Auto-organize research results',
+
+    // ========== Deep Research subs ==========
+    'research.execute': 'Task Execution',
+    'research.executeDesc': 'Multi-step search, auto planning',
+    'research.progress': 'Progress Tracking',
+    'research.progressDesc': 'Real-time task status feedback',
+    'research.report': 'Report Output',
+    'research.reportDesc': 'Structured research reports',
+    'research.save': 'Auto Archive',
+    'research.saveDesc': 'Reports auto-saved to notes',
+
+    // ========== Deep Reading ==========
+    'feature.reading.title': 'Deep Reading',
+    'feature.reading.desc': 'PDF/Word split-screen reading with AI page-by-page analysis. Select pages to ask follow-up questions. Dual OCR engine for precision.',
+    'reading.pdfSelect': 'Page Selection',
+    'reading.pdfSelectDesc': 'Select page ranges to ask precisely',
+    'reading.pdfDeep': 'AI Deep Read',
+    'reading.pdfDeepDesc': 'Page-by-page content analysis',
+    'reading.docx': 'Word Parsing',
+    'reading.docxDesc': 'Exam/document structure analysis',
+
+    // ========== Knowledge Mindmap subs ==========
+    'mindmap.iterate': 'Multi-round Refinement',
+    'mindmap.iterateDesc': 'AI expands and refines nodes step by step',
+    'mindmap.complete': 'Complete Mindmap',
+    'mindmap.completeDesc': '30→110 nodes panoramic view',
+    'mindmap.editView': 'Map Editor',
+    'mindmap.editViewDesc': 'Visual node drag-and-drop editing',
+    'mindmap.outline': 'Outline View',
+    'mindmap.outlineDesc': 'Hierarchical text quick browse',
+    'mindmap.recite': 'Recall Mode',
+    'mindmap.reciteDesc': 'Cover nodes for self-testing',
+
+    // ========== Notes & Memory ==========
+    'feature.notes_memory.title': 'Notes & Memory Management',
+    'feature.notes_memory.desc': 'Rich-text note editing and vectorized memory system. AI auto-generates memory entries. Local RAG ensures nothing is forgotten.',
+    'memory.generate': 'AI Memory Gen',
+    'memory.generateDesc': 'Auto-extract key knowledge from chats',
+    'memory.list': 'Memory Manager',
+    'memory.listDesc': 'Browse memories by topic',
+    'memory.detail': 'Memory Details',
+    'memory.detailDesc': 'Rich content & linked notes',
+    'memory.files': 'File Browser',
+    'memory.filesDesc': 'Visual memory document management',
+    'memory.vector': 'Vector Index',
+    'memory.vectorDesc': 'Auto-vectorize all resources',
+
+    // ========== Smart Q-Bank ==========
+    'feature.qbank_full.title': 'Smart Q-Bank',
+    'feature.qbank_full.desc': 'AI generates problem sets from textbooks. Supports practice, analysis, and knowledge point statistics. Auto-archive wrong answers for scientific practice.',
+    'qbank.browse': 'Q-Bank Browse',
+    'qbank.browseDesc': 'Difficulty & knowledge coverage',
+    'qbank.practice': 'Practice & Analysis',
+    'qbank.practiceDesc': 'AI real-time problem solving',
+    'qbank.analysis': 'Solution Process',
+    'qbank.analysisDesc': 'Multi-step reasoning in detail',
+    'qbank.knowledge': 'Knowledge View',
+    'qbank.knowledgeDesc': 'Knowledge point classification & mastery',
+
+    // ========== Essay Grading expanded ==========
+    'feature.essay_full.title': 'Essay Grading',
+    'feature.essay_full.desc': 'Supports 7+ exam types with streaming multi-dimensional scoring. Precisely annotate excellent passages with targeted improvement suggestions.',
+    'essay.types': 'Multi-type Support',
+    'essay.typesDesc': 'Gaokao/IELTS/GRE/CET-4/6 & more',
+    'essay.detail': 'Suggestions',
+    'essay.detailDesc': 'Line-by-line annotation & replacement',
+
+    // ========== Anki CardForge ==========
+    'feature.anki_full.title': 'Anki Smart CardForge',
+    'feature.anki_full.desc': 'Upload documents for auto-analysis and card generation. Multi-template support, card preview, one-click AnkiConnect sync to Anki desktop.',
+    'anki.upload': 'Doc Upload',
+    'anki.uploadDesc': 'Select files to add to chat',
+    'anki.preview': 'Card Preview',
+    'anki.previewDesc': '60-card carousel preview',
+    'anki.import': 'Anki Import',
+    'anki.importDesc': 'AnkiConnect one-click push',
+    'anki.tasks': 'Task Manager',
+    'anki.tasksDesc': 'Card forge progress & stats dashboard',
+    'anki.templates': 'Template Manager',
+    'anki.templatesDesc': '10+ built-in card templates',
 
     // ========== Notes System ==========
     'feature.notes.title': 'Notes System',
