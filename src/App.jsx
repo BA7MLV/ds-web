@@ -1276,7 +1276,7 @@ const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, animatio
       className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-6 sm:gap-8 md:gap-12 transition-all duration-700 ease-out ${isVisible ? anim.visible : anim.hidden}`}
       style={{ transitionDelay: `${Math.min(index * 100, 400)}ms` }}
     >
-      <div className="flex-1 w-full md:max-w-[55%]">
+      <div className="w-full md:w-[66%] md:flex-shrink-0">
         {imgSrc ? (
           <img
             src={imgSrc}
@@ -1288,7 +1288,7 @@ const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, animatio
           <ImagePlaceholder label={title} />
         )}
       </div>
-      <div className="flex-1 text-center md:text-left">
+      <div className="flex-1 min-w-0 text-center md:text-left">
         <h3 className="text-[1.125rem] sm:text-[1.25rem] font-semibold text-[color:var(--apple-ink)] mb-2 tracking-tight">
           {title}
         </h3>
@@ -1488,7 +1488,7 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
     <section ref={ref} id={id} className="px-4 sm:px-6 max-w-[90rem] mx-auto py-[3rem] sm:py-[5rem] md:py-[8rem] scroll-mt-28">
       <div className={`flex flex-col ${contentDirection} items-center gap-[3rem] sm:gap-[5rem] md:gap-[4rem]`}>
         <div
-          className="flex-1 md:max-w-[45%] text-center md:text-left"
+          className="flex-1 md:max-w-[33%] text-center md:text-left"
           style={{
             transform: isStatic ? 'none' : `translateY(${Math.round(textShift)}px)`,
             opacity,
@@ -1502,7 +1502,7 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
         </div>
 
         <div
-          className="flex-1 w-full md:max-w-[55%]"
+          className="flex-[2] w-full md:max-w-[66%]"
           style={{
             transform: isStatic ? 'none' : `translateY(${Math.round(mediaShift)}px)`,
             opacity,
