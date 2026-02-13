@@ -449,6 +449,26 @@
   }
 }
 
+/* ===== Dynamic Island / Notch Safe Area Support ===== */
+/* iPhone 14 Pro+ 灵动岛及刘海屏沉浸式适配 */
+
+/* 导航栏延伸到刘海屏区域 */
+.top-nav-safe-area {
+  margin-top: calc(-1 * env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 导航栏内容避开刘海 */
+.top-nav-content {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 移动端下载页面导航 */
+.download-nav-safe-area {
+  margin-top: calc(-1 * env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+}
+
 /* Skeleton loading animation */
 @keyframes skeleton-pulse {
   0%, 100% {
