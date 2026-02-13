@@ -1,12 +1,10 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
 
 const logo = '/logo_mono_svg.svg'
 const logoFooter = '/logo-r.svg'
 const logoFooterDark = '/logo-r-dark.svg'
-
-const cardHeaderClass = 'flex items-center gap-3 mb-[1.618rem]'
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
 const stretchProgress = (value, stretch = 1.3) => clamp((value - 0.5) / stretch + 0.5, 0, 1)
@@ -257,6 +255,7 @@ const getPolicyContent = (t) => ({
         points: [
           t('policy.about.section1.point1', ''),
           t('policy.about.section1.point2', ''),
+          t('policy.about.section1.point3', ''),
         ],
       },
       {
@@ -749,12 +748,12 @@ const App = () => {
                   <img src="/img/example/anki-制卡1.png" alt="Anki Smart CardForge" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
-        </div>
+            </div>
 
             <FaqSection motionScale={motionScale} onOpenPolicy={handlePolicyOpen} />
-      </main>
-      </>
-    )}
+          </main>
+        </>
+      )}
 
     <Footer onOpenPolicy={handlePolicyOpen} />
     <PolicyModal type={activePolicy} onClose={handlePolicyClose} />
@@ -842,9 +841,9 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.76fr)_minmax(0,1.9fr)] gap-8 sm:gap-10 lg:gap-8 xl:gap-12 items-center">
           <div className="flex flex-col items-start text-left order-2 lg:order-1">
             <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold tracking-[-0.02em] mb-4 leading-[1.1] text-[color:var(--apple-ink)]">
-              成为您的
+              {t('hero.headline.top')}
               <br />
-              <span className="whitespace-nowrap">终身学习空间</span>
+              <span className="whitespace-nowrap">{t('hero.headline.bottom')}</span>
             </h1>
 
             <button
@@ -864,14 +863,14 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
                 onClick={handleDownloadClick}
                 className="px-8 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-lg font-medium text-[15px] hover:opacity-90 active:scale-[0.98] transition-all duration-200"
               >
-                立即下载
+                {t('hero.cta.download')}
               </button>
               <button
                 type="button"
                 onClick={handleExploreClick}
                 className="px-8 py-3 bg-transparent text-[color:var(--apple-ink)] border border-[color:var(--apple-line-strong)] rounded-lg font-medium text-[15px] hover:bg-[color:var(--apple-card)] transition-all duration-200"
               >
-                了解更多
+                {t('hero.cta.explore')}
               </button>
             </div>
 
@@ -882,9 +881,9 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleExploreClick()}
-                aria-label="向下滚动"
+                aria-label={t('hero.scrollDown', '向下滚动')}
               >
-                <span className="text-[10px] text-[color:var(--apple-muted)] tracking-wider uppercase">向下滚动</span>
+                <span className="text-[10px] text-[color:var(--apple-muted)] tracking-wider uppercase">{t('hero.scrollDown', '向下滚动')}</span>
                 <svg
                   className="w-5 h-5 text-[color:var(--apple-muted)] animate-bounce-down"
                   viewBox="0 0 24 24"
