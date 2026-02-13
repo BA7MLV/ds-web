@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
-import { LazyImage } from 'react-lazy-load-image-component'
+import { LazyLoadImage as LazyImage } from 'react-lazy-load-image-component'
 import 'react-lazy-load-image-component/src/effects/blur.css'
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
@@ -7,6 +7,7 @@ import { LocaleToggle, useLocale } from './components/locale-toggle'
 const logo = '/logo_mono_svg.svg'
 const logoFooter = '/logo-r.svg'
 const logoFooterDark = '/logo-r-dark.svg'
+const SUBTEXT_FADE_DURATION_MS = 200
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
 const stretchProgress = (value, stretch = 1.3) => clamp((value - 0.5) / stretch + 0.5, 0, 1)
@@ -764,16 +765,17 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   const shouldAnimate = motionScale > 0
   const [activePreviewId, setActivePreviewId] = useState(heroPreviewItems[0].id)
   const activePreviewItem = heroPreviewItems.find(item => item.id === activePreviewId) || heroPreviewItems[0]
+  const [isSubtextVisible, setIsSubtextVisible] = useState(true)
   const [isSubtextAnimating, setIsSubtextAnimating] = useState(false)
-  const subtextTransitionTimerRef = useRef(null)
+  const subtextSwapTimerRef = useRef(null)
+  const subtextResetTimerRef = useRef(null)
   const scrollY = useScrollY()
   const showScrollHint = scrollY < 100
 
   useEffect(() => {
     return () => {
-      if (subtextTransitionTimerRef.current) {
-        window.clearTimeout(subtextTransitionTimerRef.current)
-      }
+      if (subtextSwapTimerRef.current) window.clearTimeout(subtextSwapTimerRef.current)
+      if (subtextResetTimerRef.current) window.clearTimeout(subtextResetTimerRef.current)
     }
   }, [])
 
@@ -801,13 +803,27 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
     const nextIndex = (currentIndex + 1) % heroPreviewItems.length
     const nextId = heroPreviewItems[nextIndex].id
 
-    setIsSubtextAnimating(true)
-    setActivePreviewId(nextId)
+    if (!shouldAnimate) {
+      setActivePreviewId(nextId)
+      return
+    }
 
-    subtextTransitionTimerRef.current = window.setTimeout(() => {
+    if (subtextSwapTimerRef.current) window.clearTimeout(subtextSwapTimerRef.current)
+    if (subtextResetTimerRef.current) window.clearTimeout(subtextResetTimerRef.current)
+
+    setIsSubtextAnimating(true)
+    setIsSubtextVisible(false)
+
+    subtextSwapTimerRef.current = window.setTimeout(() => {
+      setActivePreviewId(nextId)
+      setIsSubtextVisible(true)
+      subtextSwapTimerRef.current = null
+    }, SUBTEXT_FADE_DURATION_MS)
+
+    subtextResetTimerRef.current = window.setTimeout(() => {
       setIsSubtextAnimating(false)
-      subtextTransitionTimerRef.current = null
-    }, 650)
+      subtextResetTimerRef.current = null
+    }, SUBTEXT_FADE_DURATION_MS * 2)
   }
 
   return (
@@ -815,7 +831,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
       className="relative min-h-screen pt-20 pb-16 flex items-center overflow-hidden lg:overflow-visible"
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_center,var(--apple-glow),transparent_70%)] blur-[100px] opacity-40" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[980px] h-[760px] bg-[radial-gradient(ellipse_at_center,var(--apple-glow),transparent_82%)] blur-[150px] opacity-55" />
       </div>
 
       <div
@@ -839,10 +855,11 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               aria-label={t(activePreviewItem.subtextKey)}
               className="text-left mb-8 cursor-pointer transition-opacity duration-150 hover:opacity-85 disabled:cursor-default disabled:opacity-100"
             >
-              <span className="relative inline-flex h-[1.6em] items-center">
+              <span className="relative inline-flex h-[1.6em] items-center overflow-hidden align-top">
                 <span
-                  key={activePreviewId}
-                  className="absolute inset-0 text-base sm:text-lg text-[color:var(--apple-muted)] whitespace-nowrap animate-fade-in-blur"
+                  className={`text-base sm:text-lg text-[color:var(--apple-muted)] whitespace-nowrap transition-opacity duration-200 ease-out motion-reduce:transition-none ${
+                    isSubtextVisible ? 'opacity-100' : 'opacity-0'
+                  }`}
                 >
                   {t(activePreviewItem.subtextKey)}
                 </span>

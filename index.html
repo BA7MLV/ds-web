@@ -54,12 +54,20 @@
 
     <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
     <script>
-      LA.init({
-        id: 'L6EKwkfq9fvFA4LW',
-        ck: 'L6EKwkfq9fvFA4LW',
-        autoTrack: true,
-        hashMode: true,
-      });
+      (function () {
+        var analytics = window.LA
+        if (!analytics || typeof analytics.init !== 'function') {
+          console.warn('[Analytics] 51.LA SDK unavailable, skipping initialization')
+          return
+        }
+
+        analytics.init({
+          id: 'L6EKwkfq9fvFA4LW',
+          ck: 'L6EKwkfq9fvFA4LW',
+          autoTrack: true,
+          hashMode: true,
+        })
+      })()
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
