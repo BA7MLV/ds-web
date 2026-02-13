@@ -381,10 +381,10 @@ const StatsHighlight = ({ motionScale = 1 }) => {
   const shouldAnimate = motionScale > 0
 
   const stats = [
-    { value: '65', labelKey: 'stats.tools', descKey: 'stats.toolsDesc' },
-    { value: '17', labelKey: 'stats.providers', descKey: 'stats.providersDesc' },
-    { value: '8', labelKey: 'stats.modes', descKey: 'stats.modesDesc' },
-    { value: '16+', labelKey: 'stats.formats', descKey: 'stats.formatsDesc' },
+    { value: 'Chat V2', labelKey: 'stats.tools', descKey: 'stats.toolsDesc' },
+    { value: 'Hub', labelKey: 'stats.providers', descKey: 'stats.providersDesc' },
+    { value: 'Skills', labelKey: 'stats.modes', descKey: 'stats.modesDesc' },
+    { value: 'VFS', labelKey: 'stats.formats', descKey: 'stats.formatsDesc' },
   ]
 
   return (
@@ -1017,8 +1017,6 @@ const FreeModelsCallout = () => {
 }
 
 const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]' }) => {
-  const { t } = useLocale()
-
   return (
     <div
       className={`relative w-full ${className}`}

@@ -103,7 +103,7 @@ export default withMermaid(defineConfig({
       '/guide/': guideSidebar
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/BA7MLV/ds-web' }
+      { icon: 'github', link: 'https://github.com/000haoji/deep-student' }
     ],
     footer: {
       message: 'Released under the AGPL-3.0 License.',
