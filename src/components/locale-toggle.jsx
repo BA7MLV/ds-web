@@ -39,7 +39,7 @@ const translations = {
     
     // ========== AI Agent ==========
     'feature.agent.title': 'AI 智能体 · 全能助手',
-    'feature.agent.desc': '65 个内置工具按需加载，13+ 家 LLM 供应商。渐进披露架构，连接一切学习工具。',
+    'feature.agent.desc': '以 Chat V2 为入口，打通 Learning Hub、Skills 与制卡任务。统一会话与学习资源上下文。',
     'agent.multiModel': '多模型协作',
     'agent.multiModelDesc': '同时调用多个大模型',
     'agent.skills': '技能管理',
@@ -49,7 +49,7 @@ const translations = {
 
     // ========== Deep Research ==========
     'feature.research.title': '深度调研',
-    'feature.research.desc': '联网搜索最新信息，多步任务自动规划执行。从信息获取到报告生成，一步到位。',
+    'feature.research.desc': '基于研究模式进行多步任务规划，结合外部搜索与本地资料检索，输出结构化结果。',
 
 
 
@@ -59,7 +59,7 @@ const translations = {
 
     // ========== MCP 工具生态 ==========
     'feature.mcp.title': 'MCP 工具生态',
-    'feature.mcp.desc': '支持 MCP 协议，无缝集成 Context7、Arxiv 等外部工具。一键调用，无限扩展 AI 能力边界。',
+    'feature.mcp.desc': '支持 MCP 协议（SSE / WebSocket / HTTP），可接入外部工具并与内置技能链路协同。',
     'mcp.context7': 'Context7 文档',
     'mcp.context7Desc': '实时查询技术文档',
     'mcp.arxiv': 'Arxiv 论文',
@@ -101,7 +101,7 @@ const translations = {
 
     // ========== 笔记 & 记忆管理 ==========
     'feature.notes_memory.title': '笔记 & 记忆管理',
-    'feature.notes_memory.desc': '富文本笔记编辑，向量化记忆系统。AI 自动生成记忆条目，本地 RAG 永不遗忘。',
+    'feature.notes_memory.desc': '学习资源统一进入 VFS 并自动向量化，笔记、记忆与检索在同一数据层协同工作。',
     'memory.generate': 'AI 生成记忆',
     'memory.generateDesc': '对话中自动提取关键知识',
     'memory.list': '记忆管理',
@@ -170,15 +170,15 @@ const translations = {
 
     // Stats Highlight
     'stats.title': '为深度学习而生',
-    'stats.subtitle': '渐进披露架构，工具按需加载，覆盖学习全场景',
-    'stats.tools': '内置工具',
-    'stats.toolsDesc': '知识检索、笔记、Anki、题库、导图等',
-    'stats.providers': 'API 供应商',
-    'stats.providersDesc': 'OpenAI、Claude、硅基流动等',
-    'stats.modes': '练习模式',
-    'stats.modesDesc': '顺序、随机、错题优先等',
-    'stats.formats': '文档格式',
-    'stats.formatsDesc': 'PDF、Word、EPUB 等',
+    'stats.subtitle': '从对话入口到数据底座，前后端围绕学习闭环协同设计',
+    'stats.tools': '对话入口',
+    'stats.toolsDesc': 'Chat V2 统一承载学习任务与协作流程',
+    'stats.providers': '资源中枢',
+    'stats.providersDesc': 'Learning Hub 统一管理资料与上下文注入',
+    'stats.modes': '能力编排',
+    'stats.modesDesc': 'Skills + 工具调用按任务动态组合',
+    'stats.formats': '数据底座',
+    'stats.formatsDesc': '本地 SQLite + LanceDB + Blob 持久化',
 
     // Sub-features - 智能对话
     
@@ -357,7 +357,7 @@ const translations = {
     
     // ========== AI Agent ==========
     'feature.agent.title': 'AI 智慧體 · 全能助手',
-    'feature.agent.desc': '65 個內建工具按需載入，13+ 家 LLM 供應商。漸進披露架構，連接一切學習工具。',
+    'feature.agent.desc': '以 Chat V2 為入口，打通 Learning Hub、Skills 與製卡任務。統一會話與學習資源上下文。',
     'agent.multiModel': '多模型協作',
     'agent.multiModelDesc': '同時調用多個大模型',
     'agent.skills': '技能管理',
@@ -367,7 +367,7 @@ const translations = {
 
     // ========== Deep Research ==========
     'feature.research.title': '深度調研',
-    'feature.research.desc': '聯網搜尋最新資訊，多步任務自動規劃執行。從資訊獲取到報告生成，一步到位。',
+    'feature.research.desc': '基於研究模式進行多步任務規劃，結合外部搜尋與本地資料檢索，輸出結構化結果。',
 
 
 
@@ -377,7 +377,7 @@ const translations = {
 
     // ========== MCP 工具生態 ==========
     'feature.mcp.title': 'MCP 工具生態',
-    'feature.mcp.desc': '支援 MCP 協定，無縫整合 Context7、Arxiv 等外部工具。一鍵呼叫，無限擴展 AI 能力邊界。',
+    'feature.mcp.desc': '支援 MCP 協定（SSE / WebSocket / HTTP），可接入外部工具並與內建技能鏈路協同。',
     'mcp.context7': 'Context7 文件',
     'mcp.context7Desc': '即時查詢技術文件',
     'mcp.arxiv': 'Arxiv 論文',
@@ -419,7 +419,7 @@ const translations = {
 
     // ========== 筆記 & 記憶管理 ==========
     'feature.notes_memory.title': '筆記 & 記憶管理',
-    'feature.notes_memory.desc': '富文字筆記編輯，向量化記憶系統。AI 自動生成記憶條目，本地 RAG 永不遺忘。',
+    'feature.notes_memory.desc': '學習資源統一進入 VFS 並自動向量化，筆記、記憶與檢索在同一資料層協同運作。',
     'memory.generate': 'AI 生成記憶',
     'memory.generateDesc': '對話中自動提取關鍵知識',
     'memory.list': '記憶管理',
@@ -488,15 +488,15 @@ const translations = {
 
     // Stats Highlight
     'stats.title': '為深度學習而生',
-    'stats.subtitle': '漸進披露架構，工具按需載入，覆蓋學習全場景',
-    'stats.tools': '內建工具',
-    'stats.toolsDesc': '知識檢索、筆記、Anki、題庫、導圖等',
-    'stats.providers': 'API 供應商',
-    'stats.providersDesc': 'OpenAI、Claude、硅基流動等',
-    'stats.modes': '練習模式',
-    'stats.modesDesc': '順序、隨機、錯題優先等',
-    'stats.formats': '文檔格式',
-    'stats.formatsDesc': 'PDF、Word、EPUB 等',
+    'stats.subtitle': '從對話入口到資料底座，前後端圍繞學習閉環協同設計',
+    'stats.tools': '對話入口',
+    'stats.toolsDesc': 'Chat V2 統一承載學習任務與協作流程',
+    'stats.providers': '資源中樞',
+    'stats.providersDesc': 'Learning Hub 統一管理資料與上下文注入',
+    'stats.modes': '能力編排',
+    'stats.modesDesc': 'Skills + 工具呼叫按任務動態組合',
+    'stats.formats': '資料底座',
+    'stats.formatsDesc': '本地 SQLite + LanceDB + Blob 持久化',
 
     // Sub-features - 智慧對話
     
@@ -675,7 +675,7 @@ const translations = {
     
     // ========== AI Agent ==========
     'feature.agent.title': 'AI Agent · All-in-One Assistant',
-    'feature.agent.desc': '65 built-in tools loaded on demand, 13+ LLM providers. Progressive disclosure architecture connecting all your learning tools.',
+    'feature.agent.desc': 'Chat V2 is the entry point, connecting Learning Hub, Skills, and CardForge tasks with shared context.',
     'agent.multiModel': 'Multi-Model',
     'agent.multiModelDesc': 'Call multiple LLMs at once',
     'agent.skills': 'Skill Mgmt',
@@ -685,7 +685,7 @@ const translations = {
 
     // ========== Deep Research ==========
     'feature.research.title': 'Deep Research',
-    'feature.research.desc': 'Web search for latest info, multi-step tasks with auto planning and execution. From information to report generation, all in one step.',
+    'feature.research.desc': 'Research mode plans multi-step tasks and combines web search with local resource retrieval for structured outputs.',
 
 
 
@@ -695,7 +695,7 @@ const translations = {
 
     // ========== MCP Ecosystem ==========
     'feature.mcp.title': 'MCP Tool Ecosystem',
-    'feature.mcp.desc': 'MCP protocol support for seamless integration with Context7, Arxiv, and more external tools. One-click invocation, infinitely extensible AI capabilities.',
+    'feature.mcp.desc': 'Supports MCP transports (SSE / WebSocket / HTTP) to connect external tools with built-in skill workflows.',
     'mcp.context7': 'Context7 Docs',
     'mcp.context7Desc': 'Real-time tech doc queries',
     'mcp.arxiv': 'Arxiv Papers',
@@ -737,7 +737,7 @@ const translations = {
 
     // ========== Notes & Memory ==========
     'feature.notes_memory.title': 'Notes & Memory Management',
-    'feature.notes_memory.desc': 'Rich-text note editing and vectorized memory system. AI auto-generates memory entries. Local RAG ensures nothing is forgotten.',
+    'feature.notes_memory.desc': 'Resources flow into VFS and vector indexing automatically, unifying notes, memory, and retrieval on one data layer.',
     'memory.generate': 'AI Memory Gen',
     'memory.generateDesc': 'Auto-extract key knowledge from chats',
     'memory.list': 'Memory Manager',
@@ -806,15 +806,15 @@ const translations = {
 
     // Stats Highlight
     'stats.title': 'Built for Deep Learning',
-    'stats.subtitle': 'Progressive disclosure architecture with on-demand tool loading',
-    'stats.tools': 'Built-in Tools',
-    'stats.toolsDesc': 'RAG, notes, Anki, Q-bank, mindmap & more',
-    'stats.providers': 'API Providers',
-    'stats.providersDesc': 'OpenAI, Claude, SiliconFlow & more',
-    'stats.modes': 'Practice Modes',
-    'stats.modesDesc': 'Sequential, random, mistakes-first & more',
-    'stats.formats': 'Doc Formats',
-    'stats.formatsDesc': 'PDF, Word, EPUB & more',
+    'stats.subtitle': 'Frontend and backend are aligned around a conversation-first learning loop',
+    'stats.tools': 'Chat Entry',
+    'stats.toolsDesc': 'Chat V2 is the unified interaction surface',
+    'stats.providers': 'Resource Hub',
+    'stats.providersDesc': 'Learning Hub organizes resources and context injection',
+    'stats.modes': 'Skill Orchestration',
+    'stats.modesDesc': 'Skills and tools are composed per task',
+    'stats.formats': 'Local Data Core',
+    'stats.formatsDesc': 'SQLite + LanceDB + Blob stay on device',
 
     // Sub-features - AI Chat
     

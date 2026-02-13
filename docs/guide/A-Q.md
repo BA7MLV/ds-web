@@ -1,21 +1,31 @@
-````markdown
-# A&Q
-::: warning macOS 安装显示显示“已损坏，无法打开。 您应该将它移到废纸篓”
-:::
+# 常见问题（FAQ）
 
-出现此问题，可以使用接下来用这种方法：
-在终端粘贴复制输入命令（注意最后有一个空格）：
+## macOS 提示“已损坏，无法打开”怎么办？
 
-  ```shell
-sudo xattr -r -d com.apple.quarantine 
-  ```
+这是常见的系统隔离属性问题，可在终端执行：
 
-！请先不要按回车 ！请先不要按回车
+```bash
+sudo xattr -r -d com.apple.quarantine /Applications/DeepStudent.app
+```
 
-1.打开 “访达”（Finder）进入 “应用程序” 目录，找到该软件图标，将图标拖到刚才的终端窗口里面，会得到如下组合：
+如果你的安装路径不是 `/Applications/DeepStudent.app`，请替换成真实路径。
 
-sudo xattr -r -d com.apple.quarantine /Applications/WebStrom.app
+## 数据会上传到云端吗？
 
-2.回到终端窗口按回车，输入系统密码回车即可。
-3.打开软件。
-````
+DeepStudent 采用本地优先架构，核心数据默认保存在本机（SQLite + LanceDB + Blob）。
+如你主动配置了云同步（如 WebDAV / S3），才会进行对应同步。
+
+## 第一次安装后优先做什么？
+
+1. 在系统设置完成 API 配置
+2. 导入一份学习资料到 Learning Hub
+3. 回到 Chat V2 进行一次资源引用问答
+
+## 为什么文档里不再写固定工具数量？
+
+主项目迭代较快，固定数量容易过时。当前文档改为描述“能力结构与链路关系”，确保长期准确。
+
+## 如何反馈问题或共建？
+
+- 项目仓库：[deep-student](https://github.com/000haoji/deep-student)
+- 社区交流：[QQ群（310134919）](https://qm.qq.com/q/1lTUkKSaB6)
