@@ -755,3 +755,28 @@ html.home-no-search .VPNavBar .VPNavBarSearch {
     animation: none;
   }
 }
+
+/* ===== Dynamic Island / Notch Safe Area Support ===== */
+/* iPhone 14 Pro+ 灵动岛及刘海屏适配 */
+.VPNavBar,
+.VPLocalNav,
+.VPSidebar {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 移动端屏幕菜单 */
+.VPNavBar.screen-open {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 侧边栏安全区域适配 */
+.VPSidebar {
+  padding-top: calc(env(safe-area-inset-top));
+}
+
+/* 移动端横屏时侧边栏的内边距 */
+@media (max-width: 768px) {
+  .VPSidebar {
+    padding-top: env(safe-area-inset-top);
+  }
+}
