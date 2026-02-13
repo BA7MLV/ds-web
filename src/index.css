@@ -443,3 +443,25 @@
 .animate-shimmer {
   animation: shimmer 2.4s ease-in-out infinite;
 }
+
+/* Bounce down animation for scroll hint */
+@keyframes bounce-down {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+.animate-bounce-down {
+  animation: bounce-down 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-bounce-down {
+    animation: none;
+  }
+}

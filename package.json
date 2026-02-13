@@ -10,6 +10,7 @@
     "dev": "vite",
     "dev:docs": "npm run dev -w docs",
     "dev:all": "node scripts/dev-all.mjs",
+    "gen:favicons": "node scripts/generate-favicons.mjs",
     "build": "vite build && npm run build -w docs && rm -rf dist/docs && cp -R docs/.vitepress/dist dist/docs",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@resvg/resvg-wasm": "^2.6.2",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",
