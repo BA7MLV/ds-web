@@ -1,5 +1,8 @@
 import { defineConfig } from 'vitepress'
 import { withMermaid } from 'vitepress-plugin-mermaid'
+import { execFileSync } from 'node:child_process'
+import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const guideSidebar = [
   {
@@ -40,6 +43,35 @@ const guideSidebar = [
   }
 ]
 
+const docsRootDir = fileURLToPath(new URL('../', import.meta.url))
+
+const gitEditorsCache = new Map()
+
+const getGitEditors = (absPath) => {
+  if (gitEditorsCache.has(absPath)) return gitEditorsCache.get(absPath)
+
+  try {
+    const output = execFileSync('git', ['log', '--follow', '--format=%an', '--', absPath], {
+      encoding: 'utf-8'
+    })
+
+    const seen = new Set()
+    const editors = []
+    for (const line of output.split('\n')) {
+      const name = line.trim()
+      if (!name || seen.has(name)) continue
+      seen.add(name)
+      editors.push(name)
+    }
+
+    gitEditorsCache.set(absPath, editors)
+    return editors
+  } catch {
+    gitEditorsCache.set(absPath, [])
+    return []
+  }
+}
+
 export default withMermaid(defineConfig({
   appearance: true,
   markdown: {
@@ -47,11 +79,14 @@ export default withMermaid(defineConfig({
       lazyLoading: true
     }
   },
-  title: 'AI 原生的本地优先学习系统｜DeepStudent',
+  title: 'DeepStudent｜Documentation',
+  titleTemplate: ':title｜DeepStudent｜Documentation',
   description: '免费开源的AI错题管理  \n解决方案',
   base: '/docs/',
   head: [
-    ['link', { rel: 'icon', href: '/docs/favicon.ico', sizes: 'any' }],
+    // 与主站共用同一个 favicon（根目录 /public/favicon.ico）
+    ['link', { rel: 'icon', href: '/favicon.ico', sizes: 'any' }],
+    ['link', { rel: 'apple-touch-icon', href: '/docs/apple-touch-icon.png?v=20260212-2' }],
     ['meta', { name: 'theme-color', content: '#f5f5f7', media: '(prefers-color-scheme: light)' }],
     ['meta', { name: 'theme-color', content: '#0a0a0c', media: '(prefers-color-scheme: dark)' }],
     ['meta', { name: 'color-scheme', content: 'light dark' }],
@@ -70,6 +105,7 @@ export default withMermaid(defineConfig({
     siteTitle: '', // 有 logo 时不显示标题文本
     nav: [
       { text: '指南', link: '/' },
+      // base 为 /docs/，用 /../ 跳转到根站点（React 官网）
       { text: '官网', link: '/../', target: '_self' }
     ],
     sidebar: {
@@ -140,5 +176,13 @@ export default withMermaid(defineConfig({
   // 添加最后更新时间
   lastUpdated: {
     text: '最后更新时间'
-  }
+  },
+  transformPageData(pageData) {
+    if (!pageData?.relativePath?.endsWith('.md')) return
+
+    const absPath = resolve(docsRootDir, pageData.relativePath)
+    const editors = getGitEditors(absPath)
+    pageData.editors = editors
+    pageData.lastAuthor = editors[0] || ''
+  },
 }))

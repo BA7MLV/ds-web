@@ -722,3 +722,36 @@ html.home-no-search .VPNavBar .VPNavBarSearch {
 .dark ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.25);
 }
+
+/* ===== Hero Scroll Hint Animation ===== */
+.hero-scroll-hint {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero-scroll-hint svg {
+  width: 32px;
+  height: 32px;
+  color: var(--ds-muted);
+  animation: bounce-down 2s ease-in-out infinite;
+}
+
+@keyframes bounce-down {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(12px);
+    opacity: 1;
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-hint svg {
+    animation: none;
+  }
+}
