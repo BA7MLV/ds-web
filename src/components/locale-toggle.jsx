@@ -9,6 +9,7 @@ const translations = {
   zh: {
     // Nav
     'nav.features': '功能',
+    'nav.qa': 'QA',
     'nav.docs': '文档',
     'nav.download': '下载',
     
@@ -314,6 +315,7 @@ const translations = {
   'zh-Hant': {
     // Nav
     'nav.features': '功能',
+    'nav.qa': 'QA',
     'nav.docs': '文件',
     'nav.download': '下載',
 
@@ -619,6 +621,7 @@ const translations = {
   en: {
     // Nav
     'nav.features': 'Features',
+    'nav.qa': 'Q&A',
     'nav.docs': 'Docs',
     'nav.download': 'Download',
     
