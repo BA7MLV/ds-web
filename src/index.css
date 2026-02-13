@@ -426,43 +426,6 @@
   .gradient-text-animated {
     animation: none;
   }
-
-  .scroll-reveal-item {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-}
-
-/* Shimmer animation for image placeholders */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.animate-shimmer {
-  animation: shimmer 2.4s ease-in-out infinite;
-}
-
-@keyframes fade-in-blur {
-  0% {
-    opacity: 0;
-    filter: blur(10px);
-  }
-  100% {
-    opacity: 1;
-    filter: blur(0);
-  }
-}
-
-.animate-fade-in-blur {
-  animation: fade-in-blur 600ms ease-out forwards;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-slide-up {
-    animation: none;
-  }
 }
 
 @keyframes bounce-down {
