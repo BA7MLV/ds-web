@@ -375,63 +375,6 @@ const getPolicyContent = (t) => ({
 })
 
 // 功能标签导航组件
-const FeatureTabNav = () => {
-  const { t } = useLocale()
-  const [activeTab, setActiveTab] = useState('chat')
-  const scrollY = useScrollY()
-  const isSticky = scrollY > 600
-
-  const tabs = [
-    { id: 'chat', labelKey: 'featureTab.chat', targetId: 'feature-chat' },
-    { id: 'notes', labelKey: 'featureTab.notes', targetId: 'feature-notes' },
-    { id: 'textbook', labelKey: 'featureTab.textbook', targetId: 'feature-textbook' },
-    { id: 'qbank', labelKey: 'featureTab.qbank', targetId: 'feature-qbank' },
-    { id: 'essay', labelKey: 'featureTab.essay', targetId: 'feature-essay' },
-    { id: 'translate', labelKey: 'featureTab.translate', targetId: 'feature-translate' },
-    { id: 'mindmap', labelKey: 'featureTab.mindmap', targetId: 'feature-mindmap' },
-    { id: 'skills', labelKey: 'featureTab.skills', targetId: 'feature-skills' },
-    { id: 'anki', labelKey: 'featureTab.anki', targetId: 'feature-anki' },
-    { id: 'privacy', labelKey: 'featureTab.privacy', targetId: 'feature-privacy' },
-  ]
-
-  const handleTabClick = (tab) => {
-    setActiveTab(tab.id)
-    const target = document.getElementById(tab.targetId)
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }
-
-  return (
-    <nav
-      className={`sticky top-12 z-30 transition-all duration-300 ${
-        isSticky
-          ? 'bg-[color:var(--apple-nav-bg)] backdrop-blur-xl border-b border-[color:var(--apple-line)] shadow-sm'
-          : 'bg-transparent'
-      }`}
-    >
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3">
-        <div className="flex items-center justify-center gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => handleTabClick(tab)}
-              className={`focus-ring whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-full text-[12px] sm:text-[13px] font-medium transition-all duration-300 ${
-                activeTab === tab.id
-                  ? 'bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] shadow-md'
-                  : 'text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-card)]'
-              }`}
-            >
-              {t(tab.labelKey, tab.id)}
-            </button>
-          ))}
-        </div>
-      </div>
-    </nav>
-  )
-}
-
 // 数据亮点区块组件
 const StatsHighlight = ({ motionScale = 1 }) => {
   const { t } = useLocale()
@@ -912,34 +855,10 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
 }
 
 const heroPreviewItems = [
-  {
-    id: 'chat',
-    labelKey: 'hero.preview.chat',
-    subtextKey: 'hero.preview.subtext.chat',
-    src: '/img/hero-preview-overview.jpg',
-    objectPosition: 'center 38.2%',
-  },
-  {
-    id: 'skills',
-    labelKey: 'hero.preview.skills',
-    subtextKey: 'hero.preview.subtext.skills',
-    src: '/img/hero-preview-skills.jpg',
-    objectPosition: 'center 38.2%',
-  },
-  {
-    id: 'knowledge',
-    labelKey: 'hero.preview.knowledge',
-    subtextKey: 'hero.preview.subtext.knowledge',
-    src: '/img/hero-preview-mistakes.jpg',
-    objectPosition: 'center 38.2%',
-  },
-  {
-    id: 'providers',
-    labelKey: 'hero.preview.providers',
-    subtextKey: 'hero.preview.subtext.providers',
-    src: '/img/hero-preview-review.jpg',
-    objectPosition: 'center 38.2%',
-  },
+  { id: 'chat', labelKey: 'hero.preview.chat', subtextKey: 'hero.preview.subtext.chat' },
+  { id: 'skills', labelKey: 'hero.preview.skills', subtextKey: 'hero.preview.subtext.skills' },
+  { id: 'knowledge', labelKey: 'hero.preview.knowledge', subtextKey: 'hero.preview.subtext.knowledge' },
+  { id: 'providers', labelKey: 'hero.preview.providers', subtextKey: 'hero.preview.subtext.providers' },
 ]
 
 
@@ -1615,52 +1534,6 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
         </div>
       )}
     </section>
-  )
-}
-
-const Flashcard = ({ motionScale = 1 }) => {
-  const [isFlipped, setIsFlipped] = useState(false)
-  const shouldAnimate = motionScale > 0
-  const { t } = useLocale()
-
-  return (
-    <div
-      className={`bg-[color:var(--apple-card)] backdrop-blur-2xl border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] rounded-[2rem] p-[1.75rem] sm:p-[2.75rem] w-[18rem] aspect-[1/1.6] flex flex-col items-center text-center justify-center relative rotate-1 ${
-        shouldAnimate ? 'transition-all duration-700 ease-apple' : ''
-      } hover:rotate-0 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]`}
-    >
-      <div className="absolute top-[2rem] left-[2rem] w-3 h-3 bg-[color:var(--apple-ink)] rounded-full opacity-20" />
-      <div
-        className={`absolute inset-0 bg-[color:var(--apple-card-strong)] backdrop-blur-md flex items-center justify-center rounded-[2rem] ${
-          shouldAnimate ? 'transition-all duration-500' : ''
-        } ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-        aria-hidden={!isFlipped}
-      >
-        <div className="text-3xl font-bold text-[color:var(--apple-ink)] tracking-tight">1 / x</div>
-      </div>
-      <div
-        className={`relative z-10 flex flex-col items-center ${
-          shouldAnimate ? 'transition-all duration-500' : ''
-        } ${isFlipped ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
-        aria-hidden={isFlipped}
-      >
-        <div className="text-[11px] font-bold text-[color:var(--apple-muted)] tracking-[0.2em] uppercase mb-[1rem]">
-          {t('card.question')}
-        </div>
-        <div className="text-[1.75rem] font-sans font-medium text-[color:var(--apple-ink)] tracking-tight">
-          {t('flashcard.prompt')}
-        </div>
-      </div>
-      <div className="w-full h-px bg-[color:var(--apple-line)] my-[3rem]" />
-      <button
-        type="button"
-        onClick={() => setIsFlipped((prev) => !prev)}
-        className="focus-ring relative z-20 text-[13px] text-[color:var(--apple-muted)] font-semibold px-4 py-2 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] hover:text-[color:var(--apple-ink)] hover:border-[color:var(--apple-line-strong)] hover:scale-105 active:scale-95 transition-all duration-300 shadow-sm"
-        aria-pressed={isFlipped}
-      >
-        {isFlipped ? t('card.backToQuestion') : t('card.clickAnswer')}
-      </button>
-    </div>
   )
 }
 
