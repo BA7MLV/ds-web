@@ -5,7 +5,7 @@ import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
 import { MobileNavMenu } from './components/mobile-nav-menu'
 
-const logo = 'http://localhost:5180/logo-r.svg'
+const logo = '/logo-r.svg'
 const logoFooter = '/logo-r.svg'
 const logoFooterDark = '/logo-r-dark.svg'
 const SUBTEXT_FADE_DURATION_MS = 200
