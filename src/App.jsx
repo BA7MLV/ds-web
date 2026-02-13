@@ -745,8 +745,18 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   const shouldAnimate = motionScale > 0
   const [activePreviewId, setActivePreviewId] = useState(heroPreviewItems[0].id)
   const activePreviewItem = heroPreviewItems.find(item => item.id === activePreviewId) || heroPreviewItems[0]
+  const [isSubtextAnimating, setIsSubtextAnimating] = useState(false)
+  const subtextTransitionTimerRef = useRef(null)
   const scrollY = useScrollY()
   const showScrollHint = scrollY < 100
+
+  useEffect(() => {
+    return () => {
+      if (subtextTransitionTimerRef.current) {
+        window.clearTimeout(subtextTransitionTimerRef.current)
+      }
+    }
+  }, [])
 
   const handleExplore = () => {
     if (typeof document === 'undefined') return
@@ -766,21 +776,31 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   }
 
   const handleSubtextClick = () => {
+    if (isSubtextAnimating) return
+
     const currentIndex = heroPreviewItems.findIndex(item => item.id === activePreviewId)
     const nextIndex = (currentIndex + 1) % heroPreviewItems.length
-    setActivePreviewId(heroPreviewItems[nextIndex].id)
+    const nextId = heroPreviewItems[nextIndex].id
+
+    setIsSubtextAnimating(true)
+    setActivePreviewId(nextId)
+
+    subtextTransitionTimerRef.current = window.setTimeout(() => {
+      setIsSubtextAnimating(false)
+      subtextTransitionTimerRef.current = null
+    }, 650)
   }
 
   return (
     <header
-      className="relative min-h-screen px-4 sm:px-6 lg:px-8 pt-20 pb-16 flex items-center overflow-hidden lg:overflow-visible"
+      className="relative min-h-screen pt-20 pb-16 flex items-center overflow-hidden lg:overflow-visible"
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_center,var(--apple-glow),transparent_70%)] blur-[100px] opacity-40" />
       </div>
 
       <div
-        className={`relative z-10 w-full max-w-6xl mx-auto ${
+        className={`relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 ${
           shouldAnimate ? 'animate-fade-in' : ''
         }`}
         style={shouldAnimate ? { animationDelay: '0.08s' } : undefined}
@@ -796,12 +816,18 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
             <button
               type="button"
               onClick={handleSubtextClick}
-              className="text-left mb-8 group cursor-pointer hover:opacity-80 transition-opacity"
+              disabled={isSubtextAnimating}
+              aria-label={t(activePreviewItem.subtextKey)}
+              className="text-left mb-8 cursor-pointer transition-opacity duration-150 hover:opacity-85 disabled:cursor-default disabled:opacity-100"
             >
-              <p className="text-base sm:text-lg text-[color:var(--apple-muted)] flex items-center gap-2">
-                {t(activePreviewItem.subtextKey)}
-                <span className="inline-block text-[color:var(--apple-muted)] group-hover:translate-x-0.5 transition-transform">→</span>
-              </p>
+              <span className="relative inline-flex h-[1.6em] items-center">
+                <span
+                  key={activePreviewId}
+                  className="absolute inset-0 text-base sm:text-lg text-[color:var(--apple-muted)] whitespace-nowrap animate-fade-in-blur"
+                >
+                  {t(activePreviewItem.subtextKey)}
+                </span>
+              </span>
             </button>
             
             <div className="flex flex-col sm:flex-row gap-3 mb-10 w-full sm:w-auto">
@@ -1667,10 +1693,10 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
   const { t } = useLocale()
   return (
     <footer className="border-t border-[color:var(--apple-line)] mt-4 sm:mt-6 bg-[color:var(--apple-card)] backdrop-blur-2xl">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
         <div className="flex flex-col gap-8 sm:gap-10">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_auto] md:gap-12 items-start">
-            <div className="flex flex-col items-center md:items-start gap-4">
+            <div className="flex flex-col items-start gap-4">
               <div className="flex items-center gap-3 font-bold text-[color:var(--apple-ink)] text-lg tracking-tight">
                 <img src={isDark ? logoFooterDark : logoFooter} alt="" className="h-9 w-auto" />
                 <span className="sr-only">DeepStudent</span>
