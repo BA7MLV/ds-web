@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
-import { LazyLoadImage as LazyImage } from 'react-lazy-load-image-component'
-import 'react-lazy-load-image-component/src/effects/blur.css'
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
 import { MobileNavMenu } from './components/mobile-nav-menu'
@@ -9,6 +7,7 @@ const logo = '/logo_mono_svg.svg'
 const logoFooter = '/logo-r.svg'
 const logoFooterDark = '/logo-r-dark.svg'
 const SUBTEXT_FADE_DURATION_MS = 200
+const RESPONSIVE_IMAGE_WIDTHS = [640, 960, 1280, 1600]
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
 const stretchProgress = (value, stretch = 1.3) => clamp((value - 0.5) / stretch + 0.5, 0, 1)
@@ -44,6 +43,54 @@ const getIsDownloadFromLocation = () => {
   if (typeof window === 'undefined') return false
   const params = new URLSearchParams(window.location.search)
   return params.get('view') === 'download'
+}
+
+const buildResponsiveSrcSet = (basePath, extension) =>
+  RESPONSIVE_IMAGE_WIDTHS.map((width) => `${basePath}-${width}.${extension} ${width}w`).join(', ')
+
+const OptimizedImage = ({
+  src,
+  alt,
+  className,
+  loading = 'lazy',
+  decoding = 'async',
+  fetchPriority = 'auto',
+  sizes = '(min-width: 1280px) 60vw, (min-width: 768px) 70vw, 92vw',
+  draggable = 'false',
+}) => {
+  const isExamplePng = typeof src === 'string' && src.startsWith('/img/example/') && src.endsWith('.png')
+
+  if (!isExamplePng) {
+    return (
+      <img
+        src={src}
+        alt={alt}
+        className={className}
+        loading={loading}
+        decoding={decoding}
+        fetchPriority={fetchPriority}
+        draggable={draggable}
+      />
+    )
+  }
+
+  const basePath = src.slice(0, -4)
+  return (
+    <picture>
+      <source type="image/webp" srcSet={buildResponsiveSrcSet(basePath, 'webp')} sizes={sizes} />
+      <source type="image/png" srcSet={buildResponsiveSrcSet(basePath, 'png')} sizes={sizes} />
+      <img
+        src={`${basePath}-960.png`}
+        alt={alt}
+        className={className}
+        loading={loading}
+        decoding={decoding}
+        fetchPriority={fetchPriority}
+        sizes={sizes}
+        draggable={draggable}
+      />
+    </picture>
+  )
 }
 
 const scrollStore = (() => {
@@ -537,7 +584,7 @@ const App = () => {
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <img src="/img/example/主页面.png" alt="AI Agent Interface" className="w-full h-auto object-cover" />
+                  <OptimizedImage src="/img/example/软件主页图.png" alt="AI Agent Interface" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
 
@@ -558,7 +605,7 @@ const App = () => {
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <img src="/img/example/anki-制卡1.png" alt="Anki Smart CardForge" className="w-full h-auto object-cover" />
+                  <OptimizedImage src="/img/example/anki-制卡1.png" alt="Anki Smart CardForge" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
 
@@ -576,7 +623,7 @@ const App = () => {
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <img src="/img/example/mcp-2.png" alt="MCP Tool Ecosystem" className="w-full h-auto object-cover" />
+                  <OptimizedImage src="/img/example/mcp-2.png" alt="MCP Tool Ecosystem" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
 
@@ -596,7 +643,7 @@ const App = () => {
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <img src="/img/example/调研-1.png" alt="Deep Research" className="w-full h-auto object-cover" />
+                  <OptimizedImage src="/img/example/调研-1.png" alt="Deep Research" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
 
@@ -614,7 +661,7 @@ const App = () => {
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <img src="/img/example/pdf阅读-1.png" alt="Deep Reading" className="w-full h-auto object-cover" />
+                  <OptimizedImage src="/img/example/pdf阅读-1.png" alt="Deep Reading" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
 
@@ -635,7 +682,7 @@ const App = () => {
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <img src="/img/example/知识导图-1.png" alt="Knowledge Mindmap" className="w-full h-auto object-cover" />
+                  <OptimizedImage src="/img/example/知识导图-1.png" alt="Knowledge Mindmap" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
 
@@ -655,7 +702,7 @@ const App = () => {
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <img src="/img/example/笔记-1.png" alt="Notes & Memory Management" className="w-full h-auto object-cover" />
+                  <OptimizedImage src="/img/example/笔记-1.png" alt="Notes & Memory Management" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
 
@@ -675,7 +722,7 @@ const App = () => {
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <img src="/img/example/题目集-1.png" alt="Smart Q-Bank" className="w-full h-auto object-cover" />
+                  <OptimizedImage src="/img/example/题目集-1.png" alt="Smart Q-Bank" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
 
@@ -692,7 +739,7 @@ const App = () => {
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <img src="/img/example/作文-1.png" alt="Essay Grading" className="w-full h-auto object-cover" />
+                  <OptimizedImage src="/img/example/作文-1.png" alt="Essay Grading" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
 
@@ -729,10 +776,10 @@ const App = () => {
 const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
   return (
-    <nav className="sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%] top-nav-safe-area">
-      <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-12 pt-[env(safe-area-inset-top)]">
+    <nav className="sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
+      <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-12 pt-safe">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] hover:opacity-80 transition-opacity">
-          <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" />
+          <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" loading="lazy" decoding="async" />
           <span className="text-[15px] tracking-tight">DeepStudent</span>
         </a>
         <div className="flex items-center gap-4">
@@ -851,7 +898,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
             <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold tracking-[-0.02em] mb-4 leading-[1.1] text-[color:var(--apple-ink)]">
               {t('hero.headline.top')}
               <br />
-              <span className="whitespace-nowrap">{t('hero.headline.bottom')}</span>
+              <span className="whitespace-normal sm:whitespace-nowrap break-words">{t('hero.headline.bottom')}</span>
             </h1>
 
             <button
@@ -863,7 +910,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
             >
               <span className="relative inline-flex h-[1.6em] items-center overflow-hidden align-top">
                 <span
-                  className={`text-base sm:text-lg text-[color:var(--apple-muted)] whitespace-nowrap transition-opacity duration-200 ease-out motion-reduce:transition-none ${
+                  className={`text-base sm:text-lg text-[color:var(--apple-muted)] whitespace-normal sm:whitespace-nowrap break-words transition-opacity duration-200 ease-out motion-reduce:transition-none ${
                     isSubtextVisible ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
@@ -1042,27 +1089,26 @@ const FreeModelsCallout = () => {
 }
 
 const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]' }) => {
+  const heroImageSrc = '/img/example/主页面.png'
+
   return (
     <div
       className={`relative w-full ${className}`}
       style={style}
     >
       <div className="relative">
-        <div className="relative z-10 rounded-[6px] overflow-hidden shadow-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)]">
-          <LazyImage
-            src="/img/example/主页面.png"
-            alt="DeepStudent Desktop"
-            className="w-full h-auto"
-            placeholder={<div className="skeleton w-full aspect-[16/10]" />}
-          />
-        </div>
-
-        <div className="absolute top-[54%] -translate-y-1/2 -right-8 z-20 w-[28%] rounded-[6px] overflow-hidden shadow-2xl border-[2px] border-gray-900 bg-black">
-          <LazyImage
-            src="/img/example/移动端主页面.png"
-            alt="DeepStudent Mobile"
-            className="w-full h-auto"
-            placeholder={<div className="skeleton w-full aspect-[9/16]" />}
+        <div
+          className="relative z-10"
+        >
+          <OptimizedImage
+            src={heroImageSrc}
+            alt="DeepStudent 主页面预览"
+            className="block w-full h-auto object-contain"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            sizes="(min-width: 1536px) 66vw, (min-width: 1024px) 72vw, 96vw"
+            draggable="false"
           />
         </div>
       </div>
@@ -1098,8 +1144,8 @@ const DownloadPage = ({ onBack = () => {} }) => {
   ]
   return (
     <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[6.854rem] sm:pb-[11.09rem]">
-      <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl download-nav-safe-area">
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 pt-[calc(env(safe-area-inset-top)+0.75rem)]">
+      <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl">
+        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 pt-[calc(var(--sat)+0.75rem)]">
           <button
             type="button"
             onClick={onBack}
@@ -1344,7 +1390,7 @@ const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, animatio
     >
       <div className="w-full md:w-[66%] md:flex-shrink-0">
         {imgSrc ? (
-          <img
+          <OptimizedImage
             src={imgSrc}
             alt={title}
             className="w-full rounded-[6px] shadow-[var(--apple-shadow-md)] border border-[color:var(--apple-line)]"
@@ -1445,7 +1491,7 @@ const StickyImageFeatureGroup = ({ items, t }) => {
                     aria-hidden={!isActive}
                   >
                     {sf.imgSrc ? (
-                      <img
+                      <OptimizedImage
                         src={sf.imgSrc}
                         alt={t(sf.labelKey)}
                         className="w-auto h-auto max-w-full max-h-full rounded-[6px] shadow-2xl"
@@ -1735,7 +1781,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_auto] md:gap-12 items-start">
             <div className="flex flex-col items-start gap-4">
               <div className="flex items-center gap-3 font-bold text-[color:var(--apple-ink)] text-lg tracking-tight">
-                <img src={isDark ? logoFooterDark : logoFooter} alt="" className="h-9 w-auto" />
+                <img src={isDark ? logoFooterDark : logoFooter} alt="" className="h-9 w-auto" loading="lazy" decoding="async" />
                 <span className="sr-only">DeepStudent</span>
               </div>
             </div>
