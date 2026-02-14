@@ -6,6 +6,16 @@ editLink: false
 
 # 下载
 
+<script setup>
+import downloads from '../.vitepress/data/downloads.json'
+
+const release = downloads
+const macArm = release?.platforms?.macArm64
+const macX64 = release?.platforms?.macX64
+const windowsX64 = release?.platforms?.windowsX64
+const androidArm64 = release?.platforms?.androidArm64
+</script>
+
 ::: tip 系统要求
 - **macOS**：macOS 13+（Apple Silicon / Intel）
 - **Windows**：Windows 11 / Windows 10 22H2+
@@ -68,45 +78,80 @@ editLink: false
   }
 </style>
 
+<p style="font-size: 0.875rem; color: var(--vp-c-text-2); margin-top: 1rem;">
+  当前版本：<strong>{{ release.version }}</strong>
+</p>
+
 <div class="download-container">
   <div class="download-box">
     <h3>macOS <span class="download-badge badge-release">正式版</span></h3>
     <p style="font-size: 0.875rem; color: var(--vp-c-text-2); margin: 0;">
-      Apple Silicon / Intel 通用包<br/>
-      完整功能（对话、资源中心、技能、制卡、系统配置）
+      Apple Silicon / Intel<br/>
+      根据设备架构选择对应安装包
     </p>
-    <a class="download-link" target="_blank" href="https://downloads.deepstudent.ai/macos/deepstudent-v1.0.2.dmg">
+    <a v-if="macArm" class="download-link" target="_blank" :href="macArm.url">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 21L12 3M12 21L17 16M12 21L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      下载 DMG 安装包
+      下载 Apple Silicon DMG
+    </a>
+    <a v-if="macX64" class="download-link" target="_blank" :href="macX64.url">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 21L12 3M12 21L17 16M12 21L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      下载 Intel DMG
+    </a>
+    <a v-if="!macArm && !macX64" class="download-link" target="_blank" :href="release.releaseUrl">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 21L12 3M12 21L17 16M12 21L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      前往 GitHub Releases 下载
     </a>
   </div>
 
   <div class="download-box">
-    <h3>Windows <span class="download-badge badge-preview">预览版</span></h3>
+    <h3>Windows <span class="download-badge badge-release">正式版</span></h3>
     <p style="font-size: 0.875rem; color: var(--vp-c-text-2); margin: 0;">
-      持续迭代中<br/>
-      建议优先体验核心主流程（Chat + Learning Hub + Skills）
+      x64 安装程序<br/>
+      推荐直接使用 Setup 安装
     </p>
-    <a class="download-link" target="_blank" href="https://downloads.deepstudent.ai/windows/deepstudent-setup.exe">
+    <a v-if="windowsX64" class="download-link" target="_blank" :href="windowsX64.url">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 21L12 3M12 21L17 16M12 21L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       下载 EXE 安装程序
     </a>
-  </div>
-
-  <div class="download-box">
-    <h3>网盘下载</h3>
-    <p style="font-size: 0.875rem; color: var(--vp-c-text-2); margin: 0;">
-      若官方链接较慢，可使用网盘下载
-    </p>
-    <a class="download-link" href="https://pan.baidu.com/s/1TA5LHe4lSnwNOuzSQWyWzQ?pwd=Deep" target="_blank">
+    <a v-else class="download-link" target="_blank" :href="release.releaseUrl">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 21L12 3M12 21L17 16M12 21L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      百度网盘（提取码：Deep）
+      前往 GitHub Releases 下载
+    </a>
+  </div>
+
+  <div v-if="androidArm64" class="download-box">
+    <h3>Android <span class="download-badge badge-release">正式版</span></h3>
+    <p style="font-size: 0.875rem; color: var(--vp-c-text-2); margin: 0;">
+      ARM64 APK 安装包
+    </p>
+    <a class="download-link" target="_blank" :href="androidArm64.url">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 21L12 3M12 21L17 16M12 21L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      下载 APK 安装包
+    </a>
+  </div>
+
+  <div class="download-box">
+    <h3>全部版本</h3>
+    <p style="font-size: 0.875rem; color: var(--vp-c-text-2); margin: 0;">
+      查看完整发布记录与校验文件
+    </p>
+    <a class="download-link" :href="release.releaseUrl" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 21L12 3M12 21L17 16M12 21L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      打开 GitHub Releases
     </a>
   </div>
 </div>

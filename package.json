@@ -12,7 +12,7 @@
     "dev:all": "node scripts/dev-all.mjs",
     "gen:favicons": "node scripts/generate-favicons.mjs",
     "optimize-images": "node scripts/optimize-images.mjs",
-    "build": "vite build && npm run build -w docs && rm -rf dist/docs && cp -R docs/.vitepress/dist dist/docs",
+    "build": "node scripts/sync-release-downloads.mjs && vite build && npm run build -w docs && rm -rf dist/docs && cp -R docs/.vitepress/dist dist/docs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
