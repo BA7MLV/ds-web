@@ -70,12 +70,15 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
           <div
             className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
             onClick={() => setIsOpen(false)}
-            style={{ top: 'calc(env(safe-area-inset-top) + 48px)' }}
+            style={{ top: 'calc(var(--sat) + 48px)' }}
           />
           
-          {/* 菜单内容 */}
           <div
-            className="fixed right-0 top-[calc(env(safe-area-inset-top)+48px)] w-[280px] h-[calc(100vh-48px-env(safe-area-inset-top))] bg-[color:var(--apple-surface-elevated)] z-50 shadow-2xl md:hidden"
+            className="fixed right-0 w-[280px] bg-[color:var(--apple-surface-elevated)] z-50 shadow-2xl md:hidden"
+            style={{
+              top: 'calc(var(--sat) + 48px)',
+              height: 'calc(100vh - 48px - var(--sat))'
+            }}
             style={{
               animation: 'slideInFromRight 0.3s ease-out',
             }}
