@@ -16,19 +16,19 @@ const guideSidebar = [
     text: '使用文档',
     collapsed: false,
     items: [
-      { text: '准备工作', link: '/guide/start.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
-      { text: '客户端下载', link: '/guide/download.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 8H2M14 8L11 5M14 8L11 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
-      { text: '功能介绍', link: '/guide/function.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
-      { text: '项目历程', link: '/guide/timeline.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2V14M15 9H1" stroke="currentColor" stroke-width="1.5"/></svg>' },
-      { text: '功能架构', link: '/guide/feature-architecture.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' }
+      { text: '准备工作', link: '/start.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
+      { text: '客户端下载', link: '/download.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 8H2M14 8L11 5M14 8L11 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
+      { text: '功能介绍', link: '/function.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
+      { text: '项目历程', link: '/timeline.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2V14M15 9H1" stroke="currentColor" stroke-width="1.5"/></svg>' },
+      { text: '功能架构', link: '/feature-architecture.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' }
     ]
   },
   {
     text: '帮助中心',
     collapsed: false,
     items: [
-      { text: '常见问题', link: '/guide/A-Q.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
-      { text: '关于我们', link: '/guide/about.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' }
+      { text: '常见问题', link: '/A-Q.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
+      { text: '关于我们', link: '/about.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' }
     ]
   }
 ]
@@ -106,8 +106,7 @@ export default withMermaid(defineConfig({
       { text: '官网', link: '/../', target: '_self' }
     ],
     sidebar: {
-      '/': guideSidebar,
-      '/guide/': guideSidebar
+      '/': guideSidebar
     },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/000haoji/deep-student' }

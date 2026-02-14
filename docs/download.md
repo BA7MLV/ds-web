@@ -7,7 +7,7 @@ editLink: false
 # 下载
 
 <script setup>
-import downloads from '../.vitepress/data/downloads.json'
+import downloads from './.vitepress/data/downloads.json'
 
 const release = downloads
 const macArm = release?.platforms?.macArm64

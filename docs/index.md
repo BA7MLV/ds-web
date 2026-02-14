@@ -38,8 +38,8 @@
 
 ### 你可以从这里开始
 
-- 🚀 [快速入门](guide/start.md)
-- 📥 [客户端下载](guide/download.md)
-- 🧭 [功能介绍](guide/function.md)
-- 🏗️ [功能架构](guide/feature-architecture.md)
-- ❓ [常见问题](guide/A-Q.md)
+- 🚀 [快速入门](start.md)
+- 📥 [客户端下载](download.md)
+- 🧭 [功能介绍](function.md)
+- 🏗️ [功能架构](feature-architecture.md)
+- ❓ [常见问题](A-Q.md)
