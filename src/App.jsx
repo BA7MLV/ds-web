@@ -795,8 +795,8 @@ const App = () => {
 const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
   return (
-    <nav className="sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
-      <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-12 pt-safe">
+    <nav className="top-nav-safe-area sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
+      <div className="top-nav-content max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-[calc(3rem+var(--sat))]">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] hover:opacity-80 transition-opacity">
           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" loading="lazy" decoding="async" />
           <span className="text-[15px] tracking-tight">DeepStudent</span>
@@ -1865,7 +1865,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
         <div className="flex flex-col gap-8 sm:gap-10">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_auto] md:gap-12 items-start">
-            <div className="flex flex-col items-start gap-4">
+            <div className="flex flex-col items-center md:items-start gap-4">
               <div className="flex items-center gap-3 font-bold text-[color:var(--apple-ink)] text-lg tracking-tight">
                 <img src={isDark ? logoFooterDark : logoFooter} alt="" className="h-9 w-auto" loading="lazy" decoding="async" />
                 <span className="sr-only">DeepStudent</span>

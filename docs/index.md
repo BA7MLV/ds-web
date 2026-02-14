@@ -1,4 +1,4 @@
-# DeepStudent
+# 简介
 
 ![主图](/deepstudent-head.png)
 
