@@ -23,6 +23,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.462.0",
+    "motion": "^12.34.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-lazy-load-image-component": "^1.6.3",

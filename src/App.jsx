@@ -1912,7 +1912,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3 self-center sm:self-auto">
               <a
-                href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f?xsec_token=ABFtyTy-x0Maimelyl74sy1an9VAHPgOOEjqScJeuijI8%3D&xsec_source=pc_search"
+                href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="focus-ring inline-flex items-center justify-center w-10 h-10 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] border border-[color:var(--apple-line)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:scale-105 active:scale-95"
