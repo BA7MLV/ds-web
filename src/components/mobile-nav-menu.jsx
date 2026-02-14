@@ -7,13 +7,40 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
 
   // 防止背景滚动
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
+    if (!isOpen) return undefined
+
+    const body = document.body
+    const html = document.documentElement
+    const scrollY = window.scrollY || window.pageYOffset || 0
+
+    body.style.position = 'fixed'
+    body.style.top = `-${scrollY}px`
+    body.style.left = '0'
+    body.style.right = '0'
+    body.style.width = '100%'
+    body.style.overflow = 'hidden'
+    body.style.touchAction = 'none'
+    body.style.overscrollBehavior = 'none'
+
+    html.style.overflow = 'hidden'
+    html.style.touchAction = 'none'
+    html.style.overscrollBehavior = 'none'
+
     return () => {
-      document.body.style.overflow = ''
+      body.style.position = ''
+      body.style.top = ''
+      body.style.left = ''
+      body.style.right = ''
+      body.style.width = ''
+      body.style.overflow = ''
+      body.style.touchAction = ''
+      body.style.overscrollBehavior = ''
+
+      html.style.overflow = ''
+      html.style.touchAction = ''
+      html.style.overscrollBehavior = ''
+
+      window.scrollTo(0, scrollY)
     }
   }, [isOpen])
 

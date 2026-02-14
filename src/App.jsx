@@ -795,7 +795,7 @@ const App = () => {
 const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
   return (
-    <nav className="sticky top-0 z-[10010] h-[calc(3.5rem+var(--sat))] bg-white dark:bg-[color:var(--apple-nav-bg)]">
+    <nav className="sticky top-0 z-[10010] h-[calc(3.5rem+var(--sat))] bg-white/75 backdrop-blur-[20px] backdrop-saturate-[180%] dark:bg-[color:var(--apple-nav-bg)]">
       <div className="max-w-6xl mx-auto mt-safe flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-slate-900 transition-opacity hover:opacity-80 dark:text-[color:var(--apple-ink)]">
           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" loading="lazy" decoding="async" />
