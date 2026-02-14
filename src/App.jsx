@@ -795,8 +795,8 @@ const App = () => {
 const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
   return (
-    <nav className="top-nav-safe-area sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
-      <div className="top-nav-content max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-[calc(3rem+var(--sat))]">
+    <nav className="sticky top-0 z-40 h-[calc(3rem+var(--sat))] border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
+      <div className="max-w-6xl mx-auto mt-safe flex h-12 items-center justify-between px-4 sm:px-6 lg:px-8">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] hover:opacity-80 transition-opacity">
           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" loading="lazy" decoding="async" />
           <span className="text-[15px] tracking-tight">DeepStudent</span>

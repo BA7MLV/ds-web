@@ -42,7 +42,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="relative z-[60] w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] backdrop-blur-md hover:bg-[color:var(--apple-btn-secondary-bg-hover)] transition-colors"
+        className="relative z-[70] w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] backdrop-blur-md hover:bg-[color:var(--apple-btn-secondary-bg-hover)] transition-colors"
         aria-label={isOpen ? '关闭菜单' : '打开菜单'}
         aria-expanded={isOpen}
       >
@@ -68,23 +68,26 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
         <>
           {/* 背景遮罩 */}
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm md:hidden"
             onClick={() => setIsOpen(false)}
-            style={{ top: 'calc(var(--sat) + 48px)' }}
           />
-          
+
           <div
-            className="fixed right-0 bg-[color:var(--apple-surface-elevated)] z-50 shadow-2xl md:hidden"
+            className="fixed inset-0 z-[60] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%] md:hidden"
             style={{
-              top: 'calc(var(--sat) + 48px)',
-              width: 'min(86vw, 280px)',
-              maxWidth: 'calc(100vw - var(--sal) - var(--sar))',
-              height: 'calc(100dvh - 48px - var(--sat))',
-              minHeight: 'calc(100svh - 48px - var(--sat))',
-              animation: 'slideInFromRight 0.3s ease-out',
+              animation: 'fadeInMenu 0.2s ease-out',
             }}
           >
-            <nav className="flex flex-col gap-2 px-6 pt-6 pb-28">
+            <div
+              className="flex h-full flex-col"
+              style={{
+                paddingTop: 'calc(var(--sat) + 4.25rem)',
+                paddingRight: 'max(1.5rem, var(--sar))',
+                paddingBottom: 'max(1.5rem, var(--sab))',
+                paddingLeft: 'max(1.5rem, var(--sal))',
+              }}
+            >
+              <nav className="flex flex-col gap-2">
               {navItems.map((item) => (
                 <a
                   key={item.text}
@@ -99,17 +102,9 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
                   {item.text}
                 </a>
               ))}
-            </nav>
+              </nav>
             
-            {/* GitHub 链接 */}
-            <div
-              className="absolute"
-              style={{
-                left: 'max(1.5rem, var(--sal))',
-                right: 'max(1.5rem, var(--sar))',
-                bottom: 'max(1.5rem, var(--sab))',
-              }}
-            >
+            <div className="mt-auto pt-6">
               <a
                 href="https://github.com/000haoji/deep-student"
                 target="_blank"
@@ -122,18 +117,17 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
                 <span className="text-[14px] font-medium">GitHub</span>
               </a>
             </div>
+            </div>
           </div>
         </>
       )}
 
       <style>{`
-        @keyframes slideInFromRight {
+        @keyframes fadeInMenu {
           from {
-            transform: translateX(100%);
             opacity: 0;
           }
           to {
-            transform: translateX(0);
             opacity: 1;
           }
         }

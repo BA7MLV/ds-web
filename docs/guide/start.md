@@ -12,7 +12,7 @@ DeepStudent 的 AI 能力依赖你配置的模型服务与（可选）外部搜�
 
 ### 参考：SiliconFlow 注册与密钥获取
 
-<div style="text-align: center;">
+<div>
 <p><a href="https://cloud.siliconflow.cn/i/deadXN1B">https://cloud.siliconflow.cn/i/deadXN1B</a></p>
 </div>
 

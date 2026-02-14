@@ -150,8 +150,7 @@ export default withMermaid(defineConfig({
     returnToTop: true,
     // 添加侧边栏切换
     sidebarMenuLabel: '菜单',
-    // 添加移动端菜单
-    mobileMenu: true,
+    mobileMenu: false,
     // 添加编辑链接
     editLink: {
       pattern: 'https://github.com/BA7MLV/ds-web/edit/main/docs/:path',
