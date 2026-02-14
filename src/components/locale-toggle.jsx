@@ -1,5 +1,6 @@
 import { useCallback, useSyncExternalStore } from 'react'
 import { cn } from '../lib/utils'
+import zhMessages from '../locales/zh.json'
 
 const LOCALE_KEY = 'ds-locale-preference'
 const VALID_LOCALES = ['zh', 'zh-Hant', 'en']
@@ -12,6 +13,28 @@ const LOCALE_LOADERS = {
 
 const localeMessages = new Map()
 const localeLoadingTasks = new Map()
+
+localeMessages.set('zh', zhMessages)
+
+const detectInitialLocale = () => {
+  if (typeof window === 'undefined') return 'zh'
+
+  try {
+    const stored = localStorage.getItem(LOCALE_KEY)
+    if (stored && VALID_LOCALES.includes(stored)) return stored
+  } catch {
+    return 'zh'
+  }
+
+  const browserLang = navigator.language || navigator.userLanguage
+  const lower = String(browserLang || '').toLowerCase()
+  if (lower.startsWith('zh')) {
+    return lower.includes('hant') || lower.includes('tw') || lower.includes('hk') || lower.includes('mo')
+      ? 'zh-Hant'
+      : 'zh'
+  }
+  return 'en'
+}
 
 const loadLocaleMessages = async (locale) => {
   if (localeMessages.has(locale)) return localeMessages.get(locale)
@@ -36,14 +59,15 @@ const loadLocaleMessages = async (locale) => {
 const getLocaleMessages = (locale) => localeMessages.get(locale) || {}
 
 const localeStore = (() => {
-  let locale = 'zh'
+  let locale = detectInitialLocale()
+  let ready = localeMessages.has(locale)
   let version = 0
   let initialized = false
-  let cachedSnapshot = { locale, version }
+  let cachedSnapshot = { locale, ready, version }
   const listeners = new Set()
 
   const updateSnapshot = () => {
-    cachedSnapshot = { locale, version }
+    cachedSnapshot = { locale, ready, version }
   }
 
   const notify = () => {
@@ -61,6 +85,7 @@ const localeStore = (() => {
   const setLocale = (nextLocale) => {
     if (!VALID_LOCALES.includes(nextLocale) || locale === nextLocale) return
     locale = nextLocale
+    ready = localeMessages.has(nextLocale)
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(LOCALE_KEY, nextLocale)
     }
@@ -68,36 +93,32 @@ const localeStore = (() => {
     notify()
 
     loadLocaleMessages(nextLocale)
-      .then(() => notify())
-      .catch(() => undefined)
+      .then(() => {
+        ready = true
+        notify()
+      })
+      .catch(() => {
+        ready = true
+        notify()
+      })
   }
 
   const init = () => {
     if (initialized || typeof window === 'undefined') return
     initialized = true
 
-    const stored = localStorage.getItem(LOCALE_KEY)
-    if (stored && VALID_LOCALES.includes(stored)) {
-      locale = stored
-    } else {
-      const browserLang = navigator.language || navigator.userLanguage
-      const lower = String(browserLang || '').toLowerCase()
-      if (lower.startsWith('zh')) {
-        locale =
-          lower.includes('hant') || lower.includes('tw') || lower.includes('hk') || lower.includes('mo')
-            ? 'zh-Hant'
-            : 'zh'
-      } else {
-        locale = 'en'
-      }
-    }
-
     applyLocale(locale)
     updateSnapshot()
 
     loadLocaleMessages(locale)
-      .then(() => notify())
-      .catch(() => undefined)
+      .then(() => {
+        ready = true
+        notify()
+      })
+      .catch(() => {
+        ready = true
+        notify()
+      })
   }
 
   const subscribe = (listener) => {
@@ -107,7 +128,7 @@ const localeStore = (() => {
   }
 
   const getSnapshot = () => cachedSnapshot
-  const getServerSnapshot = () => ({ locale: 'zh', version: 0 })
+  const getServerSnapshot = () => ({ locale: 'zh', ready: true, version: 0 })
 
   return { subscribe, getSnapshot, getServerSnapshot, setLocale }
 })()
@@ -141,6 +162,7 @@ export const useLocale = () => {
 
   return {
     locale: state.locale,
+    ready: state.ready,
     setLocale,
     t,
     isZh: state.locale === 'zh',
