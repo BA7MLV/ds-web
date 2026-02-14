@@ -480,7 +480,7 @@ const StatsHighlight = ({ motionScale = 1 }) => {
 const App = () => {
   const [activePolicy, setActivePolicy] = useState(null)
   const [isDownloadPage, setIsDownloadPage] = useState(() => getIsDownloadFromLocation())
-  const { t } = useLocale()
+  const { t, ready } = useLocale()
   const { motionScale } = useResponsiveMotion()
   const homeScrollRef = useRef(0)
   const downloadScrollRef = useRef(0)
@@ -534,6 +534,18 @@ const App = () => {
     downloadScrollRef.current = window.scrollY || 0
     setIsDownloadPage(false)
     syncHistoryWithView(false)
+  }
+
+  if (!ready) {
+    return (
+      <div className="min-h-screen min-h-[100svh] bg-transparent text-[color:var(--apple-ink)] font-sans">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24">
+          <div className="h-8 w-40 rounded-full bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]" />
+          <div className="mt-8 h-12 w-2/3 rounded-2xl bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]" />
+          <div className="mt-4 h-6 w-1/2 rounded-xl bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]" />
+        </div>
+      </div>
+    )
   }
 
   return (
