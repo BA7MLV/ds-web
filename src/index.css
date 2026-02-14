@@ -450,14 +450,58 @@
 }
 
 /* ===== Dynamic Island / Notch Safe Area Support ===== */
-/* iPhone 14 Pro+ 灵动岛及刘海屏沉浸式适配 */
 
-/* 
- * 实现原理：
- * 1. 使用 ::before 伪元素创建延伸到刘海屏区域的背景层
- * 2. 主内容通过 padding 保持在安全区域内
- * 3. 适用于 sticky/fixed 定位的导航栏
- */
+:root {
+  --sat: 0px;
+  --sar: 0px;
+  --sab: 0px;
+  --sal: 0px;
+}
+
+@supports (padding: env(safe-area-inset-top)) {
+  :root {
+    --sat: env(safe-area-inset-top);
+    --sar: env(safe-area-inset-right);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
+  }
+}
+
+@supports (padding: constant(safe-area-inset-top)) {
+  :root {
+    --sat: constant(safe-area-inset-top);
+    --sar: constant(safe-area-inset-right);
+    --sab: constant(safe-area-inset-bottom);
+    --sal: constant(safe-area-inset-left);
+  }
+}
+
+@layer utilities {
+  .pt-safe { padding-top: var(--sat); }
+  .mt-safe { margin-top: var(--sat); }
+  .top-safe { top: var(--sat); }
+  .h-safe-top { height: var(--sat); }
+  .min-h-screen-safe {
+    min-height: calc(100vh - var(--sat));
+    min-height: calc(100svh - var(--sat));
+  }
+
+  .pb-safe { padding-bottom: var(--sab); }
+  .mb-safe { margin-bottom: var(--sab); }
+  .bottom-safe { bottom: var(--sab); }
+  .h-safe-bottom { height: var(--sab); }
+
+  .pl-safe { padding-left: var(--sal); }
+  .pr-safe { padding-right: var(--sar); }
+  .px-safe { padding-left: var(--sal); padding-right: var(--sar); }
+
+  .p-safe {
+    padding-top: var(--sat);
+    padding-right: var(--sar);
+    padding-bottom: var(--sab);
+    padding-left: var(--sal);
+  }
+}
 
 /* 导航栏沉浸式背景 */
 .top-nav-safe-area {
