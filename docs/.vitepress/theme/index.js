@@ -1,7 +1,6 @@
 import DefaultTheme from 'vitepress/theme'
 import { onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRoute, useData } from 'vitepress'
-import './custom.css'
 import CustomHome from './CustomHome.vue'
 import Layout from './Layout.vue'
 

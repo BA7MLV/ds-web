@@ -2,6 +2,13 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
 import { MobileNavMenu } from './components/mobile-nav-menu'
+import sharedDownloads from '../docs/.vitepress/data/downloads.json'
+import { buildWebsiteDownloads } from './lib/website-downloads'
+import {
+  detectSystemProfile,
+  getPreferredPlatformTab,
+  getRecommendedCardId
+} from './lib/download-recommendation'
 
 const logo = '/logo_mono_svg.svg'
 const logoFooter = '/logo-r.svg'
@@ -1128,32 +1135,77 @@ const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max
   )
 }
 
+const normalizeReleaseVersion = (rawVersion) => {
+  const value = typeof rawVersion === 'string' ? rawVersion.trim() : ''
+  if (!value) return 'v--'
+  return value.toLowerCase().startsWith('v') ? `v${value.slice(1)}` : `v${value}`
+}
+
+const formatReleaseDate = (rawDate, locale) => {
+  if (!rawDate) return '--'
+
+  const parsed = new Date(rawDate)
+  if (Number.isNaN(parsed.getTime())) return '--'
+
+  const year = parsed.getUTCFullYear()
+  const month = parsed.getUTCMonth() + 1
+  const day = parsed.getUTCDate()
+
+  if (locale === 'en') {
+    return `${month}/${day}/${year}`
+  }
+  return `${year}/${month}/${day}`
+}
+
 const DownloadPage = ({ onBack = () => {} }) => {
-  const { t } = useLocale()
-  const platformDownloads = [
-    {
-      id: 'mac',
-      platform: 'macOS',
-      channel: t('download.dmgInstall'),
-      version: 'v1.0.2 · Build 88',
-      size: '312 MB',
-      requirements: t('download.requirements.macos'),
-      description: t('download.description.macos'),
-      ctaLabel: t('download.downloadDmg'),
-      ctaHref: 'https://downloads.deepstudent.ai/macos/deepstudent-v1.0.2.dmg',
-    },
-    {
-      id: 'windows',
-      platform: 'Windows',
-      channel: t('download.preview'),
-      version: 'v0.9.8 Preview',
-      size: '298 MB',
-      requirements: t('download.requirements.windows', 'Windows 11 / 10 22H2+'),
-      description: t('download.description.windows'),
-      ctaLabel: t('download.downloadExe'),
-      ctaHref: 'https://downloads.deepstudent.ai/windows/deepstudent-setup.exe',
-    },
+  const { t, locale } = useLocale()
+  const platformDownloads = buildWebsiteDownloads(sharedDownloads, {
+    macArmChannel: t('download.channel.macArm', 'Apple 芯片 · aarch64'),
+    macX64Channel: t('download.channel.macX64', 'Intel 芯片 · x64'),
+    windowsChannel: t('download.channel.windowsX64', 'Windows · x64'),
+    androidChannel: t('download.channel.androidArm64', 'Android · arm64'),
+    fallbackLabel: t('download.allReleases', '全部版本'),
+    unknownSize: '--',
+    macArmRequirements: t('download.requirements.macos', 'macOS 13+（Apple Silicon）'),
+    macX64Requirements: t('download.requirements.macos', 'macOS 13+（Intel）'),
+    windowsRequirements: t('download.requirements.windows', 'Windows 11 / 10 22H2+'),
+    androidRequirements: t('download.requirements.android', 'Android 10+（ARM64）'),
+    macArmDescription: t('download.description.macos', '适用于 Apple Silicon 设备的 DMG 安装包'),
+    macX64Description: t('download.description.macos', '适用于 Intel 设备的 DMG 安装包'),
+    windowsDescription: t('download.description.windows'),
+    androidDescription: t('download.description.android', '适用于 Android 设备的 APK 安装包'),
+    macArmCta: t('download.downloadDmg', '下载 DMG'),
+    macX64Cta: t('download.downloadDmg', '下载 DMG'),
+    windowsCta: t('download.downloadExe', '下载 EXE'),
+    androidCta: t('download.downloadApk', '下载 APK'),
+    fallbackRequirements: t('download.requirements.all', '请根据设备选择对应安装包'),
+    fallbackDescription: t('download.description.all', '当前未获取到分平台安装包，请前往 Releases 查看全部资产'),
+    fallbackCta: t('download.openReleases', '打开 GitHub Releases')
+  })
+
+  const tabs = [
+    { id: 'macOS', label: 'macOS' },
+    { id: 'Windows', label: 'Windows' },
+    { id: 'Android', label: 'Android' }
   ]
+
+  const [activeTab, setActiveTab] = useState('macOS')
+  const [recommendedId, setRecommendedId] = useState(null)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const profile = detectSystemProfile(window.navigator)
+    const preferredTab = getPreferredPlatformTab(profile)
+    const preferredCardId = getRecommendedCardId(profile)
+
+    if (preferredTab) setActiveTab(preferredTab)
+    setRecommendedId(preferredCardId)
+  }, [])
+
+  const filteredDownloads = platformDownloads.filter((item) => item.platform === activeTab)
+  const releaseVersion = normalizeReleaseVersion(sharedDownloads?.version)
+  const updatedAtRaw = sharedDownloads?.generatedAt || sharedDownloads?.publishedAt
+  const releaseUpdatedAt = formatReleaseDate(updatedAtRaw, locale)
   return (
     <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[6.854rem] sm:pb-[11.09rem]">
       <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl">
@@ -1166,7 +1218,6 @@ const DownloadPage = ({ onBack = () => {} }) => {
 ← {t('download.backHome')}
           </button>
           <div className="flex items-center gap-3">
-            <LocaleToggle />
             <ThemeToggle />
             <span className="text-xs text-[color:var(--apple-muted)]">{t('nav.download')}</span>
           </div>
@@ -1175,10 +1226,10 @@ const DownloadPage = ({ onBack = () => {} }) => {
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-[3.236rem] sm:pt-[4.236rem] md:pt-[5.854rem] text-center">
         <h1 className="text-[2.2rem] sm:text-[3.2rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] font-display">
-          {t('download.title')}
+          {t('download.title', 'DeepStudent {version}', { version: releaseVersion })}
         </h1>
         <p className="mt-3 text-sm text-[color:var(--apple-muted)] max-w-md mx-auto">
-          {t('download.subtitle')}
+          {t('download.subtitle', '更新时间：{updatedAt}', { updatedAt: releaseUpdatedAt })}
         </p>
       </section>
 
@@ -1187,14 +1238,41 @@ const DownloadPage = ({ onBack = () => {} }) => {
           {t('download.selectPlatform')}
         </h2>
 
+        <div className="mt-4 inline-flex items-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] p-1">
+          {tabs.map((tab) => {
+            const active = tab.id === activeTab
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`focus-ring rounded-full px-4 py-2 text-xs font-medium transition-colors ${
+                  active
+                    ? 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)]'
+                    : 'text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)]'
+                }`}
+              >
+                {tab.label}
+              </button>
+            )
+          })}
+        </div>
+
         <div className="mt-6 grid gap-4 md:grid-cols-2">
-          {platformDownloads.map((platform) => (
+          {filteredDownloads.map((platform) => (
               <article
                 key={platform.id}
                 className="rounded-[1.5rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] p-[1.5rem] sm:p-[1.75rem] shadow-[var(--apple-shadow-sm)]"
               >
                 <div>
-                  <p className="text-base font-semibold text-[color:var(--apple-ink)]">{platform.platform}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-base font-semibold text-[color:var(--apple-ink)]">{platform.platform}</p>
+                    {platform.id === recommendedId ? (
+                      <span className="rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-2 py-0.5 text-[10px] font-semibold text-[color:var(--apple-ink)]">
+                        {t('download.recommended', '推荐')}
+                      </span>
+                    ) : null}
+                  </div>
                   <p className="text-xs text-[color:var(--apple-muted)]">{platform.channel}</p>
                 </div>
 
@@ -1203,7 +1281,6 @@ const DownloadPage = ({ onBack = () => {} }) => {
                 <div className="mt-4 text-xs text-[color:var(--apple-muted)] flex flex-wrap gap-x-3 gap-y-1">
                   <span>{t('download.version')} {platform.version}</span>
                   <span>{t('download.size')} {platform.size}</span>
-                  <span>{t('download.system')} {platform.requirements}</span>
                 </div>
 
                 <div className="mt-4">
@@ -1218,9 +1295,6 @@ const DownloadPage = ({ onBack = () => {} }) => {
           ))}
         </div>
 
-        <p className="mt-6 text-xs text-[color:var(--apple-muted)]">
-          {t('download.note.windowsPreview')}
-        </p>
       </section>
     </div>
   )
@@ -1836,25 +1910,42 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
           <div className="h-px bg-[color:var(--apple-line)]" aria-hidden="true" />
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <a
-              href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f?xsec_token=ABFtyTy-x0Maimelyl74sy1an9VAHPgOOEjqScJeuijI8%3D&xsec_source=pc_search"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="focus-ring inline-flex items-center justify-center w-10 h-10 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] border border-[color:var(--apple-line)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:scale-105 active:scale-95 self-center sm:self-auto"
-              aria-label={t('footer.xiaohongshu', 'Xiaohongshu')}
-              title={t('footer.xiaohongshu', 'Xiaohongshu')}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 16 16" aria-hidden="true">
-                <path
-                  fill="currentColor"
-                  d="M6.34 14.458c.106-.231.195-.431.29-.628q.329-.607.59-1.247a.74.74 0 0 1 .88-.55c.557.039 1.116.01 1.698.01V4.794c-.391 0-.777-.014-1.16 0-.267.014-.36-.073-.353-.36.019-.685 0-1.374 0-2.091h5.428v1.664c0 .783 0 .783-.76.783h-.762v7.245h1.647c.664 0 .664 0 .664.697v1.46c0 .202-.05.305-.268.305q-3.866-.007-7.73-.006a1 1 0 0 1-.164-.034"
-                />
-                <path
-                  fill="currentColor"
-                  d="M7.365 9.21c-.339.7-.637 1.324-.95 1.938a.3.3 0 0 1-.228.114c-.755 0-1.514.03-2.266-.026-.753-.056-1.054-.54-.754-1.28.342-.853.753-1.678 1.134-2.514.024-.053.042-.106.088-.223-.305 0-.572.007-.84 0a3 3 0 0 1-.646-.06.76.76 0 0 1-.652-.85.8.8 0 0 1 .074-.256c.457-1.098.97-2.175 1.464-3.256q.24-.532.51-1.05c.047-.09.155-.203.238-.207.706-.017 1.414-.009 2.184-.009-.067.172-.104.29-.156.399q-.648 1.356-1.301 2.709c-.088.183-.194.373.134.512.088-.47.44-.384.75-.384h1.784c-.075.178-.123.302-.178.42-.55 1.152-1.11 2.294-1.653 3.444-.223.469-.148.583.37.588.268-.008.538-.01.894-.01m-.97 2.834c-.419.839-.792 1.593-1.175 2.343a.26.26 0 0 1-.194.11 228 228 0 0 1-3.084-.058 2 2 0 0 1-.413-.11l.575-1.162c.188-.384.37-.767.572-1.133a.35.35 0 0 1 .247-.162c.942.047 1.884.112 2.828.17.19.01.369.002.644.002"
-                />
-              </svg>
-            </a>
+            <div className="flex items-center gap-3 self-center sm:self-auto">
+              <a
+                href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f?xsec_token=ABFtyTy-x0Maimelyl74sy1an9VAHPgOOEjqScJeuijI8%3D&xsec_source=pc_search"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="focus-ring inline-flex items-center justify-center w-10 h-10 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] border border-[color:var(--apple-line)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:scale-105 active:scale-95"
+                aria-label={t('footer.xiaohongshu', 'Xiaohongshu')}
+                title={t('footer.xiaohongshu', 'Xiaohongshu')}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M6.34 14.458c.106-.231.195-.431.29-.628q.329-.607.59-1.247a.74.74 0 0 1 .88-.55c.557.039 1.116.01 1.698.01V4.794c-.391 0-.777-.014-1.16 0-.267.014-.36-.073-.353-.36.019-.685 0-1.374 0-2.091h5.428v1.664c0 .783 0 .783-.76.783h-.762v7.245h1.647c.664 0 .664 0 .664.697v1.46c0 .202-.05.305-.268.305q-3.866-.007-7.73-.006a1 1 0 0 1-.164-.034"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M7.365 9.21c-.339.7-.637 1.324-.95 1.938a.3.3 0 0 1-.228.114c-.755 0-1.514.03-2.266-.026-.753-.056-1.054-.54-.754-1.28.342-.853.753-1.678 1.134-2.514.024-.053.042-.106.088-.223-.305 0-.572.007-.84 0a3 3 0 0 1-.646-.06.76.76 0 0 1-.652-.85.8.8 0 0 1 .074-.256c.457-1.098.97-2.175 1.464-3.256q.24-.532.51-1.05c.047-.09.155-.203.238-.207.706-.017 1.414-.009 2.184-.009-.067.172-.104.29-.156.399q-.648 1.356-1.301 2.709c-.088.183-.194.373.134.512.088-.47.44-.384.75-.384h1.784c-.075.178-.123.302-.178.42-.55 1.152-1.11 2.294-1.653 3.444-.223.469-.148.583.37.588.268-.008.538-.01.894-.01m-.97 2.834c-.419.839-.792 1.593-1.175 2.343a.26.26 0 0 1-.194.11 228 228 0 0 1-3.084-.058 2 2 0 0 1-.413-.11l.575-1.162c.188-.384.37-.767.572-1.133a.35.35 0 0 1 .247-.162c.942.047 1.884.112 2.828.17.19.01.369.002.644.002"
+                  />
+                </svg>
+              </a>
+              <a
+                href="https://qm.qq.com/q/UkEacMzuIW"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="focus-ring inline-flex items-center justify-center w-10 h-10 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] border border-[color:var(--apple-line)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:scale-105 active:scale-95"
+                aria-label={t('footer.qq', 'QQ')}
+                title={t('footer.qq', 'QQ')}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M21.395 15.035a40 40 0 0 0-.803-2.264l-1.079-2.695c.001-.032.014-.562.014-.836C19.526 4.632 17.351 0 12 0S4.474 4.632 4.474 9.241c0 .274.013.804.014.836l-1.08 2.695a39 39 0 0 0-.802 2.264c-1.021 3.283-.69 4.643-.438 4.673.54.065 2.103-2.472 2.103-2.472 0 1.469.756 3.387 2.394 4.771-.612.188-1.363.479-1.845.835-.434.32-.379.646-.301.778.343.578 5.883.369 7.482.189 1.6.18 7.14.389 7.483-.189.078-.132.132-.458-.301-.778-.483-.356-1.233-.646-1.846-.836 1.637-1.384 2.393-3.302 2.393-4.771 0 0 1.563 2.537 2.103 2.472.251-.03.581-1.39-.438-4.673"
+                  />
+                </svg>
+              </a>
+            </div>
             <div className="flex flex-col items-center sm:items-end gap-2 text-[color:var(--apple-muted)]">
               <LocaleToggle compact className="w-[8.5rem]" />
               <span className="font-mono text-[10px] tracking-[0.08em] text-center sm:text-right opacity-60">
