@@ -74,16 +74,17 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
           />
           
           <div
-            className="fixed right-0 w-[280px] bg-[color:var(--apple-surface-elevated)] z-50 shadow-2xl md:hidden"
+            className="fixed right-0 bg-[color:var(--apple-surface-elevated)] z-50 shadow-2xl md:hidden"
             style={{
               top: 'calc(var(--sat) + 48px)',
-              height: 'calc(100vh - 48px - var(--sat))'
-            }}
-            style={{
+              width: 'min(86vw, 280px)',
+              maxWidth: 'calc(100vw - var(--sal) - var(--sar))',
+              height: 'calc(100dvh - 48px - var(--sat))',
+              minHeight: 'calc(100svh - 48px - var(--sat))',
               animation: 'slideInFromRight 0.3s ease-out',
             }}
           >
-            <nav className="flex flex-col p-6 gap-2">
+            <nav className="flex flex-col gap-2 px-6 pt-6 pb-28">
               {navItems.map((item) => (
                 <a
                   key={item.text}
@@ -101,7 +102,14 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
             </nav>
             
             {/* GitHub 链接 */}
-            <div className="absolute bottom-8 left-6 right-6">
+            <div
+              className="absolute"
+              style={{
+                left: 'max(1.5rem, var(--sal))',
+                right: 'max(1.5rem, var(--sar))',
+                bottom: 'max(1.5rem, var(--sab))',
+              }}
+            >
               <a
                 href="https://github.com/000haoji/deep-student"
                 target="_blank"
