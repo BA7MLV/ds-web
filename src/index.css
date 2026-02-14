@@ -532,6 +532,7 @@
 .top-nav-safe-area {
   position: sticky;
   top: 0;
+  isolation: isolate;
 }
 
 .top-nav-safe-area::before {
@@ -545,7 +546,8 @@
   background-color: var(--apple-nav-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  z-index: -1;
+  z-index: 39;
+  pointer-events: none;
 }
 
 /* 导航栏内容避开刘海 */
@@ -557,6 +559,7 @@
 .download-nav-safe-area {
   position: sticky;
   top: 0;
+  isolation: isolate;
 }
 
 .download-nav-safe-area::before {
@@ -570,7 +573,8 @@
   background-color: var(--apple-nav-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  z-index: -1;
+  z-index: 39;
+  pointer-events: none;
 }
 
 /* Skeleton loading animation */

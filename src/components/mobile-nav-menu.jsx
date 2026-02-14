@@ -42,7 +42,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="relative w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+        className="relative z-[60] w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] backdrop-blur-md hover:bg-[color:var(--apple-btn-secondary-bg-hover)] transition-colors"
         aria-label={isOpen ? '关闭菜单' : '打开菜单'}
         aria-expanded={isOpen}
       >
