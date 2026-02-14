@@ -21,7 +21,79 @@ const androidArm64 = release?.platforms?.androidArm64
 - **Windows**：Windows 11 / Windows 10 22H2+
 :::
 
-<p>
+<style>
+.download-version {
+  margin-top: 1rem;
+  color: var(--vp-c-text-2);
+  font-size: 0.9rem;
+}
+
+.download-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.download-box {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 14px;
+  padding: 1.1rem;
+  background: var(--vp-c-bg-soft);
+}
+
+.download-box h3 {
+  margin: 0;
+  color: var(--vp-c-text-1);
+  font-size: 1.05rem;
+}
+
+.download-box p {
+  margin: 0.5rem 0 0.9rem;
+  color: var(--vp-c-text-2);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.58rem 0.85rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 10px;
+  color: var(--vp-c-brand-1);
+  background: var(--vp-c-bg);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.download-link:hover {
+  color: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+}
+
+.download-badge {
+  display: inline-block;
+  margin-left: 0.45rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  vertical-align: middle;
+}
+
+.badge-release {
+  background: rgba(26, 26, 26, 0.1);
+  color: #1a1a1a;
+}
+
+.dark .badge-release {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+</style>
+
+<p class="download-version">
   当前版本：<strong>{{ release.version }}</strong>
 </p>
 

@@ -10,12 +10,14 @@
 </div>
 
 ---
-
-::: warning 简介
-DeepStudent 是一款基于 Tauri 2 构建的 **AI 原生、本地优先**开源学习系统（AGPL-3.0）。
+::: tip 简介
+**DeepStudent** 是一款基于 Tauri 2 构建的 **AI 原生、本地优先**开源学习系统（AGPL-3.0）。
 
 实际代码实现以 **Chat V2 作为统一入口**，将 Learning Hub（学习资源中心）、Skills、MCP 工具生态与 CardForge 制卡任务连接为一个可持续学习闭环。
 :::
+
+
+
 
 ---
 

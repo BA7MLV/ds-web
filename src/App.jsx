@@ -795,24 +795,24 @@ const App = () => {
 const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
   return (
-    <nav className="sticky top-0 z-40 h-[calc(3rem+var(--sat))] border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
-      <div className="max-w-6xl mx-auto mt-safe flex h-12 items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a href="/" className="flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] hover:opacity-80 transition-opacity">
+    <nav className="sticky top-0 z-40 h-[calc(3.5rem+var(--sat))] bg-white dark:bg-[color:var(--apple-nav-bg)]">
+      <div className="max-w-6xl mx-auto mt-safe flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href="/" className="flex items-center gap-2.5 font-semibold text-slate-900 transition-opacity hover:opacity-80 dark:text-[color:var(--apple-ink)]">
           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" loading="lazy" decoding="async" />
           <span className="text-[15px] tracking-tight">DeepStudent</span>
         </a>
         <div className="flex items-center gap-4">
           {/* Desktop navigation links */}
-          <div className="hidden md:flex items-center gap-4 text-[12px] text-[color:var(--apple-muted)] font-normal">
-            <a href="#features" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors">
+          <div className="hidden items-center gap-4 text-[12px] font-normal text-slate-500 md:flex dark:text-[color:var(--apple-muted)]">
+            <a href="#features" className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]">
               {t('nav.features')}
             </a>
-            <a href="#qa" className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors">
+            <a href="#qa" className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]">
               {t('nav.qa')}
             </a>
             <a
               href="/docs/"
-              className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors"
+              className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]"
             >
               {t('nav.docs')}
             </a>
