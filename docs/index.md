@@ -1,23 +1,18 @@
 # 简介
 
-![主图](/deepstudent-head.png)
+![主图](/img/example/软件主页图-1280.webp)
 
----
 
-<div>
-  <p>关注我们的小红书账号：<a href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f?xsec_token=ABFtyTy-x0Maimelyl74sy1an9VAHPgOOEjqScJeuijI8%3D&xsec_source=pc_search">小红书</a></p>
-  <p>加入我们的社群：<a href="https://qm.qq.com/q/1lTUkKSaB6">QQ群（310134919）</a></p>
-</div>
-
----
 ::: tip 简介
 **DeepStudent** 是一款基于 Tauri 2 构建的 **AI 原生、本地优先**开源学习系统（AGPL-3.0）。
 
 实际代码实现以 **Chat V2 作为统一入口**，将 Learning Hub（学习资源中心）、Skills、MCP 工具生态与 CardForge 制卡任务连接为一个可持续学习闭环。
 :::
 
-
-
+<div>
+  <p>关注我们的小红书账号：<a href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f?xsec_token=ABFtyTy-x0Maimelyl74sy1an9VAHPgOOEjqScJeuijI8%3D&xsec_source=pc_search">小红书</a></p>
+  <p>加入我们的社群：<a href="https://qm.qq.com/q/1lTUkKSaB6">QQ群（310134919）</a></p>
+</div>
 
 ---
 

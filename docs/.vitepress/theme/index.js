@@ -4,6 +4,16 @@ import { useRoute, useData } from 'vitepress'
 import CustomHome from './CustomHome.vue'
 import Layout from './Layout.vue'
 
+let mediumZoomLoader
+
+const loadMediumZoom = async () => {
+  if (!mediumZoomLoader) {
+    mediumZoomLoader = import('medium-zoom').then((module) => module.default)
+  }
+
+  return mediumZoomLoader
+}
+
 export default {
   extends: DefaultTheme,
   Layout,
@@ -14,18 +24,37 @@ export default {
   setup() {
     const route = useRoute()
     const { isDark } = useData()
+    let zoomInstance = null
+
+    const hideSearchOnHome = () => {
+      if (typeof document === 'undefined') return
+      const root = document.documentElement
+      root.classList.toggle('home-no-search', route.path === '/')
+    }
 
     // 初始化图片缩放功能
-    const initZoom = () => {
-      // 使用 medium-zoom 实现图片缩放
-      if (typeof window !== 'undefined') {
-        // 动态导入 medium-zoom
-        import('medium-zoom').then((mediumZoom) => {
-          mediumZoom.default('.vp-doc img', {
-            background: isDark.value ? 'rgba(10, 10, 12, 0.95)' : 'rgba(255, 255, 255, 0.95)'
-          })
-        })
+    const initZoom = async () => {
+      if (typeof document === 'undefined') return
+
+      const zoomTargets = [
+        '.vp-doc p > img:not(.no-zoom):not([data-no-zoom])',
+        '.vp-doc li > img:not(.no-zoom):not([data-no-zoom])',
+        '.vp-doc td > img:not(.no-zoom):not([data-no-zoom])'
+      ].join(', ')
+      const hasTargets = document.querySelector(zoomTargets)
+
+      if (!hasTargets) {
+        zoomInstance?.detach()
+        zoomInstance = null
+        return
       }
+
+      const mediumZoom = await loadMediumZoom()
+
+      zoomInstance?.detach()
+      zoomInstance = mediumZoom(zoomTargets, {
+        background: isDark.value ? 'rgba(10, 10, 12, 0.95)' : 'rgba(255, 255, 255, 0.95)'
+      })
     }
 
     // 更新 meta theme-color
@@ -41,28 +70,24 @@ export default {
       nextTick(() => {
         initZoom()
         updateThemeColor()
-        
-        // 隐藏主页的搜索控件
-        const hideSearchOnHome = () => {
-          if (typeof document === 'undefined') return
-          const root = document.documentElement
-          root.classList.toggle('home-no-search', route.path === '/')
-        }
-        
+
         // 立即执行一次
         hideSearchOnHome()
-        
+
         // 监听路由变化
         watch(() => route.path, () => {
           nextTick(() => {
             hideSearchOnHome()
+            initZoom()
           })
         })
-
       })
     })
 
     onUnmounted(() => {
+      zoomInstance?.detach()
+      zoomInstance = null
+
       if (typeof document !== 'undefined') {
         document.documentElement.classList.remove('home-no-search')
       }
@@ -74,14 +99,5 @@ export default {
       // 重新初始化 zoom 以更新背景色
       nextTick(() => initZoom())
     })
-
-    watch(
-      () => route.path,
-      () => {
-        nextTick(() => {
-          initZoom()
-        })
-      }
-    )
   }
 }
