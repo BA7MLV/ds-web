@@ -1,21 +1,7 @@
 <script setup>
 import DefaultTheme from 'vitepress/theme'
-import { onMounted } from 'vue'
 import LastAuthor from './components/LastAuthor.vue'
 import MobileMenu from './components/MobileMenu.vue'
-
-onMounted(() => {
-  // 将移动端菜单按钮插入到导航栏中
-  const navBar = document.querySelector('.VPNavBar')
-  const mobileMenuWrapper = document.querySelector('.mobile-menu-container')
-  
-  if (navBar && mobileMenuWrapper) {
-    const target = navBar.querySelector('.VPNavBarMenu') || navBar.querySelector('.wrapper')
-    if (target) {
-      target.appendChild(mobileMenuWrapper)
-    }
-  }
-})
 </script>
 
 <template>
@@ -23,12 +9,12 @@ onMounted(() => {
     <template #doc-footer-before>
       <LastAuthor />
     </template>
+    
+    <!-- 使用 VitePress 提供的 slot 插入移动端菜单 -->
+    <template #nav-bar-content-after>
+      <MobileMenu class="vp-mobile-menu" />
+    </template>
   </DefaultTheme.Layout>
-  
-  <!-- 移动端菜单组件 - 会被移动到导航栏中 -->
-  <div class="mobile-menu-container">
-    <MobileMenu />
-  </div>
 </template>
 
 <style>
@@ -37,22 +23,12 @@ onMounted(() => {
   .VPNavBar .VPNavBarHamburger {
     display: none !important;
   }
-  
-  /* 显示我们的自定义菜单按钮 */
-  .mobile-menu-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  /* 隐藏默认的搜索框在移动端，或者缩小它 */
-  .VPNavBarSearch {
-    margin-right: 8px;
-  }
 }
 
+/* 桌面端隐藏我们的移动端菜单 */
 @media (min-width: 769px) {
-  .mobile-menu-container {
-    display: none;
+  .vp-mobile-menu {
+    display: none !important;
   }
 }
 </style>

@@ -1,18 +1,44 @@
 @import 'tailwindcss';
 
 /* ===== 主题过渡基础 ===== */
-/* 定义全局过渡属性：颜色变化平滑 */
+/* 修复：移除全局过渡，改为选择性应用，避免移动端滚动时的性能问题 */
 :root,
 .light,
 .dark {
-  /* 配置颜色过渡 */
+  /* 配置颜色过渡变量 */
   --theme-transition-duration: 0.3s;
   --theme-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
   
-  /* 应用到颜色相关属性 */
-  transition-property: background-color, color, border-color, box-shadow, fill, stroke;
-  transition-duration: var(--theme-transition-duration);
-  transition-timing-function: var(--theme-transition-timing);
+  /* 注意：移除全局 transition-property，改为下方选择性应用 */
+  /* 全局 transition 会导致移动端滚动时的布局和重绘性能问题 */
+}
+
+/* 选择性应用过渡动画到特定元素，避免全局性能开销 */
+.VPNavBar,
+.VPSidebar,
+.VPDoc .content-container,
+.VPFooter,
+.custom-block,
+.vp-doc blockquote,
+.vp-doc table {
+  transition: background-color var(--theme-transition-duration) var(--theme-transition-timing),
+              border-color var(--theme-transition-duration) var(--theme-transition-timing),
+              color var(--theme-transition-duration) var(--theme-transition-timing),
+              box-shadow var(--theme-transition-duration) var(--theme-transition-timing);
+}
+
+/* 移动端性能优化：减少或禁用过渡动画 */
+@media (max-width: 768px) {
+  .VPNavBar,
+  .VPSidebar,
+  .VPDoc .content-container,
+  .VPFooter,
+  .custom-block,
+  .vp-doc blockquote,
+  .vp-doc table {
+    /* 移动端使用更短的过渡时间，减少视觉抖动 */
+    transition-duration: 0.15s;
+  }
 }
 
 /* 尊重用户无动画偏好（WCAG无障碍）*/
@@ -21,6 +47,15 @@
   .light,
   .dark {
     --theme-transition-duration: 0s;
+  }
+  
+  .VPNavBar,
+  .VPSidebar,
+  .VPDoc .content-container,
+  .VPFooter,
+  .custom-block,
+  .vp-doc blockquote,
+  .vp-doc table {
     transition: none !important;
   }
 }
@@ -511,27 +546,7 @@ body {
 }
 
 /* ===== ENHANCED DARK MODE STYLES ===== */
-
-/* Smooth theme transition */
-@media (prefers-reduced-motion: no-preference) {
-  :root {
-    --theme-transition: 0.3s ease;
-  }
-  
-  body,
-  .VPNavBar,
-  .VPSidebar,
-  .VPDoc .content-container,
-  .VPFooter,
-  .custom-block,
-  .vp-doc blockquote,
-  .vp-doc table {
-    transition: background-color var(--theme-transition), 
-                border-color var(--theme-transition), 
-                color var(--theme-transition),
-                box-shadow var(--theme-transition);
-  }
-}
+/* 注意：主题过渡动画已移至上方"选择性应用过渡动画"部分，避免重复定义 */
 
 /* Dark mode nav enhancements */
 .dark .VPNavBar {
@@ -757,53 +772,51 @@ html.home-no-search .VPNavBar .VPNavBarSearch {
 }
 
 /* ===== Dynamic Island / Notch Safe Area Support ===== */
-/* iPhone 14 Pro+ 灵动岛及刘海屏沉浸式适配 */
-/* 策略：导航栏背景延伸到刘海区，内容在安全区域内 */
+/* iPhone 14 Pro+ 灵动岛及刘海屏适配 - 修复抽动问题 */
+/* 策略：使用更稳定的方式处理安全区域，避免负margin导致的布局抖动 */
 
-/* 主导航栏背景延伸至刘海屏区域 */
+/* 主导航栏 - 使用稳定的padding处理 */
 .VPNavBar {
-  /* 向上延伸到刘海屏下方 */
-  margin-top: calc(-1 * env(safe-area-inset-top));
-  /* 增加高度覆盖刘海区域 */
-  padding-top: env(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top, 0);
+  /* 移除负margin，避免布局抖动 */
 }
 
-/* 导航栏内部 wrapper 下移避开刘海（VitePress 使用 .wrapper 而非 .container） */
+/* 导航栏内部 wrapper - 高度自适应 */
 .VPNavBar .wrapper {
-  padding-top: env(safe-area-inset-top);
+  /* 不添加额外padding，由父元素处理 */
+  height: 100%;
 }
 
 /* 文档本地导航适配 */
 .VPLocalNav {
-  padding-top: env(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top, 0);
 }
 
-/* 侧边栏延伸到刘海屏区域 */
+/* 侧边栏 - 使用更简单的padding计算 */
 .VPSidebar {
-  margin-top: calc(-1 * env(safe-area-inset-top));
-  padding-top: calc(env(safe-area-inset-top) + 20px);
-  min-height: calc(100vh + env(safe-area-inset-top));
+  padding-top: calc(var(--vp-nav-height, 64px) + env(safe-area-inset-top, 0));
+  /* 移除复杂的min-height计算 */
 }
 
-/* 侧边栏顶部遮罩层 */
+/* 侧边栏顶部遮罩层 - 使用固定高度 */
 .VPSidebar .curtain {
-  top: calc(env(safe-area-inset-top) * -1);
-  height: calc(env(safe-area-inset-top) + 20px);
+  top: 0;
+  height: calc(var(--vp-nav-height, 64px) + env(safe-area-inset-top, 0));
 }
 
 /* 移动端侧边栏菜单面板 */
 .VPNavScreen {
-  padding-top: env(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top, 0);
 }
 
-/* 确保顶部内容不被遮挡 */
+/* 移除VPDoc的顶部padding，让内容自然流动 */
 .VPDoc {
-  padding-top: env(safe-area-inset-top);
+  padding-top: 0;
 }
 
-/* 移动端适配 */
+/* 移动端适配 - 简化处理 */
 @media (max-width: 768px) {
   .VPNavBar .wrapper {
-    padding-top: env(safe-area-inset-top);
+    /* 不添加额外padding */
   }
 }
