@@ -42,7 +42,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="relative z-[70] flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg bg-slate-100 text-slate-900 transition-colors hover:bg-slate-200 dark:bg-[color:var(--apple-btn-secondary-bg)] dark:text-[color:var(--apple-ink)] dark:hover:bg-[color:var(--apple-btn-secondary-bg-hover)]"
+        className="relative z-[10030] flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg bg-transparent text-slate-900 transition-opacity hover:opacity-70 dark:text-[color:var(--apple-ink)]"
         aria-label={isOpen ? '关闭菜单' : '打开菜单'}
         aria-expanded={isOpen}
       >
@@ -67,7 +67,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
       {isOpen && (
         <>
           <div
-            className="fixed inset-0 z-[60] bg-white md:hidden dark:bg-[color:var(--apple-nav-bg)]"
+            className="fixed inset-0 z-[10020] bg-white md:hidden dark:bg-[color:var(--apple-nav-bg)]"
             style={{
               animation: 'fadeInMenu 0.2s ease-out',
             }}

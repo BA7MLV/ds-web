@@ -1,6 +1,6 @@
 # DeepStudent
 
-![主图](/deepstudent-head.png)
+![主图](/img/example/软件主页图-1280.webp)
 
 DeepStudent 是一款基于 Tauri 2.0 构建的 **AI 原生、本地优先**开源学习系统（AGPL-3.0），以「对话即入口」的方式，把智能对话、学习资源管理、RAG 知识检索、Anki 制卡、题库练习与回顾整合为可持续的学习闭环。
 
