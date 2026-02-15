@@ -1,24 +1,28 @@
 {
-  "version": "v0.9.3",
-  "publishedAt": "2026-02-14T14:29:14Z",
-  "releaseUrl": "https://github.com/000haoji/deep-student/releases/tag/v0.9.3",
-  "generatedAt": "2026-02-14T15:17:29.788Z",
+  "version": "v0.9.4",
+  "publishedAt": "2026-02-14T18:13:15Z",
+  "releaseUrl": "https://github.com/000haoji/deep-student/releases/tag/v0.9.4",
+  "generatedAt": "2026-02-15T07:39:09.700Z",
   "platforms": {
     "macArm64": {
-      "name": "Deep.Student_0.9.3_aarch64.dmg",
-      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.3/Deep.Student_0.9.3_aarch64.dmg",
-      "sizeBytes": 46670785
+      "name": "Deep.Student_0.9.4_aarch64.dmg",
+      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.4/Deep.Student_0.9.4_aarch64.dmg",
+      "sizeBytes": 46741713
     },
     "macX64": {
-      "name": "Deep.Student_0.9.3_x64.dmg",
-      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.3/Deep.Student_0.9.3_x64.dmg",
-      "sizeBytes": 49283524
+      "name": "Deep.Student_0.9.4_x64.dmg",
+      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.4/Deep.Student_0.9.4_x64.dmg",
+      "sizeBytes": 49358548
     },
     "windowsX64": {
-      "name": "Deep.Student_0.9.3_x64-setup.exe",
-      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.3/Deep.Student_0.9.3_x64-setup.exe",
-      "sizeBytes": 36642271
+      "name": "Deep.Student_0.9.4_x64-setup.exe",
+      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.4/Deep.Student_0.9.4_x64-setup.exe",
+      "sizeBytes": 36671617
     },
-    "androidArm64": null
+    "androidArm64": {
+      "name": "Deep.Student_0.9.4_arm64.apk",
+      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.4/Deep.Student_0.9.4_arm64.apk",
+      "sizeBytes": 111556004
+    }
   }
 }
