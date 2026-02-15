@@ -713,6 +713,7 @@ const App = () => {
                 align="right"
                 motionScale={motionScale}
                 subFeatures={[
+                  { labelKey: 'memory.resources', descKey: 'memory.resourcesDesc', imgSrc: '/img/example/学习资源管理器.png' },
                   { labelKey: 'memory.generate', descKey: 'memory.generateDesc', imgSrc: '/img/example/记忆-1.png' },
                   { labelKey: 'memory.list', descKey: 'memory.listDesc', imgSrc: '/img/example/记忆-2.png' },
                   { labelKey: 'memory.detail', descKey: 'memory.detailDesc', imgSrc: '/img/example/记忆-3.png' },
@@ -762,21 +763,40 @@ const App = () => {
                 </div>
               </FeatureSection>
 
-              {/* Module 10: 翻译工作台 */}
+              {/* Module 10: 论文搜索 */}
               <FeatureSection
-                id="feature-translation"
-                title={t('feature.translation.title')}
-                desc={t('feature.translation.desc')}
+                id="feature-paper-search"
+                layout="sticky"
+                title={t('feature.paperSearch.title')}
+                desc={t('feature.paperSearch.desc')}
                 align="left"
                 motionScale={motionScale}
                 subFeatures={[
-                  { labelKey: 'translation.multiInput', descKey: 'translation.multiInputDesc' },
-                  { labelKey: 'translation.streaming', descKey: 'translation.streamingDesc' },
-                  { labelKey: 'translation.tone', descKey: 'translation.toneDesc' },
-                  { labelKey: 'translation.tts', descKey: 'translation.ttsDesc' },
+                  { labelKey: 'paperSearch.download', descKey: 'paperSearch.downloadDesc', imgSrc: '/img/example/论文搜索-2.png' },
+                  { labelKey: 'paperSearch.read', descKey: 'paperSearch.readDesc', imgSrc: '/img/example/论文搜索-3.png' },
                 ]}
               >
-                <ImagePlaceholder label="Translation Workbench" />
+                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <OptimizedImage src="/img/example/论文搜索-1.png" alt="Paper Search" className="w-full h-auto object-cover" />
+                </div>
+              </FeatureSection>
+
+              {/* Module 11: 翻译工作台 */}
+              <FeatureSection
+                id="feature-translation"
+                layout="sticky"
+                title={t('feature.translation.title')}
+                desc={t('feature.translation.desc')}
+                align="right"
+                motionScale={motionScale}
+                subFeatures={[
+                  { labelKey: 'translation.bilingual', descKey: 'translation.bilingualDesc', imgSrc: '/img/example/翻译-2.png' },
+                  { labelKey: 'translation.domain', descKey: 'translation.domainDesc', imgSrc: '/img/example/翻译-3.png' },
+                ]}
+              >
+                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <OptimizedImage src="/img/example/翻译-1.png" alt="Translation Workbench" className="w-full h-auto object-cover" />
+                </div>
               </FeatureSection>
 
             </div>
