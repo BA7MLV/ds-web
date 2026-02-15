@@ -119,6 +119,8 @@
   "anki.tasksDesc": "Card forge progress & stats dashboard",
   "anki.templates": "Template Manager",
   "anki.templatesDesc": "10+ built-in card templates",
+  "anki.templateEditor": "Template Editor",
+  "anki.templateEditorDesc": "Visual HTML/CSS editing with live preview",
   "feature.mindmap.title": "Knowledge Mindmap",
   "feature.mindmap.desc": "Mind map, logic tree, org chart & more layouts. Node editing, search & locate, export to OPML/Markdown/JSON/PNG.",
   "stats.title": "Built for Deep Learning",

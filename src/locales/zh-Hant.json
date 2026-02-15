@@ -119,6 +119,8 @@
   "anki.tasksDesc": "製卡進度與統計看板",
   "anki.templates": "模板管理",
   "anki.templatesDesc": "10+ 內建卡片模板",
+  "anki.templateEditor": "模板編輯器",
+  "anki.templateEditorDesc": "HTML/CSS 視覺化編輯與即時預覽",
   "feature.mindmap.title": "知識導圖",
   "feature.mindmap.desc": "思維導圖、邏輯樹、組織架構圖等多種佈局。節點編輯、搜尋定位，匯出 OPML/Markdown/JSON/圖片。",
   "stats.title": "為深度學習而生",
