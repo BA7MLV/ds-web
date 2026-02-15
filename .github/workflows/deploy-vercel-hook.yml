@@ -1,0 +1,25 @@
+name: Deploy Vercel via Hook
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Trigger Vercel Deploy Hook
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$VERCEL_DEPLOY_HOOK" ]; then
+            echo "Missing required secret: VERCEL_DEPLOY_HOOK"
+            exit 1
+          fi
+
+          echo "Triggering Vercel deploy hook..."
+          curl -fsS -X POST "$VERCEL_DEPLOY_HOOK"
+          echo "Deploy hook triggered successfully."
