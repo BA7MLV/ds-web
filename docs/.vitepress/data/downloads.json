@@ -1,28 +1,28 @@
 {
-  "version": "v0.9.4",
-  "publishedAt": "2026-02-14T18:13:15Z",
-  "releaseUrl": "https://github.com/000haoji/deep-student/releases/tag/v0.9.4",
-  "generatedAt": "2026-02-15T07:39:09.700Z",
+  "version": "v0.9.7",
+  "publishedAt": "2026-02-16T07:54:03Z",
+  "releaseUrl": "https://github.com/000haoji/deep-student/releases/tag/v0.9.7",
+  "generatedAt": "2026-02-16T08:21:30.375Z",
   "platforms": {
     "macArm64": {
-      "name": "Deep.Student_0.9.4_aarch64.dmg",
-      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.4/Deep.Student_0.9.4_aarch64.dmg",
-      "sizeBytes": 46741713
+      "name": "Deep.Student_0.9.7_aarch64.dmg",
+      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.7/Deep.Student_0.9.7_aarch64.dmg",
+      "sizeBytes": 46980606
     },
     "macX64": {
-      "name": "Deep.Student_0.9.4_x64.dmg",
-      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.4/Deep.Student_0.9.4_x64.dmg",
-      "sizeBytes": 49358548
+      "name": "Deep.Student_0.9.7_x64.dmg",
+      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.7/Deep.Student_0.9.7_x64.dmg",
+      "sizeBytes": 49575067
     },
     "windowsX64": {
-      "name": "Deep.Student_0.9.4_x64-setup.exe",
-      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.4/Deep.Student_0.9.4_x64-setup.exe",
-      "sizeBytes": 36671617
+      "name": "Deep.Student_0.9.7_x64-setup.exe",
+      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.7/Deep.Student_0.9.7_x64-setup.exe",
+      "sizeBytes": 36842217
     },
     "androidArm64": {
-      "name": "Deep.Student_0.9.4_arm64.apk",
-      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.4/Deep.Student_0.9.4_arm64.apk",
-      "sizeBytes": 111556004
+      "name": "Deep.Student_0.9.7_arm64.apk",
+      "url": "https://github.com/000haoji/deep-student/releases/download/v0.9.7/Deep.Student_0.9.7_arm64.apk",
+      "sizeBytes": 111920435
     }
   }
 }
