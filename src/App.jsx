@@ -816,8 +816,8 @@ const App = () => {
 const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
   return (
-    <nav className="sticky top-0 z-[10010] h-[calc(3.5rem+var(--sat))] bg-white/75 backdrop-blur-[20px] backdrop-saturate-[180%] dark:bg-[color:var(--apple-nav-bg)]">
-      <div className="max-w-6xl mx-auto mt-safe flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
+    <nav className="sticky top-0 z-[10010] pt-safe bg-white/75 backdrop-blur-[20px] backdrop-saturate-[180%] dark:bg-[color:var(--apple-nav-bg)]">
+      <div className="max-w-6xl mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-slate-900 transition-opacity hover:opacity-80 dark:text-[color:var(--apple-ink)]">
           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" loading="lazy" decoding="async" />
           <span className="text-[15px] tracking-tight">DeepStudent</span>
@@ -963,9 +963,22 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               <button
                 type="button"
                 onClick={handleDownloadClick}
-                className="px-8 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-lg font-medium text-[15px] hover:opacity-90 active:scale-[0.98] transition-all duration-200"
+                className="group inline-flex items-center gap-1.5 px-8 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-lg font-medium text-[15px] hover:opacity-90 active:scale-[0.98] transition-all duration-200"
               >
                 {t('hero.cta.download')}
+                <svg
+                  className="w-4 h-4 opacity-90 transition-[transform,opacity] duration-150 ease-out motion-reduce:transform-none group-hover:translate-x-1 group-hover:opacity-100"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
               </button>
               <button
                 type="button"
@@ -1229,8 +1242,8 @@ const DownloadPage = ({ onBack = () => {} }) => {
   const releaseUpdatedAt = formatReleaseDate(updatedAtRaw, locale)
   return (
     <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[6.854rem] sm:pb-[11.09rem]">
-      <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl">
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 pt-[calc(var(--sat)+0.75rem)]">
+      <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl pt-safe">
+        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
           <button
             type="button"
             onClick={onBack}
