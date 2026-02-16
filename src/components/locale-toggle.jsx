@@ -193,7 +193,7 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
           compact
             ? 'text-[color:var(--apple-ink)] text-[12px] font-medium'
             : 'text-[color:var(--apple-ink)] text-[13px] font-medium',
-          'px-4 leading-none text-center',
+          'pl-3 pr-10 leading-none text-left',
           'hover:bg-[color:var(--apple-btn-secondary-bg-hover)]'
         )}
         aria-label={t('locale.select', 'Language')}

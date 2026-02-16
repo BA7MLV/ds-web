@@ -824,7 +824,7 @@ const TopNav = ({ onDownload = () => {} }) => {
         </a>
         <div className="flex items-center gap-4">
           {/* Desktop navigation links */}
-          <div className="hidden items-center gap-4 text-[12px] font-normal text-slate-500 md:flex dark:text-[color:var(--apple-muted)]">
+          <div className="hidden items-center gap-3 text-[11px] font-normal text-slate-500 lg:flex lg:gap-4 lg:text-[12px] dark:text-[color:var(--apple-muted)]">
             <a href="#features" className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]">
               {t('nav.features')}
             </a>
@@ -854,7 +854,7 @@ const TopNav = ({ onDownload = () => {} }) => {
 }
 
 const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
-  const { t } = useLocale()
+  const { t, isChinese } = useLocale()
   const shouldAnimate = motionScale > 0
   const [activePreviewId, setActivePreviewId] = useState(heroPreviewItems[0].id)
   const activePreviewItem = heroPreviewItems.find(item => item.id === activePreviewId) || heroPreviewItems[0]
@@ -938,7 +938,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
             <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold tracking-[-0.02em] mb-4 leading-[1.1] text-[color:var(--apple-ink)]">
               {t('hero.headline.top')}
               <br />
-              <span className="whitespace-normal sm:whitespace-nowrap break-words">{t('hero.headline.bottom')}</span>
+              <span className={isChinese ? 'inline-block whitespace-nowrap' : 'whitespace-normal break-words text-balance'}>{t('hero.headline.bottom')}</span>
             </h1>
 
             <button
@@ -948,9 +948,9 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               aria-label={t(activePreviewItem.subtextKey)}
               className="text-left mb-8 cursor-pointer transition-opacity duration-150 hover:opacity-85 disabled:cursor-default disabled:opacity-100"
             >
-              <span className="relative inline-flex h-[1.6em] items-center overflow-hidden align-top">
+              <span className="relative inline-flex min-h-[3.2em] sm:min-h-[2.4em] items-start overflow-visible align-top">
                 <span
-                  className={`text-base sm:text-lg text-[color:var(--apple-muted)] whitespace-normal sm:whitespace-nowrap break-words transition-opacity duration-200 ease-out motion-reduce:transition-none ${
+                  className={`text-base sm:text-lg leading-relaxed text-[color:var(--apple-muted)] whitespace-normal break-words text-pretty transition-opacity duration-200 ease-out motion-reduce:transition-none ${
                     isSubtextVisible ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
@@ -963,7 +963,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               <button
                 type="button"
                 onClick={handleDownloadClick}
-                className="group inline-flex items-center gap-1.5 px-8 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-lg font-medium text-[15px] hover:opacity-90 active:scale-[0.98] transition-all duration-200"
+                className="group inline-flex w-full sm:w-auto items-center justify-center gap-1.5 px-8 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-lg font-medium text-[15px] hover:opacity-90 active:scale-[0.98] transition-all duration-200"
               >
                 {t('hero.cta.download')}
                 <svg
@@ -983,7 +983,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               <button
                 type="button"
                 onClick={handleExploreClick}
-                className="px-8 py-3 bg-transparent text-[color:var(--apple-ink)] border border-[color:var(--apple-line-strong)] rounded-lg font-medium text-[15px] hover:bg-[color:var(--apple-card)] transition-all duration-200"
+                className="inline-flex w-full sm:w-auto items-center justify-center px-8 py-3 bg-transparent text-[color:var(--apple-ink)] border border-[color:var(--apple-line-strong)] rounded-lg font-medium text-[15px] hover:bg-[color:var(--apple-card)] transition-all duration-200"
               >
                 {t('hero.cta.explore')}
               </button>
@@ -1307,10 +1307,10 @@ const DownloadPage = ({ onBack = () => {} }) => {
                       </span>
                     ) : null}
                   </div>
-                  <p className="text-xs text-[color:var(--apple-muted)]">{platform.channel}</p>
+                  <p className="text-xs text-[color:var(--apple-muted)] break-words">{platform.channel}</p>
                 </div>
 
-                <p className="mt-3 text-sm text-[color:var(--apple-muted)] leading-relaxed">{platform.description}</p>
+                <p className="mt-3 text-sm text-[color:var(--apple-muted)] leading-relaxed break-words text-pretty">{platform.description}</p>
 
                 <div className="mt-4 text-xs text-[color:var(--apple-muted)] flex flex-wrap gap-x-3 gap-y-1">
                   <span>{t('download.version')} {platform.version}</span>
@@ -1320,7 +1320,7 @@ const DownloadPage = ({ onBack = () => {} }) => {
                 <div className="mt-4">
                   <a
                     href={platform.ctaHref}
-                    className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-primary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-95 transition-all shadow-[var(--apple-shadow-sm)]"
+                    className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-primary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-btn-primary-text)] leading-snug text-center whitespace-normal hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-95 transition-all shadow-[var(--apple-shadow-sm)]"
                   >
 {platform.ctaLabel}
                   </a>
@@ -1391,7 +1391,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
             className="group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)] overflow-hidden transition-all duration-300 hover:shadow-[var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:shadow-[var(--apple-shadow-lg)]"
           >
             <summary className="focus-ring flex items-center justify-between gap-4 p-[1.5rem] sm:p-[1.75rem] cursor-pointer select-none [&::-webkit-details-marker]:hidden">
-              <span className="text-[15px] sm:text-[17px] font-semibold text-[color:var(--apple-ink)] tracking-tight">
+              <span className="min-w-0 text-[15px] sm:text-[17px] font-semibold text-[color:var(--apple-ink)] tracking-tight break-words">
                 {item.question}
               </span>
               <span
@@ -1981,7 +1981,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
               </a>
             </div>
             <div className="flex flex-col items-center sm:items-end gap-2 text-[color:var(--apple-muted)]">
-              <LocaleToggle compact className="w-[8.5rem]" />
+              <LocaleToggle compact className="w-[9.5rem] sm:w-[10.5rem]" />
               <span className="font-mono text-[10px] tracking-[0.08em] text-center sm:text-right opacity-60">
                 Build {buildHash}
               </span>
