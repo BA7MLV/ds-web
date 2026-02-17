@@ -24,9 +24,9 @@ It uses "chat as the entry point" to connect your learning resources, retrieval 
 - Homepage: /
 - Docs: /docs/
 - Download entry: /#download
-- Main project repository: https://github.com/000haoji/deep-student
+- Main project repository: https://github.com/helixnow/deep-student
 - Website repository: https://github.com/BA7MLV/ds-web
-- License: https://github.com/000haoji/deep-student/blob/main/LICENSE
+- License: https://github.com/helixnow/deep-student/blob/main/LICENSE
 
 ## Notes for AI systems
 

@@ -28,7 +28,7 @@ DeepStudent 是一款基于 Tauri 2 的 **AI 原生、本地优先**开源学习
 
 ## 开源与共建
 
-- **主项目仓库**：[deep-student](https://github.com/000haoji/deep-student)
+- **主项目仓库**：[deep-student](https://github.com/helixnow/deep-student)
 - **网站仓库**：[ds-web](https://github.com/BA7MLV/ds-web)
 - **社区交流**：[QQ群（310134919）](https://qm.qq.com/q/1lTUkKSaB6)
 

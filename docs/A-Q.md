@@ -27,5 +27,5 @@ DeepStudent 采用本地优先架构，核心数据默认保存在本机（SQLit
 
 ## 如何反馈问题或共建？
 
-- 项目仓库：[deep-student](https://github.com/000haoji/deep-student)
+- 项目仓库：[deep-student](https://github.com/helixnow/deep-student)
 - 社区交流：[QQ群（310134919）](https://qm.qq.com/q/1lTUkKSaB6)

@@ -432,17 +432,189 @@ const getPolicyContent = (t) => ({
   },
 })
 
-// 功能标签导航组件
-// 数据亮点区块组件
-const StatsHighlight = ({ motionScale = 1 }) => {
+// 架构图内联 SVG 图标（复制自主项目 ResourceIcons.tsx 的 Notion 风格调色盘）
+const archPalette = {
+  green:  { bg: '#EDF3EC', fg: '#4F9779', border: '#C6E3C6' },
+  orange: { bg: '#FBECDD', fg: '#CC782F', border: '#F5CCAA' },
+  purple: { bg: '#F6F3F9', fg: '#9A6DD7', border: '#D9CBE4' },
+  pink:   { bg: '#FBF2F5', fg: '#D65C9D', border: '#ECD0DE' },
+  blue:   { bg: '#E7F3F8', fg: '#2B59C3', border: '#B8D6E8' },
+  yellow: { bg: '#FBF3DB', fg: '#CF9232', border: '#F9E2AF' },
+}
+
+const ArchNoteIcon = ({ size = 32 }) => (
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+    <path d="M10 4C8.895 4 8 4.895 8 6V42C8 43.105 8.895 44 10 44H38C39.105 44 40 43.105 40 42V14L30 4H10Z" fill={archPalette.green.bg} stroke={archPalette.green.border} strokeWidth="1"/>
+    <path d="M30 4L40 14H31C30.448 14 30 13.552 30 13V4Z" fill="black" fillOpacity="0.05"/>
+    <rect x="14" y="20" width="16" height="2" rx="1" fill={archPalette.green.fg}/>
+    <rect x="14" y="26" width="20" height="2" rx="1" fill={archPalette.green.fg} opacity="0.6"/>
+    <rect x="14" y="32" width="18" height="2" rx="1" fill={archPalette.green.fg} opacity="0.6"/>
+    <rect x="14" y="38" width="12" height="2" rx="1" fill={archPalette.green.fg} opacity="0.4"/>
+  </svg>
+)
+
+const ArchTextbookIcon = ({ size = 32 }) => (
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+    <rect x="8" y="6" width="28" height="36" rx="2" fill={archPalette.orange.bg} stroke={archPalette.orange.fg} strokeWidth="1.5"/>
+    <rect x="8" y="6" width="5" height="36" rx="2" fill={archPalette.orange.fg} fillOpacity="0.15"/>
+    <line x1="11" y1="6" x2="11" y2="42" stroke={archPalette.orange.fg} strokeWidth="1" strokeOpacity="0.25"/>
+    <path d="M17 20H30" stroke={archPalette.orange.fg} strokeWidth="2" strokeLinecap="round"/>
+    <path d="M17 26H26" stroke={archPalette.orange.fg} strokeWidth="2" strokeLinecap="round" opacity="0.6"/>
+    <path d="M27 4V14L29.5 12L32 14V4" fill={archPalette.orange.fg}/>
+  </svg>
+)
+
+const ArchExamIcon = ({ size = 32 }) => (
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+    <g style={{ transformOrigin: '8px 44px', transform: 'rotate(8deg)' }}>
+      <path d="M8 6C6.895 6 6 6.895 6 8V40C6 41.105 6.895 42 7 42H31C32.105 42 33 41.105 33 40V12L25 6H8Z" fill={archPalette.purple.bg} stroke={archPalette.purple.fg} strokeWidth="1" opacity="0.5"/>
+    </g>
+    <g style={{ transformOrigin: '8px 44px', transform: 'rotate(-8deg)' }}>
+      <path d="M8 6C6.895 6 6 6.895 6 8V40C6 41.105 6.895 42 7 42H31C32.105 42 33 41.105 33 40V12L25 6H8Z" fill="#FFFFFF" stroke={archPalette.purple.fg} strokeWidth="1.5"/>
+      <path d="M25 6V12H33L25 6Z" fill={archPalette.purple.bg} stroke={archPalette.purple.fg} strokeWidth="1.5" strokeLinejoin="round"/>
+      <circle cx="12" cy="20" r="1.5" stroke={archPalette.purple.fg} strokeWidth="1.2" fill="none"/>
+      <rect x="16" y="19" width="10" height="2" rx="1" fill={archPalette.purple.fg} opacity="0.6"/>
+      <circle cx="12" cy="27" r="1.5" fill={archPalette.purple.fg}/>
+      <rect x="16" y="26" width="8" height="2" rx="1" fill={archPalette.purple.fg} opacity="0.8"/>
+      <circle cx="12" cy="34" r="1.5" stroke={archPalette.purple.fg} strokeWidth="1.2" fill="none"/>
+      <rect x="16" y="33" width="12" height="2" rx="1" fill={archPalette.purple.fg} opacity="0.6"/>
+    </g>
+  </svg>
+)
+
+const ArchEssayIcon = ({ size = 32 }) => (
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+    <path d="M10 4C8.895 4 8 4.895 8 6V42C8 43.105 8.895 44 10 44H38C39.105 44 40 43.105 40 42V14L30 4H10Z" fill={archPalette.pink.bg} stroke={archPalette.pink.border} strokeWidth="1"/>
+    <path d="M30 4L40 14H31C30.448 14 30 13.552 30 13V4Z" fill="black" fillOpacity="0.05"/>
+    <text x="24" y="32" fontSize="22" fontWeight="bold" fontFamily="serif" fontStyle="italic" fill={archPalette.pink.fg} textAnchor="middle">Aa</text>
+  </svg>
+)
+
+const ArchTranslationIcon = ({ size = 32 }) => (
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+    <rect x="20" y="6" width="20" height="24" rx="3" fill={archPalette.blue.bg} stroke={archPalette.blue.fg} strokeWidth="1.5" strokeOpacity="0.6"/>
+    <text x="30" y="22" fontSize="14" fontWeight="600" fill={archPalette.blue.fg} textAnchor="middle">A</text>
+    <rect x="8" y="18" width="20" height="24" rx="3" fill="#FFFFFF" stroke={archPalette.blue.fg} strokeWidth="1.5"/>
+    <text x="18" y="34" fontSize="14" fontWeight="bold" fill={archPalette.blue.fg} textAnchor="middle">文</text>
+  </svg>
+)
+
+const ArchMindmapIcon = ({ size = 32 }) => (
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+    <path d="M10 4C8.895 4 8 4.895 8 6V42C8 43.105 8.895 44 10 44H38C39.105 44 40 43.105 40 42V14L30 4H10Z" fill={archPalette.green.bg} stroke={archPalette.green.border} strokeWidth="1"/>
+    <path d="M30 4L40 14H31C30.448 14 30 13.552 30 13V4Z" fill="black" fillOpacity="0.05"/>
+    <circle cx="18" cy="26" r="3" fill={archPalette.green.fg}/>
+    <path d="M21 26C26 26 26 18 31 18" stroke={archPalette.green.fg} strokeWidth="1.5" fill="none" opacity="0.6"/>
+    <path d="M21 26C26 26 26 26 31 26" stroke={archPalette.green.fg} strokeWidth="1.5" fill="none" opacity="0.6"/>
+    <path d="M21 26C26 26 26 34 31 34" stroke={archPalette.green.fg} strokeWidth="1.5" fill="none" opacity="0.6"/>
+    <circle cx="31" cy="18" r="2.5" fill={archPalette.green.fg} opacity="0.8"/>
+    <circle cx="31" cy="26" r="2.5" fill={archPalette.green.fg} opacity="0.8"/>
+    <circle cx="31" cy="34" r="2.5" fill={archPalette.green.fg} opacity="0.8"/>
+  </svg>
+)
+
+const ArchMemoryIcon = ({ size = 32 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" fill={archPalette.purple.bg} stroke={archPalette.purple.border} strokeWidth="1.2"/>
+    <path d="M7 7L17 9" stroke={archPalette.purple.fg} strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.3"/>
+    <path d="M7 7L17 17" stroke={archPalette.purple.fg} strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.3"/>
+    <path d="M7 12L17 9" stroke={archPalette.purple.fg} strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.3"/>
+    <path d="M7 12L17 17" stroke={archPalette.purple.fg} strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.3"/>
+    <circle cx="7" cy="7" r="2.2" fill={archPalette.purple.fg} stroke={archPalette.purple.border} strokeWidth="0.6"/>
+    <circle cx="7" cy="12" r="2.2" fill={archPalette.purple.fg} stroke={archPalette.purple.border} strokeWidth="0.6"/>
+    <circle cx="7" cy="17" r="2.2" fill={archPalette.purple.fg} stroke={archPalette.purple.border} strokeWidth="0.6"/>
+    <circle cx="17" cy="9" r="1.8" fill={archPalette.purple.fg} fillOpacity="0.65" stroke={archPalette.purple.border} strokeWidth="0.6"/>
+    <circle cx="17" cy="17" r="1.8" fill={archPalette.purple.fg} fillOpacity="0.65" stroke={archPalette.purple.border} strokeWidth="0.6"/>
+  </svg>
+)
+
+const ArchFolderIcon = ({ size = 32 }) => (
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+    <path d="M6 10C6 8.895 6.895 8 8 8H18L21 11H40C41.105 11 42 11.895 42 13V39C42 40.105 41.105 41 40 41H8C6.895 41 6 40.105 6 39V10Z" fill="#E8B849"/>
+    <path d="M6 10C6 8.895 6.895 8 8 8H17C17.552 8 18 8.448 18 9V11H6V10Z" fill="#D4A53A"/>
+    <path d="M6 15C6 13.895 6.895 13 8 13H40C41.105 13 42 13.895 42 15V39C42 40.105 41.105 41 40 41H8C6.895 41 6 40.105 6 39V15Z" fill="#F5C85C"/>
+    <path d="M7 15C7 14.448 7.448 14 8 14H40C40.552 14 41 14.448 41 15" stroke="white" strokeWidth="1" strokeOpacity="0.4" fill="none"/>
+  </svg>
+)
+
+// 连接线箭头 SVG（水平方向，带流动动画）
+const FlowArrow = ({ label, sublabel, direction = 'right', className = '' }) => (
+  <div className={`flex flex-col items-center gap-1 ${className}`}>
+    <svg width="100%" height="24" viewBox="0 0 120 24" fill="none" className="overflow-visible">
+      <defs>
+        <marker id={`arrow-${direction}`} viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M0 0L6 3L0 6Z" fill="var(--apple-muted)"/>
+        </marker>
+      </defs>
+      {direction === 'both' ? (
+        <>
+          <line x1="4" y1="12" x2="116" y2="12" stroke="var(--apple-muted)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#arrow-both)" markerStart="url(#arrow-both)">
+            <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2s" repeatCount="indefinite"/>
+          </line>
+        </>
+      ) : (
+        <line x1="4" y1="12" x2="116" y2="12" stroke="var(--apple-muted)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd={`url(#arrow-${direction})`}>
+          <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2s" repeatCount="indefinite"/>
+        </line>
+      )}
+    </svg>
+    <span className="text-[11px] sm:text-[12px] text-[color:var(--apple-muted)] whitespace-nowrap leading-tight">{label}</span>
+    {sublabel && <span className="text-[10px] text-[color:var(--apple-muted)] opacity-60 whitespace-nowrap leading-tight">{sublabel}</span>}
+  </div>
+)
+
+// 垂直连接线箭头（移动端）
+const FlowArrowVertical = ({ label, sublabel, direction = 'down' }) => (
+  <div className="flex items-center gap-2 py-2">
+    <svg width="24" height="48" viewBox="0 0 24 48" fill="none">
+      <defs>
+        <marker id={`varrow-${direction}`} viewBox="0 0 6 6" refX="3" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0 0L3 6L6 0Z" fill="var(--apple-muted)"/>
+        </marker>
+      </defs>
+      {direction === 'both' ? (
+        <>
+          <line x1="12" y1="4" x2="12" y2="44" stroke="var(--apple-muted)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd={`url(#varrow-${direction})`} markerStart={`url(#varrow-${direction})`}>
+            <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2s" repeatCount="indefinite"/>
+          </line>
+        </>
+      ) : (
+        <line x1="12" y1="4" x2="12" y2="44" stroke="var(--apple-muted)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd={`url(#varrow-${direction})`}>
+          <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2s" repeatCount="indefinite"/>
+        </line>
+      )}
+    </svg>
+    <div className="flex flex-col">
+      <span className="text-[11px] text-[color:var(--apple-muted)] whitespace-nowrap leading-tight">{label}</span>
+      {sublabel && <span className="text-[10px] text-[color:var(--apple-muted)] opacity-60 whitespace-nowrap leading-tight">{sublabel}</span>}
+    </div>
+  </div>
+)
+
+// 架构图组件
+const ArchitectureDiagram = ({ motionScale = 1 }) => {
   const { t } = useLocale()
   const shouldAnimate = motionScale > 0
 
-  const stats = [
-    { value: 'Chat V2', labelKey: 'stats.tools', descKey: 'stats.toolsDesc' },
-    { value: 'Hub', labelKey: 'stats.providers', descKey: 'stats.providersDesc' },
-    { value: 'Skills', labelKey: 'stats.modes', descKey: 'stats.modesDesc' },
-    { value: 'VFS', labelKey: 'stats.formats', descKey: 'stats.formatsDesc' },
+  const resourceTypes = [
+    { Icon: ArchNoteIcon, label: t('arch.note', '笔记') },
+    { Icon: ArchTextbookIcon, label: t('arch.textbook', '教材') },
+    { Icon: ArchExamIcon, label: t('arch.exam', '题库') },
+    { Icon: ArchEssayIcon, label: t('arch.essay', '作文') },
+    { Icon: ArchTranslationIcon, label: t('arch.translation', '翻译') },
+    { Icon: ArchMindmapIcon, label: t('arch.mindmap', '导图') },
+    { Icon: ArchMemoryIcon, label: t('arch.memory', '记忆') },
+  ]
+
+  const skillTools = [
+    t('arch.skill.search', '资源/网络/论文搜索'),
+    t('arch.skill.resource', '资源管理'),
+    t('arch.skill.qbank', '题库操作'),
+    t('arch.skill.mindmap', '导图生成'),
+    t('arch.skill.memory', '记忆管理'),
+    t('arch.skill.office', 'Office 套件'),
+    t('arch.skill.anki', 'Anki 对话制卡'),
+    t('arch.skill.interact', '多种交互技能'),
   ]
 
   return (
@@ -450,34 +622,180 @@ const StatsHighlight = ({ motionScale = 1 }) => {
       className={`py-[4rem] sm:py-[6rem] px-4 sm:px-6 ${shouldAnimate ? 'animate-fade-in' : ''}`}
       style={shouldAnimate ? { animationDelay: '0.24s' } : undefined}
     >
-      <div className="max-w-[90rem] mx-auto">
-        <div className="text-center mb-[3rem] sm:mb-[4rem]">
+      <div className="max-w-[80rem] mx-auto">
+        {/* 标题 */}
+        <div className="text-center mb-[2.5rem] sm:mb-[3.5rem]">
           <h2 className="text-[1.5rem] sm:text-[2rem] font-semibold text-[color:var(--apple-ink)] tracking-tight font-display mb-3">
             {t('stats.title', '为深度学习而生')}
           </h2>
           <p className="text-[color:var(--apple-muted)] text-[15px] sm:text-[17px] max-w-2xl mx-auto">
-            {t('stats.subtitle', '渐进披露架构，工具按需加载，覆盖学习全场景')}
+            {t('stats.subtitle', '从对话入口到数据底座，前后端围绕学习闭环协同设计')}
           </p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {stats.map((stat, index) => (
-            <div
-              key={stat.labelKey}
-              className="bg-[color:var(--apple-card)] backdrop-blur-xl border border-[color:var(--apple-line)] rounded-[1.5rem] p-[1.25rem] sm:p-[1.75rem] text-center hover:shadow-[var(--apple-shadow-lg)] hover:-translate-y-1 transition-all duration-500 group"
-              style={shouldAnimate ? { animationDelay: `${0.3 + index * 0.08}s` } : undefined}
-            >
-              <div className="text-[2.5rem] sm:text-[3.5rem] font-bold text-[color:var(--apple-ink)] tracking-tight leading-none mb-2 group-hover:text-[color:var(--apple-blue)] transition-colors">
-                {stat.value}
-              </div>
-              <div className="text-[14px] sm:text-[15px] font-semibold text-[color:var(--apple-ink)] mb-1">
-                {t(stat.labelKey)}
-              </div>
-              <div className="text-[11px] sm:text-[12px] text-[color:var(--apple-muted)] leading-relaxed">
-                {t(stat.descKey)}
+        {/* 桌面端：水平布局 Chat → Skills → VFS ← Hub+Apps */}
+        <div className="hidden md:flex items-stretch justify-center gap-0">
+          {/* 左栏：Chat V2 */}
+          <div className="flex flex-col items-center justify-center w-[140px] shrink-0">
+            <div className="flex flex-col items-center gap-3">
+              <svg width="52" height="52" viewBox="0 0 56 56" fill="none">
+                <rect x="4" y="8" width="48" height="34" rx="8" fill="var(--apple-card)" stroke="var(--apple-line)" strokeWidth="1.5"/>
+                <rect x="12" y="17" width="22" height="3" rx="1.5" fill="var(--apple-muted)" opacity="0.4"/>
+                <rect x="12" y="24" width="16" height="3" rx="1.5" fill="var(--apple-muted)" opacity="0.25"/>
+                <path d="M16 42L22 48L28 42" fill="var(--apple-card)" stroke="var(--apple-line)" strokeWidth="1.5" strokeLinejoin="round"/>
+              </svg>
+              <div className="text-center">
+                <div className="text-[15px] font-semibold text-[color:var(--apple-ink)]">Chat V2</div>
+                <div className="text-[12px] text-[color:var(--apple-muted)] mt-0.5">{t('arch.chat.desc', '智能对话')}</div>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Chat → Skills 连接线 */}
+          <div className="flex items-center w-[60px] shrink-0">
+            <FlowArrow label={t('arch.arrow.invoke', '调用')} direction="right" />
+          </div>
+
+          {/* Skills 技能层 */}
+          <div className="flex flex-col items-center justify-center w-[160px] shrink-0">
+            <div className="w-full border border-dashed border-[color:var(--apple-line)] rounded-xl py-4 px-3 relative">
+              <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[color:var(--apple-bg)] px-2">
+                <span className="text-[11px] font-semibold text-[color:var(--apple-ink)]">Skills</span>
+              </div>
+              <div className="text-center mb-3">
+                <div className="text-[10px] text-[color:var(--apple-muted)]">{t('arch.skills.subtitle', '技能编排 · 按需加载')}</div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                {skillTools.map((tool) => (
+                  <div key={tool} className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <circle cx="5" cy="5" r="2" fill="var(--apple-muted)" opacity="0.5"/>
+                    </svg>
+                    <span className="text-[10px] text-[color:var(--apple-muted)] leading-tight">{tool}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Skills → VFS 连接线 */}
+          <div className="flex items-center w-[70px] shrink-0">
+            <FlowArrow label={t('arch.arrow.tools', '工具调用')} sublabel="RAG" direction="right" />
+          </div>
+
+          {/* 中栏：VFS 学习数据（抽象） */}
+          <div className="flex flex-col items-center justify-center shrink-0">
+            <div className="border border-[color:var(--apple-line)] rounded-2xl py-5 px-6 bg-[color:var(--apple-bg)] relative">
+              <div className="text-center">
+                <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">VFS</div>
+                <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.vfs.desc', '虚拟文件系统 · 学习数据')}</div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-[color:var(--apple-line)]">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">SQLite</span>
+                  <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
+                  <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">LanceDB</span>
+                  <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
+                  <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">Blob</span>
+                </div>
+                <div className="text-center mt-1">
+                  <span className="text-[10px] text-[color:var(--apple-muted)] opacity-50">{t('arch.storage', '全部数据本地存储')}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* VFS ↔ Hub 连接线 */}
+          <div className="flex items-center w-[70px] shrink-0">
+            <FlowArrow label={t('arch.arrow.rw', '读写')} sublabel="DSTU" direction="both" />
+          </div>
+
+          {/* 右栏：Learning Hub + 资源类型 */}
+          <div className="flex flex-col items-center justify-center w-[200px] shrink-0">
+            <div className="flex flex-col items-center gap-2 mb-4">
+              <ArchFolderIcon size={40} />
+              <div className="text-center">
+                <div className="text-[14px] font-semibold text-[color:var(--apple-ink)]">Learning Hub</div>
+                <div className="text-[11px] text-[color:var(--apple-muted)] mt-0.5">{t('arch.hub.desc', '学习资源管理器')}</div>
+              </div>
+            </div>
+            <div className="w-12 h-px bg-[color:var(--apple-line)] mb-3"></div>
+            <div className="grid grid-cols-4 gap-x-3 gap-y-2 justify-items-center">
+              {resourceTypes.map(({ Icon, label }) => (
+                <div key={label} className="flex flex-col items-center gap-0.5">
+                  <Icon size={22} />
+                  <span className="text-[9px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap">{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* 移动端：垂直堆叠布局 */}
+        <div className="flex md:hidden flex-col items-center gap-0">
+          {/* Chat V2 */}
+          <div className="flex flex-col items-center gap-2">
+            <svg width="44" height="44" viewBox="0 0 56 56" fill="none">
+              <rect x="4" y="8" width="48" height="34" rx="8" fill="var(--apple-card)" stroke="var(--apple-line)" strokeWidth="1.5"/>
+              <rect x="12" y="17" width="22" height="3" rx="1.5" fill="var(--apple-muted)" opacity="0.4"/>
+              <rect x="12" y="24" width="16" height="3" rx="1.5" fill="var(--apple-muted)" opacity="0.25"/>
+              <path d="M16 42L22 48L28 42" fill="var(--apple-card)" stroke="var(--apple-line)" strokeWidth="1.5" strokeLinejoin="round"/>
+            </svg>
+            <div className="text-[14px] font-semibold text-[color:var(--apple-ink)]">Chat V2</div>
+            <div className="text-[11px] text-[color:var(--apple-muted)]">{t('arch.chat.desc', '智能对话')}</div>
+          </div>
+
+          <FlowArrowVertical label={t('arch.arrow.invoke', '调用')} direction="down" />
+
+          {/* Skills 技能层 */}
+          <div className="w-full max-w-[280px] border border-dashed border-[color:var(--apple-line)] rounded-xl py-3 px-3 relative">
+            <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[color:var(--apple-bg)] px-2">
+              <span className="text-[11px] font-semibold text-[color:var(--apple-ink)]">Skills</span>
+            </div>
+            <div className="text-center mb-2 mt-1">
+              <div className="text-[10px] text-[color:var(--apple-muted)]">{t('arch.skills.subtitle', '技能编排 · 按需加载')}</div>
+            </div>
+            <div className="grid grid-cols-2 gap-1.5">
+              {skillTools.map((tool) => (
+                <div key={tool} className="flex items-center gap-1 px-2 py-1 rounded-md bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]">
+                  <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+                    <circle cx="5" cy="5" r="2" fill="var(--apple-muted)" opacity="0.5"/>
+                  </svg>
+                  <span className="text-[9px] text-[color:var(--apple-muted)] leading-tight">{tool}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <FlowArrowVertical label={t('arch.arrow.tools', '工具调用')} sublabel="RAG" direction="down" />
+
+          {/* VFS 数据（抽象） */}
+          <div className="border border-[color:var(--apple-line)] rounded-2xl py-4 px-6 bg-[color:var(--apple-bg)]">
+            <div className="text-center">
+              <div className="text-[15px] font-semibold text-[color:var(--apple-ink)]">VFS</div>
+              <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.vfs.desc', '虚拟文件系统 · 学习数据')}</div>
+            </div>
+            <div className="mt-3 pt-2 border-t border-[color:var(--apple-line)] text-center">
+              <span className="text-[10px] text-[color:var(--apple-muted)] opacity-60">SQLite + LanceDB + Blob</span>
+            </div>
+          </div>
+
+          <FlowArrowVertical label={t('arch.arrow.rw', '读写')} sublabel="DSTU" direction="both" />
+
+          {/* Learning Hub + 资源类型 */}
+          <div className="flex flex-col items-center gap-2">
+            <ArchFolderIcon size={36} />
+            <div className="text-[14px] font-semibold text-[color:var(--apple-ink)]">Learning Hub</div>
+            <div className="text-[11px] text-[color:var(--apple-muted)]">{t('arch.hub.desc', '学习资源管理器')}</div>
+            <div className="grid grid-cols-4 gap-x-4 gap-y-2 mt-2 justify-items-center">
+              {resourceTypes.map(({ Icon, label }) => (
+                <div key={label} className="flex flex-col items-center gap-0.5">
+                  <Icon size={22} />
+                  <span className="text-[9px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap">{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -564,8 +882,8 @@ const App = () => {
           <TopNav onDownload={handleDownloadOpen} />
           <HeroSection onDownload={handleDownloadOpen} motionScale={motionScale} />
 
-          {/* 数据亮点区块 */}
-          <StatsHighlight motionScale={motionScale} />
+          {/* 架构图 */}
+          <ArchitectureDiagram motionScale={motionScale} />
 
           <main
             id="features"
@@ -578,7 +896,7 @@ const App = () => {
               <FeatureSection
                 id="feature-free-models"
                 title={t('freeModels.title', '免费模型，开箱即用')}
-                desc={t('freeModels.desc', '合作伙伴免费提供的 AI 模型，无需 API Key，下载即用。')}
+                desc={t('freeModels.desc', '硅基流动免费提供的 AI 模型，无需 API Key，下载即用。')}
                 align="right"
                 motionScale={motionScale}
               >
@@ -601,7 +919,7 @@ const App = () => {
                   { labelKey: 'agent.parallelResult', descKey: 'agent.parallelResultDesc', imgSrc: '/img/example/并行-2.png' },
                   { labelKey: 'agent.skills', descKey: 'agent.skillsDesc', imgSrc: '/img/example/技能管理.png' },
                   { labelKey: 'agent.group', descKey: 'agent.groupDesc', imgSrc: '/img/example/分组.png' },
-                  { labelKey: 'agent.session', descKey: 'agent.sessionDesc', imgSrc: '/img/example/会话浏览.png' },
+                  { labelKey: 'agent.session', descKey: 'agent.sessionDesc', imgSrc: '/example/会话管理.png' },
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
@@ -619,7 +937,7 @@ const App = () => {
                 motionScale={motionScale}
                 subFeatures={[
                   { labelKey: 'anki.upload', descKey: 'anki.uploadDesc', imgSrc: '/img/example/anki-发送.png' },
-                  { labelKey: 'anki.preview', descKey: 'anki.previewDesc', imgSrc: '/img/example/anki-制卡2.png' },
+                  { labelKey: 'feature.anki_full.title', descKey: 'feature.anki_full.desc', imgSrc: '/img/example/anki-制卡1.png' },
                   { labelKey: 'anki.import', descKey: 'anki.importDesc', imgSrc: '/img/example/anki-制卡3.png' },
                   { labelKey: 'anki.tasks', descKey: 'anki.tasksDesc', imgSrc: '/img/example/制卡任务.png' },
                   { labelKey: 'anki.templates', descKey: 'anki.templatesDesc', imgSrc: '/img/example/模板库-1.png' },
@@ -627,7 +945,7 @@ const App = () => {
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <OptimizedImage src="/img/example/anki-制卡1.png" alt="Anki Smart CardForge" className="w-full h-auto object-cover" />
+                  <OptimizedImage src="/img/example/anki-制卡2.png" alt={t('anki.preview')} className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
 
@@ -840,6 +1158,14 @@ const TopNav = ({ onDownload = () => {} }) => {
               {t('nav.docs')}
             </a>
             <a
+              href="https://github.com/helixnow/deep-student"
+              className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+            <a
               href="#download"
               onClick={(e) => { e.preventDefault(); onDownload(); }}
               className="focus-ring text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] transition-colors font-normal"
@@ -965,11 +1291,11 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               <button
                 type="button"
                 onClick={handleDownloadClick}
-                className="group inline-flex w-full sm:w-auto items-center justify-center gap-1.5 px-8 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-lg font-medium text-[15px] hover:opacity-90 active:scale-[0.98] transition-all duration-200"
+                className="group inline-flex w-full sm:w-auto items-center justify-center gap-1.5 px-8 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-lg font-medium text-[15px] whitespace-nowrap hover:opacity-90 active:scale-[0.98] transition-all duration-200"
               >
-                {t('hero.cta.download')}
+                <span className="whitespace-nowrap">{t('hero.cta.download')}</span>
                 <svg
-                  className="w-4 h-4 opacity-90 transition-[transform,opacity] duration-150 ease-out motion-reduce:transform-none group-hover:translate-x-1 group-hover:opacity-100"
+                  className="w-4 h-4 shrink-0 opacity-90 transition-[transform,opacity] duration-150 ease-out motion-reduce:transform-none group-hover:translate-x-1 group-hover:opacity-100"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -982,13 +1308,17 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </button>
-              <button
-                type="button"
-                onClick={handleExploreClick}
-                className="inline-flex w-full sm:w-auto items-center justify-center px-8 py-3 bg-transparent text-[color:var(--apple-ink)] border border-[color:var(--apple-line-strong)] rounded-lg font-medium text-[15px] hover:bg-[color:var(--apple-card)] transition-all duration-200"
+              <a
+                href="https://github.com/helixnow/deep-student"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-3 bg-transparent text-[color:var(--apple-ink)] border border-[color:var(--apple-line-strong)] rounded-lg font-medium text-[15px] hover:bg-[color:var(--apple-card)] transition-all duration-200"
               >
-                {t('hero.cta.explore')}
-              </button>
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" aria-hidden="true">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                </svg>
+                GitHub
+              </a>
             </div>
 
             {showScrollHint && (
@@ -1126,14 +1456,14 @@ const FreeModelsCallout = () => {
           <img
             src={siliconflowLogo}
             alt="SiliconFlow"
-            className="h-6 w-auto dark:hidden"
+            className="h-8 sm:h-9 w-auto dark:hidden"
             loading="lazy"
             draggable="false"
           />
           <img
             src={siliconflowLogoDark}
             alt="SiliconFlow"
-            className="h-6 w-auto hidden dark:block"
+            className="h-8 sm:h-9 w-auto hidden dark:block"
             loading="lazy"
             draggable="false"
           />
@@ -1344,7 +1674,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
       id: 'open-source',
       question: t('faq.openSource.q'),
       answer: t('faq.openSource.a'),
-      linkHref: 'https://github.com/deepstudents/ai-mistake-manager',
+      linkHref: 'https://github.com/helixnow/deep-student',
       linkLabel: t('faq.openSource.link'),
     },
     {
@@ -1557,26 +1887,63 @@ const AlternatingFeatureGroup = ({ items, t }) => {
 // 左侧使用原生 CSS sticky，右侧文字滚动触发图片 crossfade 切换
 const StickyImageFeatureGroup = ({ items, t }) => {
   const [activeIndex, setActiveIndex] = useState(0)
-  const textRefs = useRef([])
+  const leadingMarkerRef = useRef(null)
+  const markerRefs = useRef([])
+  const mediaFrameRef = useRef(null)
 
-  // 每个文字块独立挂载 IntersectionObserver，进入视口中心区域时激活对应图片
+  // 使用统一滚动边界判定激活项：
+  // 当「图片中心」对齐到「span 标记上方 1/4 图片高度」时触发切换
+  // => spanTop <= imageTop + imageHeight * 3/4
   useEffect(() => {
-    if (typeof IntersectionObserver === 'undefined') return
-    const observers = []
-    textRefs.current.forEach((el, i) => {
-      if (!el) return
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveIndex(i)
-          }
-        },
-        { rootMargin: '-35% 0px -35% 0px', threshold: 0.01 }
-      )
-      observer.observe(el)
-      observers.push(observer)
-    })
-    return () => observers.forEach((o) => o.disconnect())
+    if (typeof window === 'undefined') return undefined
+
+    let rafId = null
+
+    const getTriggerBoundaryY = () => {
+      const mediaNode = mediaFrameRef.current
+      if (!mediaNode) return 0
+      const { top, height } = mediaNode.getBoundingClientRect()
+      return top + height * (3 / 4)
+    }
+
+    const updateActiveByAnchor = () => {
+      const boundaryY = getTriggerBoundaryY()
+      let nextIndex = 0
+      const triggerNodes = [leadingMarkerRef.current, ...markerRefs.current]
+
+      for (let i = 0; i < triggerNodes.length; i += 1) {
+        const node = triggerNodes[i]
+        if (!node) continue
+        const { top } = node.getBoundingClientRect()
+        if (top <= boundaryY) {
+          nextIndex = Math.min(Math.max(i - 1, 0), items.length - 1)
+        } else {
+          break
+        }
+      }
+
+      setActiveIndex((prev) => (prev === nextIndex ? prev : nextIndex))
+    }
+
+    const onScrollOrResize = () => {
+      if (rafId) return
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null
+        updateActiveByAnchor()
+      })
+    }
+
+    updateActiveByAnchor()
+    window.addEventListener('scroll', onScrollOrResize, { passive: true })
+    window.addEventListener('resize', onScrollOrResize)
+
+    return () => {
+      window.removeEventListener('scroll', onScrollOrResize)
+      window.removeEventListener('resize', onScrollOrResize)
+      if (rafId) {
+        window.cancelAnimationFrame(rafId)
+      }
+    }
   }, [items.length])
 
   return (
@@ -1601,7 +1968,7 @@ const StickyImageFeatureGroup = ({ items, t }) => {
         {/* 左侧图片列：由原生 sticky 固定在视口顶部偏移处 */}
         <div className="min-w-0">
           <div className="sticky top-32 z-10 w-full">
-            <div className="relative aspect-video rounded-[6px] flex items-center justify-center">
+            <div ref={mediaFrameRef} className="relative aspect-video rounded-[6px] flex items-center justify-center">
               {items.map((sf, i) => {
                 const isActive = i === activeIndex
                 return (
@@ -1617,7 +1984,8 @@ const StickyImageFeatureGroup = ({ items, t }) => {
                         src={sf.imgSrc}
                         alt={t(sf.labelKey)}
                         className="w-auto h-auto max-w-full max-h-full rounded-[6px] shadow-2xl"
-                        loading="lazy"
+                        loading={i === 0 ? 'eager' : 'lazy'}
+                        fetchPriority={i === 0 ? 'high' : 'auto'}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center relative">
@@ -1657,12 +2025,12 @@ const StickyImageFeatureGroup = ({ items, t }) => {
         {/* 右侧滚动文字区 */}
         <div className="min-w-0">
           <div className="space-y-0">
+            <div ref={leadingMarkerRef} className="h-0 opacity-0 pointer-events-none" aria-hidden="true" />
             {items.map((sf, index) => {
               const isActive = index === activeIndex
               return (
                 <div
                   key={sf.labelKey}
-                  ref={(el) => { textRefs.current[index] = el }}
                   className="min-h-[50vh] flex items-center"
                 >
                   <div
@@ -1673,11 +2041,14 @@ const StickyImageFeatureGroup = ({ items, t }) => {
                     }`}
                   >
                     <div className="flex items-center gap-3 mb-3">
-                      <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-[12px] font-bold transition-colors duration-400 ${
+                      <span
+                        ref={(el) => { markerRefs.current[index] = el }}
+                        className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-[12px] font-bold transition-colors duration-400 ${
                         isActive
                           ? 'bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)]'
                           : 'bg-[color:var(--apple-line-strong)] text-[color:var(--apple-muted)]'
-                      }`}>
+                        }`}
+                      >
                         {index + 1}
                       </span>
                       <div className={`h-px flex-1 transition-all duration-500 ${
@@ -1933,7 +2304,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
                 {t('footer.terms')}
               </button>
               <a
-                href="https://github.com/deepstudents/ai-mistake-manager"
+                href="https://github.com/helixnow/deep-student"
                 className="focus-ring hover:text-[color:var(--apple-ink)] transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"

@@ -103,7 +103,7 @@ export default withMermaid(defineConfig({
       '/': guideSidebar
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/000haoji/deep-student' }
+      { icon: 'github', link: 'https://github.com/helixnow/deep-student' }
     ],
     footer: {
       message: 'Released under the AGPL-3.0 License.',

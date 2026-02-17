@@ -1,4 +1,4 @@
-const DEFAULT_RELEASE_URL = 'https://github.com/000haoji/deep-student/releases/latest'
+const DEFAULT_RELEASE_URL = 'https://github.com/helixnow/deep-student/releases/latest'
 
 const ASSET_MATCHERS = {
   macArm64: [/(aarch64|arm64)\.dmg$/i],

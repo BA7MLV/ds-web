@@ -7,7 +7,7 @@ test('buildWebsiteDownloads maps each architecture asset into independent cards'
   const cards = buildWebsiteDownloads(
     {
       version: 'v0.9.2',
-      releaseUrl: 'https://github.com/000haoji/deep-student/releases/tag/v0.9.2',
+      releaseUrl: 'https://github.com/helixnow/deep-student/releases/tag/v0.9.2',
       platforms: {
         macArm64: { name: 'mac-arm.dmg', url: 'https://example.com/mac-arm.dmg', sizeBytes: 2100 },
         macX64: { name: 'mac-x64.dmg', url: 'https://example.com/mac-x64.dmg', sizeBytes: 4200 },
@@ -55,7 +55,7 @@ test('buildWebsiteDownloads keeps available cards and does not collapse architec
   const cards = buildWebsiteDownloads(
     {
       version: 'v0.9.2',
-      releaseUrl: 'https://github.com/000haoji/deep-student/releases/tag/v0.9.2',
+      releaseUrl: 'https://github.com/helixnow/deep-student/releases/tag/v0.9.2',
       platforms: {
         macArm64: { name: 'mac-arm.dmg', url: 'https://example.com/mac-arm.dmg', sizeBytes: 1024 },
         macX64: null,
@@ -95,7 +95,7 @@ test('buildWebsiteDownloads returns a single fallback card when no assets exist'
   const cards = buildWebsiteDownloads(
     {
       version: 'v0.9.2',
-      releaseUrl: 'https://github.com/000haoji/deep-student/releases/tag/v0.9.2',
+      releaseUrl: 'https://github.com/helixnow/deep-student/releases/tag/v0.9.2',
       platforms: {
         macArm64: null,
         macX64: null,
@@ -128,5 +128,5 @@ test('buildWebsiteDownloads returns a single fallback card when no assets exist'
 
   assert.equal(cards.length, 1)
   assert.equal(cards[0].id, 'allReleases')
-  assert.equal(cards[0].ctaHref, 'https://github.com/000haoji/deep-student/releases/tag/v0.9.2')
+  assert.equal(cards[0].ctaHref, 'https://github.com/helixnow/deep-student/releases/tag/v0.9.2')
 })

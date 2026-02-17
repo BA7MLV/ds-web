@@ -8,7 +8,7 @@ import { buildDownloadsData } from './lib/release-downloads.mjs'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DOCS_OUTPUT_PATH = resolve(__dirname, '../docs/.vitepress/data/downloads.json')
 const WEBSITE_OUTPUT_PATH = resolve(__dirname, '../src/data/downloads.json')
-const RELEASE_API_URL = 'https://api.github.com/repos/000haoji/deep-student/releases/latest'
+const RELEASE_API_URL = 'https://api.github.com/repos/helixnow/deep-student/releases/latest'
 
 async function fileExists(filePath) {
   try {
@@ -70,7 +70,7 @@ async function syncReleaseDownloads() {
 
     const fallbackData = buildDownloadsData({
       tag_name: 'unknown',
-      html_url: 'https://github.com/000haoji/deep-student/releases/latest',
+      html_url: 'https://github.com/helixnow/deep-student/releases/latest',
       assets: []
     })
 

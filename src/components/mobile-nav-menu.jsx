@@ -162,7 +162,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
         </nav>
         <div className="mt-auto pt-6">
           <a
-            href="https://github.com/000haoji/deep-student"
+            href="https://github.com/helixnow/deep-student"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-[color:var(--apple-muted)] dark:hover:bg-white/10 dark:hover:text-[color:var(--apple-ink)]"
