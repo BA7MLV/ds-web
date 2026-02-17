@@ -587,7 +587,7 @@ const App = () => {
                 </div>
               </FeatureSection>
 
-              {/* Module 1: AI 智能体 · 全能助手 */}
+              {/* Module 1: 智能体，多面手 */}
               <FeatureSection
                 id="feature-agent"
                 layout="sticky"
