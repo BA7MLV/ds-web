@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
 import { MobileNavMenu } from './components/mobile-nav-menu'
-import sharedDownloads from '../docs/.vitepress/data/downloads.json'
+import sharedDownloads from './data/downloads.json'
 import { buildWebsiteDownloads } from './lib/website-downloads'
 import {
   detectSystemProfile,
@@ -484,6 +484,107 @@ const StatsHighlight = ({ motionScale = 1 }) => {
   )
 }
 
+const CitationSummary = ({ t, motionScale = 1 }) => {
+  const shouldAnimate = motionScale > 0
+
+  return (
+    <section
+      id="overview"
+      className={`relative z-10 pb-8 sm:pb-10 lg:pb-12 ${shouldAnimate ? 'animate-fade-in' : ''}`}
+      style={shouldAnimate ? { animationDelay: '0.22s' } : undefined}
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-[color:var(--apple-card)] backdrop-blur-xl border border-[color:var(--apple-line)] rounded-[1.5rem] p-6 sm:p-8 lg:p-10 shadow-[var(--apple-shadow-sm)]">
+          <h2 className="text-[1.35rem] sm:text-[1.75rem] font-semibold tracking-tight text-[color:var(--apple-ink)] font-display">
+            {t('citation.title', '一句话了解 DeepStudent')}
+          </h2>
+          <p className="mt-3 text-[14px] sm:text-[15px] leading-relaxed text-[color:var(--apple-muted)]">
+            {t(
+              'citation.definition',
+              'DeepStudent 是一款基于 Tauri 2 构建的 AI 原生、本地优先开源学习系统（AGPL-3.0）。它以「对话即入口」把智能对话、学习资源管理、RAG 检索、Anki 制卡与练习回顾串成可持续的学习闭环。'
+            )}
+          </p>
+
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.9fr)] gap-6 lg:gap-8">
+            <div>
+              <h3 className="text-[13px] sm:text-[14px] font-semibold tracking-wide text-[color:var(--apple-ink)]">
+                {t('citation.pointsTitle', '它适合做什么？')}
+              </h3>
+              <ul className="mt-3 space-y-2 text-[13px] sm:text-[14px] leading-relaxed text-[color:var(--apple-muted)] list-disc pl-5">
+                <li>{t('citation.point1')}</li>
+                <li>{t('citation.point2')}</li>
+                <li>{t('citation.point3')}</li>
+                <li>{t('citation.point4')}</li>
+              </ul>
+
+              <div className="mt-5 flex flex-wrap items-center gap-2 text-[12px] sm:text-[13px]">
+                <a
+                  href="#download"
+                  className="focus-ring inline-flex items-center rounded-full px-3 py-1 bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink)] border border-[color:var(--apple-line)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)]"
+                >
+                  {t('citation.linkDownload', '下载')}
+                </a>
+                <a
+                  href="/docs/"
+                  className="focus-ring inline-flex items-center rounded-full px-3 py-1 bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink)] border border-[color:var(--apple-line)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)]"
+                >
+                  {t('citation.linkDocs', '文档')}
+                </a>
+                <a
+                  href="https://github.com/000haoji/deep-student"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="focus-ring inline-flex items-center rounded-full px-3 py-1 bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink)] border border-[color:var(--apple-line)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)]"
+                >
+                  GitHub
+                </a>
+                <a
+                  href="/llms.txt"
+                  className="focus-ring inline-flex items-center rounded-full px-3 py-1 bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink)] border border-[color:var(--apple-line)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)]"
+                >
+                  llms.txt
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-[13px] sm:text-[14px] font-semibold tracking-wide text-[color:var(--apple-ink)]">
+                {t('citation.faqTitle', '常见问题（FAQ）')}
+              </h3>
+              <div className="mt-3 space-y-2">
+                <details className="rounded-xl border border-[color:var(--apple-line)] bg-[color:var(--apple-surface)]/40 px-4 py-3">
+                  <summary className="cursor-pointer text-[13px] sm:text-[14px] font-medium text-[color:var(--apple-ink)]">
+                    {t('citation.faqQ1')}
+                  </summary>
+                  <p className="mt-2 text-[12px] sm:text-[13px] leading-relaxed text-[color:var(--apple-muted)]">
+                    {t('citation.faqA1')}
+                  </p>
+                </details>
+                <details className="rounded-xl border border-[color:var(--apple-line)] bg-[color:var(--apple-surface)]/40 px-4 py-3">
+                  <summary className="cursor-pointer text-[13px] sm:text-[14px] font-medium text-[color:var(--apple-ink)]">
+                    {t('citation.faqQ2')}
+                  </summary>
+                  <p className="mt-2 text-[12px] sm:text-[13px] leading-relaxed text-[color:var(--apple-muted)]">
+                    {t('citation.faqA2')}
+                  </p>
+                </details>
+                <details className="rounded-xl border border-[color:var(--apple-line)] bg-[color:var(--apple-surface)]/40 px-4 py-3">
+                  <summary className="cursor-pointer text-[13px] sm:text-[14px] font-medium text-[color:var(--apple-ink)]">
+                    {t('citation.faqQ3')}
+                  </summary>
+                  <p className="mt-2 text-[12px] sm:text-[13px] leading-relaxed text-[color:var(--apple-muted)]">
+                    {t('citation.faqA3')}
+                  </p>
+                </details>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 const App = () => {
   const [activePolicy, setActivePolicy] = useState(null)
   const [isDownloadPage, setIsDownloadPage] = useState(() => getIsDownloadFromLocation())
@@ -566,6 +667,8 @@ const App = () => {
 
           {/* 数据亮点区块 */}
           <StatsHighlight motionScale={motionScale} />
+
+          <CitationSummary t={t} motionScale={motionScale} />
 
           <main
             id="features"
