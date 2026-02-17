@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
 import { MobileNavMenu } from './components/mobile-nav-menu'
@@ -538,63 +538,96 @@ const ArchFolderIcon = ({ size = 32 }) => (
 )
 
 // 连接线箭头 SVG（水平方向，带流动动画）
-const FlowArrow = ({ label, sublabel, direction = 'right', className = '' }) => (
-  <div className={`flex flex-col items-center gap-1 ${className}`}>
-    <svg width="100%" height="24" viewBox="0 0 120 24" fill="none" className="overflow-visible">
-      <defs>
-        <marker id={`arrow-${direction}`} viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-          <path d="M0 0L6 3L0 6Z" fill="var(--apple-muted)"/>
-        </marker>
-      </defs>
-      {direction === 'both' ? (
-        <>
-          <line x1="4" y1="12" x2="116" y2="12" stroke="var(--apple-muted)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#arrow-both)" markerStart="url(#arrow-both)">
+let _hArrowId = 0
+const FlowArrow = ({ label, sublabel, direction = 'right', className = '' }) => {
+  const uid = useMemo(() => `harrow-${++_hArrowId}`, [])
+  const endId = `${uid}-end`
+  const startId = `${uid}-start`
+  return (
+    <div className={`flex flex-col items-center gap-1 ${className}`}>
+      <svg width="100%" height="24" viewBox="0 0 120 24" fill="none" className="overflow-visible">
+        <defs>
+          <marker id={endId} viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M0 0L6 3L0 6Z" fill="var(--apple-muted)"/>
+          </marker>
+          {direction === 'both' && (
+            <marker id={startId} viewBox="0 0 6 6" refX="1" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M6 0L0 3L6 6Z" fill="var(--apple-muted)"/>
+            </marker>
+          )}
+        </defs>
+        {direction === 'both' ? (
+          <line x1="6" y1="12" x2="114" y2="12" stroke="var(--apple-muted)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd={`url(#${endId})`} markerStart={`url(#${startId})`}>
             <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2s" repeatCount="indefinite"/>
           </line>
-        </>
-      ) : (
-        <line x1="4" y1="12" x2="116" y2="12" stroke="var(--apple-muted)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd={`url(#arrow-${direction})`}>
-          <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2s" repeatCount="indefinite"/>
-        </line>
-      )}
-    </svg>
-    <span className="text-[11px] sm:text-[12px] text-[color:var(--apple-muted)] whitespace-nowrap leading-tight">{label}</span>
-    {sublabel && <span className="text-[10px] text-[color:var(--apple-muted)] opacity-60 whitespace-nowrap leading-tight">{sublabel}</span>}
-  </div>
-)
-
-// 垂直连接线箭头（移动端）
-const FlowArrowVertical = ({ label, sublabel, direction = 'down' }) => (
-  <div className="flex items-center gap-2 py-2">
-    <svg width="24" height="48" viewBox="0 0 24 48" fill="none">
-      <defs>
-        <marker id={`varrow-${direction}`} viewBox="0 0 6 6" refX="3" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-          <path d="M0 0L3 6L6 0Z" fill="var(--apple-muted)"/>
-        </marker>
-      </defs>
-      {direction === 'both' ? (
-        <>
-          <line x1="12" y1="4" x2="12" y2="44" stroke="var(--apple-muted)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd={`url(#varrow-${direction})`} markerStart={`url(#varrow-${direction})`}>
+        ) : (
+          <line x1="4" y1="12" x2="116" y2="12" stroke="var(--apple-muted)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd={`url(#${endId})`}>
             <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2s" repeatCount="indefinite"/>
           </line>
-        </>
-      ) : (
-        <line x1="12" y1="4" x2="12" y2="44" stroke="var(--apple-muted)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd={`url(#varrow-${direction})`}>
-          <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2s" repeatCount="indefinite"/>
-        </line>
-      )}
-    </svg>
-    <div className="flex flex-col">
-      <span className="text-[11px] text-[color:var(--apple-muted)] whitespace-nowrap leading-tight">{label}</span>
+        )}
+      </svg>
+      <span className="text-[11px] sm:text-[12px] text-[color:var(--apple-muted)] whitespace-nowrap leading-tight">{label}</span>
       {sublabel && <span className="text-[10px] text-[color:var(--apple-muted)] opacity-60 whitespace-nowrap leading-tight">{sublabel}</span>}
     </div>
-  </div>
-)
+  )
+}
+
+// 垂直连接线箭头（移动端）
+let _vArrowId = 0
+const FlowArrowVertical = ({ label, sublabel, direction = 'down' }) => {
+  const uid = useMemo(() => `varrow-${++_vArrowId}`, [])
+  const endId = `${uid}-end`
+  const startId = `${uid}-start`
+  return (
+    <div className="flex items-center gap-2 py-2">
+      <svg width="24" height="48" viewBox="0 0 24 48" fill="none">
+        <defs>
+          {/* 向下箭头（不用orient=auto，手动画向下三角） */}
+          <marker id={endId} viewBox="0 0 6 6" refX="3" refY="6" markerWidth="5" markerHeight="5">
+            <path d="M0 0L3 6L6 0Z" fill="var(--apple-muted)"/>
+          </marker>
+          {direction === 'both' && (
+            <marker id={startId} viewBox="0 0 6 6" refX="3" refY="0" markerWidth="5" markerHeight="5">
+              <path d="M0 6L3 0L6 6Z" fill="var(--apple-muted)"/>
+            </marker>
+          )}
+        </defs>
+        {direction === 'both' ? (
+          <line x1="12" y1="6" x2="12" y2="42" stroke="var(--apple-muted)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd={`url(#${endId})`} markerStart={`url(#${startId})`}>
+            <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2s" repeatCount="indefinite"/>
+          </line>
+        ) : (
+          <line x1="12" y1="4" x2="12" y2="44" stroke="var(--apple-muted)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd={`url(#${endId})`}>
+            <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2s" repeatCount="indefinite"/>
+          </line>
+        )}
+      </svg>
+      <div className="flex flex-col">
+        <span className="text-[11px] text-[color:var(--apple-muted)] whitespace-nowrap leading-tight">{label}</span>
+        {sublabel && <span className="text-[10px] text-[color:var(--apple-muted)] opacity-60 whitespace-nowrap leading-tight">{sublabel}</span>}
+      </div>
+    </div>
+  )
+}
 
 // 架构图组件
 const ArchitectureDiagram = ({ motionScale = 1 }) => {
   const { t } = useLocale()
   const shouldAnimate = motionScale > 0
+
+  const chatFeatures = [
+    t('arch.chat.feat.latex', 'LaTeX 渲染'),
+    t('arch.chat.feat.cot', '思维链'),
+    t('arch.chat.feat.multimodal', '多模态'),
+    t('arch.chat.feat.attach', '附件自动 OCR'),
+    t('arch.chat.feat.mcp', 'MCP 工具协议'),
+    t('arch.chat.feat.rag', 'RAG 检索增强'),
+    t('arch.chat.feat.session', '会话分组'),
+  ]
+  const chatFeaturesRow4 = [
+    t('arch.chat.feat.parallel', '并行对比'),
+    t('arch.chat.feat.provider', '多供应商适配'),
+  ]
 
   const resourceTypes = [
     { Icon: ArchNoteIcon, label: t('arch.note', '笔记') },
@@ -633,100 +666,141 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
           </p>
         </div>
 
-        {/* 桌面端：水平布局 Chat → Skills → VFS ← Hub+Apps */}
-        <div className="hidden md:flex items-stretch justify-center gap-0">
-          {/* 左栏：Chat V2 */}
-          <div className="flex flex-col items-center justify-center w-[140px] shrink-0">
-            <div className="flex flex-col items-center gap-3">
-              <svg width="52" height="52" viewBox="0 0 56 56" fill="none">
-                <rect x="4" y="8" width="48" height="34" rx="8" fill="var(--apple-card)" stroke="var(--apple-line)" strokeWidth="1.5"/>
-                <rect x="12" y="17" width="22" height="3" rx="1.5" fill="var(--apple-muted)" opacity="0.4"/>
-                <rect x="12" y="24" width="16" height="3" rx="1.5" fill="var(--apple-muted)" opacity="0.25"/>
-                <path d="M16 42L22 48L28 42" fill="var(--apple-card)" stroke="var(--apple-line)" strokeWidth="1.5" strokeLinejoin="round"/>
-              </svg>
-              <div className="text-center">
+        {/* 桌面端：正方形 Grid 布局（md+） */}
+        <div className="hidden md:block max-w-[700px] mx-auto">
+          <div className="grid grid-cols-[1fr_auto_1fr] gap-y-0">
+            {/* 第一行：Chat V2 | 引用资源连接 | Learning Hub */}
+            <div className="flex flex-col items-center justify-center py-4">
+              <div className="relative w-[260px] h-[200px]">
+                {/* 放大半透明对话气泡背景 */}
+                <svg className="absolute inset-0 w-full h-full opacity-[0.08]" viewBox="0 0 56 56" fill="none" preserveAspectRatio="xMidYMid meet">
+                  <rect x="2" y="4" width="52" height="40" rx="8" fill="var(--apple-muted)"/>
+                  <path d="M16 44L22 51L28 44" fill="var(--apple-muted)"/>
+                </svg>
+                {/* 特性标签覆盖在内 */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pt-2 pb-6 px-5 gap-1.5">
+                  <div className="flex flex-wrap justify-center gap-1.5">
+                    {chatFeatures.map((feat) => (
+                      <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap">{feat}</span>
+                    ))}
+                  </div>
+                  <div className="flex justify-center gap-1.5">
+                    {chatFeaturesRow4.map((feat) => (
+                      <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap">{feat}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="text-center mt-2">
                 <div className="text-[15px] font-semibold text-[color:var(--apple-ink)]">Chat V2</div>
                 <div className="text-[12px] text-[color:var(--apple-muted)] mt-0.5">{t('arch.chat.desc', '智能对话')}</div>
               </div>
             </div>
-          </div>
 
-          {/* Chat → Skills 连接线 */}
-          <div className="flex items-center w-[60px] shrink-0">
-            <FlowArrow label={t('arch.arrow.invoke', '调用')} direction="right" />
-          </div>
+            {/* Chat ↔ Hub 引用资源连接线 */}
+            <div className="flex items-center justify-center px-3">
+              <FlowArrow label={t('arch.arrow.ref', '引用资源')} direction="both" />
+            </div>
 
-          {/* Skills 技能层 */}
-          <div className="flex flex-col items-center justify-center w-[160px] shrink-0">
-            <div className="w-full border border-dashed border-[color:var(--apple-line)] rounded-xl py-4 px-3 relative">
-              <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[color:var(--apple-bg)] px-2">
-                <span className="text-[11px] font-semibold text-[color:var(--apple-ink)]">Skills</span>
-              </div>
-              <div className="text-center mb-3">
-                <div className="text-[10px] text-[color:var(--apple-muted)]">{t('arch.skills.subtitle', '技能编排 · 按需加载')}</div>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                {skillTools.map((tool) => (
-                  <div key={tool} className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]">
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                      <circle cx="5" cy="5" r="2" fill="var(--apple-muted)" opacity="0.5"/>
-                    </svg>
-                    <span className="text-[10px] text-[color:var(--apple-muted)] leading-tight">{tool}</span>
+            {/* Learning Hub */}
+            <div className="flex flex-col items-center justify-center py-4">
+              <div className="relative w-[240px] h-[180px]">
+                <svg className="absolute inset-0 w-full h-full opacity-[0.10]" viewBox="0 0 48 48" fill="none" preserveAspectRatio="xMidYMid meet">
+                  <path d="M6 10C6 8.895 6.895 8 8 8H18L21 11H40C41.105 11 42 11.895 42 13V39C42 40.105 41.105 41 40 41H8C6.895 41 6 40.105 6 39V10Z" fill="#E8B849"/>
+                  <path d="M6 10C6 8.895 6.895 8 8 8H17C17.552 8 18 8.448 18 9V11H6V10Z" fill="#D4A53A"/>
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center pt-6 px-7">
+                  <div className="grid grid-cols-4 gap-x-4 gap-y-3 justify-items-center">
+                    {resourceTypes.map(({ Icon, label }) => (
+                      <div key={label} className="flex flex-col items-center gap-0.5">
+                        <Icon size={20} />
+                        <span className="text-[9px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap">{label}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Skills → VFS 连接线 */}
-          <div className="flex items-center w-[70px] shrink-0">
-            <FlowArrow label={t('arch.arrow.tools', '工具调用')} sublabel="RAG" direction="right" />
-          </div>
-
-          {/* 中栏：VFS 学习数据（抽象） */}
-          <div className="flex flex-col items-center justify-center shrink-0">
-            <div className="border border-[color:var(--apple-line)] rounded-2xl py-5 px-6 bg-[color:var(--apple-bg)] relative">
-              <div className="text-center">
-                <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">VFS</div>
-                <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.vfs.desc', '虚拟文件系统 · 学习数据')}</div>
-              </div>
-              <div className="mt-3 pt-3 border-t border-[color:var(--apple-line)]">
-                <div className="flex items-center justify-center gap-2">
-                  <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">SQLite</span>
-                  <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
-                  <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">LanceDB</span>
-                  <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
-                  <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">Blob</span>
-                </div>
-                <div className="text-center mt-1">
-                  <span className="text-[10px] text-[color:var(--apple-muted)] opacity-50">{t('arch.storage', '全部数据本地存储')}</span>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* VFS ↔ Hub 连接线 */}
-          <div className="flex items-center w-[70px] shrink-0">
-            <FlowArrow label={t('arch.arrow.rw', '读写')} sublabel="DSTU" direction="both" />
-          </div>
-
-          {/* 右栏：Learning Hub + 资源类型 */}
-          <div className="flex flex-col items-center justify-center w-[200px] shrink-0">
-            <div className="flex flex-col items-center gap-2 mb-4">
-              <ArchFolderIcon size={40} />
-              <div className="text-center">
+              <div className="text-center mt-2">
                 <div className="text-[14px] font-semibold text-[color:var(--apple-ink)]">Learning Hub</div>
                 <div className="text-[11px] text-[color:var(--apple-muted)] mt-0.5">{t('arch.hub.desc', '学习资源管理器')}</div>
               </div>
             </div>
-            <div className="w-12 h-px bg-[color:var(--apple-line)] mb-3"></div>
-            <div className="grid grid-cols-4 gap-x-3 gap-y-2 justify-items-center">
-              {resourceTypes.map(({ Icon, label }) => (
-                <div key={label} className="flex flex-col items-center gap-0.5">
-                  <Icon size={22} />
-                  <span className="text-[9px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap">{label}</span>
+
+            {/* 箭头行：Chat → Skills */}
+            <div className="flex justify-center">
+              <FlowArrowVertical label={t('arch.arrow.invoke', '调用')} direction="down" />
+            </div>
+
+            {/* 中列留空 */}
+            <div />
+
+            {/* 箭头行：Hub ↔ VFS */}
+            <div className="flex justify-center">
+              <FlowArrowVertical label={t('arch.arrow.rw', '读写')} sublabel="DSTU" direction="both" />
+            </div>
+
+            {/* 第二行：Skills | 工具调用连接 | VFS */}
+            <div className="flex flex-col items-center py-2">
+              <div className="w-full border border-[color:var(--apple-line)] rounded-2xl py-5 px-5 bg-[color:var(--apple-bg)]">
+                <div className="text-center">
+                  <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">Skills</div>
+                  <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.skills.subtitle', '技能编排 · 按需加载')}</div>
                 </div>
-              ))}
+                <div className="mt-3 pt-3 border-t border-[color:var(--apple-line)]">
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {skillTools.map((tool) => (
+                      <div key={tool} className="flex items-center gap-1 px-2 py-1 rounded-md bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]">
+                        <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+                          <circle cx="5" cy="5" r="2" fill="var(--apple-muted)" opacity="0.5"/>
+                        </svg>
+                        <span className="text-[10px] text-[color:var(--apple-muted)] leading-tight">{tool}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Skills → VFS 连接线 */}
+            <div className="flex items-center justify-center px-3">
+              <FlowArrow label={t('arch.arrow.tools', '工具调用')} sublabel="RAG" direction="right" />
+            </div>
+
+            {/* VFS */}
+            <div className="flex flex-col items-center py-2">
+              <div className="w-full border border-[color:var(--apple-line)] rounded-2xl py-5 px-5 bg-[color:var(--apple-bg)]">
+                <div className="text-center">
+                  <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">VFS</div>
+                  <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.vfs.desc', '虚拟文件系统 · 学习数据')}</div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-[color:var(--apple-line)]">
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">SQLite</span>
+                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
+                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">LanceDB</span>
+                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
+                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">Blob</span>
+                  </div>
+                  <div className="text-center mt-1">
+                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-50">{t('arch.storage', '全部数据本地存储')}</span>
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-[color:var(--apple-line)]">
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-1.5 justify-center">
+                      <span className="text-[10px] font-medium text-[color:var(--apple-muted)]">{t('arch.vfs.ocr', '多引擎级联 OCR')}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 justify-center">
+                      <span className="text-[10px] font-medium text-[color:var(--apple-muted)]">{t('arch.vfs.vector', '多维度向量引擎')}</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 mt-0.5">
+                      <span className="text-[9px] text-[color:var(--apple-muted)] opacity-50">{t('arch.vfs.vector.text', '文本嵌入')}</span>
+                      <span className="text-[9px] text-[color:var(--apple-muted)] opacity-30">|</span>
+                      <span className="text-[9px] text-[color:var(--apple-muted)] opacity-50">{t('arch.vfs.vector.cross', '跨维度检索')}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -735,12 +809,24 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
         <div className="flex md:hidden flex-col items-center gap-0">
           {/* Chat V2 */}
           <div className="flex flex-col items-center gap-2">
-            <svg width="44" height="44" viewBox="0 0 56 56" fill="none">
-              <rect x="4" y="8" width="48" height="34" rx="8" fill="var(--apple-card)" stroke="var(--apple-line)" strokeWidth="1.5"/>
-              <rect x="12" y="17" width="22" height="3" rx="1.5" fill="var(--apple-muted)" opacity="0.4"/>
-              <rect x="12" y="24" width="16" height="3" rx="1.5" fill="var(--apple-muted)" opacity="0.25"/>
-              <path d="M16 42L22 48L28 42" fill="var(--apple-card)" stroke="var(--apple-line)" strokeWidth="1.5" strokeLinejoin="round"/>
-            </svg>
+            <div className="relative w-[270px] h-[175px]">
+              <svg className="absolute inset-0 w-full h-full opacity-[0.08]" viewBox="0 0 56 56" fill="none" preserveAspectRatio="xMidYMid meet">
+                <rect x="2" y="4" width="52" height="40" rx="8" fill="var(--apple-muted)"/>
+                <path d="M16 44L22 51L28 44" fill="var(--apple-muted)"/>
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center pt-2 pb-6 px-5 gap-1.5">
+                <div className="flex flex-wrap justify-center gap-1.5">
+                  {chatFeatures.map((feat) => (
+                    <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap">{feat}</span>
+                  ))}
+                </div>
+                <div className="flex justify-center gap-1.5">
+                  {chatFeaturesRow4.map((feat) => (
+                    <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap">{feat}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
             <div className="text-[14px] font-semibold text-[color:var(--apple-ink)]">Chat V2</div>
             <div className="text-[11px] text-[color:var(--apple-muted)]">{t('arch.chat.desc', '智能对话')}</div>
           </div>
@@ -748,22 +834,22 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
           <FlowArrowVertical label={t('arch.arrow.invoke', '调用')} direction="down" />
 
           {/* Skills 技能层 */}
-          <div className="w-full max-w-[280px] border border-dashed border-[color:var(--apple-line)] rounded-xl py-3 px-3 relative">
-            <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[color:var(--apple-bg)] px-2">
-              <span className="text-[11px] font-semibold text-[color:var(--apple-ink)]">Skills</span>
+          <div className="w-full max-w-[280px] border border-[color:var(--apple-line)] rounded-2xl py-4 px-4 bg-[color:var(--apple-bg)]">
+            <div className="text-center">
+              <div className="text-[15px] font-semibold text-[color:var(--apple-ink)]">Skills</div>
+              <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.skills.subtitle', '技能编排 · 按需加载')}</div>
             </div>
-            <div className="text-center mb-2 mt-1">
-              <div className="text-[10px] text-[color:var(--apple-muted)]">{t('arch.skills.subtitle', '技能编排 · 按需加载')}</div>
-            </div>
-            <div className="grid grid-cols-2 gap-1.5">
-              {skillTools.map((tool) => (
-                <div key={tool} className="flex items-center gap-1 px-2 py-1 rounded-md bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]">
-                  <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
-                    <circle cx="5" cy="5" r="2" fill="var(--apple-muted)" opacity="0.5"/>
-                  </svg>
-                  <span className="text-[9px] text-[color:var(--apple-muted)] leading-tight">{tool}</span>
-                </div>
-              ))}
+            <div className="mt-3 pt-3 border-t border-[color:var(--apple-line)]">
+              <div className="grid grid-cols-2 gap-1.5">
+                {skillTools.map((tool) => (
+                  <div key={tool} className="flex items-center gap-1 px-2 py-1 rounded-md bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]">
+                    <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+                      <circle cx="5" cy="5" r="2" fill="var(--apple-muted)" opacity="0.5"/>
+                    </svg>
+                    <span className="text-[10px] text-[color:var(--apple-muted)] leading-tight">{tool}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -778,23 +864,39 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
             <div className="mt-3 pt-2 border-t border-[color:var(--apple-line)] text-center">
               <span className="text-[10px] text-[color:var(--apple-muted)] opacity-60">SQLite + LanceDB + Blob</span>
             </div>
+            <div className="mt-2 pt-2 border-t border-[color:var(--apple-line)] text-center">
+              <div className="text-[10px] font-medium text-[color:var(--apple-muted)]">{t('arch.vfs.ocr', '多引擎级联 OCR')}</div>
+              <div className="text-[10px] font-medium text-[color:var(--apple-muted)] mt-1">{t('arch.vfs.vector', '多维度向量引擎')}</div>
+              <div className="flex items-center justify-center gap-1.5 mt-1">
+                <span className="text-[9px] text-[color:var(--apple-muted)] opacity-50">{t('arch.vfs.vector.text', '文本嵌入')}</span>
+                <span className="text-[9px] text-[color:var(--apple-muted)] opacity-30">|</span>
+                <span className="text-[9px] text-[color:var(--apple-muted)] opacity-50">{t('arch.vfs.vector.cross', '跨维度检索')}</span>
+              </div>
+            </div>
           </div>
 
           <FlowArrowVertical label={t('arch.arrow.rw', '读写')} sublabel="DSTU" direction="both" />
 
-          {/* Learning Hub + 资源类型 */}
+          {/* Learning Hub + 资源类型（放入文件夹图标内） */}
           <div className="flex flex-col items-center gap-2">
-            <ArchFolderIcon size={36} />
+            <div className="relative w-[290px] h-[210px]">
+              <svg className="absolute inset-0 w-full h-full opacity-[0.10]" viewBox="0 0 48 48" fill="none" preserveAspectRatio="xMidYMid meet">
+                <path d="M6 10C6 8.895 6.895 8 8 8H18L21 11H40C41.105 11 42 11.895 42 13V39C42 40.105 41.105 41 40 41H8C6.895 41 6 40.105 6 39V10Z" fill="#E8B849"/>
+                <path d="M6 10C6 8.895 6.895 8 8 8H17C17.552 8 18 8.448 18 9V11H6V10Z" fill="#D4A53A"/>
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center pt-8 px-8">
+                <div className="grid grid-cols-4 gap-x-5 gap-y-3 justify-items-center">
+                  {resourceTypes.map(({ Icon, label }) => (
+                    <div key={label} className="flex flex-col items-center gap-0.5">
+                      <Icon size={22} />
+                      <span className="text-[9px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap">{label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
             <div className="text-[14px] font-semibold text-[color:var(--apple-ink)]">Learning Hub</div>
             <div className="text-[11px] text-[color:var(--apple-muted)]">{t('arch.hub.desc', '学习资源管理器')}</div>
-            <div className="grid grid-cols-4 gap-x-4 gap-y-2 mt-2 justify-items-center">
-              {resourceTypes.map(({ Icon, label }) => (
-                <div key={label} className="flex flex-col items-center gap-0.5">
-                  <Icon size={22} />
-                  <span className="text-[9px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap">{label}</span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>
