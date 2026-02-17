@@ -12,11 +12,37 @@
       name="description"
       content="DeepStudent - AI 原生、本地优先的开源学习系统。智能对话、学习资源管理、Anki 制卡、题库练习、知识导图、翻译工作台，形成学习闭环。"
     />
+    <meta
+      name="keywords"
+      content="DeepStudent, AI 学习系统, 本地优先, 开源, Tauri, RAG, Anki 制卡, 题库, 知识导图, 翻译, 学习资料管理"
+    />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <link rel="canonical" href="https://deepstudent.cn/" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" />
+
+    <meta property="og:site_name" content="DeepStudent" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content="您的终身学习空间｜DeepStudent" />
+    <meta
+      property="og:description"
+      content="DeepStudent - AI 原生、本地优先的开源学习系统。智能对话、学习资源管理、Anki 制卡、题库练习、知识导图、翻译工作台，形成学习闭环。"
+    />
+    <meta property="og:url" content="https://deepstudent.cn/" />
+    <meta property="og:image" content="https://deepstudent.cn/img/index.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="您的终身学习空间｜DeepStudent" />
+    <meta
+      name="twitter:description"
+      content="DeepStudent - AI 原生、本地优先的开源学习系统。智能对话、学习资源管理、Anki 制卡、题库练习、知识导图、翻译工作台，形成学习闭环。"
+    />
+    <meta name="twitter:image" content="https://deepstudent.cn/img/index.png" />
     <link
       rel="preload"
       as="image"
-      href="/img/example/主页面-960.webp"
-      imagesrcset="/img/example/主页面-640.webp 640w, /img/example/主页面-960.webp 960w, /img/example/主页面-1280.webp 1280w, /img/example/主页面-1600.webp 1600w"
+      href="/img/example/软件主页图-960.webp"
+      imagesrcset="/img/example/软件主页图-640.webp 640w, /img/example/软件主页图-960.webp 960w, /img/example/软件主页图-1280.webp 1280w, /img/example/软件主页图-1600.webp 1600w"
       imagesizes="(min-width: 1536px) 66vw, (min-width: 1024px) 72vw, 96vw"
       type="image/webp"
       fetchpriority="high"
@@ -63,6 +89,7 @@
 
     <script>
       (function () {
+        if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return
         var initAnalytics = function () {
           var analytics = window.LA
           if (!analytics || typeof analytics.init !== 'function') {
@@ -110,7 +137,58 @@
     <title>您的终身学习空间｜DeepStudent</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <main id="ds-seo-fallback" role="main" aria-label="DeepStudent">
+        <h1>您的终身学习空间｜DeepStudent</h1>
+        <p>
+          DeepStudent 是一款基于 Tauri 2 构建的 AI 原生、本地优先开源学习系统（AGPL-3.0）。它以「对话即入口」把智能对话、学习资源管理、RAG
+          检索、Anki 制卡与练习回顾串成可持续的学习闭环。
+        </p>
+        <p>
+          你可以用它：导入并管理资料（PDF/Word/图片…）→ 本地索引与检索 → 对话驱动阅读/调研/练习 → 一键制卡与间隔复习。
+        </p>
+        <ul>
+          <li>本地优先：离线可用，数据可审计可备份，敏感信息加密存储</li>
+          <li>AI 入口统一：Chat V2 + Skills + MCP 工具生态 + CardForge 任务编排</li>
+          <li>学习资料统一：VFS 单一数据源，全文检索 + 向量检索（RAG）</li>
+          <li>学习闭环：题库练习、错题归档、知识导图、翻译工作台、Anki 制卡</li>
+        </ul>
+        <p>
+          <a href="#download">立即下载</a>
+          · <a href="/docs/">查看文档</a>
+          · <a href="https://github.com/000haoji/deep-student" target="_blank" rel="noopener noreferrer">主项目 GitHub</a>
+          · <a href="/llms.txt">llms.txt</a>
+        </p>
+
+        <section aria-labelledby="ds-faq-title">
+          <h2 id="ds-faq-title">常见问题（FAQ）</h2>
+          <details>
+            <summary>DeepStudent 是云服务吗？</summary>
+            <p>
+              不是。DeepStudent 以「本地优先」为核心，数据默认保存在本地。你可以选择配置第三方模型/搜索服务，但不会要求注册登录。
+            </p>
+          </details>
+          <details>
+            <summary>需要自备 API Key 吗？</summary>
+            <p>
+              可选。你可以配置自己的模型 API Key；同时也支持合作伙伴提供的免费模型，下载即可体验核心能力。
+            </p>
+          </details>
+          <details>
+            <summary>它和 Anki 的关系是什么？</summary>
+            <p>
+              DeepStudent 提供 CardForge 制卡任务：从文档/对话中提取知识点并生成卡片，支持导出 APKG 或通过 AnkiConnect 同步到 Anki。
+            </p>
+          </details>
+        </section>
+
+        <noscript>
+          <p>
+            当前浏览器已禁用 JavaScript。你仍可通过 <a href="/docs/">文档</a> 了解 DeepStudent，并从页面的“下载”入口获取安装包。
+          </p>
+        </noscript>
+      </main>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
