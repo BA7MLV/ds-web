@@ -96,47 +96,6 @@
       })();
     </script>
 
-    <script>
-      (function () {
-        if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return
-        var initAnalytics = function () {
-          var analytics = window.LA
-          if (!analytics || typeof analytics.init !== 'function') {
-            console.warn('[Analytics] 51.LA SDK unavailable, skipping initialization')
-            return
-          }
-
-          analytics.init({
-            id: 'L6EKwkfq9fvFA4LW',
-            ck: 'L6EKwkfq9fvFA4LW',
-            autoTrack: true,
-            hashMode: true,
-          })
-        }
-
-        var loadAnalytics = function () {
-          var existing = document.getElementById('LA_COLLECT')
-          if (existing) return
-          var script = document.createElement('script')
-          script.charset = 'UTF-8'
-          script.id = 'LA_COLLECT'
-          script.src = 'https://sdk.51.la/js-sdk-pro.min.js'
-          script.async = true
-          script.onload = initAnalytics
-          script.onerror = function () {
-            console.warn('[Analytics] 51.LA SDK failed to load')
-          }
-          document.head.appendChild(script)
-        }
-
-        var schedule = window.requestIdleCallback
-          ? function (task) { window.requestIdleCallback(task, { timeout: 3000 }) }
-          : function (task) { window.setTimeout(task, 1200) }
-
-        schedule(loadAnalytics)
-      })()
-    </script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
