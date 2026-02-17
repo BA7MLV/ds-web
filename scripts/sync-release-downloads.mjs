@@ -6,7 +6,8 @@ import { fileURLToPath } from 'node:url'
 import { buildDownloadsData } from './lib/release-downloads.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const OUTPUT_PATH = resolve(__dirname, '../docs/.vitepress/data/downloads.json')
+const DOCS_OUTPUT_PATH = resolve(__dirname, '../docs/.vitepress/data/downloads.json')
+const WEBSITE_OUTPUT_PATH = resolve(__dirname, '../src/data/downloads.json')
 const RELEASE_API_URL = 'https://api.github.com/repos/000haoji/deep-student/releases/latest'
 
 async function fileExists(filePath) {
@@ -18,9 +19,9 @@ async function fileExists(filePath) {
   }
 }
 
-async function writeDownloadsFile(data) {
-  await mkdir(dirname(OUTPUT_PATH), { recursive: true })
-  await writeFile(OUTPUT_PATH, `${JSON.stringify(data, null, 2)}\n`, 'utf-8')
+async function writeDownloadsFile(filePath, data) {
+  await mkdir(dirname(filePath), { recursive: true })
+  await writeFile(filePath, `${JSON.stringify(data, null, 2)}\n`, 'utf-8')
 }
 
 async function fetchLatestRelease() {
@@ -42,16 +43,28 @@ async function syncReleaseDownloads() {
   try {
     const release = await fetchLatestRelease()
     const data = buildDownloadsData(release)
-    await writeDownloadsFile(data)
-    console.log(`[release-sync] Updated ${OUTPUT_PATH} (${data.version})`)
+    await writeDownloadsFile(DOCS_OUTPUT_PATH, data)
+    await writeDownloadsFile(WEBSITE_OUTPUT_PATH, data)
+    console.log(`[release-sync] Updated ${DOCS_OUTPUT_PATH} (${data.version})`)
+    console.log(`[release-sync] Updated ${WEBSITE_OUTPUT_PATH} (${data.version})`)
     return
   } catch (error) {
-    const hasCache = await fileExists(OUTPUT_PATH)
+    const hasDocsCache = await fileExists(DOCS_OUTPUT_PATH)
+    const hasWebsiteCache = await fileExists(WEBSITE_OUTPUT_PATH)
+    const hasCache = hasDocsCache || hasWebsiteCache
 
     if (hasCache) {
-      const cached = JSON.parse(await readFile(OUTPUT_PATH, 'utf-8'))
+      const cachePath = hasWebsiteCache ? WEBSITE_OUTPUT_PATH : DOCS_OUTPUT_PATH
+      const cached = JSON.parse(await readFile(cachePath, 'utf-8'))
       console.warn(`[release-sync] Failed to fetch latest release, using cached data (${cached.version || 'unknown'}).`)
       console.warn(`[release-sync] Reason: ${error.message}`)
+
+      if (hasDocsCache) {
+        await writeDownloadsFile(DOCS_OUTPUT_PATH, cached)
+      }
+      if (hasWebsiteCache) {
+        await writeDownloadsFile(WEBSITE_OUTPUT_PATH, cached)
+      }
       return
     }
 
@@ -61,7 +74,8 @@ async function syncReleaseDownloads() {
       assets: []
     })
 
-    await writeDownloadsFile(fallbackData)
+    await writeDownloadsFile(DOCS_OUTPUT_PATH, fallbackData)
+    await writeDownloadsFile(WEBSITE_OUTPUT_PATH, fallbackData)
     console.warn('[release-sync] Failed to fetch latest release and no cache found. Wrote fallback data.')
     console.warn(`[release-sync] Reason: ${error.message}`)
   }
