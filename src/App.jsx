@@ -597,6 +597,8 @@ const App = () => {
                 motionScale={motionScale}
                 subFeatures={[
                   { labelKey: 'agent.multiModel', descKey: 'agent.multiModelDesc', imgSrc: '/img/example/模型分配.png' },
+                  { labelKey: 'agent.parallel', descKey: 'agent.parallelDesc', imgSrc: '/img/example/并行-1.png' },
+                  { labelKey: 'agent.parallelResult', descKey: 'agent.parallelResultDesc', imgSrc: '/img/example/并行-2.png' },
                   { labelKey: 'agent.skills', descKey: 'agent.skillsDesc', imgSrc: '/img/example/技能管理.png' },
                   { labelKey: 'agent.group', descKey: 'agent.groupDesc', imgSrc: '/img/example/分组.png' },
                   { labelKey: 'agent.session', descKey: 'agent.sessionDesc', imgSrc: '/img/example/会话浏览.png' },
