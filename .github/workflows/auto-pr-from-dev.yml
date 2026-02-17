@@ -1,0 +1,47 @@
+name: Auto PR from dev to main
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  open-or-update-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create PR from dev to main if needed
+        env:
+          GH_TOKEN: ${{ secrets.BA7MLV_GH_PAT }}
+        run: |
+          set -euo pipefail
+
+          git fetch origin main dev
+
+          ahead_count=$(git rev-list --count origin/main..origin/dev)
+          if [ "$ahead_count" -eq 0 ]; then
+            echo "No commits ahead on dev. Skip PR creation."
+            exit 0
+          fi
+
+          pr_number=$(gh pr list --base main --head dev --state open --json number --jq '.[0].number')
+
+          if [ -n "$pr_number" ]; then
+            echo "PR #$pr_number already exists. No action needed."
+            exit 0
+          fi
+
+          gh pr create \
+            --base main \
+            --head dev \
+            --title "chore: sync dev into main" \
+            --body "Automated PR created after updates were pushed to dev."
