@@ -30,3 +30,6 @@ dist-ssr
 /Claude/
 .env.local
 !.env.example
+
+# VitePress build cache
+docs/.vitepress/cache/
