@@ -1,9 +1,11 @@
 <script setup>
 import DefaultTheme from 'vitepress/theme'
+import Analytics51la from './Analytics51la.vue'
 import LastAuthor from './components/LastAuthor.vue'
 </script>
 
 <template>
+  <Analytics51la />
   <DefaultTheme.Layout>
     <template #doc-footer-before>
       <LastAuthor />

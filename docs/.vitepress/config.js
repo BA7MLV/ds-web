@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { withMermaid } from 'vitepress-plugin-mermaid'
+import { loadEnv } from 'vite'
 import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -34,6 +35,12 @@ const guideSidebar = [
 ]
 
 const docsRootDir = fileURLToPath(new URL('../', import.meta.url))
+
+const repoRootDir = resolve(docsRootDir, '..')
+const mode = process.env.NODE_ENV ?? 'development'
+const env = loadEnv(mode, repoRootDir, '')
+const LA_ID = env.LA_ID
+const LA_CK = env.LA_CK
 
 const gitEditorsCache = new Map()
 
@@ -90,6 +97,19 @@ export default withMermaid(defineConfig({
         href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap',
       },
     ],
+    ...(LA_ID && LA_CK
+      ? [
+          [
+            'script',
+            {
+              charset: 'UTF-8',
+              id: 'LA_COLLECT',
+              src: 'https://sdk.51.la/js-sdk-pro.min.js',
+            },
+          ],
+          ['script', {}, `LA.init({id:"${LA_ID}",ck:"${LA_CK}"})`],
+        ]
+      : []),
   ],
   themeConfig: {
     logo: { light: '/logo-r.svg', dark: '/logo-r-dark.svg' },
