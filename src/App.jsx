@@ -616,16 +616,20 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
   const { t } = useLocale()
   const shouldAnimate = motionScale > 0
 
-  const chatFeatures = [
+  const chatRow1 = [
     t('arch.chat.feat.latex', 'LaTeX 渲染'),
     t('arch.chat.feat.cot', '思维链'),
     t('arch.chat.feat.multimodal', '多模态'),
+  ]
+  const chatRow2 = [
     t('arch.chat.feat.attach', '附件自动 OCR'),
     t('arch.chat.feat.mcp', 'MCP 工具协议'),
+  ]
+  const chatRow3 = [
     t('arch.chat.feat.rag', 'RAG 检索增强'),
     t('arch.chat.feat.session', '会话分组'),
   ]
-  const chatFeaturesRow4 = [
+  const chatRow4 = [
     t('arch.chat.feat.parallel', '并行对比'),
     t('arch.chat.feat.provider', '多供应商适配'),
   ]
@@ -672,24 +676,21 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
           <div className="grid grid-cols-[1fr_auto_1fr] gap-y-0">
             {/* 第一行：Chat V2 | 引用资源连接 | Learning Hub */}
             <div className="flex flex-col items-center justify-center py-4">
-              <div className="relative w-[260px] h-[200px]">
+              <div className="relative w-[290px] h-[230px]">
                 {/* 放大半透明对话气泡背景 */}
-                <svg className="absolute inset-0 w-full h-full opacity-[0.08]" viewBox="0 0 56 56" fill="none" preserveAspectRatio="xMidYMid meet">
-                  <rect x="2" y="4" width="52" height="40" rx="8" fill="var(--apple-muted)"/>
-                  <path d="M16 44L22 51L28 44" fill="var(--apple-muted)"/>
+                <svg className="absolute inset-0 w-full h-full opacity-[0.12]" viewBox="0 0 60 60" fill="none" preserveAspectRatio="xMidYMid meet">
+                  <rect x="1" y="1" width="58" height="46" rx="10" fill="var(--apple-muted)"/>
+                  <path d="M18 47L24 56L30 47" fill="var(--apple-muted)"/>
                 </svg>
                 {/* 特性标签覆盖在内 */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center pt-2 pb-6 px-5 gap-1.5">
-                  <div className="flex flex-wrap justify-center gap-1.5">
-                    {chatFeatures.map((feat) => (
-                      <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap">{feat}</span>
-                    ))}
-                  </div>
-                  <div className="flex justify-center gap-1.5">
-                    {chatFeaturesRow4.map((feat) => (
-                      <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap">{feat}</span>
-                    ))}
-                  </div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 pb-8 px-8 gap-1.5">
+                  {[chatRow1, chatRow2, chatRow3, chatRow4].map((row, i) => (
+                    <div key={i} className="flex justify-center gap-1.5">
+                      {row.map((feat) => (
+                        <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap">{feat}</span>
+                      ))}
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="text-center mt-2">
@@ -810,22 +811,19 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
         <div className="flex md:hidden flex-col items-center gap-0">
           {/* Chat V2 */}
           <div className="flex flex-col items-center gap-2">
-            <div className="relative w-[270px] h-[175px]">
-              <svg className="absolute inset-0 w-full h-full opacity-[0.08]" viewBox="0 0 56 56" fill="none" preserveAspectRatio="xMidYMid meet">
-                <rect x="2" y="4" width="52" height="40" rx="8" fill="var(--apple-muted)"/>
-                <path d="M16 44L22 51L28 44" fill="var(--apple-muted)"/>
+            <div className="relative w-[300px] h-[210px]">
+              <svg className="absolute inset-0 w-full h-full opacity-[0.12]" viewBox="0 0 60 60" fill="none" preserveAspectRatio="xMidYMid meet">
+                <rect x="1" y="1" width="58" height="46" rx="10" fill="var(--apple-muted)"/>
+                <path d="M18 47L24 56L30 47" fill="var(--apple-muted)"/>
               </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center pt-2 pb-6 px-5 gap-1.5">
-                <div className="flex flex-wrap justify-center gap-1.5">
-                  {chatFeatures.map((feat) => (
-                    <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap">{feat}</span>
-                  ))}
-                </div>
-                <div className="flex justify-center gap-1.5">
-                  {chatFeaturesRow4.map((feat) => (
-                    <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap">{feat}</span>
-                  ))}
-                </div>
+              <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 pb-8 px-8 gap-1.5">
+                {[chatRow1, chatRow2, chatRow3, chatRow4].map((row, i) => (
+                  <div key={i} className="flex justify-center gap-1.5">
+                    {row.map((feat) => (
+                      <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap">{feat}</span>
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
             <div className="text-[14px] font-semibold text-[color:var(--apple-ink)]">Chat V2</div>
