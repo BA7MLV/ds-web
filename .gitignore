@@ -24,6 +24,9 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+.env
 .env*.local
 /.claude/
 /Claude/
+.env.local
+!.env.example
