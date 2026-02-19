@@ -1022,7 +1022,7 @@ const App = () => {
                   { labelKey: 'agent.parallelResult', descKey: 'agent.parallelResultDesc', imgSrc: '/img/example/并行-2.png' },
                   { labelKey: 'agent.skills', descKey: 'agent.skillsDesc', imgSrc: '/img/example/技能管理.png' },
                   { labelKey: 'agent.group', descKey: 'agent.groupDesc', imgSrc: '/img/example/分组.png' },
-                  { labelKey: 'agent.session', descKey: 'agent.sessionDesc', imgSrc: '/example/会话管理.png' },
+                  { labelKey: 'agent.session', descKey: 'agent.sessionDesc', imgSrc: '/img/example/会话管理.png' },
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
