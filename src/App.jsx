@@ -545,8 +545,8 @@ const FlowArrow = ({ label, sublabel, direction = 'right', className = '' }) => 
   const endId = `${uid}-end`
   const startId = `${uid}-start`
   return (
-    <div className={`flex flex-col items-center gap-1 ${className}`}>
-      <svg width="100%" height="24" viewBox="0 0 120 24" fill="none" className="overflow-visible">
+    <div className={`flex flex-col items-center gap-1.5 relative group ${className}`}>
+      <svg width="100%" height="24" viewBox="0 0 120 24" fill="none" className="overflow-visible transition-opacity duration-300 group-hover:opacity-80">
         <defs>
           <marker id={endId} viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
             <path d="M0 0L6 3L0 6Z" fill="var(--apple-muted)"/>
@@ -567,8 +567,10 @@ const FlowArrow = ({ label, sublabel, direction = 'right', className = '' }) => 
           </line>
         )}
       </svg>
-      <span className="text-[11px] sm:text-[12px] text-[color:var(--apple-muted)] whitespace-nowrap leading-tight">{label}</span>
-      {sublabel && <span className="text-[10px] text-[color:var(--apple-muted)] opacity-60 whitespace-nowrap leading-tight">{sublabel}</span>}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-none transition-transform duration-300 group-hover:scale-105">
+        <span className="text-[11px] sm:text-[12px] font-medium text-[color:var(--apple-ink)] bg-[color:var(--apple-bg)]/80 backdrop-blur-sm px-2.5 py-0.5 rounded-md border border-[color:var(--apple-line)] shadow-sm whitespace-nowrap leading-tight">{label}</span>
+        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--apple-bg)]/80 backdrop-blur-sm px-1.5 py-0.5 mt-0.5 rounded-md border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight shadow-sm">{sublabel}</span>}
+      </div>
     </div>
   )
 }
@@ -580,10 +582,9 @@ const FlowArrowVertical = ({ label, sublabel, direction = 'down' }) => {
   const endId = `${uid}-end`
   const startId = `${uid}-start`
   return (
-    <div className="flex items-center gap-2 py-2">
-      <svg width="24" height="48" viewBox="0 0 24 48" fill="none">
+    <div className="flex items-center justify-center py-2 relative group w-[60px] h-[48px]">
+      <svg width="24" height="100%" viewBox="0 0 24 48" fill="none" className="absolute inset-0 mx-auto transition-opacity duration-300 group-hover:opacity-80">
         <defs>
-          {/* 向下箭头（不用orient=auto，手动画向下三角） */}
           <marker id={endId} viewBox="0 0 6 6" refX="3" refY="6" markerWidth="5" markerHeight="5">
             <path d="M0 0L3 6L6 0Z" fill="var(--apple-muted)"/>
           </marker>
@@ -603,9 +604,9 @@ const FlowArrowVertical = ({ label, sublabel, direction = 'down' }) => {
           </line>
         )}
       </svg>
-      <div className="flex flex-col">
-        <span className="text-[11px] text-[color:var(--apple-muted)] whitespace-nowrap leading-tight">{label}</span>
-        {sublabel && <span className="text-[10px] text-[color:var(--apple-muted)] opacity-60 whitespace-nowrap leading-tight">{sublabel}</span>}
+      <div className="relative z-10 flex flex-col items-center bg-[color:var(--apple-bg)]/80 backdrop-blur-sm px-2 py-1 rounded-md border border-[color:var(--apple-line)] shadow-sm pointer-events-none transition-transform duration-300 group-hover:scale-105">
+        <span className="text-[11px] font-medium text-[color:var(--apple-ink)] whitespace-nowrap leading-tight">{label}</span>
+        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--apple-bg)]/50 px-1 py-0.5 mt-0.5 rounded border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight shadow-sm">{sublabel}</span>}
       </div>
     </div>
   )
@@ -617,7 +618,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
   const shouldAnimate = motionScale > 0
 
   const chatRow1 = [
-    t('arch.chat.feat.latex', 'LaTeX 渲染'),
+    t('arch.chat.feat.parallel', '并行对比'),
     t('arch.chat.feat.cot', '思维链'),
     t('arch.chat.feat.multimodal', '多模态'),
   ]
@@ -630,7 +631,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
     t('arch.chat.feat.session', '会话分组'),
   ]
   const chatRow4 = [
-    t('arch.chat.feat.parallel', '并行对比'),
+    t('arch.chat.feat.latex', 'LaTeX 渲染'),
     t('arch.chat.feat.provider', '多供应商适配'),
   ]
 
@@ -664,7 +665,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
         {/* 标题 */}
         <div className="text-center mb-[2.5rem] sm:mb-[3.5rem]">
           <h2 className="text-[1.5rem] sm:text-[2rem] font-semibold text-[color:var(--apple-ink)] tracking-tight font-display mb-3">
-            {t('stats.title', '为深度学习而生')}
+            {t('stats.title', 'AI 原生的学习闭环')}
           </h2>
           <p className="text-[color:var(--apple-muted)] text-[15px] sm:text-[17px] max-w-2xl mx-auto">
             {t('stats.subtitle', '从对话入口到数据底座，前后端围绕学习闭环协同设计')}
@@ -675,26 +676,27 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
         <div className="hidden md:block max-w-[700px] mx-auto">
           <div className="grid grid-cols-[1fr_auto_1fr] gap-y-0">
             {/* 第一行：Chat V2 | 引用资源连接 | Learning Hub */}
-            <div className="flex flex-col items-center justify-center py-4">
-              <div className="relative w-[290px] h-[230px]">
-                {/* 放大半透明对话气泡背景 */}
-                <svg className="absolute inset-0 w-full h-full opacity-[0.12]" viewBox="0 0 60 60" fill="none" preserveAspectRatio="xMidYMid meet">
+            <div className="flex flex-col items-center justify-center py-4 group cursor-default">
+              <div className="relative w-[260px] h-[206px] transition-transform duration-500 ease-out group-hover:-translate-y-1">
+                {/* 放大半透明对话气泡背景，增加发光效果 */}
+                <div className="absolute inset-0 bg-blue-500/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <svg className="absolute inset-0 w-full h-full opacity-[0.12] drop-shadow-sm transition-all duration-500 group-hover:opacity-[0.16] group-hover:drop-shadow-md" viewBox="0 0 60 60" fill="none" preserveAspectRatio="xMidYMid meet">
                   <rect x="1" y="1" width="58" height="46" rx="10" fill="var(--apple-muted)"/>
                   <path d="M18 47L24 56L30 47" fill="var(--apple-muted)"/>
                 </svg>
-                {/* 特性标签覆盖在内 */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 pb-8 px-8 gap-1.5">
+                {/* 特性标签覆盖在内，将其高度限制在气泡方形主体（约76.6%）内以实现绝对居中 */}
+                <div className="absolute top-0 left-0 right-0 h-[76.6%] flex flex-col items-center justify-center px-4 gap-1.5">
                   {[chatRow1, chatRow2, chatRow3, chatRow4].map((row, i) => (
                     <div key={i} className="flex justify-center gap-1.5">
                       {row.map((feat) => (
-                        <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap">{feat}</span>
+                        <span key={feat} className="text-[8px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap bg-[color:var(--apple-bg)]/50 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 group-hover:border-[color:var(--apple-muted)]/30 group-hover:shadow-sm group-hover:bg-[color:var(--apple-bg)]/80">{feat}</span>
                       ))}
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="text-center mt-2">
-                <div className="text-[15px] font-semibold text-[color:var(--apple-ink)]">Chat V2</div>
+              <div className="text-center mt-2 transition-transform duration-500 group-hover:-translate-y-0.5">
+                <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">Chat V2</div>
                 <div className="text-[12px] text-[color:var(--apple-muted)] mt-0.5">{t('arch.chat.desc', '智能对话')}</div>
               </div>
             </div>
@@ -705,26 +707,29 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
             </div>
 
             {/* Learning Hub */}
-            <div className="flex flex-col items-center justify-center py-4">
-              <div className="relative w-[240px] h-[180px]">
-                <svg className="absolute inset-0 w-full h-full opacity-[0.10]" viewBox="0 0 48 48" fill="none" preserveAspectRatio="xMidYMid meet">
+            <div className="flex flex-col items-center justify-center py-4 group cursor-default">
+              <div className="relative w-[270px] h-[202px] transition-transform duration-500 ease-out group-hover:-translate-y-1">
+                <div className="absolute inset-0 bg-amber-500/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <svg className="absolute inset-0 w-full h-full scale-[1.2] opacity-[0.10] drop-shadow-sm transition-all duration-500 group-hover:opacity-[0.14] group-hover:drop-shadow-md" viewBox="0 0 48 48" fill="none" preserveAspectRatio="xMidYMid meet">
                   <path d="M6 10C6 8.895 6.895 8 8 8H18L21 11H40C41.105 11 42 11.895 42 13V39C42 40.105 41.105 41 40 41H8C6.895 41 6 40.105 6 39V10Z" fill="#E8B849"/>
                   <path d="M6 10C6 8.895 6.895 8 8 8H17C17.552 8 18 8.448 18 9V11H6V10Z" fill="#D4A53A"/>
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center pt-6 px-7">
-                  <div className="grid grid-cols-4 gap-x-4 gap-y-3 justify-items-center">
-                    {resourceTypes.map(({ Icon, label }) => (
-                      <div key={label} className="flex flex-col items-center gap-0.5">
-                        <Icon size={20} />
-                        <span className="text-[9px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap">{label}</span>
+                  <div className="grid grid-cols-4 gap-x-5 gap-y-4 justify-items-center">
+                    {resourceTypes.map((item) => (
+                      <div key={item.label} className="flex flex-col items-center gap-1 group/item transition-transform duration-300 hover:-translate-y-0.5">
+                        <div className="rounded-lg transition-colors duration-300 group-hover/item:bg-[color:var(--apple-line)]/50">
+                          <item.Icon size={22} />
+                        </div>
+                        <span className="text-[10px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap transition-colors duration-300 group-hover/item:text-[color:var(--apple-ink)]">{item.label}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
-              <div className="text-center mt-2">
-                <div className="text-[14px] font-semibold text-[color:var(--apple-ink)]">Learning Hub</div>
-                <div className="text-[11px] text-[color:var(--apple-muted)] mt-0.5">{t('arch.hub.desc', '学习资源管理器')}</div>
+              <div className="text-center mt-2 transition-transform duration-500 group-hover:-translate-y-0.5">
+                <div className="text-[15px] font-semibold text-[color:var(--apple-ink)]">Learning Hub</div>
+                <div className="text-[12px] text-[color:var(--apple-muted)] mt-0.5">{t('arch.hub.desc', '学习资源管理器')}</div>
               </div>
             </div>
 
@@ -742,20 +747,21 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
             </div>
 
             {/* 第二行：Skills | 工具调用连接 | VFS */}
-            <div className="flex flex-col items-center py-2">
-              <div className="w-full border border-[color:var(--apple-line)] rounded-2xl py-5 px-5 bg-[color:var(--apple-bg)]">
-                <div className="text-center">
+            <div className="flex flex-col items-center py-2 group cursor-default">
+              <div className="relative w-full border border-[color:var(--apple-line)] rounded-[20px] py-5 px-5 bg-[color:var(--apple-bg)]/80 backdrop-blur-sm transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:shadow-md group-hover:border-[color:var(--apple-muted)]/30 group-hover:bg-[color:var(--apple-bg)]">
+                <div className="absolute inset-0 bg-emerald-500/5 blur-2xl rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                <div className="relative z-10 text-center">
                   <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">Skills</div>
                   <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.skills.subtitle', '技能编排 · 按需加载')}</div>
                 </div>
-                <div className="mt-3 pt-3 border-t border-[color:var(--apple-line)]">
-                  <div className="grid grid-cols-2 gap-1.5">
+                <div className="relative z-10 mt-4 pt-4 border-t border-[color:var(--apple-line)]/60">
+                  <div className="grid grid-cols-2 gap-2">
                     {skillTools.map((tool) => (
-                      <div key={tool} className="flex items-center gap-1 px-2 py-1 rounded-md bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]">
-                        <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
-                          <circle cx="5" cy="5" r="2" fill="var(--apple-muted)" opacity="0.5"/>
+                      <div key={tool} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]/60 transition-colors duration-300 hover:border-[color:var(--apple-muted)]/40 hover:bg-[color:var(--apple-line)]/30">
+                        <svg width="8" height="8" viewBox="0 0 10 10" fill="none" className="shrink-0">
+                          <circle cx="5" cy="5" r="2.5" fill="var(--apple-muted)" opacity="0.6" className="transition-opacity duration-300 group-hover:opacity-80"/>
                         </svg>
-                        <span className="text-[10px] text-[color:var(--apple-muted)] leading-tight">{tool}</span>
+                        <span className="text-[11px] text-[color:var(--apple-muted)] leading-tight transition-colors duration-300 hover:text-[color:var(--apple-ink)]">{tool}</span>
                       </div>
                     ))}
                   </div>
@@ -769,36 +775,37 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
             </div>
 
             {/* VFS */}
-            <div className="flex flex-col items-center py-2">
-              <div className="w-full border border-[color:var(--apple-line)] rounded-2xl py-5 px-5 bg-[color:var(--apple-bg)]">
-                <div className="text-center">
+            <div className="flex flex-col items-center py-2 group cursor-default">
+              <div className="relative w-full border border-[color:var(--apple-line)] rounded-[20px] py-5 px-5 bg-[color:var(--apple-bg)]/80 backdrop-blur-sm transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:shadow-md group-hover:border-[color:var(--apple-muted)]/30 group-hover:bg-[color:var(--apple-bg)]">
+                <div className="absolute inset-0 bg-purple-500/5 blur-2xl rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                <div className="relative z-10 text-center">
                   <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">VFS</div>
                   <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.vfs.desc', '虚拟文件系统 · 学习数据')}</div>
                 </div>
-                <div className="mt-3 pt-3 border-t border-[color:var(--apple-line)]">
-                  <div className="flex items-center justify-center gap-2">
-                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">SQLite</span>
-                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
-                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">LanceDB</span>
-                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
-                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">Blob</span>
+                <div className="relative z-10 mt-4 pt-3 border-t border-[color:var(--apple-line)]/60">
+                  <div className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]/40 transition-colors duration-300 hover:border-[color:var(--apple-muted)]/30">
+                    <span className="text-[11px] font-medium text-[color:var(--apple-muted)] opacity-80">SQLite</span>
+                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-30">+</span>
+                    <span className="text-[11px] font-medium text-[color:var(--apple-muted)] opacity-80">LanceDB</span>
+                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-30">+</span>
+                    <span className="text-[11px] font-medium text-[color:var(--apple-muted)] opacity-80">Blob</span>
                   </div>
-                  <div className="text-center mt-1">
-                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-50">{t('arch.storage', '全部数据本地存储')}</span>
+                  <div className="text-center mt-1.5">
+                    <span className="text-[9px] text-[color:var(--apple-muted)] opacity-60">{t('arch.storage', '全部数据本地存储')}</span>
                   </div>
                 </div>
-                <div className="mt-3 pt-3 border-t border-[color:var(--apple-line)]">
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-1.5 justify-center">
-                      <span className="text-[10px] font-medium text-[color:var(--apple-muted)]">{t('arch.vfs.ocr', '多引擎级联 OCR')}</span>
+                <div className="relative z-10 mt-3 pt-3 border-t border-[color:var(--apple-line)]/60">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-1.5 justify-center py-1.5 rounded-lg transition-colors duration-300 hover:bg-[color:var(--apple-line)]/30">
+                      <span className="text-[11px] font-medium text-[color:var(--apple-ink)] opacity-80">{t('arch.vfs.ocr', '多引擎级联 OCR')}</span>
                     </div>
-                    <div className="flex items-center gap-1.5 justify-center">
-                      <span className="text-[10px] font-medium text-[color:var(--apple-muted)]">{t('arch.vfs.vector', '多维度向量引擎')}</span>
-                    </div>
-                    <div className="flex items-center justify-center gap-2 mt-0.5">
-                      <span className="text-[9px] text-[color:var(--apple-muted)] opacity-50">{t('arch.vfs.vector.text', '文本嵌入')}</span>
-                      <span className="text-[9px] text-[color:var(--apple-muted)] opacity-30">|</span>
-                      <span className="text-[9px] text-[color:var(--apple-muted)] opacity-50">{t('arch.vfs.vector.cross', '跨维度检索')}</span>
+                    <div className="flex flex-col items-center justify-center py-1.5 rounded-lg transition-colors duration-300 hover:bg-[color:var(--apple-line)]/30">
+                      <span className="text-[11px] font-medium text-[color:var(--apple-ink)] opacity-80">{t('arch.vfs.vector', '多维度向量引擎')}</span>
+                      <div className="flex items-center justify-center gap-2 mt-1">
+                        <span className="text-[9px] text-[color:var(--apple-muted)] opacity-60">{t('arch.vfs.vector.text', '文本嵌入')}</span>
+                        <span className="text-[9px] text-[color:var(--apple-muted)] opacity-30">|</span>
+                        <span className="text-[9px] text-[color:var(--apple-muted)] opacity-60">{t('arch.vfs.vector.cross', '跨维度检索')}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -816,11 +823,12 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
                 <rect x="1" y="1" width="58" height="46" rx="10" fill="var(--apple-muted)"/>
                 <path d="M18 47L24 56L30 47" fill="var(--apple-muted)"/>
               </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 pb-8 px-8 gap-1.5">
+              {/* 移动端同样限制在76.6%高度内 */}
+              <div className="absolute top-0 left-0 right-0 h-[76.6%] flex flex-col items-center justify-center px-6 gap-1.5">
                 {[chatRow1, chatRow2, chatRow3, chatRow4].map((row, i) => (
                   <div key={i} className="flex justify-center gap-1.5">
                     {row.map((feat) => (
-                      <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap">{feat}</span>
+                      <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap bg-[color:var(--apple-bg)]/50 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 group-hover:border-[color:var(--apple-muted)]/30 group-hover:shadow-sm group-hover:bg-[color:var(--apple-bg)]/80">{feat}</span>
                     ))}
                   </div>
                 ))}
@@ -879,16 +887,18 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
           {/* Learning Hub + 资源类型（放入文件夹图标内） */}
           <div className="flex flex-col items-center gap-2">
             <div className="relative w-[290px] h-[210px]">
-              <svg className="absolute inset-0 w-full h-full opacity-[0.10]" viewBox="0 0 48 48" fill="none" preserveAspectRatio="xMidYMid meet">
+              <svg className="absolute inset-0 w-full h-full scale-[1.2] opacity-[0.10]" viewBox="0 0 48 48" fill="none" preserveAspectRatio="xMidYMid meet">
                 <path d="M6 10C6 8.895 6.895 8 8 8H18L21 11H40C41.105 11 42 11.895 42 13V39C42 40.105 41.105 41 40 41H8C6.895 41 6 40.105 6 39V10Z" fill="#E8B849"/>
                 <path d="M6 10C6 8.895 6.895 8 8 8H17C17.552 8 18 8.448 18 9V11H6V10Z" fill="#D4A53A"/>
               </svg>
               <div className="absolute inset-0 flex items-center justify-center pt-8 px-8">
                 <div className="grid grid-cols-4 gap-x-5 gap-y-3 justify-items-center">
-                  {resourceTypes.map(({ Icon, label }) => (
-                    <div key={label} className="flex flex-col items-center gap-0.5">
-                      <Icon size={22} />
-                      <span className="text-[9px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap">{label}</span>
+                  {resourceTypes.map((item) => (
+                    <div key={item.label} className="flex flex-col items-center gap-0.5 group/item transition-transform duration-300 hover:-translate-y-0.5">
+                      <div className="rounded-lg transition-colors duration-300 group-hover/item:bg-[color:var(--apple-line)]/50">
+                        <item.Icon size={22} />
+                      </div>
+                      <span className="text-[9px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap transition-colors duration-300 group-hover/item:text-[color:var(--apple-ink)]">{item.label}</span>
                     </div>
                   ))}
                 </div>
@@ -1356,7 +1366,33 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
       className="relative min-h-screen pt-20 pb-16 flex items-center overflow-hidden lg:overflow-visible"
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[980px] h-[760px] bg-[radial-gradient(ellipse_at_center,var(--apple-glow),transparent_82%)] blur-[150px] opacity-55" />
+        {/* 1. 底层流光溢彩氛围光源 (Aurora) - 极柔和的蓝紫青色调交融 */}
+        <div className="absolute top-[0%] left-[10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.12),transparent_60%)] blur-[80px] mix-blend-plus-lighter" />
+        <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-[radial-gradient(circle_at_center,rgba(191,90,242,0.1),transparent_60%)] blur-[80px] mix-blend-plus-lighter" />
+        <div className="absolute bottom-[10%] left-[20%] w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08),transparent_60%)] blur-[100px] mix-blend-plus-lighter" />
+
+        {/* 2. 模拟一整块无边框的极透玻璃覆盖全局 */}
+        <div className="absolute inset-0 backdrop-blur-[60px] saturate-[1.2]" />
+
+        {/* 3. 苹果风大块玻璃面板边缘 (巨大的柔和曲面，带物理高光) */}
+        <div className="absolute top-[-30%] left-[-20%] right-[-20%] h-[80%] rounded-[100%] border-t border-[rgba(255,255,255,0.4)] dark:border-[rgba(255,255,255,0.2)] opacity-80"
+             style={{
+               boxShadow: 'inset 0 10px 40px -10px rgba(255,255,255,0.2)',
+               maskImage: 'radial-gradient(ellipse at top, black 25%, transparent 60%)',
+               WebkitMaskImage: 'radial-gradient(ellipse at top, black 25%, transparent 60%)'
+             }} />
+
+        {/* 4. 微妙的边缘色散 (Chromatic Dispersion) - 沿高光弧线的彩色光谱折射 */}
+        <div className="absolute top-[-30%] left-[-20%] right-[-20%] h-[80%] rounded-[100%] mix-blend-color-dodge opacity-60 dark:opacity-80"
+             style={{
+               boxShadow: 'inset 0 15px 30px -10px rgba(45,212,191,0.5), inset 0 25px 50px -15px rgba(168,85,247,0.4), inset 0 35px 70px -20px rgba(244,63,94,0.3)',
+               maskImage: 'radial-gradient(ellipse at top, black 35%, transparent 65%)',
+               WebkitMaskImage: 'radial-gradient(ellipse at top, black 35%, transparent 65%)'
+             }} />
+
+        {/* 5. 极微弱的质感噪点 */}
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] mix-blend-overlay pointer-events-none"
+             style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")' }} />
       </div>
 
       <div

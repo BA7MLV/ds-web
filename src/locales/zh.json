@@ -127,8 +127,10 @@
   "anki.templateEditorDesc": "HTML/CSS 可视化编辑与实时预览",
   "feature.mindmap.title": "知识导图",
   "feature.mindmap.desc": "思维导图、逻辑树、组织架构图等多种布局。节点编辑、搜索定位，导出 OPML/Markdown/JSON/图片。",
-  "stats.title": "为深度学习而生",
-  "stats.subtitle": "从对话入口到数据底座，前后端围绕学习闭环协同设计",
+  "stats": {
+    "title": "AI 原生的学习闭环",
+    "subtitle": "从对话入口到数据底座，前后端围绕学习闭环协同设计"
+  },
   "stats.tools": "对话入口",
   "stats.toolsDesc": "Chat V2 统一承载学习任务与协作流程",
   "stats.providers": "资源中枢",

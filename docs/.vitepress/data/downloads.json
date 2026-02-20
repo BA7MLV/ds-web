@@ -1,28 +1,28 @@
 {
-  "version": "v0.9.11",
-  "publishedAt": "2026-02-17T17:32:54Z",
-  "releaseUrl": "https://github.com/helixnow/deep-student/releases/tag/v0.9.11",
-  "generatedAt": "2026-02-18T02:12:50.929Z",
+  "version": "v0.9.13",
+  "publishedAt": "2026-02-18T16:41:28Z",
+  "releaseUrl": "https://github.com/helixnow/deep-student/releases/tag/v0.9.13",
+  "generatedAt": "2026-02-20T10:55:18.006Z",
   "platforms": {
     "macArm64": {
-      "name": "Deep.Student_0.9.11_aarch64.dmg",
-      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.11/Deep.Student_0.9.11_aarch64.dmg",
-      "sizeBytes": 48514251
+      "name": "Deep.Student_0.9.13_aarch64.dmg",
+      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.13/Deep.Student_0.9.13_aarch64.dmg",
+      "sizeBytes": 48558404
     },
     "macX64": {
-      "name": "Deep.Student_0.9.11_x64.dmg",
-      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.11/Deep.Student_0.9.11_x64.dmg",
-      "sizeBytes": 51225356
+      "name": "Deep.Student_0.9.13_x64.dmg",
+      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.13/Deep.Student_0.9.13_x64.dmg",
+      "sizeBytes": 51306227
     },
     "windowsX64": {
-      "name": "Deep.Student_0.9.11_x64-setup.exe",
-      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.11/Deep.Student_0.9.11_x64-setup.exe",
-      "sizeBytes": 38054978
+      "name": "Deep.Student_0.9.13_x64-setup.exe",
+      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.13/Deep.Student_0.9.13_x64-setup.exe",
+      "sizeBytes": 38121880
     },
     "androidArm64": {
-      "name": "Deep.Student_0.9.11_arm64.apk",
-      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.11/Deep.Student_0.9.11_arm64.apk",
-      "sizeBytes": 115500339
+      "name": "Deep.Student_0.9.13_arm64.apk",
+      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.13/Deep.Student_0.9.13_arm64.apk",
+      "sizeBytes": 115615027
     }
   }
 }
