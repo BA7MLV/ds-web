@@ -1789,13 +1789,21 @@ const DownloadPage = ({ onBack = () => {} }) => {
                   <span>{t('download.size')} {platform.size}</span>
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 flex flex-wrap items-center gap-2">
                   <a
                     href={platform.ctaHref}
                     className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-primary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-btn-primary-text)] leading-snug text-center whitespace-normal hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-95 transition-all shadow-[var(--apple-shadow-sm)]"
                   >
 {platform.ctaLabel}
                   </a>
+                  {platform.mirrorHref ? (
+                    <a
+                      href={platform.mirrorHref}
+                      className="focus-ring inline-flex items-center justify-center gap-1.5 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-ink)] leading-snug text-center whitespace-normal hover:bg-[color:var(--apple-btn-secondary-bg-hover,var(--apple-card))] active:scale-95 transition-all"
+                    >
+                      {t('download.mirrorDownload', '镜像下载')}
+                    </a>
+                  ) : null}
                 </div>
               </article>
           ))}

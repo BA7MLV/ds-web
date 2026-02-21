@@ -193,6 +193,7 @@
   "download.system": "系統",
   "download.downloadDmg": "下載 DMG",
   "download.downloadExe": "下載 EXE",
+  "download.mirrorDownload": "鏡像下載",
   "download.requirements.macos": "macOS 13+，Apple Silicon / Intel",
   "download.requirements.windows": "Windows 11 / 10 22H2+",
   "download.description.macos": "全功能版本：智慧對話、學習資源管理、Anki 製卡、題庫練習、作文批改、知識導圖、翻譯工作台等。Apple Silicon 與 Intel 雙架構優化。",

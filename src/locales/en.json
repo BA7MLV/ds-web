@@ -193,6 +193,7 @@
   "download.system": "System",
   "download.downloadDmg": "Download DMG",
   "download.downloadExe": "Download EXE",
+  "download.mirrorDownload": "Mirror",
   "download.requirements.macos": "macOS 13+, Apple Silicon / Intel",
   "download.requirements.windows": "Windows 11 / 10 22H2+",
   "download.description.macos": "Full-featured: AI Chat, Learning Hub, Anki CardForge, Q-Bank, Essay Grading, Knowledge Mindmap, Translation Workbench & more. Optimized for Apple Silicon & Intel.",

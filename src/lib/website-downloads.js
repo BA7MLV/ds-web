@@ -28,7 +28,8 @@ function buildAssetCard(spec, asset, version, releaseUrl, labels) {
     requirements: spec.requirements,
     description: spec.description,
     ctaLabel: spec.ctaLabel,
-    ctaHref: resolveLink(asset, releaseUrl)
+    ctaHref: resolveLink(asset, releaseUrl),
+    mirrorHref: asset?.mirrorUrl || null
   }
 }
 
