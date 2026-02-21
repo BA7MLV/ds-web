@@ -108,8 +108,8 @@
       (function () {
         var id = '%VITE_LA_51_ID%'
         var ck = '%VITE_LA_51_CK%'
-        if (!id || id === '%VITE_LA_51_ID%' || id === 'undefined') return
-        if (!ck || ck === '%VITE_LA_51_CK%' || ck === 'undefined') ck = id
+        if (!id || id.indexOf('%') !== -1 || id === 'undefined') return
+        if (!ck || ck.indexOf('%') !== -1 || ck === 'undefined') ck = id
 
         if (window.LA && window.LA.init) {
           window.LA.init({ id: id, ck: ck, hashMode: true })
