@@ -83,22 +83,18 @@ export const NetworkProvider = ({ children }) => {
     <NetworkContext.Provider value={value}>
       {children}
       <NetworkToast 
-        isOnline={isOnline}
         showOffline={showOfflineToast}
         showBackOnline={showBackOnlineToast}
         onDismiss={dismissOfflineToast}
-        connectionType={connectionType}
       />
     </NetworkContext.Provider>
   )
 }
 
 const NetworkToast = ({ 
-  isOnline, 
   showOffline, 
   showBackOnline, 
   onDismiss, 
-  connectionType 
 }) => {
   if (!showOffline && !showBackOnline) return null
 

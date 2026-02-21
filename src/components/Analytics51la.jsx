@@ -10,17 +10,21 @@ export const Analytics51la = () => {
     }
 
     if (window.LA && window.LA.init) return
+    if (document.getElementById('LA_COLLECT')) return
 
     const script = document.createElement('script')
     script.id = 'LA_COLLECT'
     script.charset = 'UTF-8'
-    script.src = '//sdk.51.la/js-sdk-pro.min.js'
-    
+    script.async = true
+    script.src = 'https://sdk.51.la/js-sdk-pro.min.js'
+     
     script.onload = () => {
       if (window.LA && window.LA.init) {
         window.LA.init({
           id: LA_51_ID,
-          ck: LA_51_CK || LA_51_ID
+          ck: LA_51_CK || LA_51_ID,
+          autoTrack: true,
+          hashMode: true,
         })
         console.log('[Analytics] 51.la initialized')
       }

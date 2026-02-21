@@ -83,7 +83,9 @@ const LazyImageWithFallback = forwardRef(({
       if ('decode' in imgElementRef.current) {
         try {
           await imgElementRef.current.decode()
-        } catch {}
+        } catch (error) {
+          void error
+        }
       }
     }
     
