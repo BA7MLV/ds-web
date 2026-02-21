@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-import { Analytics51la } from './components/Analytics51la'
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
 import { MobileNavMenu } from './components/mobile-nav-menu'
@@ -986,7 +985,6 @@ const App = () => {
 
   return (
     <>
-      <Analytics51la />
       <div className="min-h-screen min-h-[100svh] bg-transparent text-[color:var(--apple-ink)] font-sans selection:bg-black selection:text-white">
         {isDownloadPage ? (
         <DownloadPage onBack={handleDownloadClose} />

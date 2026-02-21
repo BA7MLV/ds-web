@@ -102,6 +102,29 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <script charset="UTF-8" id="LA_COLLECT" src="https://sdk.51.la/js-sdk-pro.min.js"></script>
+    <script>
+      (function () {
+        var id = '%VITE_LA_51_ID%'
+        var ck = '%VITE_LA_51_CK%'
+        if (!id || id === '%VITE_LA_51_ID%' || id === 'undefined') return
+        if (!ck || ck === '%VITE_LA_51_CK%' || ck === 'undefined') ck = id
+
+        if (window.LA && window.LA.init) {
+          window.LA.init({ id: id, ck: ck, hashMode: true })
+          return
+        }
+
+        var script = document.getElementById('LA_COLLECT')
+        if (!script || !script.addEventListener) return
+        script.addEventListener('load', function () {
+          if (window.LA && window.LA.init) {
+            window.LA.init({ id: id, ck: ck, hashMode: true })
+          }
+        })
+      })()
+    </script>
     <title>您的终身学习空间｜DeepStudent</title>
   </head>
   <body>
