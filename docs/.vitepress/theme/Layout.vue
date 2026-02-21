@@ -1,11 +1,9 @@
 <script setup>
 import DefaultTheme from 'vitepress/theme'
-import Analytics51la from './Analytics51la.vue'
 import LastAuthor from './components/LastAuthor.vue'
 </script>
 
 <template>
-  <Analytics51la />
   <DefaultTheme.Layout>
     <template #doc-footer-before>
       <LastAuthor />
@@ -79,7 +77,22 @@ import LastAuthor from './components/LastAuthor.vue'
   display: none !important;
 }
 
-.VPSidebarItem .button[aria-expanded] {
+/*
+ * 默认主题中，“分组标题”本质也是一个 VPSidebarItem：
+ * - 没有 link
+ * - 有 children（items）
+ * 点击标题会触发 toggle 折叠。
+ * 这里禁用该交互，并且即使被标记为 collapsed（可能来自持久化状态）也强制展开。
+ */
+.VPSidebarItem.collapsible:not(.is-link) > .item {
   pointer-events: none;
+}
+
+.VPSidebarItem.collapsed > .items {
+  display: block !important;
+}
+
+.VPSidebarItem.collapsed.level-0 {
+  padding-bottom: 24px;
 }
 </style>
