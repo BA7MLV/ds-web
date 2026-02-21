@@ -1186,12 +1186,13 @@ const App = () => {
                 align="right"
                 motionScale={motionScale}
                 subFeatures={[
-                  { labelKey: 'essay.types', descKey: 'essay.typesDesc', imgSrc: '/img/example/作文批改-1.png' },
-                  { labelKey: 'essay.detail', descKey: 'essay.detailDesc', imgSrc: '/img/example/作文-2.png' },
+                  { labelKey: 'essay.types', descKey: 'essay.typesDesc', imgSrc: '/img/example/作文-1.png' },
+                  { labelKey: 'essay.polish', descKey: 'essay.polishDesc', imgSrc: '/img/example/作文-3.png' },
+                  { labelKey: 'essay.settings', descKey: 'essay.settingsDesc', imgSrc: '/img/example/作文-4.png' },
                 ]}
               >
                 <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <OptimizedImage src="/img/example/作文-1.png" alt="Essay Grading" className="w-full h-auto object-cover" />
+                  <OptimizedImage src="/img/example/作文-2.png" alt="Essay Grading" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
 
