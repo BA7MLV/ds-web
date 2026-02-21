@@ -60,8 +60,13 @@ const docsRootDir = fileURLToPath(new URL('../', import.meta.url))
 const repoRootDir = resolve(docsRootDir, '..')
 const mode = process.env.NODE_ENV ?? 'development'
 const env = loadEnv(mode, repoRootDir, '')
-const LA_ID = env.VITE_LA_51_ID || env.LA_ID
-const LA_CK = env.VITE_LA_51_CK || env.LA_CK || LA_ID
+const LA_ID = process.env.VITE_LA_51_ID || process.env.LA_ID || env.VITE_LA_51_ID || env.LA_ID
+const LA_CK =
+  process.env.VITE_LA_51_CK ||
+  process.env.LA_CK ||
+  env.VITE_LA_51_CK ||
+  env.LA_CK ||
+  LA_ID
 
 const gitEditorsCache = new Map()
 
@@ -128,7 +133,7 @@ export default withMermaid(defineConfig({
               src: 'https://sdk.51.la/js-sdk-pro.min.js',
             },
           ],
-          ['script', {}, `LA.init({id:"${LA_ID}",ck:"${LA_CK}",autoTrack:true,hashMode:true});`],
+          ['script', {}, `LA.init({id:"${LA_ID}",ck:"${LA_CK}",hashMode:true});`],
         ]
       : []),
   ],
