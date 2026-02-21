@@ -428,6 +428,6 @@ sudo xattr -r -d com.apple.quarantine /Applications/DeepStudent.app
 
 ## 安装后建议
 
-1. 先完成 [快速入门](./start.md) 的 API 配置
-2. 导入一份真实学习资料到 Learning Hub
-3. 在 Chat V2 引用该资源并完成一次完整问答
+1. 先完成 [快速入门](./user-guide/00-quick-start.md) 的模型服务配置
+2. 导入一份真实学习资料到学习资源中心
+3. 在智能对话 (Chat V2) 引用该资源并完成一次完整问答
