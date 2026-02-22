@@ -204,6 +204,36 @@ export default withMermaid(defineConfig({
       themeConfig: {
         lastUpdatedText: '最后更新时间'
       }
+    },
+    en: {
+      label: 'English',
+      lang: 'en-US',
+      link: '/en/',
+      themeConfig: {
+        nav: [
+          { text: 'Docs', link: '/en/' },
+          { text: 'Website', link: '/../', target: '_self' },
+        ],
+        sidebar: {
+          '/en/': [
+            {
+              text: 'DeepStudent',
+              collapsed: false,
+              items: [{ text: 'Home', link: '/en/' }],
+            },
+          ],
+        },
+        outline: {
+          level: [2, 3],
+          label: 'On this page',
+        },
+        sidebarMenuLabel: 'Menu',
+        lastUpdatedText: 'Last updated',
+        editLink: {
+          pattern: 'https://github.com/BA7MLV/ds-web/edit/main/docs/:path',
+          text: 'Edit this page on GitHub',
+        },
+      }
     }
   },
   // 添加默认语言
