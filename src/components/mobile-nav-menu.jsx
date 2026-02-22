@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { useLocale } from './locale-toggle'
+import { LocaleSlider, useLocale } from './locale-toggle'
 
 export const MobileNavMenu = ({ onDownload = () => {} }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -9,6 +9,9 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
   const scrollYRef = useRef(0)
   const previousBodyStylesRef = useRef(null)
   const previousHtmlStylesRef = useRef(null)
+  const triggerRef = useRef(null)
+  const overlayRef = useRef(null)
+  const closeButtonRef = useRef(null)
 
   useEffect(() => {
     setMounted(true)
@@ -19,6 +22,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
 
     const body = document.body
     const html = document.documentElement
+    const triggerEl = triggerRef.current
     scrollYRef.current = window.scrollY || window.pageYOffset || 0
     previousBodyStylesRef.current = {
       position: body.style.position,
@@ -36,10 +40,6 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
       overscrollBehavior: html.style.overscrollBehavior,
     }
 
-    const preventScroll = (event) => {
-      event.preventDefault()
-    }
-
     body.style.position = 'fixed'
     body.style.top = `-${scrollYRef.current}px`
     body.style.left = '0'
@@ -53,12 +53,50 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
     html.style.touchAction = 'none'
     html.style.overscrollBehavior = 'none'
 
-    window.addEventListener('wheel', preventScroll, { passive: false })
-    window.addEventListener('touchmove', preventScroll, { passive: false })
+    const getFocusableElements = () => {
+      const root = overlayRef.current
+      if (!root) return []
+      return Array.from(
+        root.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+      )
+    }
+
+    const focusInitial = () => {
+      if (closeButtonRef.current) {
+        closeButtonRef.current.focus()
+        return
+      }
+      const focusables = getFocusableElements()
+      if (focusables.length) focusables[0].focus()
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        setIsOpen(false)
+        return
+      }
+      if (event.key !== 'Tab') return
+      const focusables = getFocusableElements()
+      if (!focusables.length) return
+      const first = focusables[0]
+      const last = focusables[focusables.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    focusInitial()
+    window.addEventListener('keydown', handleKeyDown)
 
     return () => {
-      window.removeEventListener('wheel', preventScroll)
-      window.removeEventListener('touchmove', preventScroll)
+      window.removeEventListener('keydown', handleKeyDown)
 
       if (previousBodyStylesRef.current) {
         body.style.position = previousBodyStylesRef.current.position
@@ -78,6 +116,8 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
       }
 
       window.scrollTo(0, scrollYRef.current)
+
+      if (triggerEl?.focus) triggerEl.focus()
     }
   }, [isOpen])
 
@@ -100,7 +140,11 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
 
   const menuOverlay = isOpen && mounted ? (
     <div
-      className="fixed inset-0 z-[99999] md:hidden"
+      ref={overlayRef}
+      className="fixed inset-0 z-overlay md:hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label={t('nav.mobileMenu', '导航菜单')}
       style={{
         animation: 'fadeInMenu 0.2s ease-out',
       }}
@@ -112,24 +156,21 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
         aria-label="关闭菜单"
       />
       <div
-        className="relative flex flex-col h-full overflow-hidden"
+        className="relative flex flex-col h-full overflow-y-auto"
         style={{
           paddingTop: 'calc(var(--sat) + 4.25rem)',
           paddingRight: 'max(1.5rem, var(--sar))',
           paddingBottom: 'max(1.5rem, var(--sab))',
           paddingLeft: 'max(1.5rem, var(--sal))',
-          touchAction: 'none',
-          overscrollBehavior: 'none',
         }}
-        onWheel={(event) => event.preventDefault()}
-        onTouchMove={(event) => event.preventDefault()}
       >
         <button
           type="button"
           onClick={() => setIsOpen(false)}
-          className="absolute z-10 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--apple-card)] text-[color:var(--apple-ink)] shadow-sm border border-[color:var(--apple-line)] hover:bg-[color:var(--apple-card-hover)] transition-colors"
+          className="focus-ring absolute z-10 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--apple-card)] text-[color:var(--apple-ink)] shadow-sm border border-[color:var(--apple-line)] hover:bg-[color:var(--apple-card-hover)] transition-colors"
           style={{ top: 'calc(var(--sat) + 1rem)', right: '1.5rem' }}
           aria-label="关闭菜单"
+          ref={closeButtonRef}
         >
           <svg
             viewBox="0 0 24 24"
@@ -144,6 +185,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
             <path d="m6 6 12 12" />
           </svg>
         </button>
+
         <nav className="flex flex-col gap-2 mt-2">
           {navItems.map((item) => (
             <a
@@ -160,12 +202,17 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
             </a>
           ))}
         </nav>
+
+        <div className="mt-6">
+          <LocaleSlider compact className="w-full max-w-sm" />
+        </div>
+
         <div className="mt-auto pt-6">
           <a
             href="https://github.com/helixnow/deep-student"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-[color:var(--apple-muted)] dark:hover:bg-white/10 dark:hover:text-[color:var(--apple-ink)]"
+            className="flex items-center gap-3 rounded-xl px-4 py-3 text-[color:var(--apple-muted)] transition-colors hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-white/10 dark:hover:text-[color:var(--apple-ink)]"
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
               <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -182,7 +229,8 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="relative z-[99999] flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg bg-transparent text-slate-900 transition-opacity hover:opacity-70 dark:text-[color:var(--apple-ink)]"
+        ref={triggerRef}
+        className="focus-ring relative flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg bg-transparent text-slate-900 transition-opacity hover:opacity-70 dark:text-[color:var(--apple-ink)]"
         aria-label={isOpen ? '关闭菜单' : '打开菜单'}
         aria-expanded={isOpen}
       >
