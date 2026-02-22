@@ -4,6 +4,8 @@ import { LocaleToggle, useLocale } from './components/locale-toggle'
 import { MobileNavMenu } from './components/mobile-nav-menu'
 import sharedDownloads from './data/downloads.json'
 import { buildWebsiteDownloads } from './lib/website-downloads'
+import { getImageRequestHints } from './lib/image-loading'
+import { subscribeToMediaQueryChange } from './lib/media-query-subscribe'
 import {
   detectSystemProfile,
   getPreferredPlatformTab,
@@ -283,12 +285,7 @@ const useResponsiveMotion = () => {
     update()
 
     const attach = (query) => {
-      if (query.addEventListener) {
-        query.addEventListener('change', update)
-        return () => query.removeEventListener('change', update)
-      }
-      query.addListener(update)
-      return () => query.removeListener(update)
+      return subscribeToMediaQueryChange(query, update)
     }
 
     const detachMotion = attach(motionQuery)
@@ -525,15 +522,6 @@ const ArchMemoryIcon = ({ size = 32 }) => (
     <circle cx="7" cy="17" r="2.2" fill={archPalette.purple.fg} stroke={archPalette.purple.border} strokeWidth="0.6"/>
     <circle cx="17" cy="9" r="1.8" fill={archPalette.purple.fg} fillOpacity="0.65" stroke={archPalette.purple.border} strokeWidth="0.6"/>
     <circle cx="17" cy="17" r="1.8" fill={archPalette.purple.fg} fillOpacity="0.65" stroke={archPalette.purple.border} strokeWidth="0.6"/>
-  </svg>
-)
-
-const ArchFolderIcon = ({ size = 32 }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
-    <path d="M6 10C6 8.895 6.895 8 8 8H18L21 11H40C41.105 11 42 11.895 42 13V39C42 40.105 41.105 41 40 41H8C6.895 41 6 40.105 6 39V10Z" fill="#E8B849"/>
-    <path d="M6 10C6 8.895 6.895 8 8 8H17C17.552 8 18 8.448 18 9V11H6V10Z" fill="#D4A53A"/>
-    <path d="M6 15C6 13.895 6.895 13 8 13H40C41.105 13 42 13.895 42 15V39C42 40.105 41.105 41 40 41H8C6.895 41 6 40.105 6 39V15Z" fill="#F5C85C"/>
-    <path d="M7 15C7 14.448 7.448 14 8 14H40C40.552 14 41 14.448 41 15" stroke="white" strokeWidth="1" strokeOpacity="0.4" fill="none"/>
   </svg>
 )
 
@@ -985,7 +973,7 @@ const App = () => {
 
   return (
     <>
-      <div className="min-h-screen min-h-[100svh] bg-transparent text-[color:var(--apple-ink)] font-sans selection:bg-black selection:text-white">
+      <div className="min-h-screen min-h-[100svh] bg-transparent text-[color:var(--apple-ink)] font-sans">
         {isDownloadPage ? (
         <DownloadPage onBack={handleDownloadClose} />
       ) : (
@@ -1003,7 +991,7 @@ const App = () => {
             }`}
             style={motionScale > 0 ? { animationDelay: '0.18s' } : undefined}
           >
-            <div className="space-y-[6.854rem] sm:space-y-[11.09rem] lg:space-y-[17.944rem] pt-[4.236rem] sm:pt-[6.854rem]">
+            <div className="space-y-[var(--space-section-stack)] pt-[var(--space-section-top)]">
               <FeatureSection
                 id="feature-free-models"
                 title={t('freeModels.title', '免费模型，开箱即用')}
@@ -1033,9 +1021,7 @@ const App = () => {
                   { labelKey: 'agent.session', descKey: 'agent.sessionDesc', imgSrc: '/img/example/会话管理.png' },
                 ]}
               >
-                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
-                  <OptimizedImage src="/img/example/软件主页图.png" alt="AI Agent Interface" className="w-full h-auto object-cover" />
-                </div>
+                <OptimizedImage src="/img/example/软件主页图.png" alt="AI Agent Interface" className="w-full h-auto object-cover" />
               </FeatureSection>
 
               {/* Module 2: Anki 智能制卡 */}
@@ -1249,7 +1235,7 @@ const App = () => {
 const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
   return (
-    <nav className="sticky top-0 z-[10010] pt-safe bg-white/75 backdrop-blur-[20px] backdrop-saturate-[180%] dark:bg-[color:var(--apple-nav-bg)]">
+    <nav className="sticky top-0 z-nav pt-safe bg-white/75 backdrop-blur-[20px] backdrop-saturate-[180%] dark:bg-[color:var(--apple-nav-bg)]">
       <div className="max-w-6xl mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-slate-900 transition-opacity hover:opacity-80 dark:text-[color:var(--apple-ink)]">
           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" loading="lazy" decoding="async" />
@@ -1257,7 +1243,7 @@ const TopNav = ({ onDownload = () => {} }) => {
         </a>
         <div className="flex items-center gap-4">
           {/* Desktop navigation links */}
-          <div className="hidden items-center gap-3 text-[11px] font-normal text-slate-500 lg:flex lg:gap-4 lg:text-[12px] dark:text-[color:var(--apple-muted)]">
+          <div className="hidden items-center gap-3 text-[11px] font-normal text-[color:var(--apple-muted)] lg:flex lg:gap-4 lg:text-[12px]">
             <a href="#features" className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]">
               {t('nav.features')}
             </a>
@@ -1299,6 +1285,8 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   const shouldAnimate = motionScale > 0
   const [activePreviewId, setActivePreviewId] = useState(heroPreviewItems[0].id)
   const activePreviewItem = heroPreviewItems.find(item => item.id === activePreviewId) || heroPreviewItems[0]
+  const activePreviewIndex = Math.max(0, heroPreviewItems.findIndex(item => item.id === activePreviewId))
+  const previewCount = heroPreviewItems.length
   const [isSubtextVisible, setIsSubtextVisible] = useState(true)
   const [isSubtextAnimating, setIsSubtextAnimating] = useState(false)
   const subtextSwapTimerRef = useRef(null)
@@ -1360,38 +1348,45 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
     }, SUBTEXT_FADE_DURATION_MS * 2)
   }
 
+  const subtextA11yStatus = isChinese
+    ? `当前第 ${activePreviewIndex + 1} 项 / 共 ${previewCount} 项，可切换`
+    : `Item ${activePreviewIndex + 1} of ${previewCount}. Press to switch.`
+
   return (
     <header
       className="relative min-h-screen pt-20 pb-16 flex items-center overflow-hidden lg:overflow-visible"
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
-        {/* 1. 底层流光溢彩氛围光源 (Aurora) - 极柔和的蓝紫青色调交融 */}
-        <div className="absolute top-[0%] left-[10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.12),transparent_60%)] blur-[80px] mix-blend-plus-lighter" />
-        <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-[radial-gradient(circle_at_center,rgba(191,90,242,0.1),transparent_60%)] blur-[80px] mix-blend-plus-lighter" />
-        <div className="absolute bottom-[10%] left-[20%] w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08),transparent_60%)] blur-[100px] mix-blend-plus-lighter" />
+        <div className="absolute top-[-10%] left-[12%] w-[56vw] h-[56vw] max-w-[680px] max-h-[680px] bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.12),transparent_60%)] blur-[84px] mix-blend-plus-lighter" />
+        <div className="absolute top-[-22%] right-[-10%] w-[52vw] h-[52vw] max-w-[760px] max-h-[760px] bg-[radial-gradient(circle_at_center,rgba(120,119,126,0.08),transparent_62%)] blur-[96px] opacity-70" />
 
-        {/* 2. 模拟一整块无边框的极透玻璃覆盖全局 */}
-        <div className="absolute inset-0 backdrop-blur-[60px] saturate-[1.2]" />
+        <div className="absolute inset-0 backdrop-blur-2xl backdrop-saturate-150" />
 
-        {/* 3. 苹果风大块玻璃面板边缘 (巨大的柔和曲面，带物理高光) */}
-        <div className="absolute top-[-30%] left-[-20%] right-[-20%] h-[80%] rounded-[100%] border-t border-[rgba(255,255,255,0.4)] dark:border-[rgba(255,255,255,0.2)] opacity-80"
-             style={{
-               boxShadow: 'inset 0 10px 40px -10px rgba(255,255,255,0.2)',
-               maskImage: 'radial-gradient(ellipse at top, black 25%, transparent 60%)',
-               WebkitMaskImage: 'radial-gradient(ellipse at top, black 25%, transparent 60%)'
-             }} />
+        <div
+          className="absolute top-[-30%] left-[-20%] right-[-20%] h-[80%] rounded-[100%] border-t border-[rgba(255,255,255,0.4)] dark:border-[rgba(255,255,255,0.2)] opacity-80"
+          style={{
+            boxShadow: 'inset 0 10px 40px -10px rgba(255,255,255,0.2)',
+            maskImage: 'radial-gradient(ellipse at top, black 25%, transparent 60%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at top, black 25%, transparent 60%)',
+          }}
+        />
 
-        {/* 4. 微妙的边缘色散 (Chromatic Dispersion) - 沿高光弧线的彩色光谱折射 */}
-        <div className="absolute top-[-30%] left-[-20%] right-[-20%] h-[80%] rounded-[100%] mix-blend-color-dodge opacity-60 dark:opacity-80"
-             style={{
-               boxShadow: 'inset 0 15px 30px -10px rgba(45,212,191,0.5), inset 0 25px 50px -15px rgba(168,85,247,0.4), inset 0 35px 70px -20px rgba(244,63,94,0.3)',
-               maskImage: 'radial-gradient(ellipse at top, black 35%, transparent 65%)',
-               WebkitMaskImage: 'radial-gradient(ellipse at top, black 35%, transparent 65%)'
-             }} />
+        <div
+          className="absolute top-[-30%] left-[-20%] right-[-20%] h-[80%] rounded-[100%] opacity-35 dark:opacity-45"
+          style={{
+            boxShadow: 'inset 0 18px 40px -14px rgba(255,255,255,0.22), inset 0 38px 86px -24px rgba(255,255,255,0.10)',
+            maskImage: 'radial-gradient(ellipse at top, black 32%, transparent 66%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at top, black 32%, transparent 66%)',
+          }}
+        />
 
-        {/* 5. 极微弱的质感噪点 */}
-        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] mix-blend-overlay pointer-events-none"
-             style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")' }} />
+        <div
+          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] mix-blend-overlay pointer-events-none"
+          style={{
+            backgroundImage:
+              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")',
+          }}
+        />
       </div>
 
       <div
@@ -1412,8 +1407,8 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               type="button"
               onClick={handleSubtextClick}
               disabled={isSubtextAnimating}
-              aria-label={t(activePreviewItem.subtextKey)}
-              className="text-left mb-8 cursor-pointer transition-opacity duration-150 hover:opacity-85 disabled:cursor-default disabled:opacity-100"
+              aria-label={`${t(activePreviewItem.subtextKey)}。${subtextA11yStatus}`}
+              className="focus-ring text-left mb-8 cursor-pointer rounded-lg transition-opacity duration-150 hover:opacity-85 disabled:cursor-default disabled:opacity-100"
             >
               <span className="relative inline-flex min-h-[3.2em] sm:min-h-[2.4em] items-start overflow-visible align-top">
                 <span
@@ -1424,6 +1419,8 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
                   {t(activePreviewItem.subtextKey)}
                 </span>
               </span>
+
+              <span className="sr-only">{subtextA11yStatus}</span>
             </button>
             
             <div className="flex flex-col sm:flex-row gap-3 mb-10 w-full sm:w-auto">
@@ -1614,6 +1611,7 @@ const FreeModelsCallout = () => {
 
 const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]' }) => {
   const heroImageSrc = '/img/example/软件主页图.png'
+  const heroHints = getImageRequestHints({ role: 'hero' })
 
   return (
     <div
@@ -1628,9 +1626,9 @@ const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max
             src={heroImageSrc}
             alt="DeepStudent 主页面预览"
             className="block w-full h-auto object-contain"
-            loading="eager"
+            loading={heroHints.loading}
             decoding="async"
-            fetchPriority="high"
+            fetchPriority={heroHints.fetchPriority}
             sizes="(min-width: 1536px) 66vw, (min-width: 1024px) 72vw, 96vw"
             draggable="false"
           />
@@ -1712,7 +1710,7 @@ const DownloadPage = ({ onBack = () => {} }) => {
   const updatedAtRaw = sharedDownloads?.generatedAt || sharedDownloads?.publishedAt
   const releaseUpdatedAt = formatReleaseDate(updatedAtRaw, locale)
   return (
-    <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[6.854rem] sm:pb-[11.09rem]">
+    <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[var(--space-page-bottom)]">
       <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl pt-safe">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
           <button
@@ -1729,7 +1727,7 @@ const DownloadPage = ({ onBack = () => {} }) => {
         </div>
       </div>
 
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-[3.236rem] sm:pt-[4.236rem] md:pt-[5.854rem] text-center">
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-[var(--space-section-top)] text-center">
         <h1 className="text-[2.2rem] sm:text-[3.2rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] font-display">
           {t('download.title', 'DeepStudent {version}', { version: releaseVersion })}
         </h1>
@@ -1738,7 +1736,7 @@ const DownloadPage = ({ onBack = () => {} }) => {
         </p>
       </section>
 
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-[3.236rem] sm:pt-[4.236rem]">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-[var(--space-section-top)]">
         <h2 className="text-[1.3rem] sm:text-[1.9rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] font-display">
           {t('download.selectPlatform')}
         </h2>
@@ -1816,6 +1814,7 @@ const DownloadPage = ({ onBack = () => {} }) => {
 const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
   const shouldAnimate = motionScale > 0
   const { t } = useLocale()
+
   const faqItems = [
     {
       id: 'open-source',
@@ -1870,8 +1869,10 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
             className="group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)] overflow-hidden transition-all duration-300 hover:shadow-[var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:shadow-[var(--apple-shadow-lg)]"
           >
             <summary className="focus-ring flex items-center justify-between gap-4 p-[1.5rem] sm:p-[1.75rem] cursor-pointer select-none [&::-webkit-details-marker]:hidden">
-              <span className="min-w-0 text-[15px] sm:text-[17px] font-semibold text-[color:var(--apple-ink)] tracking-tight break-words">
-                {item.question}
+              <span className="min-w-0">
+                <span className="min-w-0 text-[15px] sm:text-[17px] font-semibold text-[color:var(--apple-ink)] tracking-tight break-words">
+                  {item.question}
+                </span>
               </span>
               <span
                 className="text-[color:var(--apple-muted)] transition-transform duration-300 ease-apple group-open:rotate-180 inline-flex items-center justify-center w-8 h-8 rounded-full bg-[color:var(--apple-btn-secondary-bg)] group-hover:bg-[color:var(--apple-btn-secondary-bg-hover)]"
@@ -2037,6 +2038,7 @@ const StickyImageFeatureGroup = ({ items, t }) => {
   const leadingMarkerRef = useRef(null)
   const markerRefs = useRef([])
   const mediaFrameRef = useRef(null)
+  const deferredImageHints = getImageRequestHints({ role: 'feature' })
 
   // 使用统一滚动边界判定激活项：
   // 当「图片中心」对齐到「span 标记上方 1/4 图片高度」时触发切换
@@ -2131,8 +2133,8 @@ const StickyImageFeatureGroup = ({ items, t }) => {
                         src={sf.imgSrc}
                         alt={t(sf.labelKey)}
                         className="w-auto h-auto max-w-full max-h-full rounded-[6px] shadow-2xl"
-                        loading={i === 0 ? 'eager' : 'lazy'}
-                        fetchPriority={i === 0 ? 'high' : 'auto'}
+                        loading={deferredImageHints.loading}
+                        fetchPriority={deferredImageHints.fetchPriority}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center relative">
@@ -2344,7 +2346,7 @@ const PolicyModal = ({ type, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center px-4"
+      className="fixed inset-0 z-modal flex items-center justify-center px-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
