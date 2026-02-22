@@ -1,0 +1,33 @@
+Run: 2026-02-22T00:41:48+0800
+Command: node --test
+
+✔ detectSystemProfile detects macOS arm64 from userAgentData (1.343667ms)
+✔ detectSystemProfile detects macOS x64 from x86_64 userAgent text (1.878667ms)
+✔ detectSystemProfile defaults to arm64 for ambiguous macOS UA (0.262167ms)
+✔ getRecommendedCardId maps profile to correct card id (0.206ms)
+✔ getPreferredPlatformTab maps profile to tabs (0.0855ms)
+✔ website downloads snapshot exists and is valid JSON (3.381084ms)
+✔ hero image is eager + high priority (0.588166ms)
+✔ non-hero images are lazy + auto priority (0.062833ms)
+✔ subscribeToMediaQueryChange uses addEventListener/removeEventListener when available (1.679708ms)
+✔ subscribeToMediaQueryChange is a noop when addEventListener is missing (0.291333ms)
+✔ buildDownloadsData maps release assets and metadata (4.084375ms)
+✔ buildDownloadsData returns null platform entries when assets are missing (0.081084ms)
+✔ SunsetDetector 初始化经纬度（默认/自定义） (0.979459ms)
+✔ SunsetDetector minutesToTime 处理负值与超过 24 小时 (0.943125ms)
+✔ SunsetDetector formatTime 格式化为 HH:MM (0.074417ms)
+✔ SunsetDetector getDayOfYear 在闰年返回正确序数 (0.988792ms)
+✔ SunsetDetector 计算日出日落时间（北京，粗略范围） (0.97875ms)
+✔ SunsetDetector 同日调用命中缓存（sunrise/sunset 值一致） (0.216958ms)
+✔ SunsetDetector getTimeUntilNextTransition 返回正数与合法事件类型 (0.0925ms)
+✔ buildWebsiteDownloads maps each architecture asset into independent cards (0.458042ms)
+✔ buildWebsiteDownloads keeps available cards and does not collapse architectures (0.079667ms)
+✔ buildWebsiteDownloads returns a single fallback card when no assets exist (0.063417ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 161.336334

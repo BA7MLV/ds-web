@@ -1,0 +1,9 @@
+Run: 2026-02-22T00:41:48+0800
+Command: npm run preview -- --port 5187 --strictPort --host 127.0.0.1
+
+Smoke check:
+- GET / -> 200
+- GET /?view=download -> 200
+
+Notes:
+- baseline-browser-mapping warning printed (non-blocking)

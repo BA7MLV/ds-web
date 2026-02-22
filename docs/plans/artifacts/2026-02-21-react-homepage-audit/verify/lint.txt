@@ -1,0 +1,5 @@
+Run: 2026-02-22T00:41:48+0800
+Command: npm run lint -- --max-warnings=0
+
+> ds-web@0.0.0 lint
+> eslint . --max-warnings=0
