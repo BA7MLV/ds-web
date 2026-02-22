@@ -24,11 +24,13 @@ test('buildDownloadsData maps release assets and metadata', () => {
   assert.deepEqual(result.platforms.macArm64, {
     name: 'Deep.Student_0.9.2_aarch64.dmg',
     url: 'https://example.com/mac-arm.dmg',
+    mirrorUrl: 'https://download.deepstudent.cn/releases/v0.9.2/Deep.Student_0.9.2_aarch64.dmg',
     sizeBytes: 11
   })
   assert.deepEqual(result.platforms.windowsX64, {
     name: 'Deep.Student_0.9.2_x64-setup.exe',
     url: 'https://example.com/win.exe',
+    mirrorUrl: 'https://download.deepstudent.cn/releases/v0.9.2/Deep.Student_0.9.2_x64-setup.exe',
     sizeBytes: 33
   })
 })

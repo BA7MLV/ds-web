@@ -42,6 +42,14 @@ async function fetchLatestRelease() {
 async function syncReleaseDownloads() {
   try {
     const release = await fetchLatestRelease()
+
+    // Some GitHub "latest" releases can be published before assets are uploaded.
+    // In that case, keeping the last known-good downloads metadata is better than
+    // overwriting it with empty/null entries.
+    if (!Array.isArray(release?.assets) || release.assets.length === 0) {
+      throw new Error('Latest release has no assets')
+    }
+
     const data = buildDownloadsData(release)
     await writeDownloadsFile(DOCS_OUTPUT_PATH, data)
     await writeDownloadsFile(WEBSITE_OUTPUT_PATH, data)
