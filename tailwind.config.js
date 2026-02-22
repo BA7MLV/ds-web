@@ -4,6 +4,12 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      zIndex: {
+        noise: '20',
+        nav: '40',
+        overlay: '50',
+        modal: '60',
+      },
       fontFamily: {
         sans: [
           '"Noto Sans SC"',
