@@ -1,12 +1,14 @@
-import { useCallback, useSyncExternalStore } from 'react'
+import { useCallback, useId, useSyncExternalStore } from 'react'
 import { cn } from '../lib/utils'
 import zhMessages from '../locales/zh.json'
 
 const LOCALE_KEY = 'ds-locale-preference'
 const VALID_LOCALES = ['zh', 'zh-Hant', 'en']
 
+const loadBundledLocale = (messages) => Promise.resolve({ default: messages })
+
 const LOCALE_LOADERS = {
-  zh: () => import('../locales/zh.json'),
+  zh: () => loadBundledLocale(zhMessages),
   'zh-Hant': () => import('../locales/zh-Hant.json'),
   en: () => import('../locales/en.json'),
 }
@@ -157,7 +159,7 @@ export const useLocale = () => {
         return value === undefined || value === null ? '' : String(value)
       })
     },
-    [state.locale, state.version]
+    [state.locale]
   )
 
   return {
@@ -221,6 +223,91 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
         </svg>
       </span>
     </div>
+  )
+}
+
+export const LocaleSlider = ({ className = '', compact = false }) => {
+  const { locale, setLocale, t } = useLocale()
+  const groupId = useId()
+
+  const options = [
+    {
+      value: 'zh',
+      label: t('locale.zh', '简体中文'),
+      short: t('locale.zhShort', '简中'),
+    },
+    {
+      value: 'zh-Hant',
+      label: t('locale.zhHant', '繁體中文'),
+      short: t('locale.zhHantShort', '繁中'),
+    },
+    {
+      value: 'en',
+      label: t('locale.en', 'English'),
+      short: t('locale.enShort', 'EN'),
+    },
+  ]
+
+  const index = Math.max(0, options.findIndex((opt) => opt.value === locale))
+
+  return (
+    <fieldset className={cn('w-full', className)}>
+      <legend className="sr-only">{t('locale.select', 'Language')}</legend>
+      <div
+        className={cn(
+          'relative grid grid-cols-3 items-center p-1 rounded-full',
+          'bg-[color:var(--apple-btn-secondary-bg)] border border-[color:var(--apple-line)]',
+          'backdrop-blur-xl backdrop-saturate-[180%] shadow-[var(--apple-shadow-sm)]',
+          compact ? 'h-8' : 'h-10',
+          'focus-within:ring-2 focus-within:ring-offset-2',
+          'focus-within:ring-[rgba(29,29,31,0.2)] focus-within:ring-offset-[rgba(255,255,255,0.9)]',
+          'dark:focus-within:ring-[rgba(255,255,255,0.3)] dark:focus-within:ring-offset-[rgba(0,0,0,0.9)]'
+        )}
+      >
+        <div
+          aria-hidden="true"
+          className={cn(
+            'absolute top-1 bottom-1 left-1 rounded-full',
+            'bg-[color:var(--apple-card-strong)] shadow-[var(--apple-shadow-sm)]',
+            'transform transition-transform duration-150 ease-out motion-reduce:transition-none'
+          )}
+          style={{
+            width: 'calc((100% - 0.5rem) / 3)',
+            transform: `translateX(${index * 100}%)`,
+          }}
+        />
+
+        {options.map((opt) => {
+          const checked = opt.value === locale
+          const id = `${groupId}-${opt.value}`
+
+          return (
+            <div key={opt.value} className="relative z-10 h-full">
+              <input
+                id={id}
+                className="sr-only"
+                type="radio"
+                name={`${groupId}-ds-locale`}
+                value={opt.value}
+                checked={checked}
+                onChange={(event) => setLocale(event.target.value)}
+              />
+              <label
+                htmlFor={id}
+                className={cn(
+                  'inline-flex h-full w-full items-center justify-center rounded-full px-2',
+                  'cursor-pointer select-none',
+                  compact ? 'text-[12px] font-semibold' : 'text-[13px] font-semibold',
+                  checked ? 'text-[color:var(--apple-ink)]' : 'text-[color:var(--apple-muted)]'
+                )}
+              >
+                {compact ? opt.short : opt.label}
+              </label>
+            </div>
+          )
+        })}
+      </div>
+    </fieldset>
   )
 }
 
