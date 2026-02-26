@@ -2,7 +2,7 @@ import * as React from 'react'
 import { cn } from '../../lib/utils'
 
 const buttonVariants = (variant = 'default', size = 'default', className = '') => {
-  const baseStyles = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--apple-blue)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96] duration-300 ease-apple'
+  const baseStyles = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-[transform,opacity,background-color,box-shadow,color,border-color] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--apple-blue)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96] duration-150 ease-apple motion-reduce:transition-none'
   
   const variants = {
     default: 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] shadow-sm hover:shadow-md hover:-translate-y-0.5',

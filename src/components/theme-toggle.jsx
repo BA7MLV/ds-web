@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { SunsetDetector } from '../lib/sunset-detection'
+import { subscribeToMediaQueryChange } from '../lib/media-query-subscribe'
 
 // Theme values: 'light' | 'dark' | 'system'
 const THEME_KEY = 'ds-theme-preference'
@@ -98,11 +99,7 @@ const themeStore = (() => {
         listeners.forEach((l) => l())
       }
     }
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleChange)
-    } else {
-      mediaQuery.addListener(handleChange)
-    }
+    subscribeToMediaQueryChange(mediaQuery, handleChange)
   }
 
   const initSunsetDetection = () => {
@@ -185,7 +182,7 @@ export const ThemeToggle = ({ className = '' }) => {
       onClick={cycleTheme}
       className={`
         focus-ring relative flex items-center justify-center
-        w-7 h-7 rounded-full
+        w-10 h-10 rounded-full
         text-[color:var(--apple-muted)]
         hover:text-[color:var(--apple-ink)]
         hover:bg-[color:var(--apple-card)]

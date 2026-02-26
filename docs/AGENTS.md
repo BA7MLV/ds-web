@@ -5,7 +5,7 @@
 - `docs/.vitepress/`: 站点配置与主题。
   - `config.js`: 标题、导航、侧边栏、本地搜索、编辑链接等。
   - `theme/`: 自定义主题（`index.js` 挂载 medium-zoom、暗色偏好；`custom.css` 已引入 Tailwind）。
-- `docs/guide/`: 指南与专题文档。
+- `docs/` 根目录：包含首页与各指南专题文档页面。
 - `docs/public/`: 公共静态资源（图片、图标）。
 - 根目录：`tailwind.config.js`、`postcss.config.js`、`package.json`。
 

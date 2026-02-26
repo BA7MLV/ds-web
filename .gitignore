@@ -23,3 +23,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.vercel
+.env
+.env*.local
+/.claude/
+/Claude/
+.env.local
+!.env.example
+
+# VitePress build cache
+docs/.vitepress/cache/

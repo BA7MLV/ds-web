@@ -1,58 +1,110 @@
 <script setup>
 import DefaultTheme from 'vitepress/theme'
-import { onMounted } from 'vue'
+import LanguageSwitch from './components/LanguageSwitch.vue'
 import LastAuthor from './components/LastAuthor.vue'
-import MobileMenu from './components/MobileMenu.vue'
-
-onMounted(() => {
-  // 将移动端菜单按钮插入到导航栏中
-  const navBar = document.querySelector('.VPNavBar')
-  const mobileMenuWrapper = document.querySelector('.mobile-menu-container')
-  
-  if (navBar && mobileMenuWrapper) {
-    const target = navBar.querySelector('.VPNavBarMenu') || navBar.querySelector('.wrapper')
-    if (target) {
-      target.appendChild(mobileMenuWrapper)
-    }
-  }
-})
 </script>
 
 <template>
   <DefaultTheme.Layout>
+    <template #nav-screen-content-after>
+      <div class="NavScreenLang">
+        <LanguageSwitch />
+      </div>
+    </template>
     <template #doc-footer-before>
       <LastAuthor />
     </template>
   </DefaultTheme.Layout>
-  
-  <!-- 移动端菜单组件 - 会被移动到导航栏中 -->
-  <div class="mobile-menu-container">
-    <MobileMenu />
-  </div>
 </template>
 
+<style scoped>
+.NavScreenLang {
+  padding: 12px 16px 0;
+}
+</style>
+
 <style>
-/* 隐藏 VitePress 默认的移动端菜单按钮 */
+:root {
+  --vp-nav-logo-height: 38px;
+  --vp-c-brand-1: #1a1a1a;
+  --vp-c-brand-2: #1a1a1a;
+  --vp-c-brand-3: #1a1a1a;
+}
+
+.vp-doc a {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.vp-doc a:hover {
+  color: #1a1a1a;
+}
+
+.dark .vp-doc a {
+  color: #ffffff;
+}
+
+.dark {
+  --vp-c-brand-1: #ffffff;
+  --vp-c-brand-2: #ffffff;
+  --vp-c-brand-3: #ffffff;
+}
+
+.dark .vp-doc a:hover {
+  color: #ffffff;
+}
+
+/* 正文内容图：限制最大宽度、保持比例、统一居中间距 */
+.vp-doc p > img,
+.vp-doc li > img,
+.vp-doc td > img {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  margin: 1.25rem auto;
+  border-radius: 12px;
+}
+
 @media (max-width: 768px) {
-  .VPNavBar .VPNavBarHamburger {
-    display: none !important;
-  }
-  
-  /* 显示我们的自定义菜单按钮 */
-  .mobile-menu-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  /* 隐藏默认的搜索框在移动端，或者缩小它 */
-  .VPNavBarSearch {
-    margin-right: 8px;
+  .vp-doc p > img,
+  .vp-doc li > img,
+  .vp-doc td > img {
+    margin: 0.9rem auto;
+    border-radius: 10px;
   }
 }
 
-@media (min-width: 769px) {
-  .mobile-menu-container {
-    display: none;
-  }
+/* 确保放大层始终在侧边栏与导航之上 */
+.medium-zoom-overlay {
+  z-index: 9998 !important;
+}
+
+.medium-zoom-image--opened {
+  z-index: 9999 !important;
+}
+
+/* 保持侧边栏分组常开，隐藏折叠交互 */
+.VPSidebarItem .caret {
+  display: none !important;
+}
+
+/*
+ * 默认主题中，“分组标题”本质也是一个 VPSidebarItem：
+ * - 没有 link
+ * - 有 children（items）
+ * 点击标题会触发 toggle 折叠。
+ * 这里禁用该交互，并且即使被标记为 collapsed（可能来自持久化状态）也强制展开。
+ */
+.VPSidebarItem.collapsible:not(.is-link) > .item {
+  pointer-events: none;
+}
+
+.VPSidebarItem.collapsed > .items {
+  display: block !important;
+}
+
+.VPSidebarItem.collapsed.level-0 {
+  padding-bottom: 24px;
 }
 </style>

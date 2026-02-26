@@ -5,13 +5,13 @@
   "main": "index.js",
   "scripts": {
     "dev": "vitepress dev . --port 5174",
-    "build": "vitepress build .",
+    "build": "node ../scripts/sync-release-downloads.mjs && vitepress build .",
     "preview": "vitepress preview .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "AGPL-3.0-only",
   "type": "module",
   "dependencies": {
     "medium-zoom": "^1.1.0",

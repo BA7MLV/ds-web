@@ -83,15 +83,10 @@ const main = async () => {
     fs.writeFileSync(absPath, content)
   }
 
-  // eslint-disable-next-line no-console
   console.log('Favicons generated:')
-  // eslint-disable-next-line no-console
   console.log('- public/favicon.ico')
-  // eslint-disable-next-line no-console
   console.log('- public/apple-touch-icon.png')
-  // eslint-disable-next-line no-console
   console.log('- docs/public/favicon.ico')
-  // eslint-disable-next-line no-console
   console.log('- docs/public/apple-touch-icon.png')
 }
 

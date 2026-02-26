@@ -1,0 +1,39 @@
+Run: 2026-02-22T00:41:48+0800
+Command: CI=true NO_COLOR=1 FORCE_COLOR=0 npm run build
+
+> ds-web@0.0.0 build
+> node scripts/sync-release-downloads.mjs && vite build && npm run build -w docs && rm -rf dist/docs && cp -R docs/.vitepress/dist dist/docs
+
+[release-sync] Updated /Users/ba7mlv/Documents/Coding/ds-web/docs/.vitepress/data/downloads.json (v0.9.15)
+[release-sync] Updated /Users/ba7mlv/Documents/Coding/ds-web/src/data/downloads.json (v0.9.15)
+vite v7.2.4 building client environment for production...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+transforming...
+✓ 47 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                    8.05 kB │ gzip:   3.17 kB
+dist/assets/index-COE0AzcB.css    57.92 kB │ gzip:  10.37 kB
+dist/assets/zh-Hant-8SF5ymNM.js   18.73 kB │ gzip:   7.57 kB
+dist/assets/en-BihHoJYA.js        19.26 kB │ gzip:   6.98 kB
+dist/assets/index-BQwh5G_B.js    347.37 kB │ gzip: 103.96 kB
+✓ built in 1.42s
+
+> ds-web-docs@1.0.0 build
+> node ../scripts/sync-release-downloads.mjs && vitepress build .
+
+[release-sync] Updated /Users/ba7mlv/Documents/Coding/ds-web/docs/.vitepress/data/downloads.json (v0.9.15)
+[release-sync] Updated /Users/ba7mlv/Documents/Coding/ds-web/src/data/downloads.json (v0.9.15)
+
+  vitepress v1.6.4
+
+- building client + server bundles...
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[32m✓[0m building client + server bundles...
+- rendering pages...
+[32m✓[0m rendering pages...
+build complete in 9.97s.

@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
   :root {
     font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei',
       ui-sans-serif, sans-serif;
@@ -18,7 +25,7 @@
     /* Light theme tokens */
     --apple-ink: #1d1d1f;
     --apple-ink-secondary: #48484a;
-    --apple-muted: #86868b;
+    --apple-muted: #6e6e73;
     --apple-line: rgba(0, 0, 0, 0.08);
     --apple-line-strong: rgba(0, 0, 0, 0.12);
     --apple-soft-line: rgba(255, 255, 255, 0.8);
@@ -81,6 +88,18 @@
 
     /* Noise overlay */
     --apple-noise-opacity: 0.035;
+
+    --z-noise: 20;
+    --z-nav: 40;
+    --z-overlay: 50;
+    --z-modal: 60;
+
+    --space-section-top: clamp(3.25rem, 5vw + 1rem, 5.75rem);
+    --space-section-stack: clamp(5rem, 9vw, 11.5rem);
+    --space-page-bottom: clamp(6.5rem, 12vw, 12rem);
+    --space-block-lg: clamp(2.5rem, 5vw, 4.5rem);
+    --space-block-md: clamp(1.5rem, 3vw, 3rem);
+    --space-block-sm: clamp(1rem, 2vw, 2rem);
 
     --radius: 0.75rem;
   }
@@ -146,6 +165,8 @@
     margin: 0;
     min-height: 100vh;
     overflow-x: hidden;
+    overflow-x: clip;
+    position: relative;
     color: var(--apple-ink);
     background-color: var(--apple-surface);
     background-image: 
@@ -162,6 +183,30 @@
     transition: background-color 0.4s ease, color 0.3s ease;
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: var(--apple-noise-opacity);
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: overlay;
+  }
+
   /* Dark mode body - Apple-inspired dramatic dark */
   .dark body {
     background-color: #000000;
@@ -173,6 +218,13 @@
       /* Base black */
       linear-gradient(180deg, #000000 0%, #000000 100%);
     background-attachment: fixed;
+  }
+
+  @media (max-width: 1023px) {
+    body,
+    .dark body {
+      background-attachment: scroll;
+    }
   }
 
   /* Global selection style */
@@ -187,21 +239,21 @@
 
   #root {
     min-height: 100vh;
+    width: 100%;
+    max-width: 100%;
     position: relative;
+    z-index: 1;
     isolation: isolate;
+    overflow-x: clip;
   }
 
-  /* Subtle noise texture overlay */
-  #root::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity: var(--apple-noise-opacity);
-    pointer-events: none;
-    z-index: 9999;
-    mix-blend-mode: overlay;
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
   }
+
 }
 
 @layer components {
@@ -332,7 +384,7 @@
     pointer-events: none;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1), width 0.3s ease;
+    transition: transform 200ms var(--ease-apple);
   }
 
   /* Apple-style gradient text */
@@ -394,7 +446,7 @@
 
   /* Subtle hover lift effect */
   .hover-lift {
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+    transition: transform 150ms var(--ease-out), box-shadow 150ms ease;
   }
 
   .hover-lift:hover {
@@ -450,19 +502,64 @@
 }
 
 /* ===== Dynamic Island / Notch Safe Area Support ===== */
-/* iPhone 14 Pro+ 灵动岛及刘海屏沉浸式适配 */
 
-/* 
- * 实现原理：
- * 1. 使用 ::before 伪元素创建延伸到刘海屏区域的背景层
- * 2. 主内容通过 padding 保持在安全区域内
- * 3. 适用于 sticky/fixed 定位的导航栏
- */
+:root {
+  --sat: 0px;
+  --sar: 0px;
+  --sab: 0px;
+  --sal: 0px;
+}
+
+@supports (padding: env(safe-area-inset-top)) {
+  :root {
+    --sat: env(safe-area-max-inset-top, env(safe-area-inset-top));
+    --sar: env(safe-area-inset-right);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
+  }
+}
+
+@supports (padding: constant(safe-area-inset-top)) {
+  :root {
+    --sat: constant(safe-area-inset-top);
+    --sar: constant(safe-area-inset-right);
+    --sab: constant(safe-area-inset-bottom);
+    --sal: constant(safe-area-inset-left);
+  }
+}
+
+@layer utilities {
+  .pt-safe { padding-top: var(--sat); }
+  .mt-safe { margin-top: var(--sat); }
+  .top-safe { top: var(--sat); }
+  .h-safe-top { height: var(--sat); }
+  .min-h-screen-safe {
+    min-height: calc(100vh - var(--sat));
+    min-height: calc(100svh - var(--sat));
+  }
+
+  .pb-safe { padding-bottom: var(--sab); }
+  .mb-safe { margin-bottom: var(--sab); }
+  .bottom-safe { bottom: var(--sab); }
+  .h-safe-bottom { height: var(--sab); }
+
+  .pl-safe { padding-left: var(--sal); }
+  .pr-safe { padding-right: var(--sar); }
+  .px-safe { padding-left: var(--sal); padding-right: var(--sar); }
+
+  .p-safe {
+    padding-top: var(--sat);
+    padding-right: var(--sar);
+    padding-bottom: var(--sab);
+    padding-left: var(--sal);
+  }
+}
 
 /* 导航栏沉浸式背景 */
 .top-nav-safe-area {
   position: sticky;
   top: 0;
+  isolation: isolate;
 }
 
 .top-nav-safe-area::before {
@@ -471,23 +568,25 @@
   top: 0;
   left: 0;
   right: 0;
-  height: env(safe-area-inset-top);
+  height: var(--sat);
   background: inherit;
   background-color: var(--apple-nav-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  z-index: -1;
+  z-index: calc(var(--z-nav) - 1);
+  pointer-events: none;
 }
 
 /* 导航栏内容避开刘海 */
 .top-nav-content {
-  padding-top: env(safe-area-inset-top);
+  padding-top: var(--sat);
 }
 
 /* 移动端下载页面导航 */
 .download-nav-safe-area {
   position: sticky;
   top: 0;
+  isolation: isolate;
 }
 
 .download-nav-safe-area::before {
@@ -496,12 +595,13 @@
   top: 0;
   left: 0;
   right: 0;
-  height: env(safe-area-inset-top);
+  height: var(--sat);
   background: inherit;
   background-color: var(--apple-nav-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  z-index: -1;
+  z-index: calc(var(--z-nav) - 1);
+  pointer-events: none;
 }
 
 /* Skeleton loading animation */

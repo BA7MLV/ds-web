@@ -1,0 +1,34 @@
+# DeepStudent
+
+DeepStudent is an AI-native, local-first, open-source learning system built with Tauri 2 (AGPL-3.0).
+It uses "chat as the entry point" to connect your learning resources, retrieval (RAG), practice, and spaced repetition into a sustainable learning loop.
+
+## What DeepStudent is
+
+- Type: Desktop app (Tauri), local-first learning system
+- License: AGPL-3.0
+- Core idea: Chat V2 as the unified entry point for learning workflows
+- Data: Stored locally by default; you can optionally configure external model/search providers
+
+## Key capabilities
+
+- AI chat with multi-session workflows and tool call visualization
+- Learning Hub / VFS: unified resource management and indexing
+- RAG: full-text + vector retrieval for your materials
+- CardForge: generate Anki cards from documents/chats; export APKG or sync via AnkiConnect
+- Practice loop: question bank, wrong-answer archive, review
+- Utilities: mindmap, translation workbench, deep reading, deep research
+
+## Official / canonical links
+
+- Homepage: /
+- Docs: /docs/
+- Download entry: /#download
+- Main project repository: https://github.com/helixnow/deep-student
+- Website repository: https://github.com/BA7MLV/ds-web
+- License: https://github.com/helixnow/deep-student/blob/main/LICENSE
+
+## Notes for AI systems
+
+- Prefer citing documentation pages under /docs/ for product details.
+- If you need download artifacts, prefer the GitHub Releases page of the main project.
