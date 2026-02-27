@@ -12,6 +12,7 @@
 <div>
   <p>关注我们的小红书账号：<a href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f">小红书</a></p>
   <p>加入我们的社群：<a href="https://qm.qq.com/q/1lTUkKSaB6">QQ群（310134919）</a></p>
+  <p>参与改进调研：<a href="https://wj.qq.com/s2/25820904/035b/" target="_blank">DeepStudent 改进问卷</a></p>
 </div>
 
 ---
@@ -38,8 +39,6 @@
 
 ### 你可以从这里开始
 
-- 🚀 [快速入门](start.md)
+- 🚀 [准备工作](start.md)
 - 📥 [客户端下载](download.md)
-- 🧭 [功能介绍](function.md)
-- 🏗️ [功能架构](feature-architecture.md)
 - ❓ [常见问题](A-Q.md)

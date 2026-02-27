@@ -34,6 +34,8 @@ DeepStudent 是一款基于 Tauri 2 的 **AI 原生、本地优先**开源学习
 
 欢迎通过 Issue / PR 参与共建，帮助我们持续校准产品与文档。
 
+- **改进调研问卷**：[填写问卷](https://wj.qq.com/s2/25820904/035b/)，帮助我们了解你的需求与建议
+
 ## 联系方式
 
 - **邮件**：support@deepstudent.cn
