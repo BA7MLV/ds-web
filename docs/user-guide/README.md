@@ -78,7 +78,7 @@
 ## 技术支持
 
 - **项目源码**：[GitHub Repository](https://github.com/helixnow/deep-student)
-- **问题反馈**：[GitHub Issues](https://github.com/your-repo/issues)
+- **问题反馈**：[GitHub Issues](https://github.com/helixnow/deep-student/issues)
 
 ---
 

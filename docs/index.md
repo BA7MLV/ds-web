@@ -4,12 +4,12 @@
 
 
 ::: tip 简介
-**DeepStudent** 是一款基于 Tauri 2 构建的 **AI 原生、本地优先**开源学习系统（AGPL-3.0）。
+DeepStudent 是一款 AI 原生、本地优先、开源的终身学习系统。
 
-实际代码实现以 **Chat V2（智能对话）作为统一入口**，将学习资源中心 (Learning Hub)、技能系统 (Skills)、MCP 工具生态与 CardForge 制卡任务连接为一个可持续学习闭环。
+DeepStudent 将学习资源中心、Anki 制卡、技能系统、题库练习与知识导图整合为可持续迭代的学习闭环。
 :::
 
-<div>
+<div style="text-align: center;">
   <p>关注我们的小红书账号：<a href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f">小红书</a></p>
   <p>加入我们的社群：<a href="https://qm.qq.com/q/1lTUkKSaB6">QQ群（310134919）</a></p>
   <p>参与改进调研：<a href="https://wj.qq.com/s2/25820904/035b/" target="_blank">DeepStudent 改进问卷</a></p>
@@ -17,7 +17,7 @@
 
 ---
 
-### 核心能力（按当前主项目实现校准）
+### 核心能力
 
 | 模块 | 对应能力 |
 |:---|:---|
