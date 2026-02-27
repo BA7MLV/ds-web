@@ -27,9 +27,7 @@ DeepStudent 是一款基于 Tauri 2.0 构建的 **AI 原生、本地优先**开�
 
 ### 入门指南
 
-- [快速入门](start.md) — 配置 API 密钥和基本设置
-- [功能介绍](function.md) — 核心功能模块使用指南
-- [功能架构](feature-architecture.md) — 技术架构基准文档
+- [准备工作](start.md) — 配置 API 密钥和基本设置
 
 ## 技术栈
 

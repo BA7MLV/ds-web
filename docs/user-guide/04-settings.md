@@ -47,8 +47,8 @@
 | 分类 | 可选字体 |
 |------|---------|
 | 系统字体 | 系统默认 |
-| 英文字体 | Inter、Roboto、Open Sans、Lato、Montserrat 等 |
-| 中文无衬线 | 苹方/微软雅黑、思源黑体、鸿蒙黑体、OPPO Sans 等 |
+| 英文字体 | Inter、Roboto、Open Sans、Lato、Montserrat、Poppins、IBM Plex Sans、Source Sans |
+| 中文无衬线 | 苹方/微软雅黑、思源黑体、鸿蒙黑体、OPPO Sans、阿里巴巴普惠体 |
 | 中文衬线 | 思源宋体、宋体 |
 | 手写字体 | 霞鹜文楷、楷体 |
 | 等宽字体 | JetBrains Mono、Cascadia Code |
@@ -70,6 +70,7 @@
 - **青碧色**：清新青色调
 - **柔和色调**：低饱和度配色
 - **纸纹质感**：仿纸质背景
+- **自选色号**：通过取色器自定义任意主题色
 
 点击色彩圆点即可切换，切换后立即生效。
 
@@ -144,13 +145,16 @@ SiliconFlow（硅基流动）供应商提供一键配置功能：
 
 | 功能 | 预设模型 |
 |------|---------|
-| 对话 / 题库AI批改 | `deepseek-ai/DeepSeek-V3.2` |
+| 对话 | `deepseek-ai/DeepSeek-V3.2` |
+| 题库 AI 批改 | `deepseek-ai/DeepSeek-V3.2` |
 | Anki 制卡 | `Qwen/Qwen3-30B-A3B-Instruct-2507` |
-| 嵌入（RAG） | `BAAI/bge-m3` |
+| 嵌入（RAG） | `BAAI/bge-m3`（维度 1024） |
 | 重排序 | `BAAI/bge-reranker-v2-m3` |
 | 标题/标签生成 | `inclusionAI/Ling-mini-2.0` |
 | 翻译 | `tencent/Hunyuan-MT-7B` |
-| OCR（默认） | `PaddlePaddle/PaddleOCR-VL-1.5` |
+| 题目集解析 | `deepseek-ai/DeepSeek-V3.2` |
+| 记忆决策 | `inclusionAI/Ling-mini-2.0` |
+| OCR（默认） | `PaddlePaddle/PaddleOCR-VL-1.5`（另有 PaddleOCR-VL、Qwen3-VL-8B 可选） |
 
 #### 编辑和删除供应商
 
@@ -216,6 +220,7 @@ SiliconFlow（硅基流动）供应商提供一键配置功能：
 | **标题/标签生成模型** | 生成聊天标题和智能标签 | 可选，默认使用对话模型 |
 | **翻译专用模型** | 文本翻译功能 | 可选，默认使用对话模型 |
 | **题库AI批改模型** | 题目集中 AI 评分与解析 | 可选，默认使用对话模型 |
+| **记忆决策模型** | 记忆智能写入时的去重判断 | 可选，默认使用对话模型 |
 
 ### RAG 与知识库模型
 
@@ -265,7 +270,7 @@ SiliconFlow（硅基流动）供应商提供一键配置功能：
 - ⚠️ 黄色警告：可选项未配置
 - ❌ 红色叉号：必选项未配置
 
-配置状态检查包括：对话模型、Anki制卡模型（可选）、重排序模型（可选）、标题/标签生成模型（可选）、翻译专用模型（可选）、题库AI批改模型（可选）、题目集 OCR 模型（可选）。
+配置状态检查包括：对话模型、Anki制卡模型（可选）、重排序模型（可选）、标题/标签生成模型（可选）、翻译专用模型（可选）、题库AI批改模型（可选）、记忆决策模型（可选）、题目集 OCR 模型（可选）。
 
 当对话模型配置完成后，会显示"基础功能配置完成"的提示。
 

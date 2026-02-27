@@ -4,7 +4,7 @@ DeepStudent 的 AI 能力依赖你配置的模型服务与（可选）外部搜�
 
 ## 第一步：配置模型服务（必做）
 
-1. 打开 DeepStudent，进入 **系统设置 → 模型服务**。
+1. 打开 DeepStudent，进入 **系统设置 → API 配置**。
 2. 添加你的服务供应商并填写 API Key。
 3. 完成模型分配（对话、检索、制卡等场景）。
 
@@ -12,7 +12,7 @@ DeepStudent 的 AI 能力依赖你配置的模型服务与（可选）外部搜�
 
 ### 参考：SiliconFlow 注册与密钥获取
 
-<div>
+<div style="text-align: center;">
 <p><a href="https://cloud.siliconflow.cn/i/deadXN1B">https://cloud.siliconflow.cn/i/deadXN1B</a></p>
 </div>
 
@@ -42,9 +42,9 @@ DeepStudent 的 AI 能力依赖你配置的模型服务与（可选）外部搜�
 
 ## 第三步：跑通完整学习闭环（建议）
 
-1. 在 **学习资源** 导入一份资料（PDF / 文档 / 笔记）。
+1. 在 **Learning Hub** 导入一份资料（PDF / 文档 / 笔记）。
 2. 等待 OCR 与索引完成（如有提示）。
-3. 回到 **Chat V2**（智能对话），引用该资源发起问题。
+3. 回到 **Chat V2**，引用该资源发起问题。
 4. 视任务激活技能（如导师、调研、制卡）。
 5. 需要复习时进入制卡任务导出到 Anki。
 

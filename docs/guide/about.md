@@ -19,22 +19,20 @@ DeepStudent 是一款基于 Tauri 2 的 **AI 原生、本地优先**开源学习
 
 ## 系统组成（对齐当前实现）
 
-- **智能对话 (Chat V2)**：任务入口与执行反馈
-- **学习资源中心 (Learning Hub)**：资源管理与上下文注入
-- **技能系统 (Skills)**：能力编排与按需工具注入
-- **MCP 扩展层**：外部服务接入（SSE/WebSocket/HTTP）
-- **制卡任务 (CardForge)**：任务化制卡与导出同步
-- **系统设置与数据治理**：模型接入、搜索、同步与治理
+- **Chat V2**：任务入口与执行反馈
+- **Learning Hub**：资源管理与上下文注入
+- **Skills**：能力编排与按需工具注入
+- **MCP**：外部服务扩展层（SSE/WebSocket/HTTP）
+- **CardForge**：任务化制卡与导出同步
+- **Settings / Data Governance**：模型接入、搜索、同步与治理
 
 ## 开源与共建
 
-- **主项目仓库**：[deep-student](https://github.com/helixnow/deep-student)
+- **主项目仓库**：[deep-student](https://github.com/000haoji/deep-student)
 - **网站仓库**：[ds-web](https://github.com/BA7MLV/ds-web)
 - **社区交流**：[QQ群（310134919）](https://qm.qq.com/q/1lTUkKSaB6)
 
 欢迎通过 Issue / PR 参与共建，帮助我们持续校准产品与文档。
-
-- **改进调研问卷**：[填写问卷](https://wj.qq.com/s2/25820904/035b/)，帮助我们了解你的需求与建议
 
 ## 联系方式
 

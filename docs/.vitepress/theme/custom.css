@@ -1,0 +1,809 @@
+@import 'tailwindcss';
+
+/* ===== 主题过渡基础 ===== */
+/* 定义全局过渡属性：颜色变化平滑 */
+:root,
+.light,
+.dark {
+  /* 配置颜色过渡 */
+  --theme-transition-duration: 0.3s;
+  --theme-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* 应用到颜色相关属性 */
+  transition-property: background-color, color, border-color, box-shadow, fill, stroke;
+  transition-duration: var(--theme-transition-duration);
+  transition-timing-function: var(--theme-transition-timing);
+}
+
+/* 尊重用户无动画偏好（WCAG无障碍）*/
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  .light,
+  .dark {
+    --theme-transition-duration: 0s;
+    transition: none !important;
+  }
+}
+
+/* ===== LIGHT THEME ===== */
+:root {
+  /* Design System Tokens */
+  --ds-ink: #1c1c1e;
+  --ds-ink-secondary: #3c3c43;
+  --ds-muted: #5b5e66;
+  --ds-surface: #f6f6f7;
+  --ds-surface-strong: #ffffff;
+  --ds-card: #ffffff;
+  --ds-card-strong: #ffffff;
+  --ds-card-hover: #ffffff;
+  --ds-line: rgba(0, 0, 0, 0.08);
+  --ds-line-soft: rgba(0, 0, 0, 0.04);
+  --ds-line-strong: rgba(0, 0, 0, 0.12);
+  --ds-blue: #2a6df4;
+  --ds-blue-hover: #1f5fe0;
+  --ds-blue-soft: rgba(42, 109, 244, 0.12);
+  --ds-glow: rgba(42, 109, 244, 0.12);
+  --ds-selection-bg: rgba(0, 0, 0, 0.9);
+  --ds-selection-text: #ffffff;
+
+  /* Typography */
+  --vp-font-family-base: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', ui-sans-serif, sans-serif;
+  --vp-font-family-mono: 'SFMono-Regular', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+
+  /* VitePress Overrides */
+  --vp-c-bg: var(--ds-surface);
+  --vp-c-bg-alt: var(--ds-surface-strong);
+  --vp-c-bg-elv: var(--ds-surface-strong);
+  --vp-c-bg-soft: #fbfbfc;
+  --vp-c-bg-mute: #f2f2f4;
+
+  --vp-c-border: var(--ds-line);
+  --vp-c-divider: rgba(0, 0, 0, 0.08);
+  --vp-c-gutter: rgba(0, 0, 0, 0.08);
+
+  --vp-c-text-1: var(--ds-ink);
+  --vp-c-text-2: var(--ds-muted);
+  --vp-c-text-3: #8b8f97;
+
+  --vp-c-default-1: rgba(0, 0, 0, 0.08);
+  --vp-c-default-2: rgba(0, 0, 0, 0.12);
+  --vp-c-default-3: rgba(0, 0, 0, 0.16);
+  --vp-c-default-soft: rgba(0, 0, 0, 0.04);
+
+  --vp-c-brand-1: var(--ds-blue);
+  --vp-c-brand-2: #1a82f0;
+  --vp-c-brand-3: #2f8cf7;
+  --vp-c-brand-soft: var(--ds-blue-soft);
+
+  --vp-code-bg: rgba(0, 0, 0, 0.04);
+  --vp-code-block-bg: #fafafa;
+
+  --vp-nav-bg-color: #ffffff;
+  --vp-nav-logo-height: 40px;
+  --vp-nav-screen-bg-color: #f6f6f7;
+  --vp-local-nav-bg-color: #ffffff;
+  --vp-sidebar-bg-color: #ffffff;
+
+  --ds-nav-bg-top: rgba(255, 255, 255, 0.9);
+  --ds-nav-bg-scrolled: #ffffff;
+  --ds-nav-bg-screen: #ffffff;
+  --ds-nav-border-top: var(--ds-line-soft);
+  --ds-nav-border-scrolled: var(--ds-line);
+  --ds-nav-shadow-scrolled: 0 8px 24px rgba(15, 23, 42, 0.06);
+
+  --vp-button-brand-bg: #111111;
+  --vp-button-brand-hover-bg: #000000;
+  --vp-button-brand-active-bg: #000000;
+  --vp-button-brand-text: #ffffff;
+  --vp-button-brand-hover-text: #ffffff;
+  --vp-button-brand-active-text: #ffffff;
+
+  --vp-button-alt-bg: rgba(255, 255, 255, 0.72);
+  --vp-button-alt-hover-bg: rgba(255, 255, 255, 0.9);
+  --vp-button-alt-active-bg: rgba(255, 255, 255, 0.95);
+  --vp-button-alt-border: rgba(0, 0, 0, 0.08);
+  --vp-button-alt-text: var(--ds-ink);
+  --vp-button-alt-hover-text: var(--ds-ink);
+
+  --vp-shadow-1: 0 6px 20px rgba(15, 23, 42, 0.08);
+  --vp-shadow-2: 0 12px 30px rgba(15, 23, 42, 0.1);
+  --vp-shadow-3: 0 18px 40px rgba(15, 23, 42, 0.12);
+  --vp-c-shadow-3: var(--vp-shadow-3);
+}
+
+/* ===== DARK THEME - SOTA Deep Space ===== */
+.dark {
+  color-scheme: dark;
+
+  /* Design System Tokens - Deep space aesthetic */
+  --ds-ink: #f4f4f5;
+  --ds-ink-secondary: #c7c7cc;
+  --ds-muted: rgba(235, 235, 245, 0.6);
+  --ds-surface: #0f0f11;
+  --ds-surface-strong: #151518;
+  --ds-card: #151518;
+  --ds-card-strong: #151518;
+  --ds-card-hover: #19191d;
+  --ds-line: rgba(255, 255, 255, 0.12);
+  --ds-line-soft: rgba(255, 255, 255, 0.06);
+  --ds-line-strong: rgba(255, 255, 255, 0.2);
+  --ds-blue: #7aa7ff;
+  --ds-blue-hover: #95b9ff;
+  --ds-blue-soft: rgba(122, 167, 255, 0.18);
+  --ds-glow: rgba(122, 167, 255, 0.12);
+  --ds-selection-bg: rgba(122, 167, 255, 0.32);
+  --ds-selection-text: #ffffff;
+
+  /* VitePress Overrides */
+  --vp-c-bg: var(--ds-surface);
+  --vp-c-bg-alt: var(--ds-surface-strong);
+  --vp-c-bg-elv: var(--ds-surface-strong);
+  --vp-c-bg-soft: #17171b;
+  --vp-c-bg-mute: #121216;
+
+  --vp-c-border: var(--ds-line);
+  --vp-c-divider: rgba(255, 255, 255, 0.08);
+  --vp-c-gutter: rgba(255, 255, 255, 0.08);
+
+  --vp-c-text-1: var(--ds-ink);
+  --vp-c-text-2: var(--ds-muted);
+  --vp-c-text-3: rgba(235, 235, 245, 0.38);
+
+  --vp-c-default-1: rgba(255, 255, 255, 0.06);
+  --vp-c-default-2: rgba(255, 255, 255, 0.1);
+  --vp-c-default-3: rgba(255, 255, 255, 0.14);
+  --vp-c-default-soft: rgba(255, 255, 255, 0.04);
+
+  --vp-c-brand-1: var(--ds-blue);
+  --vp-c-brand-2: #78b8ff;
+  --vp-c-brand-3: #9dcfff;
+  --vp-c-brand-soft: var(--ds-blue-soft);
+
+  --vp-code-bg: rgba(255, 255, 255, 0.06);
+  --vp-code-block-bg: #121216;
+
+  --vp-nav-bg-color: #0f0f11;
+  --vp-nav-logo-height: 40px;
+  --vp-nav-screen-bg-color: #0f0f11;
+  --vp-local-nav-bg-color: #0f0f11;
+  --vp-sidebar-bg-color: #0f0f11;
+
+  --ds-nav-bg-top: rgba(15, 15, 17, 0.92);
+  --ds-nav-bg-scrolled: #101014;
+  --ds-nav-bg-screen: #101014;
+  --ds-nav-border-top: rgba(255, 255, 255, 0.1);
+  --ds-nav-border-scrolled: rgba(255, 255, 255, 0.16);
+  --ds-nav-shadow-scrolled: 0 10px 30px rgba(0, 0, 0, 0.38);
+
+  /* Inverted buttons for dark mode */
+  --vp-button-brand-bg: #f5f5f7;
+  --vp-button-brand-hover-bg: #ffffff;
+  --vp-button-brand-active-bg: #e8e8ea;
+  --vp-button-brand-text: #0a0a0c;
+  --vp-button-brand-hover-text: #0a0a0c;
+  --vp-button-brand-active-text: #0a0a0c;
+
+  --vp-button-alt-bg: #1a1a1f;
+  --vp-button-alt-hover-bg: #1f1f25;
+  --vp-button-alt-active-bg: #1c1c22;
+  --vp-button-alt-border: rgba(255, 255, 255, 0.12);
+  --vp-button-alt-text: var(--ds-ink);
+  --vp-button-alt-hover-text: var(--ds-ink);
+
+  --vp-shadow-1: 0 12px 30px rgba(0, 0, 0, 0.4);
+  --vp-shadow-2: 0 20px 45px rgba(0, 0, 0, 0.45);
+  --vp-shadow-3: 0 28px 60px rgba(0, 0, 0, 0.5);
+  --vp-c-shadow-3: var(--vp-shadow-3);
+}
+
+/* ===== GLOBAL STYLES ===== */
+body {
+  color: var(--ds-ink);
+  font-feature-settings: 'ss01', 'ss02', 'cv11';
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--ds-surface);
+}
+
+/* Light mode background gradient */
+body {
+  background-image: none;
+}
+
+/* Dark mode background - SOTA deep space effect */
+.dark body {
+  background-color: var(--ds-surface);
+  background-image: none;
+}
+
+/* Selection colors */
+::selection {
+  background: var(--ds-selection-bg);
+  color: var(--ds-selection-text);
+}
+
+.VPSite {
+  background: transparent;
+}
+
+.VPNavBar,
+.VPLocalNav {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.VPNavBar {
+  background-color: var(--ds-nav-bg-top);
+  border-bottom: 1px solid var(--ds-nav-border-top);
+  box-shadow: none;
+}
+
+.VPNavBar:not(.home.top) {
+  background-color: var(--ds-nav-bg-scrolled);
+  border-bottom-color: var(--ds-nav-border-scrolled);
+  box-shadow: var(--ds-nav-shadow-scrolled);
+}
+
+.VPNavBar.screen-open {
+  background-color: var(--ds-nav-bg-screen);
+  border-bottom-color: var(--ds-nav-border-scrolled);
+  box-shadow: var(--ds-nav-shadow-scrolled);
+}
+
+.VPLocalNav {
+  background-color: var(--ds-nav-bg-top);
+  border-bottom: 1px solid var(--ds-nav-border-top);
+}
+
+@media (min-width: 960px) {
+  .VPLocalNav {
+    border-bottom-color: var(--ds-nav-border-scrolled);
+  }
+}
+
+.VPSidebar {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-right: 1px solid var(--ds-line-soft);
+}
+
+.VPSidebar .curtain {
+  background-color: var(--vp-sidebar-bg-color);
+}
+
+.VPDoc .content-container {
+  background: var(--ds-card);
+  border: 1px solid var(--ds-line);
+  border-radius: 14px;
+  padding: 2.25rem 2.5rem;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (max-width: 960px) {
+  .VPDoc .content-container {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .VPDoc .content-container {
+    padding: 1.5rem;
+    border-radius: 22px;
+  }
+}
+
+.VPDocFooter {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ds-line);
+  display: flex;
+  flex-direction: column;
+}
+
+.VPDocFooter .edit-info {
+  order: 1;
+  padding-bottom: 0;
+}
+
+.VPDocFooter .vp-git-editors {
+  order: 2;
+  align-self: flex-end;
+  margin-top: 4px;
+  padding-bottom: 18px;
+  font-size: 13px;
+  text-align: right;
+  color: var(--vp-c-text-2);
+}
+
+.VPDocFooter .prev-next {
+  order: 3;
+}
+
+@media (min-width: 640px) {
+  .VPDocFooter .vp-git-editors {
+    padding-bottom: 14px;
+  }
+}
+
+.VPFooter {
+  background: var(--ds-card);
+  border-top: 1px solid var(--ds-line);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.vp-doc h4,
+.vp-doc h5,
+.vp-doc h6 {
+  font-family: var(--vp-font-family-base);
+  color: var(--ds-ink);
+}
+
+.vp-doc p,
+.vp-doc li {
+  color: var(--ds-ink-secondary);
+}
+
+.vp-doc strong {
+  color: var(--ds-ink);
+  font-weight: 600;
+}
+
+.vp-doc a {
+  color: var(--ds-blue);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.vp-doc a:hover {
+  color: var(--ds-blue-hover);
+  border-bottom-color: currentColor;
+}
+
+.dark .vp-doc a:hover {
+  color: #9dcfff;
+}
+
+.vp-doc blockquote {
+  border-left: 3px solid rgba(42, 109, 244, 0.35);
+  background: #f6f6f8;
+  border-radius: 10px;
+}
+
+.dark .vp-doc blockquote {
+  background: #151518;
+}
+
+.vp-doc table {
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.dark .vp-doc table {
+  background: #151518;
+}
+
+.vp-doc th,
+.vp-doc td {
+  border-color: var(--ds-line);
+}
+
+.custom-block {
+  border-radius: 10px;
+  border: 1px solid var(--ds-line);
+}
+
+.custom-block-title {
+  font-family: var(--vp-font-family-base);
+}
+
+.sidebar-group.collapsible .sidebar-group-title {
+  cursor: pointer;
+  position: relative;
+  padding-right: 1.5rem;
+}
+
+.sidebar-group.collapsible .sidebar-group-title::after {
+  content: '';
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(0deg);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid currentColor;
+  transition: transform 0.15s ease-out;
+}
+
+.sidebar-group.collapsible.collapsed .sidebar-group-title::after {
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.sidebar-group.collapsible .sidebar-group-items {
+  overflow: hidden;
+}
+
+.sidebar-group.collapsible.collapsed .sidebar-group-items {
+  max-height: 0;
+}
+
+.sidebar-group-title {
+  display: flex;
+  align-items: center;
+}
+
+.dark .sidebar-group.collapsible .sidebar-group-title::after {
+  border-top-color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 768px) {
+  .sidebar-group.collapsible .sidebar-group-title {
+    padding-right: 1.25rem;
+  }
+
+  .sidebar-group.collapsible .sidebar-group-title::after {
+    right: 0.25rem;
+  }
+}
+
+.medium-zoom-overlay {
+  z-index: 9999;
+}
+
+.medium-zoom-image {
+  z-index: 10000;
+}
+
+.vp-doc img {
+  cursor: zoom-in;
+  border-radius: 10px;
+}
+
+.VPHero {
+  text-align: left !important;
+}
+
+.VPHero .container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  text-align: left !important;
+}
+
+.VPHero .main {
+  text-align: left !important;
+  margin: 0 !important;
+}
+
+.VPHero .actions {
+  justify-content: flex-start !important;
+}
+
+@media (max-width: 768px) {
+  .VPHero {
+    text-align: center !important;
+  }
+
+  .VPHero .container {
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .VPHero .main {
+    text-align: center !important;
+  }
+
+  .VPHero .actions {
+    justify-content: center !important;
+  }
+}
+
+/* ===== ENHANCED DARK MODE STYLES ===== */
+
+/* Smooth theme transition */
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    --theme-transition: 0.3s ease;
+  }
+  
+  body,
+  .VPNavBar,
+  .VPSidebar,
+  .VPDoc .content-container,
+  .VPFooter,
+  .custom-block,
+  .vp-doc blockquote,
+  .vp-doc table {
+    transition: background-color var(--theme-transition), 
+                border-color var(--theme-transition), 
+                color var(--theme-transition),
+                box-shadow var(--theme-transition);
+  }
+}
+
+/* Dark mode nav enhancements */
+.dark .VPNavBar {
+  border-bottom-color: var(--ds-nav-border-top);
+}
+
+.dark .VPNavBar:not(.home.top),
+.dark .VPNavBar.screen-open,
+.dark .VPLocalNav {
+  border-bottom-color: var(--ds-nav-border-scrolled);
+}
+
+.dark .VPSidebar {
+  border-right-color: var(--ds-line);
+}
+
+html.home-no-search .VPNavBar .search,
+html.home-no-search .VPNavBar .VPNavBarSearch {
+  display: none !important;
+}
+
+/* Code block dark mode polish */
+.dark .vp-code-group .tabs {
+  background: var(--ds-card);
+  border-bottom-color: var(--ds-line);
+}
+
+.dark .vp-code-group .tabs label {
+  color: var(--ds-muted);
+}
+
+.dark .vp-code-group .tabs label.active {
+  color: var(--ds-ink);
+}
+
+.dark div[class*='language-'] {
+  background: var(--vp-code-block-bg) !important;
+  border: 1px solid var(--ds-line);
+}
+
+.dark div[class*='language-'] code {
+  color: var(--ds-ink);
+}
+
+/* Search box dark mode */
+.dark .VPNavBarSearch .DocSearch-Button {
+  background: var(--ds-card);
+  border-color: var(--ds-line);
+}
+
+.dark .VPNavBarSearch .DocSearch-Button:hover {
+  background: var(--ds-card-hover);
+}
+
+/* Custom block dark mode polish */
+.dark .custom-block.info {
+  background: rgba(90, 168, 255, 0.08);
+  border-color: rgba(90, 168, 255, 0.25);
+}
+
+.dark .custom-block.tip {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.dark .custom-block.warning {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.dark .custom-block.danger {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+/* SVG and icon inversion for dark mode */
+.dark .vp-doc svg text {
+  fill: var(--ds-ink);
+}
+
+.dark .vp-doc svg rect[fill="#0071e3"],
+.dark .vp-doc svg rect[fill="url(#blueGrad)"] {
+  fill: var(--ds-blue);
+}
+
+.dark .vp-doc svg circle[fill="white"] {
+  fill: rgba(255, 255, 255, 0.9);
+}
+
+/* Medium zoom dark mode overlay */
+.dark .medium-zoom-overlay {
+  background: rgba(10, 10, 12, 0.95) !important;
+}
+
+/* Image border in dark mode */
+.dark .vp-doc img {
+  border: 1px solid var(--ds-line);
+  background: var(--ds-card);
+}
+
+/* Inline code dark mode */
+.dark .vp-doc :not(pre) > code {
+  background: var(--vp-code-bg);
+  color: var(--ds-blue);
+  border: 1px solid var(--ds-line);
+}
+
+/* Horizontal rule dark mode */
+.dark .vp-doc hr {
+  border-color: var(--ds-line);
+}
+
+/* Badge dark mode */
+.dark .VPBadge {
+  background: var(--ds-card);
+  border-color: var(--ds-line);
+}
+
+/* Local search dark mode polish */
+.dark .VPLocalSearchBox {
+  --vp-local-search-bg: var(--ds-surface-strong);
+  --vp-local-search-result-bg: var(--ds-card);
+  --vp-local-search-highlight-bg: var(--ds-blue-soft);
+}
+
+/* Feature card enhancements for dark mode */
+.dark .VPFeature {
+  background: var(--ds-card);
+  border-color: var(--ds-line);
+}
+
+.dark .VPFeature:hover {
+  background: var(--ds-card-hover);
+  border-color: var(--ds-line-strong);
+}
+
+/* Home page button fixes */
+.dark .VPButton.brand {
+  background: var(--vp-button-brand-bg);
+  color: var(--vp-button-brand-text);
+}
+
+.dark .VPButton.alt {
+  background: var(--vp-button-alt-bg);
+  color: var(--vp-button-alt-text);
+  border-color: var(--vp-button-alt-border);
+}
+
+/* Outline sidebar dark mode */
+.dark .VPDocOutlineItem a {
+  color: var(--ds-muted);
+}
+
+.dark .VPDocOutlineItem a:hover,
+.dark .VPDocOutlineItem a.active {
+  color: var(--ds-ink);
+}
+
+/* Edit link dark mode */
+.dark .edit-link-button {
+  color: var(--ds-muted);
+}
+
+.dark .edit-link-button:hover {
+  color: var(--ds-blue);
+}
+
+/* Last updated dark mode */
+.dark .VPLastUpdated {
+  color: var(--ds-muted);
+}
+
+/* Scrollbar dark mode */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ===== Hero Scroll Hint Animation ===== */
+.hero-scroll-hint {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero-scroll-hint svg {
+  width: 32px;
+  height: 32px;
+  color: var(--ds-muted);
+  animation: bounce-down 2s ease-in-out infinite;
+}
+
+@keyframes bounce-down {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(12px);
+    opacity: 1;
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-hint svg {
+    animation: none;
+  }
+}
+
+/* ===== Dynamic Island / Notch Safe Area Support ===== */
+/* iPhone 14 Pro+ 灵动岛及刘海屏沉浸式适配 */
+/* 策略：导航栏背景延伸到刘海区，内容在安全区域内 */
+
+/* 主导航栏背景延伸至刘海屏区域 */
+.VPNavBar {
+  /* 向上延伸到刘海屏下方 */
+  margin-top: calc(-1 * env(safe-area-inset-top));
+  /* 增加高度覆盖刘海区域 */
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 导航栏内部 wrapper 下移避开刘海（VitePress 使用 .wrapper 而非 .container） */
+.VPNavBar .wrapper {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 文档本地导航适配 */
+.VPLocalNav {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 侧边栏延伸到刘海屏区域 */
+.VPSidebar {
+  margin-top: calc(-1 * env(safe-area-inset-top));
+  padding-top: calc(env(safe-area-inset-top) + 20px);
+  min-height: calc(100vh + env(safe-area-inset-top));
+}
+
+/* 侧边栏顶部遮罩层 */
+.VPSidebar .curtain {
+  top: calc(env(safe-area-inset-top) * -1);
+  height: calc(env(safe-area-inset-top) + 20px);
+}
+
+/* 移动端侧边栏菜单面板 */
+.VPNavScreen {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 确保顶部内容不被遮挡 */
+.VPDoc {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .VPNavBar .wrapper {
+    padding-top: env(safe-area-inset-top);
+  }
+}
