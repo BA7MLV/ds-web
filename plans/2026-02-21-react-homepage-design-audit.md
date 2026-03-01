@@ -296,10 +296,10 @@
 
 ### 项目内（.md）
 
-- [README](../readme.md)
+- [README](../index.md)
 - [Docs Index](../index.md)
 - [Docs Download](../download.md)
-- [Feature Architecture](../feature-architecture.md)
+- [Feature Architecture](../guide/feature-architecture.md)
 - [计划模板示例：GitHub 下载加速 TODO](2026-02-20-github-cn-download-acceleration-todo.md)
 
 ### 外部规范
