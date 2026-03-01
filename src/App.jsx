@@ -1448,7 +1448,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
                 </svg>
               </button>
               <a
-                href="/docs/start"
+                href="/docs/start.html"
                 className="group inline-flex w-full sm:w-auto items-center justify-center gap-1.5 px-8 py-3 bg-transparent text-[color:var(--apple-ink)] border border-[color:var(--apple-line-strong)] rounded-lg font-medium text-[15px] hover:bg-[color:var(--apple-card)] transition-all duration-200"
               >
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
