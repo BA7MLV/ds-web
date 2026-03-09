@@ -294,6 +294,9 @@
   "policy.close": "Close dialog",
   "locale.select": "Language",
   "locale.zh": "简体中文",
+  "locale.zhShort": "简中",
   "locale.zhHant": "繁體中文",
-  "locale.en": "English"
+  "locale.zhHantShort": "繁中",
+  "locale.en": "English",
+  "locale.enShort": "EN"
 }

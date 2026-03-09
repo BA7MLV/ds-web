@@ -293,7 +293,10 @@
   "policy.understood": "我已瞭解",
   "policy.close": "關閉彈窗",
   "locale.select": "語言",
-  "locale.zh": "簡體中文",
+  "locale.zh": "简体中文",
+  "locale.zhShort": "簡中",
   "locale.zhHant": "繁體中文",
-  "locale.en": "English"
+  "locale.zhHantShort": "繁中",
+  "locale.en": "English",
+  "locale.enShort": "EN"
 }

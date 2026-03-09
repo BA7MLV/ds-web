@@ -296,6 +296,9 @@
   "policy.close": "关闭弹窗",
   "locale.select": "语言",
   "locale.zh": "简体中文",
+  "locale.zhShort": "简中",
   "locale.zhHant": "繁體中文",
-  "locale.en": "English"
+  "locale.zhHantShort": "繁中",
+  "locale.en": "English",
+  "locale.enShort": "EN"
 }

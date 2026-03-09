@@ -1,4 +1,10 @@
 import { useCallback, useId, useSyncExternalStore } from 'react'
+import {
+  getLocaleSliderLabelClassName,
+  getLocaleSliderThumbClassName,
+  getLocaleSliderThumbStyle,
+  getLocaleSliderTrackClassName,
+} from '../lib/locale-slider-ui.js'
 import { cn } from '../lib/utils'
 import zhMessages from '../locales/zh.json'
 
@@ -200,9 +206,9 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
         )}
         aria-label={t('locale.select', 'Language')}
       >
-        <option value="zh">{t('locale.zh', '简体中文')}</option>
-        <option value="zh-Hant">{t('locale.zhHant', '繁體中文')}</option>
-        <option value="en">{t('locale.en', 'English')}</option>
+        <option value="zh">{t('locale.zh')}</option>
+        <option value="zh-Hant">{t('locale.zhHant')}</option>
+        <option value="en">{t('locale.en')}</option>
       </select>
       <span
         className={cn(
@@ -233,18 +239,18 @@ export const LocaleSlider = ({ className = '', compact = false }) => {
   const options = [
     {
       value: 'zh',
-      label: t('locale.zh', '简体中文'),
-      short: t('locale.zhShort', '简中'),
+      label: t('locale.zh'),
+      short: t('locale.zhShort'),
     },
     {
       value: 'zh-Hant',
-      label: t('locale.zhHant', '繁體中文'),
-      short: t('locale.zhHantShort', '繁中'),
+      label: t('locale.zhHant'),
+      short: t('locale.zhHantShort'),
     },
     {
       value: 'en',
-      label: t('locale.en', 'English'),
-      short: t('locale.enShort', 'EN'),
+      label: t('locale.en'),
+      short: t('locale.enShort'),
     },
   ]
 
@@ -253,28 +259,11 @@ export const LocaleSlider = ({ className = '', compact = false }) => {
   return (
     <fieldset className={cn('w-full', className)}>
       <legend className="sr-only">{t('locale.select', 'Language')}</legend>
-      <div
-        className={cn(
-          'relative grid grid-cols-3 items-center p-1 rounded-full',
-          'bg-[color:var(--apple-btn-secondary-bg)] border border-[color:var(--apple-line)]',
-          'backdrop-blur-xl backdrop-saturate-[180%] shadow-[var(--apple-shadow-sm)]',
-          compact ? 'h-8' : 'h-10',
-          'focus-within:ring-2 focus-within:ring-offset-2',
-          'focus-within:ring-[rgba(29,29,31,0.2)] focus-within:ring-offset-[rgba(255,255,255,0.9)]',
-          'dark:focus-within:ring-[rgba(255,255,255,0.3)] dark:focus-within:ring-offset-[rgba(0,0,0,0.9)]'
-        )}
-      >
+      <div className={getLocaleSliderTrackClassName({ compact })}>
         <div
           aria-hidden="true"
-          className={cn(
-            'absolute top-1 bottom-1 left-1 rounded-full',
-            'bg-[color:var(--apple-card-strong)] shadow-[var(--apple-shadow-sm)]',
-            'transform transition-transform duration-150 ease-out motion-reduce:transition-none'
-          )}
-          style={{
-            width: 'calc((100% - 0.5rem) / 3)',
-            transform: `translateX(${index * 100}%)`,
-          }}
+          className={getLocaleSliderThumbClassName()}
+          style={getLocaleSliderThumbStyle(index, options.length)}
         />
 
         {options.map((opt) => {
@@ -285,21 +274,18 @@ export const LocaleSlider = ({ className = '', compact = false }) => {
             <div key={opt.value} className="relative z-10 h-full">
               <input
                 id={id}
-                className="sr-only"
+                className="peer sr-only"
                 type="radio"
                 name={`${groupId}-ds-locale`}
                 value={opt.value}
                 checked={checked}
                 onChange={(event) => setLocale(event.target.value)}
+                aria-label={opt.label}
               />
               <label
                 htmlFor={id}
-                className={cn(
-                  'inline-flex h-full w-full items-center justify-center rounded-full px-2',
-                  'cursor-pointer select-none',
-                  compact ? 'text-[12px] font-semibold' : 'text-[13px] font-semibold',
-                  checked ? 'text-[color:var(--apple-ink)]' : 'text-[color:var(--apple-muted)]'
-                )}
+                className={getLocaleSliderLabelClassName({ compact, checked })}
+                title={compact ? opt.label : undefined}
               >
                 {compact ? opt.short : opt.label}
               </label>
