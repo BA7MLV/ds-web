@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
 const NetworkContext = createContext(null)
 
@@ -101,9 +101,9 @@ const NetworkToast = ({
   return (
     <div 
       className={`fixed top-4 left-1/2 -translate-x-1/2 z-overlay px-4 py-3 rounded-full shadow-lg backdrop-blur-xl transition-all duration-300 ${
-        showOffline 
-          ? 'bg-[color:var(--apple-error-bg)] text-[color:var(--apple-error-text)] border border-[color:var(--apple-error-border)]' 
-          : 'bg-[color:var(--apple-success-bg)] text-[color:var(--apple-success-text)] border border-[color:var(--apple-success-border)]'
+        showOffline
+          ? 'border border-red-200 bg-red-500/10 text-red-700 dark:border-red-400/30 dark:bg-red-500/15 dark:text-red-200'
+          : 'border border-emerald-200 bg-emerald-500/10 text-emerald-700 dark:border-emerald-400/30 dark:bg-emerald-500/15 dark:text-emerald-200'
       }`}
     >
       <div className="flex items-center gap-3">

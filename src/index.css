@@ -28,6 +28,7 @@
     --apple-muted: #6e6e73;
     --apple-line: rgba(0, 0, 0, 0.08);
     --apple-line-strong: rgba(0, 0, 0, 0.12);
+    --apple-accent-line: rgba(124, 132, 145, 0.36);
     --apple-soft-line: rgba(255, 255, 255, 0.8);
     --apple-surface: #fbfbfd;
     --apple-surface-elevated: #ffffff;
@@ -113,6 +114,7 @@
     --apple-muted: #86868b;
     --apple-line: rgba(255, 255, 255, 0.08);
     --apple-line-strong: rgba(255, 255, 255, 0.12);
+    --apple-accent-line: rgba(194, 201, 212, 0.38);
     --apple-soft-line: rgba(255, 255, 255, 0.12);
     --apple-surface: #000000;
     --apple-surface-elevated: #1c1c1e;

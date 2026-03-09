@@ -1,4 +1,4 @@
-import { forwardRef, useState, useEffect, useRef } from 'react'
+import { forwardRef, useEffect, useRef, useState } from 'react'
 import { useImageLoader } from '../hooks/useImageLoader'
 
 const usePrefersReducedMotion = () => {
@@ -194,7 +194,7 @@ const LazyImageWithFallback = forwardRef(({
             {maxRetries > 0 && (
               <button
                 onClick={handleRetry}
-                className="mt-2 px-3 py-1.5 text-xs font-medium text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] bg-[color:var(--apple-blue-bg)] hover:bg-[color:var(--apple-blue-bg-hover)] rounded-full transition-colors"
+                className="mt-2 px-3 py-1.5 text-xs font-medium text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] bg-[color:var(--apple-blue-soft)] hover:bg-[color:var(--apple-blue-soft)]/80 rounded-full transition-colors"
               >
                 重新加载
               </button>

@@ -3,6 +3,8 @@ import { LocaleToggle, useLocale } from './components/locale-toggle'
 import { MobileNavMenu } from './components/mobile-nav-menu'
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import sharedDownloads from './data/downloads.json'
+import { getRecommendedBadgeClassName } from './lib/download-badge'
+import { getDownloadCardClassName } from './lib/download-card'
 import {
   detectSystemProfile,
   getPreferredPlatformTab,
@@ -10,6 +12,8 @@ import {
 } from './lib/download-recommendation'
 import { getImageRequestHints } from './lib/image-loading'
 import { subscribeToMediaQueryChange } from './lib/media-query-subscribe'
+import { getNextTopNavHiddenState } from './lib/top-nav-visibility'
+import { cn } from './lib/utils'
 import { buildWebsiteDownloads } from './lib/website-downloads'
 
 const logo = '/logo_mono_svg.svg'
@@ -190,6 +194,59 @@ const useViewportHeight = (enabled = true) => {
     [enabled]
   )
   return useSyncExternalStore(subscribe, viewportStore.getSnapshot, () => 0)
+}
+
+const useAutoHideTopNav = () => {
+  const [isHidden, setIsHidden] = useState(false)
+  const previousScrollYRef = useRef(0)
+  const hiddenRef = useRef(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    let rafId = null
+
+    const update = () => {
+      const currentY = Math.max(0, window.scrollY || window.pageYOffset || 0)
+      const nextHidden = getNextTopNavHiddenState({
+        previousY: previousScrollYRef.current,
+        currentY,
+        hidden: hiddenRef.current,
+      })
+
+      previousScrollYRef.current = currentY
+      if (nextHidden === hiddenRef.current) return
+
+      hiddenRef.current = nextHidden
+      setIsHidden(nextHidden)
+    }
+
+    const handleScroll = () => {
+      if (rafId) return
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null
+        update()
+      })
+    }
+
+    previousScrollYRef.current = Math.max(0, window.scrollY || window.pageYOffset || 0)
+    hiddenRef.current = false
+    setIsHidden(false)
+    update()
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
+      if (rafId) {
+        window.cancelAnimationFrame(rafId)
+      }
+    }
+  }, [])
+
+  return isHidden
 }
 
 const useParallaxProgress = ({
@@ -555,8 +612,8 @@ const FlowArrow = ({ label, sublabel, direction = 'right', className = '' }) => 
         )}
       </svg>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-none transition-transform duration-300 group-hover:scale-105">
-        <span className="text-[11px] sm:text-[12px] font-medium text-[color:var(--apple-ink)] bg-[color:var(--apple-bg)]/80 backdrop-blur-sm px-2.5 py-0.5 rounded-md border border-[color:var(--apple-line)] shadow-sm whitespace-nowrap leading-tight">{label}</span>
-        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--apple-bg)]/80 backdrop-blur-sm px-1.5 py-0.5 mt-0.5 rounded-md border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight shadow-sm">{sublabel}</span>}
+        <span className="text-[11px] sm:text-[12px] font-medium text-[color:var(--apple-ink)] bg-[color:var(--apple-card)]/80 backdrop-blur-sm px-2.5 py-0.5 rounded-md border border-[color:var(--apple-line)] shadow-sm whitespace-nowrap leading-tight">{label}</span>
+        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--apple-card)]/80 backdrop-blur-sm px-1.5 py-0.5 mt-0.5 rounded-md border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight shadow-sm">{sublabel}</span>}
       </div>
     </div>
   )
@@ -591,9 +648,9 @@ const FlowArrowVertical = ({ label, sublabel, direction = 'down' }) => {
           </line>
         )}
       </svg>
-      <div className="relative z-10 flex flex-col items-center bg-[color:var(--apple-bg)]/80 backdrop-blur-sm px-2 py-1 rounded-md border border-[color:var(--apple-line)] shadow-sm pointer-events-none transition-transform duration-300 group-hover:scale-105">
+      <div className="relative z-10 flex flex-col items-center bg-[color:var(--apple-card)]/80 backdrop-blur-sm px-2 py-1 rounded-md border border-[color:var(--apple-line)] shadow-sm pointer-events-none transition-transform duration-300 group-hover:scale-105">
         <span className="text-[11px] font-medium text-[color:var(--apple-ink)] whitespace-nowrap leading-tight">{label}</span>
-        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--apple-bg)]/50 px-1 py-0.5 mt-0.5 rounded border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight shadow-sm">{sublabel}</span>}
+        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--apple-card)]/50 px-1 py-0.5 mt-0.5 rounded border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight shadow-sm">{sublabel}</span>}
       </div>
     </div>
   )
@@ -676,7 +733,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
                   {[chatRow1, chatRow2, chatRow3, chatRow4].map((row, i) => (
                     <div key={i} className="flex justify-center gap-1.5">
                       {row.map((feat) => (
-                        <span key={feat} className="text-[8px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap bg-[color:var(--apple-bg)]/50 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 group-hover:border-[color:var(--apple-muted)]/30 group-hover:shadow-sm group-hover:bg-[color:var(--apple-bg)]/80">{feat}</span>
+                        <span key={feat} className="text-[8px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap bg-[color:var(--apple-card)]/50 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 group-hover:border-[color:var(--apple-muted)]/30 group-hover:shadow-sm group-hover:bg-[color:var(--apple-card)]/80">{feat}</span>
                       ))}
                     </div>
                   ))}
@@ -735,7 +792,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
 
             {/* 第二行：Skills | 工具调用连接 | VFS */}
             <div className="flex flex-col items-center py-2 group cursor-default">
-              <div className="relative w-full border border-[color:var(--apple-line)] rounded-[20px] py-5 px-5 bg-[color:var(--apple-bg)]/80 backdrop-blur-sm transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:shadow-md group-hover:border-[color:var(--apple-muted)]/30 group-hover:bg-[color:var(--apple-bg)]">
+              <div className="relative w-full border border-[color:var(--apple-line)] rounded-[20px] py-5 px-5 bg-[color:var(--apple-card)]/80 backdrop-blur-sm transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:shadow-md group-hover:border-[color:var(--apple-muted)]/30 group-hover:bg-[color:var(--apple-card)]">
                 <div className="absolute inset-0 bg-emerald-500/5 blur-2xl rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                 <div className="relative z-10 text-center">
                   <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">Skills</div>
@@ -763,7 +820,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
 
             {/* VFS */}
             <div className="flex flex-col items-center py-2 group cursor-default">
-              <div className="relative w-full border border-[color:var(--apple-line)] rounded-[20px] py-5 px-5 bg-[color:var(--apple-bg)]/80 backdrop-blur-sm transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:shadow-md group-hover:border-[color:var(--apple-muted)]/30 group-hover:bg-[color:var(--apple-bg)]">
+              <div className="relative w-full border border-[color:var(--apple-line)] rounded-[20px] py-5 px-5 bg-[color:var(--apple-card)]/80 backdrop-blur-sm transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:shadow-md group-hover:border-[color:var(--apple-muted)]/30 group-hover:bg-[color:var(--apple-card)]">
                 <div className="absolute inset-0 bg-purple-500/5 blur-2xl rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                 <div className="relative z-10 text-center">
                   <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">VFS</div>
@@ -815,7 +872,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
                 {[chatRow1, chatRow2, chatRow3, chatRow4].map((row, i) => (
                   <div key={i} className="flex justify-center gap-1.5">
                     {row.map((feat) => (
-                      <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap bg-[color:var(--apple-bg)]/50 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 group-hover:border-[color:var(--apple-muted)]/30 group-hover:shadow-sm group-hover:bg-[color:var(--apple-bg)]/80">{feat}</span>
+                      <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap bg-[color:var(--apple-card)]/50 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 group-hover:border-[color:var(--apple-muted)]/30 group-hover:shadow-sm group-hover:bg-[color:var(--apple-card)]/80">{feat}</span>
                     ))}
                   </div>
                 ))}
@@ -828,7 +885,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
           <FlowArrowVertical label={t('arch.arrow.invoke', '调用')} direction="down" />
 
           {/* Skills 技能层 */}
-          <div className="w-full max-w-[280px] border border-[color:var(--apple-line)] rounded-2xl py-4 px-4 bg-[color:var(--apple-bg)]">
+          <div className="w-full max-w-[280px] border border-[color:var(--apple-line)] rounded-2xl py-4 px-4 bg-[color:var(--apple-surface)]">
             <div className="text-center">
               <div className="text-[15px] font-semibold text-[color:var(--apple-ink)]">Skills</div>
               <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.skills.subtitle', '技能编排 · 按需加载')}</div>
@@ -850,7 +907,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
           <FlowArrowVertical label={t('arch.arrow.tools', '工具调用')} sublabel="RAG" direction="down" />
 
           {/* VFS 数据（抽象） */}
-          <div className="border border-[color:var(--apple-line)] rounded-2xl py-4 px-6 bg-[color:var(--apple-bg)]">
+          <div className="border border-[color:var(--apple-line)] rounded-2xl py-4 px-6 bg-[color:var(--apple-surface)]">
             <div className="text-center">
               <div className="text-[15px] font-semibold text-[color:var(--apple-ink)]">VFS</div>
               <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.vfs.desc', '虚拟文件系统 · 学习数据')}</div>
@@ -1041,7 +1098,7 @@ const App = () => {
                   { labelKey: 'anki.templateEditor', descKey: 'anki.templateEditorDesc', imgSrc: '/img/example/模板库-2.png' },
                 ]}
               >
-                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
                   <OptimizedImage src="/img/example/anki-制卡2.png" alt={t('anki.preview')} className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
@@ -1059,7 +1116,7 @@ const App = () => {
                   { labelKey: 'mcp.output', descKey: 'mcp.outputDesc', imgSrc: '/img/example/mcp-4.png' },
                 ]}
               >
-                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
                   <OptimizedImage src="/img/example/mcp-2.png" alt="MCP Tool Ecosystem" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
@@ -1079,7 +1136,7 @@ const App = () => {
                   { labelKey: 'research.save', descKey: 'research.saveDesc', imgSrc: '/img/example/调研-5.png' },
                 ]}
               >
-                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
                   <OptimizedImage src="/img/example/调研-1.png" alt="Deep Research" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
@@ -1097,7 +1154,7 @@ const App = () => {
                   { labelKey: 'reading.docx', descKey: 'reading.docxDesc', imgSrc: '/img/example/docx阅读-1.png' },
                 ]}
               >
-                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
                   <OptimizedImage src="/img/example/pdf阅读-1.png" alt="Deep Reading" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
@@ -1118,7 +1175,7 @@ const App = () => {
                   { labelKey: 'mindmap.recite', descKey: 'mindmap.reciteDesc', imgSrc: '/img/example/知识导图-6.png' },
                 ]}
               >
-                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
                   <OptimizedImage src="/img/example/知识导图-1.png" alt="Knowledge Mindmap" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
@@ -1139,7 +1196,7 @@ const App = () => {
                   { labelKey: 'memory.vector', descKey: 'memory.vectorDesc', imgSrc: '/img/example/向量化状态.png' },
                 ]}
               >
-                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
                   <OptimizedImage src="/img/example/笔记-1.png" alt="Notes & Memory Management" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
@@ -1159,7 +1216,7 @@ const App = () => {
                   { labelKey: 'qbank.knowledge', descKey: 'qbank.knowledgeDesc', imgSrc: '/img/example/题目集-5.png' },
                 ]}
               >
-                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
                   <OptimizedImage src="/img/example/题目集-1.png" alt="Smart Q-Bank" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
@@ -1177,7 +1234,7 @@ const App = () => {
                   { labelKey: 'essay.settings', descKey: 'essay.settingsDesc', imgSrc: '/img/example/作文-4.png' },
                 ]}
               >
-                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
                   <OptimizedImage src="/img/example/作文-2.png" alt="Essay Grading" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
@@ -1195,7 +1252,7 @@ const App = () => {
                   { labelKey: 'paperSearch.read', descKey: 'paperSearch.readDesc', imgSrc: '/img/example/论文搜索-3.png' },
                 ]}
               >
-                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
                   <OptimizedImage src="/img/example/论文搜索-1.png" alt="Paper Search" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
@@ -1213,7 +1270,7 @@ const App = () => {
                   { labelKey: 'translation.domain', descKey: 'translation.domainDesc', imgSrc: '/img/example/翻译-3.png' },
                 ]}
               >
-                <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)]">
+                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
                   <OptimizedImage src="/img/example/翻译-1.png" alt="Translation Workbench" className="w-full h-auto object-cover" />
                 </div>
               </FeatureSection>
@@ -1234,8 +1291,15 @@ const App = () => {
 
 const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
+  const isHidden = useAutoHideTopNav()
+
   return (
-    <nav className="sticky top-0 z-nav pt-safe bg-white/75 backdrop-blur-[20px] backdrop-saturate-[180%] dark:bg-[color:var(--apple-nav-bg)]">
+    <nav
+      className={cn(
+        'sticky top-0 z-nav pt-safe bg-white/75 backdrop-blur-[20px] backdrop-saturate-[180%] dark:bg-[color:var(--apple-nav-bg)] transition-transform duration-200 ease-out',
+        isHidden ? '-translate-y-full' : 'translate-y-0'
+      )}
+    >
       <div className="max-w-6xl mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-slate-900 transition-opacity hover:opacity-80 dark:text-[color:var(--apple-ink)]">
           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" loading="lazy" decoding="async" />
@@ -1675,6 +1739,7 @@ const formatReleaseDate = (rawDate, locale) => {
 
 const DownloadPage = ({ onBack = () => {} }) => {
   const { t, locale } = useLocale()
+  const isHidden = useAutoHideTopNav()
   const platformDownloads = buildWebsiteDownloads(sharedDownloads, {
     macArmChannel: t('download.channel.macArm', 'Apple 芯片 · aarch64'),
     macX64Channel: t('download.channel.macX64', 'Intel 芯片 · x64'),
@@ -1724,7 +1789,12 @@ const DownloadPage = ({ onBack = () => {} }) => {
   const releaseUpdatedAt = formatReleaseDate(updatedAtRaw, locale)
   return (
     <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[var(--space-page-bottom)]">
-      <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl pt-safe">
+      <div
+        className={cn(
+          'sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl pt-safe transition-transform duration-200 ease-out',
+          isHidden ? '-translate-y-full' : 'translate-y-0'
+        )}
+      >
         <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
           <button
             type="button"
@@ -1775,19 +1845,22 @@ const DownloadPage = ({ onBack = () => {} }) => {
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
-          {filteredDownloads.map((platform) => (
+          {filteredDownloads.map((platform) => {
+            const isRecommended = platform.id === recommendedId
+
+            return (
               <article
                 key={platform.id}
-                className="rounded-[1.5rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] p-[1.5rem] sm:p-[1.75rem] shadow-[var(--apple-shadow-sm)]"
+                className={getDownloadCardClassName(isRecommended)}
               >
+                {isRecommended ? (
+                  <span className={getRecommendedBadgeClassName()}>
+                    {t('download.recommended', '推荐')}
+                  </span>
+                ) : null}
                 <div>
                   <div className="flex items-center gap-2">
                     <p className="text-base font-semibold text-[color:var(--apple-ink)]">{platform.platform}</p>
-                    {platform.id === recommendedId ? (
-                      <span className="rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-2 py-0.5 text-[10px] font-semibold text-[color:var(--apple-ink)]">
-                        {t('download.recommended', '推荐')}
-                      </span>
-                    ) : null}
                   </div>
                   <p className="text-xs text-[color:var(--apple-muted)] break-words">{platform.channel}</p>
                 </div>
@@ -1816,7 +1889,8 @@ const DownloadPage = ({ onBack = () => {} }) => {
                   ) : null}
                 </div>
               </article>
-          ))}
+            )
+          })}
         </div>
 
       </section>
@@ -1848,7 +1922,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
       question: t('faq.macosQuarantine.q'),
       answer: t('faq.macosQuarantine.a'),
       code: t('faq.macosQuarantine.code', 'sudo xattr -r -d com.apple.quarantine <App Path>'),
-      linkHref: '/docs/guide/A-Q',
+      linkHref: '/docs/A-Q',
       linkLabel: t('faq.macosQuarantine.link'),
     },
     {
