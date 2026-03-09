@@ -1,32 +1,27 @@
 {
-  "version": "v0.9.23",
-  "publishedAt": "2026-02-27T07:56:41Z",
-  "releaseUrl": "https://github.com/helixnow/deep-student/releases/tag/v0.9.23",
-  "generatedAt": "2026-02-27T12:42:32.100Z",
+  "version": "v0.9.34",
+  "publishedAt": "2026-03-09T09:09:57Z",
+  "releaseUrl": "https://github.com/helixnow/deep-student/releases/tag/v0.9.34",
+  "generatedAt": "2026-03-09T15:47:51.131Z",
   "platforms": {
     "macArm64": {
-      "name": "Deep.Student_0.9.23_aarch64.dmg",
-      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.23/Deep.Student_0.9.23_aarch64.dmg",
-      "mirrorUrl": "https://download.deepstudent.cn/releases/v0.9.23/Deep.Student_0.9.23_aarch64.dmg",
-      "sizeBytes": 48915057
+      "name": "Deep.Student_0.9.34_aarch64.dmg",
+      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.34/Deep.Student_0.9.34_aarch64.dmg",
+      "mirrorUrl": "https://download.deepstudent.cn/releases/v0.9.34/Deep.Student_0.9.34_aarch64.dmg",
+      "sizeBytes": 49672212
     },
     "macX64": {
-      "name": "Deep.Student_0.9.23_x64.dmg",
-      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.23/Deep.Student_0.9.23_x64.dmg",
-      "mirrorUrl": "https://download.deepstudent.cn/releases/v0.9.23/Deep.Student_0.9.23_x64.dmg",
-      "sizeBytes": 51643148
+      "name": "Deep.Student_0.9.34_x64.dmg",
+      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.34/Deep.Student_0.9.34_x64.dmg",
+      "mirrorUrl": "https://download.deepstudent.cn/releases/v0.9.34/Deep.Student_0.9.34_x64.dmg",
+      "sizeBytes": 52585226
     },
     "windowsX64": {
-      "name": "Deep.Student_0.9.23_x64-setup.exe",
-      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.23/Deep.Student_0.9.23_x64-setup.exe",
-      "mirrorUrl": "https://download.deepstudent.cn/releases/v0.9.23/Deep.Student_0.9.23_x64-setup.exe",
-      "sizeBytes": 38397869
+      "name": "Deep.Student_0.9.34_x64-setup.exe",
+      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.34/Deep.Student_0.9.34_x64-setup.exe",
+      "mirrorUrl": "https://download.deepstudent.cn/releases/v0.9.34/Deep.Student_0.9.34_x64-setup.exe",
+      "sizeBytes": 39012035
     },
-    "androidArm64": {
-      "name": "Deep.Student_0.9.23_arm64.apk",
-      "url": "https://github.com/helixnow/deep-student/releases/download/v0.9.23/Deep.Student_0.9.23_arm64.apk",
-      "mirrorUrl": "https://download.deepstudent.cn/releases/v0.9.23/Deep.Student_0.9.23_arm64.apk",
-      "sizeBytes": 116434227
-    }
+    "androidArm64": null
   }
 }
