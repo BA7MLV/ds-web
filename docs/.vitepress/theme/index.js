@@ -1,8 +1,9 @@
+import { useData, useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
-import { onMounted, onUnmounted, nextTick, watch } from 'vue'
-import { useRoute, useData } from 'vitepress'
+import { nextTick, onMounted, onUnmounted, watch } from 'vue'
 import CustomHome from './CustomHome.vue'
 import Layout from './Layout.vue'
+import './custom.css'
 
 let mediumZoomLoader
 
@@ -17,7 +18,7 @@ const loadMediumZoom = async () => {
 export default {
   extends: DefaultTheme,
   Layout,
-  enhanceApp({ app, router, siteData }) {
+  enhanceApp({ app }) {
     // 注册自定义首页组件
     app.component('CustomHome', CustomHome)
   },
