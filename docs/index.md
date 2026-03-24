@@ -12,7 +12,7 @@ DeepStudent 将学习资源中心、Anki 制卡、技能系统、题库练习与
 <div style="text-align: center;">
   <p>关注我们的小红书账号：<a href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f">小红书</a></p>
   <p>加入我们的社群：<a href="https://qm.qq.com/q/1lTUkKSaB6">QQ群（310134919）</a></p>
-  <p>参与改进调研：<a href="https://wj.qq.com/s2/25820904/035b/" target="_blank">DeepStudent 改进问卷</a></p>
+  <p>参与改进调研：<a href="https://my.feishu.cn/share/base/form/shrcnpYmoEOwgZqr5Xl7I9QBRXf" target="_blank">DeepStudent 改进问卷</a></p>
 </div>
 
 ---
