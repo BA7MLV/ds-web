@@ -1,0 +1,85 @@
+# Deep Student 官网原型：竖滑横移功能区
+
+**日期：** 2026-07-09  
+**状态：** 设计已确认，待实现  
+**范围：** 独立原型页（验证交互与排版，再接入现有站）
+
+## 目标
+
+做一版独立原型页，验证 Apple 气质的功能展示：用户**纵向滚动**时，功能面板**横向推进**；上滑/下滑共用同一进度，动画可逆回退，手感流畅丝滑。
+
+## 决策摘要
+
+| 项 | 选择 |
+|---|---|
+| 交付形态 | 独立原型页（不替换现有首页） |
+| 横滑实现 | Sticky + scroll progress → `translateX` |
+| 面板数量 | 先 3 个核心 |
+| 面板内容 | Agent 对话 / Anki 制卡 / 学习中枢 |
+| 视觉 | Apple 气质：留白、系统字体栈、中性浅灰、少卡片 |
+| 动画库 | 现有 `motion`，不新增 GSAP |
+
+## 页面结构
+
+1. **短 Hero**：品牌 + 一句定位 + CTA  
+2. **横滑功能区**（本节重点）  
+3. **轻量收尾**：下载入口
+
+## 横滑机制
+
+- 外层容器高度约 `3 × 100vh`（每面板约 1 屏滚动距离）
+- 内层 `position: sticky; top: 0; height: 100vh; overflow: hidden`
+- 横向轨道放置 3 个全宽面板
+- 滚动进度 `0 → 1` 映射 `translateX(0 → -2 × 100vw)`
+- 用 `requestAnimationFrame` 读滚动；`motion` 做轻微平滑插值（跟手、不抖）
+- 上滑/下滑共用同一进度，天然可逆
+- `prefers-reduced-motion`：关闭插值，直接跟进度；或降级为纵向堆叠
+- 窄屏（移动端）：改为纵向 3 卡，避免小屏 sticky 横滑手感差
+
+```
+<section style={{ height: `${panels * 100}vh` }}>
+  <div className="sticky top-0 h-screen overflow-hidden">
+    <motion.div style={{ x }} className="flex w-max">
+      {panels.map(...)}
+    </motion.div>
+  </div>
+</section>
+```
+
+## 单面板构图
+
+- 左：短标题 + 一句说明（文案区 ≤ 视口约 40%）
+- 右：产品截图/界面示意（大图主导）
+- 底部：细进度点，随滚动更新
+- 文案可有轻微淡入/位移，绑定进度，可回退
+- 不放浮动徽章、不堆统计数字
+
+## 视觉规范
+
+- 背景 `#F5F5F7`
+- 主文字 `#1D1D1F`
+- 次文字 `#86868B`
+- 强调色：沿用 Deep Student 现有品牌色
+- 字体：`-apple-system, BlinkMacSystemFont, "SF Pro Display", ...`
+- 截图区极淡阴影或无阴影；少边框、少卡片感
+
+## 文件落点
+
+- `src/pages/PrototypeHome.jsx` — 原型页组装
+- `src/components/horizontal-feature-scroll.jsx` — 横滑核心
+- `src/components/feature-panel.jsx` — 单面板
+- 入口：`?view=prototype` 或独立 path，**不替换**当前主站 `App.jsx` 逻辑
+
+## 验收标准
+
+1. 下滑：面板从左到右推进；上滑：原路回退，无跳跃  
+2. 触控板 / 鼠标滚轮跟手，无明显掉帧  
+3. 进度点与当前面板同步  
+4. `prefers-reduced-motion` 与窄屏有合理降级  
+5. 不影响现有官网 `/` 与下载页  
+
+## 非目标（本原型不做）
+
+- 整站视觉重做与深色模式完整适配  
+- 全部功能面板（后续再扩到 4–6）  
+- 接入生产导航 / SEO / 分析埋点（验证通过后再接）
