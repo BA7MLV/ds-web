@@ -57,7 +57,8 @@ const main = async () => {
   const wasmPath = path.join(rootDir, 'node_modules/@resvg/resvg-wasm/index_bg.wasm')
   await initWasm(fs.readFileSync(wasmPath))
 
-  const svgPath = process.argv[2] ?? path.join(rootDir, 'public/favicon.svg')
+  // Source SVG lives in docs/public; the old public/favicon.svg copy was removed.
+  const svgPath = process.argv[2] ?? path.join(rootDir, 'docs/public/favicon.svg')
   const svg = readUtf8(svgPath)
 
   // Transparent favicon keeps the browser tab UI background.
@@ -70,6 +71,8 @@ const main = async () => {
   )
   const appleTouch = renderPng(svg, 180, appleTouchBackground)
 
+  // After regenerating, bump the apple-touch-icon `?v=` stamp in index.html
+  // (and docs/.vitepress/config.js if the docs icon changed) so caches refresh.
   const outputs = [
     ['public/favicon.ico', ico],
     ['public/apple-touch-icon.png', appleTouch],

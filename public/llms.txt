@@ -1,5 +1,7 @@
 # DeepStudent
 
+> DeepStudent｜AI 原生、本地优先的开源学习系统
+
 DeepStudent is an AI-native, local-first, open-source learning system built with Tauri 2 (AGPL-3.0).
 It uses "chat as the entry point" to connect your learning resources, retrieval (RAG), practice, and spaced repetition into a sustainable learning loop.
 

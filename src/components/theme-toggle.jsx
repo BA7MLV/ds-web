@@ -156,48 +156,96 @@ export const useTheme = () => {
   }
 }
 
+// Inline SF Symbol 风格图标（sun.max / moon / circle.lefthalf.filled）
+const SunIcon = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+    <circle cx="12" cy="12" r="4.25" fill="currentColor" />
+    <g stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+      <path d="M12 2.75v2" />
+      <path d="M12 19.25v2" />
+      <path d="M2.75 12h2" />
+      <path d="M19.25 12h2" />
+      <path d="m5.46 5.46 1.42 1.42" />
+      <path d="m17.12 17.12 1.42 1.42" />
+      <path d="m18.54 5.46-1.42 1.42" />
+      <path d="m6.88 17.12-1.42 1.42" />
+    </g>
+  </svg>
+)
+
+const MoonIcon = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+    <path
+      d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"
+      fill="currentColor"
+      stroke="currentColor"
+      strokeWidth="1"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
+const AutoIcon = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+    <circle cx="12" cy="12" r="8.25" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M12 3.75a8.25 8.25 0 0 0 0 16.5Z" fill="currentColor" />
+  </svg>
+)
+
+const THEME_ORDER = ['system', 'light', 'dark']
+const THEME_LABELS = { system: '跟随系统', light: '浅色模式', dark: '深色模式' }
+
+// Apple 弹性缓动（轻微过冲），reduced motion 下由 motion-reduce 类禁用
+const SPRING_EASE = 'ease-[cubic-bezier(0.34,1.56,0.64,1)]'
+
 // Theme toggle button with three states
 export const ThemeToggle = ({ className = '' }) => {
   const { theme, setTheme } = useTheme()
 
-  const cycleTheme = () => {
-    const order = ['system', 'light', 'dark']
-    const currentIndex = order.indexOf(theme)
-    const nextIndex = (currentIndex + 1) % order.length
-    setTheme(order[nextIndex])
-  }
+  const nextTheme = THEME_ORDER[(THEME_ORDER.indexOf(theme) + 1) % THEME_ORDER.length]
 
-  const getSymbol = () => {
-    if (theme === 'system') return 'A'
-    if (theme === 'dark') return '●'
-    return '○'
-  }
-
-  const getLabel = () => {
-    if (theme === 'system') return '跟随系统'
-    if (theme === 'dark') return '深色模式'
-    return '浅色模式'
-  }
+  // 触控目标：视觉尺寸保持 28px，通过伪元素向四周各扩展 8px，
+  // 使命中区域达到 44×44px（Apple HIG 最小触控目标），与 LocaleToggle 一致
+  // 三个图标叠放在同一位置，激活的旋转归位并放大淡入，其余反向旋出并缩小淡出
+  const iconClass = (isActive, hiddenTransform) => `
+    absolute inset-0 flex items-center justify-center
+    transition-all duration-300 ${SPRING_EASE}
+    motion-reduce:transition-none
+    ${isActive ? 'opacity-100 scale-100 rotate-0' : `opacity-0 ${hiddenTransform}`}
+  `.trim()
 
   return (
     <button
       type="button"
-      onClick={cycleTheme}
+      onClick={() => setTheme(nextTheme)}
       className={`
-        focus-ring relative flex items-center justify-center
+        focus-ring touch-manipulation group relative flex items-center justify-center
         w-7 h-7 rounded-full
+        before:content-[''] before:absolute before:-inset-2 before:rounded-full
         text-[color:var(--apple-muted)]
         hover:text-[color:var(--apple-ink)]
-        hover:bg-[color:var(--apple-card)]
-        active:scale-90
-        transition-all duration-200
+        hover:bg-[color:var(--apple-btn-secondary-bg)]
+        active:scale-[0.88] active:duration-100 active:ease-out
+        transition-[transform,background-color,color,box-shadow]
+        duration-300 ${SPRING_EASE}
+        motion-reduce:transition-none motion-reduce:active:scale-100
         ${className}
       `.trim()}
-      aria-label={`当前：${getLabel()}，点击切换`}
-      title={getLabel()}
+      aria-label={`主题：${THEME_LABELS[theme]}，点按切换为${THEME_LABELS[nextTheme]}`}
+      title={THEME_LABELS[theme]}
     >
-      <span className="transition-transform duration-300 ease-out text-xs font-medium">
-        {getSymbol()}
+      <span className={iconClass(theme === 'light', '-rotate-90 scale-50')}>
+        <SunIcon className="w-4 h-4 transition-transform duration-500 ease-out group-hover:rotate-45 motion-reduce:transition-none motion-reduce:group-hover:rotate-0" />
+      </span>
+      <span className={iconClass(theme === 'dark', 'rotate-90 scale-50')}>
+        <MoonIcon className="w-4 h-4 transition-transform duration-500 ease-out group-hover:-rotate-12 motion-reduce:transition-none motion-reduce:group-hover:rotate-0" />
+      </span>
+      <span className={iconClass(theme === 'system', 'scale-50')}>
+        <AutoIcon className="w-4 h-4 transition-transform duration-500 ease-out group-hover:rotate-180 motion-reduce:transition-none motion-reduce:group-hover:rotate-0" />
+      </span>
+      {/* 屏幕阅读器实时播报当前主题 */}
+      <span className="sr-only" aria-live="polite">
+        {THEME_LABELS[theme]}
       </span>
     </button>
   )
@@ -225,6 +273,8 @@ export const ThemeSelector = ({ className = '' }) => {
 
   return (
     <div className={`relative ${className}`}>
+      {/* 触控目标：视觉高度保持紧凑，伪元素向上下各扩展 8px，
+          使命中区域达到 ≥44px（Apple HIG 最小触控目标），与 LocaleToggle 一致 */}
       <button
         type="button"
         onClick={(e) => {
@@ -232,8 +282,9 @@ export const ThemeSelector = ({ className = '' }) => {
           setIsOpen(!isOpen)
         }}
         className="
-          focus-ring flex items-center gap-2 
+          focus-ring relative flex items-center gap-2
           px-3 py-1.5 rounded-full
+          after:content-[''] after:absolute after:inset-x-0 after:-inset-y-2
           text-xs font-medium
           bg-[color:var(--apple-card)] 
           border border-[color:var(--apple-line)]
@@ -241,6 +292,7 @@ export const ThemeSelector = ({ className = '' }) => {
           hover:text-[color:var(--apple-ink)]
           hover:bg-[color:var(--apple-card-hover)]
           transition-all duration-200
+          motion-reduce:transition-none
         "
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -255,7 +307,7 @@ export const ThemeSelector = ({ className = '' }) => {
             min-w-[120px] rounded-xl
             bg-[color:var(--apple-card-strong)]
             border border-[color:var(--apple-line)]
-            shadow-[var(--apple-shadow-md)]
+            [box-shadow:var(--apple-shadow-md)]
             backdrop-blur-xl
             z-50
           "
@@ -273,12 +325,13 @@ export const ThemeSelector = ({ className = '' }) => {
                   setIsOpen(false)
                 }}
                 className={`
-                  w-full flex items-center gap-2.5 px-3 py-2
+                  focus-ring w-full flex items-center gap-2.5 px-3 py-2 min-h-11
                   text-xs font-medium text-left
                   transition-colors duration-150
+                  motion-reduce:transition-none
                   ${isSelected 
                     ? 'text-[color:var(--apple-blue)] bg-[color:var(--apple-blue-soft)]' 
-                    : 'text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-card-hover)]'
+                    : 'text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg)]'
                   }
                 `}
                 role="option"

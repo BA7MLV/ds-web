@@ -39,6 +39,8 @@
     --apple-blue-hover: #0077ed;
     --apple-blue-soft: rgba(0, 113, 227, 0.12);
     --apple-glow: rgba(0, 113, 227, 0.15);
+    /* Segmented control thumb (light: translucent white pill) */
+    --apple-seg-thumb: rgba(255, 255, 255, 0.85);
     --apple-purple: #bf5af2;
     --apple-pink: #ff375f;
     
@@ -57,6 +59,9 @@
     --apple-shadow-xl: 
       0 24px 48px rgba(0,0,0,0.08), 
       0 48px 100px rgba(0,0,0,0.12);
+    --apple-shadow-2xl:
+      0 32px 64px rgba(0,0,0,0.1),
+      0 64px 128px rgba(0,0,0,0.14);
 
     /* Easing */
     --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
@@ -72,6 +77,9 @@
     /* Button tokens */
     --apple-btn-primary-bg: #1d1d1f;
     --apple-btn-primary-bg-hover: #3a3a3c;
+    /* Pressed reuses hover here: the #1d1d1f→#3a3a3c step is already
+       perceptible; dark overrides to a deeper step (see .dark) */
+    --apple-btn-primary-bg-active: #3a3a3c;
     --apple-btn-primary-text: #ffffff;
     --apple-btn-secondary-bg: rgba(0, 0, 0, 0.05);
     --apple-btn-secondary-bg-hover: rgba(0, 0, 0, 0.08);
@@ -80,7 +88,19 @@
 
     /* Nav tokens */
     --apple-nav-bg: rgba(251, 251, 253, 0.75);
+    /* Scrolled nav is more opaque so the 12px muted links keep contrast no
+       matter what scrolls behind the blur (mirrors --apple-menu-bg) */
+    --apple-nav-bg-scrolled: rgba(251, 251, 253, 0.88);
     --apple-nav-border: rgba(0, 0, 0, 0.05);
+    /* Full-screen menu backdrop: more opaque than the nav bar so menu text
+       keeps AA contrast no matter what scrolls behind the blur */
+    --apple-menu-bg: rgba(251, 251, 253, 0.92);
+
+    /* Focus ring (consumed by .focus-ring); dark values live in .dark.
+       0.55 keeps the ring ≥3:1 on the near-white page and light surfaces
+       (0.2 rendered at only ~1.5:1, effectively invisible) */
+    --apple-focus-ring: rgba(29, 29, 31, 0.55);
+    --apple-focus-ring-offset: rgba(255, 255, 255, 0.9);
 
     /* Selection */
     --apple-selection-bg: rgba(0, 113, 227, 0.15);
@@ -97,7 +117,11 @@
 
     /* Dark theme tokens - Apple-inspired deep space */
     --apple-ink: #f5f5f7;
-    --apple-ink-secondary: #86868b;
+    /* Was #86868b, identical to --apple-muted: that collapsed the
+       secondary/muted hierarchy light mode has, and sat at ~4.2:1 (<AA) for
+       text-sm on dark cards. #a1a1a6 (Apple systemGray dark) keeps the tier
+       and lands ~5.9:1. */
+    --apple-ink-secondary: #a1a1a6;
     --apple-muted: #86868b;
     --apple-line: rgba(255, 255, 255, 0.08);
     --apple-line-strong: rgba(255, 255, 255, 0.12);
@@ -109,9 +133,13 @@
     --apple-card-hover: rgba(44, 44, 46, 0.85);
     /* Monochrome premium look - replacing blue with white */
     --apple-blue: #0a84ff;
-    --apple-blue-hover: #0077ed;
+    /* Hover must lighten in dark mode; #0077ed was darker than the resting
+       #0a84ff and dropped link contrast below AA on near-black surfaces. */
+    --apple-blue-hover: #409cff;
     --apple-blue-soft: rgba(10, 132, 255, 0.15);
     --apple-glow: rgba(10, 132, 255, 0.25);
+    /* systemGray thumb: ~3:1 against the dark segmented track (WCAG 1.4.11) */
+    --apple-seg-thumb: #636366;
     --apple-purple: #bf5af2;
     --apple-pink: #ff375f;
     
@@ -119,6 +147,7 @@
     --apple-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.05);
     --apple-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255,255,255,0.05);
     --apple-shadow-xl: 0 32px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255,255,255,0.05);
+    --apple-shadow-2xl: 0 40px 100px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255,255,255,0.06);
 
     /* Title gradient - Apple dark mode style with subtle silver highlight */
     --apple-title-gradient: linear-gradient(
@@ -131,6 +160,10 @@
     /* Button tokens - White primary in dark mode */
     --apple-btn-primary-bg: #ffffff;
     --apple-btn-primary-bg-hover: #f2f2f7;
+    /* Hover #f2f2f7 is only ~2% darker than the white fill, imperceptible as
+       press feedback; step one more level to #e8e8ed (iOS systemGray5 light),
+       matching the Download page primary CTA (Round 17) */
+    --apple-btn-primary-bg-active: #e8e8ed;
     --apple-btn-primary-text: #000000;
     --apple-btn-secondary-bg: rgba(255, 255, 255, 0.08);
     --apple-btn-secondary-bg-hover: rgba(255, 255, 255, 0.12);
@@ -139,7 +172,24 @@
 
     /* Nav tokens */
     --apple-nav-bg: rgba(0, 0, 0, 0.75);
-    --apple-nav-border: rgba(255, 255, 255, 0.08);
+    /* Dark scrolled state: at 0.75 black, bright content blurred behind the
+       bar dropped the 12px --apple-muted links to ~2.9:1 worst-case. Round 19
+       recheck: 0.94 over #121214 composites to ~rgb(32,32,34) against a white
+       blur, putting #86868b at ~4.48:1 — a hair under AA. 0.95 lands the
+       worst case at ~4.6:1 with headroom while the bar still reads as glass;
+       this sits one step above the 0.94 --apple-menu-bg, whose smallest text
+       is 14px+ and doesn't need the extra opacity. */
+    --apple-nav-bg-scrolled: rgba(18, 18, 20, 0.95);
+    /* Matches --apple-line-strong: 0.08 hairlines vanish against the
+       near-black scrolled bar, and dark mode has no drop shadow to help */
+    --apple-nav-border: rgba(255, 255, 255, 0.12);
+    /* Lifted slightly above pure black so hairlines and the settings rows
+       still read as a surface while staying ≥AA against --apple-ink */
+    --apple-menu-bg: rgba(18, 18, 20, 0.94);
+
+    /* Focus ring: white @0.5 is ≥3:1 on near-black (was 0.3, ~2.3:1) */
+    --apple-focus-ring: rgba(255, 255, 255, 0.5);
+    --apple-focus-ring-offset: rgba(0, 0, 0, 0.9);
 
     /* Selection */
     --apple-selection-bg: rgba(10, 132, 255, 0.25);
@@ -230,18 +280,57 @@
 }
 
 @layer components {
+  /* Ring colors come from the --apple-focus-* theme tokens (:root / .dark),
+     so dark switching happens via inheritance like every other token */
   .focus-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    --tw-ring-color: var(--apple-focus-ring);
+    --tw-ring-offset-color: var(--apple-focus-ring-offset);
   }
 
-  :root .focus-ring {
-    --tw-ring-color: rgba(29, 29, 31, 0.2);
-    --tw-ring-offset-color: rgba(255, 255, 255, 0.9);
+  /* Inset variant for controls that sit flush against an overflow-clipping
+     ancestor (FAQ <summary> inside the overflow-hidden accordion card, the
+     full-bleed mobile-menu rows inside their scroll region): .focus-ring
+     paints an outward box-shadow, which ancestor clipping swallows, so draw
+     the indicator inward instead — same convention as .policy-modal-scroll
+     and .skip-link. --apple-ink is ≥3:1 on every surface in both themes. */
+  .focus-ring-inset:focus-visible {
+    outline: 2px solid var(--apple-ink);
+    outline-offset: -2px;
   }
 
-  .dark .focus-ring {
-    --tw-ring-color: rgba(255, 255, 255, 0.3);
-    --tw-ring-offset-color: rgba(0, 0, 0, 0.9);
+  /* Skip link: visually hidden until keyboard focus, then pinned above the
+     sticky nav (z 10010) inside the safe area. */
+  .skip-link {
+    position: fixed;
+    top: calc(0.75rem + var(--sat, 0px));
+    left: calc(0.75rem + var(--sal, 0px));
+    z-index: 10020;
+    padding: 0.625rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--apple-btn-primary-text);
+    background-color: var(--apple-btn-primary-bg);
+    box-shadow: var(--apple-shadow-lg);
+  }
+
+  .skip-link:not(:focus) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .skip-link:focus-visible {
+    outline: 2px solid var(--apple-ink);
+    outline-offset: 2px;
   }
 
   .segmented-control-wrap {
@@ -426,6 +515,95 @@
     transform: translateY(-2px);
     box-shadow: var(--apple-shadow-lg);
   }
+
+  .text-hero {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+  }
+
+  .text-section-title {
+    font-size: clamp(1.75rem, 3.5vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .text-body-large {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    line-height: 1.65;
+  }
+
+  /* Shared CTA spec — keep in sync with ui/button.jsx and the Download/Policy
+     CTAs: pill radius, 14px/500, 44px min touch height, active scale 0.97. */
+  .btn-apple-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    /* Primary tap target: skip the double-tap-to-zoom delay on touch devices */
+    touch-action: manipulation;
+    color: var(--apple-btn-primary-text);
+    background-color: var(--apple-btn-primary-bg);
+    box-shadow: var(--apple-shadow-sm);
+    transition: background-color 0.2s ease, transform 0.2s var(--ease-apple);
+  }
+
+  .btn-apple-primary:hover {
+    background-color: var(--apple-btn-primary-bg-hover);
+  }
+
+  /* Touch devices never see :hover, so scale alone was the only press signal
+     (hero primary download CTA); pair it with a background step like the
+     Download page CTAs. Reduced motion drops the scale but keeps this. */
+  .btn-apple-primary:active {
+    background-color: var(--apple-btn-primary-bg-active);
+    transform: scale(0.97);
+  }
+
+  .btn-apple-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    /* Primary tap target: skip the double-tap-to-zoom delay on touch devices */
+    touch-action: manipulation;
+    color: var(--apple-ink);
+    border: 1px solid var(--apple-line-strong);
+    background: transparent;
+    transition: background-color 0.2s ease, transform 0.2s var(--ease-apple);
+  }
+
+  .btn-apple-secondary:hover {
+    background: var(--apple-btn-secondary-bg-hover);
+  }
+
+  .btn-apple-secondary:active {
+    transform: scale(0.97);
+  }
+
+  /* Focus recheck: solid ink outline is ≥3:1 on both page backgrounds
+     (#1d1d1f on near-white, #f5f5f7 on near-black), and the 2px offset gap
+     shows the page bg so the ring stays distinct from the white primary fill
+     in dark mode (WCAG 1.4.11 adjacent-color requirement). */
+  .btn-apple-primary:focus-visible,
+  .btn-apple-secondary:focus-visible {
+    outline: 2px solid var(--apple-ink);
+    outline-offset: 2px;
+  }
 }
 
 /* Theme transition - respect reduced motion */
@@ -450,6 +628,29 @@
 
   .gradient-text-animated {
     animation: none;
+  }
+
+  /* Segmented thumb snaps instead of sliding */
+  .segmented-control__slider {
+    transition: none;
+  }
+
+  .hover-lift {
+    transition: none;
+  }
+
+  .hover-lift:hover {
+    transform: none;
+  }
+
+  .btn-apple-primary,
+  .btn-apple-secondary {
+    transition: none;
+  }
+
+  .btn-apple-primary:active,
+  .btn-apple-secondary:active {
+    transform: none;
   }
 }
 
@@ -542,12 +743,20 @@
   left: 0;
   right: 0;
   height: var(--sat);
+  /* Inherit the header's background so the notch strip follows the
+     resting -> scrolled bg swap instead of pinning to --apple-nav-bg */
   background: inherit;
-  background-color: var(--apple-nav-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   z-index: 39;
   pointer-events: none;
+  transition: background-color 0.3s var(--ease-apple);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .top-nav-safe-area::before {
+    transition: none;
+  }
 }
 
 /* 导航栏内容避开刘海 */
@@ -635,5 +844,96 @@
   }
   .skeleton::after {
     animation: none;
+  }
+}
+
+/* ===== Policy Modal ===== */
+@keyframes policy-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes policy-modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.policy-modal-backdrop {
+  animation: policy-backdrop-in 0.3s ease-out both;
+}
+
+.policy-modal-panel {
+  animation: policy-modal-in 0.42s var(--ease-apple) both;
+}
+
+.policy-modal-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--apple-line-strong) transparent;
+  scrollbar-gutter: stable;
+}
+
+.policy-modal-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.policy-modal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.policy-modal-scroll::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background-color: var(--apple-line-strong);
+}
+
+.policy-modal-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: var(--apple-muted);
+}
+
+/* Keyboard-scrollable region: inset outline so it isn't clipped by the
+   panel's overflow-hidden; --apple-ink is >=AA in both themes. */
+.policy-modal-scroll:focus-visible {
+  outline: 2px solid var(--apple-ink);
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .policy-modal-backdrop,
+  .policy-modal-panel {
+    animation: none;
+  }
+}
+
+/* FAQ accordion — animate native <details> expand/collapse height.
+   Progressive enhancement: engines without ::details-content / interpolate-size
+   (which invalidate or ignore these rules) keep the instant toggle, and the
+   panel fade in faq-section.jsx still provides motion there. Height motion is
+   gated to no-preference so reduced-motion users get an instant toggle. */
+@media (prefers-reduced-motion: no-preference) {
+  .faq-accordion {
+    interpolate-size: allow-keywords;
+  }
+
+  .faq-accordion::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size 0.4s var(--ease-apple),
+      content-visibility 0.4s allow-discrete;
+  }
+
+  .faq-accordion[open]::details-content {
+    block-size: auto;
   }
 }

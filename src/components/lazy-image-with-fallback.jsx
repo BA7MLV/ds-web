@@ -1,15 +1,21 @@
 import { forwardRef, useState, useEffect, useRef } from 'react'
 import { useImageLoader } from '../hooks/useImageLoader'
+import { useLocale } from './locale-toggle'
+
+// 同步读取初值，避免 reduced-motion 用户在首帧仍触发淡入动画
+const getInitialReducedMotion = () =>
+  typeof window !== 'undefined'
+  && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 const usePrefersReducedMotion = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(getInitialReducedMotion)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    
+
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     setPrefersReducedMotion(mediaQuery.matches)
-    
+
     const handler = (e) => setPrefersReducedMotion(e.matches)
     mediaQuery.addEventListener('change', handler)
     return () => mediaQuery.removeEventListener('change', handler)
@@ -40,12 +46,13 @@ const LazyImageWithFallback = forwardRef(({
   blurDuration = 400,
   ...imgProps
 }, forwardedRef) => {
+  const { t } = useLocale()
   const prefersReducedMotion = usePrefersReducedMotion()
   const [isReady, setIsReady] = useState(false)
+  const [placeholderDone, setPlaceholderDone] = useState(false)
   const imgElementRef = useRef(null)
-  
+
   const {
-    status,
     progress,
     errorMessage,
     isLoading,
@@ -61,7 +68,13 @@ const LazyImageWithFallback = forwardRef(({
     rootMargin,
   })
 
-  const enableBlurUp = blurUp && placeholderSrc && !prefersReducedMotion
+  // LQIP 本身是静态内容：reduced-motion 只去掉 blur-up 过渡动画，
+  // 占位图仍保留（比 skeleton 更有信息量，且无脉冲干扰）
+  const hasLqip = blurUp && placeholderSrc
+  const enableBlurUp = hasLqip && !prefersReducedMotion
+  const effectiveDuration = prefersReducedMotion ? 0 : blurDuration
+  // 占位层比主图晚一点开始淡出，交叉过渡期间不会露出底色
+  const placeholderDelay = effectiveDuration > 0 ? 100 : 0
 
   useEffect(() => {
     if (!isSuccess) {
@@ -69,94 +82,86 @@ const LazyImageWithFallback = forwardRef(({
     }
   }, [isSuccess])
 
+  // 主图渐显结束后再卸载占位层，保证淡出动画完整播放
+  useEffect(() => {
+    if (!isReady) {
+      setPlaceholderDone(false)
+      return
+    }
+    const timer = setTimeout(
+      () => setPlaceholderDone(true),
+      effectiveDuration + placeholderDelay + 50
+    )
+    return () => clearTimeout(timer)
+  }, [isReady, effectiveDuration, placeholderDelay])
+
   const handleRetry = () => {
     setIsReady(false)
     retry()
   }
 
-  const containerStyle = aspectRatio 
-    ? { aspectRatio, position: 'relative' } 
+  const containerStyle = aspectRatio
+    ? { aspectRatio, position: 'relative' }
     : { position: 'relative' }
 
   const handleImageLoad = async () => {
-    if (imgElementRef.current) {
-      if ('decode' in imgElementRef.current) {
-        try {
-          await imgElementRef.current.decode()
-        } catch {}
+    const img = imgElementRef.current
+    if (img && typeof img.decode === 'function') {
+      try {
+        await img.decode()
+      } catch {
+        // decode() 失败不影响展示，直接沿用 onload 时机
       }
     }
-    
     setIsReady(true)
     onLoad?.()
+  }
+
+  const showPlaceholder = !isError && !isOffline && (!isReady || !placeholderDone)
+
+  const placeholderStyle = {
+    opacity: isReady ? 0 : 1,
+    transition: effectiveDuration > 0
+      ? `opacity ${effectiveDuration}ms var(--ease-apple) ${placeholderDelay}ms`
+      : 'none',
   }
 
   const renderPlaceholder = () => {
     if (CustomPlaceholder) {
       return (
-        <div 
-          className="absolute inset-0 z-10"
-          style={{
-            opacity: isReady ? 0 : 1,
-            transition: 'opacity 300ms ease-out',
-          }}
-        >
+        <div className="absolute inset-0" style={placeholderStyle} aria-hidden>
           <CustomPlaceholder />
         </div>
       )
     }
 
-    return (
-      <div 
-        className={`absolute inset-0 z-10 skeleton w-full h-full rounded-[6px] ${className}`}
-        style={{
-          opacity: isReady ? 0 : 1,
-          transition: 'opacity 300ms ease-out',
-          ...containerStyle,
-        }}
-      >
-        {showProgress && isLoading && (
-          <div className="absolute inset-x-0 bottom-0 h-1 bg-[color:var(--apple-line-strong)]">
-            <div 
-              className="h-full bg-[color:var(--apple-blue)] transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        )}
-      </div>
-    )
-  }
+    if (hasLqip) {
+      return (
+        <div
+          className={`absolute inset-0 w-full h-full rounded-[6px] overflow-hidden ${className}`}
+          style={placeholderStyle}
+          aria-hidden
+        >
+          <img
+            src={placeholderSrc}
+            alt=""
+            draggable={false}
+            className="w-full h-full object-cover"
+            style={{
+              filter: 'blur(20px) saturate(1.15)',
+              transform: 'scale(1.1)',
+            }}
+          />
+        </div>
+      )
+    }
 
-  const renderBlurPlaceholder = () => {
-    if (!enableBlurUp) return renderPlaceholder()
-    
     return (
-      <div 
-        className={`absolute inset-0 z-10 w-full h-full rounded-[6px] overflow-hidden ${className}`}
-        style={{
-          opacity: isReady ? 0 : 1,
-          transition: `opacity ${blurDuration}ms ease-out`,
-          ...containerStyle,
-        }}
-      >
-        <img
-          src={placeholderSrc}
-          alt=""
-          className="w-full h-full object-cover"
-          style={{
-            filter: 'blur(20px)',
-            transform: 'scale(1.1)',
-          }}
-        />
-        {showProgress && isLoading && (
-          <div className="absolute inset-x-0 bottom-0 h-1 bg-[color:var(--apple-line-strong)] z-20">
-            <div 
-              className="h-full bg-[color:var(--apple-blue)] transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        )}
-      </div>
+      <div
+        className={`absolute inset-0 skeleton w-full h-full rounded-[6px] ${className}`}
+        style={placeholderStyle}
+        aria-hidden
+      />
     )
   }
 
@@ -165,40 +170,59 @@ const LazyImageWithFallback = forwardRef(({
       return <CustomFallback error={errorMessage} onRetry={handleRetry} />
     }
 
+    const message = errorText || errorMessage
+      || (isOffline ? t('placeholder.offlineMessage') : t('placeholder.errorMessage'))
+
+    // 与 ImagePlaceholder / FeatureScreenshotFrame 同族：6px 圆角、apple-line 描边、
+    // card-strong 玻璃底（backdrop blur）与 shadow-md
     return (
-      <div 
-        className={`w-full h-full min-h-[120px] rounded-[6px] bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] flex flex-col items-center justify-center gap-2 p-4 ${className}`}
-        style={aspectRatio ? { aspectRatio } : {}}
+      <div
+        className={`relative w-full h-full min-h-[120px] rounded-[6px] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card-strong)] backdrop-blur-2xl flex items-center justify-center overflow-hidden [box-shadow:var(--apple-shadow-md)] ${className}`}
+        style={aspectRatio ? { aspectRatio } : undefined}
+        role="img"
+        aria-label={message}
       >
-        {isOffline ? (
-          <>
-            <svg className="w-10 h-10 text-[color:var(--apple-muted)] opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.138m2.167 9.138l-2.829-2.829" />
-            </svg>
-            <span className="text-sm text-[color:var(--apple-muted)] text-center">
-              {errorText || '网络已断开'}
-            </span>
-          </>
-        ) : (
-          <>
-            <svg className="w-10 h-10 text-[color:var(--apple-muted)] opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <rect x="3" y="3" width="18" height="18" rx="3" strokeWidth={1.5} />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
-            </svg>
-            <span className="text-sm text-[color:var(--apple-muted)] text-center">
-              {errorText || '加载失败'}
-            </span>
-            {maxRetries > 0 && (
-              <button
-                onClick={handleRetry}
-                className="mt-2 px-3 py-1.5 text-xs font-medium text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] bg-[color:var(--apple-blue-bg)] hover:bg-[color:var(--apple-blue-bg-hover)] rounded-full transition-colors"
-              >
-                重新加载
-              </button>
+        <div
+          className="absolute inset-0 opacity-80"
+          style={{
+            background:
+              'radial-gradient(ellipse 80% 60% at 30% 20%, var(--apple-blue-soft), transparent 55%), radial-gradient(ellipse 70% 50% at 80% 80%, rgba(191, 90, 242, 0.08), transparent 50%)',
+          }}
+          aria-hidden
+        />
+        <div className="z-10 flex flex-col items-center gap-3 px-6 text-center">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--apple-surface-elevated)] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)]">
+            {isOffline ? (
+              <svg className="w-5 h-5 text-[color:var(--apple-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.138m2.167 9.138l-2.829-2.829" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5 text-[color:var(--apple-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+                <rect x="3" y="3" width="18" height="18" rx="4" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M21 15l-5-5L5 21" />
+              </svg>
             )}
-          </>
-        )}
+          </div>
+          {/* 深色下 --apple-muted 在 card-strong 上约 3.5:1（<AA），换用 ink-secondary */}
+          <span className="text-[12px] sm:text-[13px] text-[color:var(--apple-muted)] dark:text-[color:var(--apple-ink-secondary)] font-medium leading-snug max-w-[16rem]">
+            {message}
+          </span>
+          {!isOffline && maxRetries > 0 && (
+            // 视觉上保持紧凑胶囊，::before 扩展命中区至 HIG 44px 最小触控目标
+            // （与 theme-toggle 同一模式），touch-manipulation 消除双击缩放延迟
+            <button
+              type="button"
+              onClick={handleRetry}
+              className="focus-ring relative touch-manipulation rounded-full bg-[color:var(--apple-blue-soft)] px-3.5 py-1.5 text-xs font-medium text-[color:var(--apple-blue)] before:absolute before:-inset-2 before:rounded-full before:content-[''] hover:bg-[color:var(--apple-blue)] hover:text-white active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
+            >
+              {t('placeholder.retry')}
+            </button>
+          )}
+          <span className="text-[10px] uppercase tracking-widest text-[color:var(--apple-muted)] opacity-50 dark:opacity-70">
+            {isOffline ? t('placeholder.status.offline') : t('placeholder.status.error')}
+          </span>
+        </div>
       </div>
     )
   }
@@ -206,12 +230,19 @@ const LazyImageWithFallback = forwardRef(({
   const renderImage = () => {
     if (!isSuccess) return null
 
-    const transitionStyle = enableBlurUp 
-      ? { 
-          transition: `filter ${blurDuration}ms ease-out`,
-          filter: isReady ? 'blur(0px)' : 'blur(10px)',
-        }
-      : {}
+    const imageStyle = {
+      objectFit,
+      opacity: isReady ? 1 : 0,
+      transition: effectiveDuration > 0
+        ? `opacity ${effectiveDuration}ms var(--ease-apple), filter ${effectiveDuration}ms var(--ease-apple), transform ${effectiveDuration}ms var(--ease-apple)`
+        : 'none',
+      // 无过渡（reduced-motion）时不必提升合成层
+      willChange: !isReady && effectiveDuration > 0 ? 'opacity, filter, transform' : 'auto',
+      ...(enableBlurUp && {
+        filter: isReady ? 'blur(0px)' : 'blur(12px)',
+        transform: isReady ? 'scale(1)' : 'scale(1.03)',
+      }),
+    }
 
     return (
       <img
@@ -225,8 +256,8 @@ const LazyImageWithFallback = forwardRef(({
         }}
         src={src}
         alt={alt}
-        className={`absolute inset-0 w-full h-full object-${objectFit} rounded-[6px] ${className}`}
-        style={transitionStyle}
+        className={`absolute inset-0 w-full h-full rounded-[6px] ${className}`}
+        style={imageStyle}
         onLoad={handleImageLoad}
         onError={() => {
           setIsReady(false)
@@ -238,20 +269,19 @@ const LazyImageWithFallback = forwardRef(({
   }
 
   return (
-    <div 
+    <div
       ref={elementRef}
       className={`relative overflow-hidden ${containerClassName}`}
       style={containerStyle}
     >
+      {showPlaceholder && renderPlaceholder()}
       {renderImage()}
-      
-      {(isLoading || status === 'idle') && (enableBlurUp ? renderBlurPlaceholder() : renderPlaceholder())}
       {(isError || isOffline) && renderError()}
-      
-      {isLoading && showProgress && !enableBlurUp && (
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[color:var(--apple-line-strong)] z-20">
-          <div 
-            className="h-full bg-[color:var(--apple-blue)] transition-all duration-300"
+
+      {showProgress && isLoading && (
+        <div className="absolute inset-x-0 bottom-0 z-10 h-0.5 overflow-hidden bg-[color:var(--apple-line-strong)]">
+          <div
+            className="h-full bg-[color:var(--apple-blue)] transition-[width] duration-300 ease-out motion-reduce:transition-none"
             style={{ width: `${progress}%` }}
           />
         </div>

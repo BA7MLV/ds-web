@@ -2,51 +2,10 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png?v=20260212-2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0a0a0c" media="(prefers-color-scheme: dark)" />
-    <meta name="color-scheme" content="light dark" />
-    <meta
-      name="description"
-      content="DeepStudent - AI 原生、本地优先的开源学习系统。智能对话、学习资源管理、Anki 制卡、题库练习、知识导图、翻译工作台，形成学习闭环。"
-    />
-    <meta
-      name="keywords"
-      content="DeepStudent, AI 学习系统, 本地优先, 开源, Tauri, RAG, Anki 制卡, 题库, 知识导图, 翻译, 学习资料管理"
-    />
-    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
-    <link rel="canonical" href="https://deepstudent.cn/" />
-    <link rel="alternate" type="text/plain" href="/llms.txt" />
 
-    <script>
-      document.documentElement.classList.add('ds-js')
-    </script>
-    <style>
-      .ds-js #ds-seo-fallback {
-        display: none;
-      }
-    </style>
-
-    <meta property="og:site_name" content="DeepStudent" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="zh_CN" />
-    <meta property="og:title" content="您的终身学习空间｜DeepStudent" />
-    <meta
-      property="og:description"
-      content="DeepStudent - AI 原生、本地优先的开源学习系统。智能对话、学习资源管理、Anki 制卡、题库练习、知识导图、翻译工作台，形成学习闭环。"
-    />
-    <meta property="og:url" content="https://deepstudent.cn/" />
-    <meta property="og:image" content="https://deepstudent.cn/img/index.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="您的终身学习空间｜DeepStudent" />
-    <meta
-      name="twitter:description"
-      content="DeepStudent - AI 原生、本地优先的开源学习系统。智能对话、学习资源管理、Anki 制卡、题库练习、知识导图、翻译工作台，形成学习闭环。"
-    />
-    <meta name="twitter:image" content="https://deepstudent.cn/img/index.png" />
+    <!-- 首屏 LCP：hero 主图预加载置于 head 最前，先于内联脚本与其余资源发起请求；
+         imagesrcset/imagesizes 与 hero-section 渲染的 srcset/sizes 保持一致，确保命中同一缓存条目 -->
     <link
       rel="preload"
       as="image"
@@ -56,6 +15,58 @@
       type="image/webp"
       fetchpriority="high"
     />
+
+    <!-- 字体：尽早建连；样式表异步加载，配合 display=swap 保证文字先以回退字体渲染 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
+      media="print"
+      onload="this.onload=null;this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+
+    <title>DeepStudent｜AI 原生、本地优先的开源学习系统</title>
+    <meta
+      name="description"
+      content="DeepStudent 是一款 AI 原生、本地优先的开源学习系统。对话即入口：读资料、做调研、练题库、一键制卡进 Anki，数据都存在你自己的电脑里。"
+    />
+    <meta
+      name="keywords"
+      content="DeepStudent, AI 学习系统, 本地优先, 开源, Tauri, RAG, Anki 制卡, 题库, 知识导图, 翻译, 学习资料管理"
+    />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <link rel="canonical" href="https://deepstudent.cn/" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" />
+
+    <!-- 图标由 scripts/generate-favicons.mjs 生成；touch-icon 重新生成后需同步更新 ?v= 缓存标记 -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png?v=20260825" />
+    <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0c" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <meta name="application-name" content="DeepStudent" />
+    <meta name="apple-mobile-web-app-title" content="DeepStudent" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <script>
+      document.documentElement.classList.add('ds-js')
+    </script>
+    <style>
+      .ds-js #ds-seo-fallback {
+        display: none;
+      }
+    </style>
 
     <!-- 防闪烁脚本：在CSS加载前同步应用主题，确保零视觉闪烁 -->
     <script>
@@ -96,57 +107,63 @@
       })();
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
+    <meta property="og:site_name" content="DeepStudent" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content="DeepStudent｜AI 原生、本地优先的开源学习系统" />
+    <meta
+      property="og:description"
+      content="DeepStudent 是一款 AI 原生、本地优先的开源学习系统。对话即入口：读资料、做调研、练题库、一键制卡进 Anki，数据都存在你自己的电脑里。"
     />
-    <title>您的终身学习空间｜DeepStudent</title>
+    <meta property="og:url" content="https://deepstudent.cn/" />
+    <meta property="og:image" content="https://deepstudent.cn/img/index.png" />
+    <meta property="og:image:width" content="2496" />
+    <meta property="og:image:height" content="1598" />
+    <meta property="og:image:alt" content="DeepStudent 应用主界面预览" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DeepStudent｜AI 原生、本地优先的开源学习系统" />
+    <meta
+      name="twitter:description"
+      content="DeepStudent 是一款 AI 原生、本地优先的开源学习系统。对话即入口：读资料、做调研、练题库、一键制卡进 Anki，数据都存在你自己的电脑里。"
+    />
+    <meta name="twitter:image" content="https://deepstudent.cn/img/index.png" />
+    <meta name="twitter:image:alt" content="DeepStudent 应用主界面预览" />
   </head>
   <body>
     <div id="root">
       <main id="ds-seo-fallback" role="main" aria-label="DeepStudent">
-        <h1>您的终身学习空间｜DeepStudent</h1>
+        <h1>DeepStudent｜AI 原生、本地优先的开源学习系统</h1>
         <p>
-          DeepStudent 是一款基于 Tauri 2 构建的 AI 原生、本地优先开源学习系统（AGPL-3.0）。它以「对话即入口」把智能对话、学习资源管理、RAG
-          检索、Anki 制卡与练习回顾串成可持续的学习闭环。
-        </p>
-        <p>
-          你可以用它：导入并管理资料（PDF/Word/图片…）→ 本地索引与检索 → 对话驱动阅读/调研/练习 → 一键制卡与间隔复习。
+          DeepStudent 基于 Tauri 2 构建，AGPL-3.0 开源。它以「对话即入口」串起学习资料管理、RAG 检索、题库练习与 Anki
+          制卡：导入资料，边聊边读，一键制卡，按计划复习。
         </p>
         <ul>
-          <li>本地优先：离线可用，数据可审计可备份，敏感信息加密存储</li>
-          <li>AI 入口统一：Chat V2 + Skills + MCP 工具生态 + CardForge 任务编排</li>
-          <li>学习资料统一：VFS 单一数据源，全文检索 + 向量检索（RAG）</li>
-          <li>学习闭环：题库练习、错题归档、知识导图、翻译工作台、Anki 制卡</li>
+          <li>本地优先：离线可用，数据存在你自己的电脑里，可备份、可加密</li>
+          <li>入口统一：Chat V2 + Skills + MCP 工具生态 + CardForge 制卡任务</li>
+          <li>资料统一：VFS 单一数据源，全文检索与向量检索（RAG）</li>
+          <li>学习闭环：题库练习、错题归档、知识导图、翻译工作台</li>
         </ul>
         <p>
           <a href="#download">立即下载</a>
           · <a href="/docs/">查看文档</a>
-          · <a href="https://github.com/helixnow/deep-student" target="_blank" rel="noopener noreferrer">主项目 GitHub</a>
+          · <a href="https://github.com/helixnow/deep-student" target="_blank" rel="noopener noreferrer">GitHub</a>
           · <a href="/llms.txt">llms.txt</a>
         </p>
 
         <section aria-labelledby="ds-faq-title">
-          <h2 id="ds-faq-title">常见问题（FAQ）</h2>
+          <h2 id="ds-faq-title">常见问题</h2>
           <details>
             <summary>DeepStudent 是云服务吗？</summary>
-            <p>
-              不是。DeepStudent 以「本地优先」为核心，数据默认保存在本地。你可以选择配置第三方模型/搜索服务，但不会要求注册登录。
-            </p>
+            <p>不是。数据默认保存在本地，无需注册登录；第三方模型与搜索服务均为可选配置。</p>
           </details>
           <details>
             <summary>需要自备 API Key 吗？</summary>
-            <p>
-              可选。你可以配置自己的模型 API Key；同时也支持合作伙伴提供的免费模型，下载即可体验核心能力。
-            </p>
+            <p>可选。既支持配置自己的模型 Key，也内置合作伙伴提供的免费模型，下载即可体验。</p>
           </details>
           <details>
             <summary>它和 Anki 的关系是什么？</summary>
-            <p>
-              DeepStudent 提供 CardForge 制卡任务：从文档/对话中提取知识点并生成卡片，支持导出 APKG 或通过 AnkiConnect 同步到 Anki。
-            </p>
+            <p>CardForge 可从文档或对话中提取知识点生成卡片，支持导出 APKG，或经 AnkiConnect 同步到 Anki。</p>
           </details>
         </section>
 

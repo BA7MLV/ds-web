@@ -1,7 +1,6 @@
 import DefaultTheme from 'vitepress/theme'
 import { onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRoute, useData } from 'vitepress'
-import CustomHome from './CustomHome.vue'
 import Layout from './Layout.vue'
 
 let mediumZoomLoader
@@ -18,8 +17,13 @@ export default {
   extends: DefaultTheme,
   Layout,
   enhanceApp({ app, router, siteData }) {
-    // 注册自定义首页组件
-    app.component('CustomHome', CustomHome)
+    // Round 5 评估结论：CustomHome.vue 暂不整页挂载——营销首页由官网 /
+    // 承担（导航「官网」即指向它），docs 首页改由 index.md 的 .doc-hero
+    // 复用同一套 --apple-* token 对齐视觉。
+    // Round 9 审计：取消全局注册。VitePress 构建会把所有被引用组件的
+    // CSS 合并进单一 style.css，此前的注册使该组件约 630 行未使用样式
+    // 打进每个页面；现无任何 md 挂载 <CustomHome />，故不再 import。
+    // 如需恢复着陆页，在此重新 import 并 app.component 注册即可。
   },
   setup() {
     const route = useRoute()

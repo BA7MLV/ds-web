@@ -1,0 +1,345 @@
+# Apple 级 UI/UX 优化进度
+
+> 分支：`cursor/apple-ui-optimization-36c9` · 基线：`dev` · 目标：Apple 级视觉、交互与文案品质，多端适配
+
+## 总体目标
+
+- 视觉：玻璃态、留白、字体层级、阴影与动效对齐 Apple 官网质感
+- 交互：滚动叙事、粘性区块、安全区、减少动效偏好
+- 文案：有人味、具体、避免 AI 腔（aislop）
+- 工程：组件化拆分、性能与可访问性
+
+## 轮次记录
+
+### Round 1（已完成）
+
+**子代理分工（10 路并行）— 全部落地**
+
+| # | 范围 | 状态 |
+|---|------|------|
+| 1 | `zh.json` 文案 | ✅ |
+| 2 | `en.json` 文案 | ✅ |
+| 3 | `zh-Hant.json` 文案 | ✅ |
+| 4 | `mobile-nav-menu.jsx` | ✅ |
+| 5 | `theme-toggle.jsx` | ✅ |
+| 6 | `locale-toggle.jsx` | ✅ |
+| 7 | `button.jsx` + `card.jsx` | ✅ |
+| 8 | `index.html` | ✅ |
+| 9 | `index.css` | ✅ |
+| 10 | `tailwind.config.js` | ✅ |
+
+**父代理**：Hero / TopNav / Download / 占位图 / 进度文档 — ✅
+
+### Round 2（已完成）
+
+- [x] `App.jsx` 拆分为 `src/components/sections/*`（~359 行路由壳）
+- [x] ArchitectureDiagram 视觉升级
+- [x] PolicyModal 提取与动效
+- [x] FreeModelsCallout 玻璃卡片
+- [x] FeatureScreenshotFrame 统一主图框
+- [x] LazyImage LQIP 交叉淡入
+- [x] VitePress CustomHome 样式对齐
+- [x] Stats 区块（`stats-section.jsx` + 三语 `*Unit` keys）
+- [x] Hero / TopNav 统一 `useScroll`（去重复 scroll listener）
+
+### Round 3（已完成）
+
+- [x] Hero 排版与预览指示器 / a11y — `a8b1282`
+- [x] Feature sticky 桌面交叉淡入 — `144f9da`
+- [x] Feature 移动端节奏与截图框统一 — `facb581`
+- [x] Download 页 segmented control 与推荐卡片 — `9ca86f3`
+- [x] FAQ 手风琴触控与过渡 — `2a38c4e`
+- [x] Footer 社交图标与安全区 — `a96cf22`
+- [x] Stats + Architecture 视觉衔接 — `2ed9344`
+- [x] 深色模式导航控件对比度 — `a06449c`
+- [x] 全站 safe-area 扫描 — `58cd363`
+- [x] FAQ / footer / arch 文案第二轮 — `9b71e7c`
+
+验收：`npm run build` 通过（Round 4 开始时复验），无重复组件定义，详细清单见 ROUND3.md。
+
+### Round 4（已完成）
+
+- [x] Hero LCP / 字体 preload（`b9e9231`）
+- [x] Sticky feature 滚动性能（`ceb3ee9`）
+- [x] FreeModels 微交互（`f3ee834`）
+- [x] Theme / Locale toggle a11y（`afec727`）
+- [x] PolicyModal ↔ Download chrome 对齐（`9a3f98c`）
+- [x] VitePress Apple token 对齐（`bcd63d0`）
+- [x] Feature 排版统一（`d8ed7dc`）
+- [x] LazyImage 错误态对齐（`d1adb21`）
+- [x] Landmarks + skip link（`e353cb0`）
+- [x] 进度文档同步（`b732c80`）
+
+### Round 5（已完成）
+
+- [x] zh hero/freeModels/stats 文案第三轮（`9f9d3d1`）
+- [x] en / zh-Hant 同步（`8424af2`）
+- [x] Architecture 玻璃态与连接线（`9efdfee`）
+- [x] Sticky 移动端 fallback 触控（`669dab0`）
+- [x] Download 空态/回退（`8a88256`）
+- [x] TopNav 滚动 chrome（`cf82c18`）
+- [x] Footer i18n / aria（`b3f8a43`）
+- [x] Docs home `.doc-hero` 对齐（`c8fda15`）
+- [x] reduced-motion 全站审计（`1a17f9c`）
+- [x] ROUND4 验收回填（`022983f`）
+- [x] Apple shadow token 修复（`5493829` / `b35a8a9`）
+
+### Round 6（已完成）
+
+- [x] 按钮体系统一（`4e1e831`）
+- [x] focus-ring 扫描（`1387a5b`）
+- [x] 截图框阴影对齐（`365fa3c`）+ `--apple-shadow-2xl`（`33df97d`）
+- [x] Architecture 深色对比度（`d82f97b`）
+- [x] Download 分段深色（`eb7e719`）
+- [x] Nav 品牌节奏（`146a6d7`）+ lg 断点修复（`24470f8`）
+- [x] FAQ / Policy 标题尺度（`5c2dc7a`）
+- [x] 占位图状态 i18n（`cafa084`）
+- [x] Docs doc-hero 间距（`adc7150`）
+- [x] ROUND5 验收回填（`b07ba3a`）
+
+### Round 7（已完成）
+
+平板断点体验、主题切换进移动菜单、性能与文案第四轮。
+
+- [x] 移动菜单 ThemeToggle + LocaleToggle（`d4b9e6d`）
+- [x] Hero GitHub / preview i18n（随 `d4b9e6d`）
+- [x] Feature 滚动性能（`17f9865`）
+- [x] Stats 入场动画（`b60773a`）
+- [x] Download CTA 对齐 btn-apple（`cd89b56`）
+- [x] FAQ disclosure a11y（`3e50492`）
+- [x] zh feature.*.desc 第四轮（`58848b7` / 内容于 `7dac8f7`）
+- [x] en / zh-Hant feature 同步（`b5f8ee3`）
+- [x] VitePress 侧栏 Apple token（`5fdd25a`）
+- [x] ROUND6 验收回填（`7dac8f7`）
+
+验收：`npm run build` 于 `b5f8ee3` 通过；三语 317 keys；详见 ROUND7.md。
+
+### Round 8（已完成）
+
+i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。详见 ROUND8.md。
+
+- [x] `useImageLoader` 错误/重试文案三语 i18n（`3dcce44`）
+- [x] TopNav / Footer / 移动菜单 GitHub 标签 i18n（`1827ae3`）
+- [x] ModeSwitchPanel 使用审计（`548faca`）
+- [x] 截图资源 aspect-ratio 核对（`77d4660`）
+- [x] 平板菜单打开态二次打磨（`6fa27c0`）
+- [x] FreeModels + Stats 深色微对比（`2ccce33`）
+- [x] FAQ / Architecture zh 文案第五轮（`cab1907`）
+- [x] en / zh-Hant 同步（`c01196e`）
+- [x] VitePress 搜索框 / nav token 再对齐（`58b8e82`）
+- [x] ROUND7 验收核对 + 视觉 QA 记录（随本轮验收文档落地；截图留作本地 artifacts 不入仓）
+
+验收：10/10 落地（含 VitePress 搜索 `58b8e82`）；详见 ROUND8.md。
+
+### Round 9（已完成）
+
+死代码清理、locale 加载警告、文档站与 a11y/文案再打磨。详见 ROUND9.md。
+
+- [x] Round 8 #9 VitePress 搜索 token 收尾（已于 Round 8 落地 `58b8e82`，本轮跳过）
+- [x] 删除无引用 `switch.jsx`（`f8fcfc6`）
+- [x] locale-toggle 动静态 import 警告治理（`855f782`）
+- [x] VitePress CustomHome 审计（`690b072`）
+- [x] Skip link / landmarks 二次核对（`5a707dc`）
+- [x] Download 空态 / fallback 深色再验（`61ac76d`）
+- [x] Footer 社交链接 a11y（`e7548af`）
+- [x] zh download/policy 文案第六轮（`7aa6487`）
+- [x] en / zh-Hant 同步本轮 copy（`5f34994`）
+- [x] ROUND8 验收回填 + PROGRESS 关闭 Round 8（`7ef31d7` / `bcc4362`）
+
+验收：10/10 落地；详见 ROUND9.md。
+
+### Round 10（已完成）
+
+性能预算、深色/动效再验、文案第七轮与资源一致性。详见 ROUND10.md。
+
+- [x] 移除未使用 `@radix-ui/react-switch` 依赖（`e13b108`）
+- [x] 软件主页图 png/webp 宽高比记录/修复（`e19144e`）
+- [x] 营销页性能预算扫描（`c853cb1`）
+- [x] FAQ 手风琴动效与 reduced-motion 再验（`3e2ef23`）
+- [x] PolicyModal 深色对比与焦点环再验（`8b790f7`）
+- [x] Hero 移动端排版微打磨（`42d25ee`）
+- [x] VitePress `.doc-hero` 深色间距与对比（`9df1d7d`）
+- [x] 全站 `prefers-reduced-motion` 二次扫描（`601bdc8`）
+- [x] zh 文案第七轮 nav/a11y/placeholder（`cca8d00`）
+- [x] en / zh-Hant 同步本轮 copy + PROGRESS 核对（`6e95af2` / `6a617cc`）
+
+验收：10/10 落地；详见 ROUND10.md。
+
+
+### Round 11（已完成）
+
+未使用依赖清理、导航/Stats/Feature a11y 与文案第八轮。详见 ROUND11.md。
+
+- [x] 移除 `@tsparticles/*`（`5898011`）
+- [x] 移除 `motion`（`f79d319`）
+- [x] 移除 lucide / lazy-image / cva（`93ce963`）
+- [x] TopNav 深色 focus（`f050448`）
+- [x] FreeModels 触控与键盘（`a7e1f3b` / `467ca46`）
+- [x] Stats reduced-motion（`c84ca7a`）
+- [x] Feature sticky 焦点顺序（`ceea1c6`）
+- [x] zh stats/freeModels/footer 文案第八轮（`6e8860d`）
+- [x] en / zh-Hant 同步（`ebd8309`）
+- [x] ROUND10 验收核对 + PROGRESS（本轮文档提交）
+
+验收：10/10 落地；三语 326 keys；详见 ROUND11.md。
+
+### Round 12（已完成）
+
+死 primitive 清理、离线 Toast i18n/a11y、键盘扫尾与文案第九轮。详见 ROUND12.md。
+
+- [x] 删除无引用 `button.jsx`（`1349863`）
+- [x] 删除无引用 `card.jsx`（`ba870a9`）
+- [x] Network Toast i18n / live region（`d410e96`）
+- [x] Mobile nav 焦点陷阱加固（`a9b97e1`）
+- [x] Download segmented 键盘（`58a76e2`）
+- [x] Architecture a11y / 深色分割线（`a0fc03f`）
+- [x] LazyImage 重试触控（`4a8aadf`）
+- [x] zh architecture/agent 文案第九轮（`c4250de`）
+- [x] en / zh-Hant 同步（`d410e96` / `ac0c385`）
+- [x] ROUND11 验收 + PROGRESS（`65f3ce4` / 本轮文档）
+
+验收：10/10 落地；三语 329 keys；详见 ROUND12.md。
+
+### Round 13（已完成）
+
+控件焦点再验、下载文案第十轮、文档站与截图框扫尾。详见 ROUND13.md。
+
+- [x] ThemeToggle 触控 / focus（`67e63f5`）
+- [x] LocaleToggle 键盘 / focus（`3938e80`）
+- [x] Hero 预览指示器（`5b4bddd`）
+- [x] Footer focus / safe-area（`1c2006a`）
+- [x] PolicyModal 焦点锁（`b9ca30a`）
+- [x] FeatureScreenshotFrame chrome（`cc39512`）
+- [x] VitePress 深色 active（`1c954b2`）
+- [x] zh download 文案第十轮（`9aff5e6`）
+- [x] en / zh-Hant 同步（`cbd4715`）
+- [x] ROUND12 验收 + PROGRESS（`4895dac` / 本轮文档）
+
+验收：10/10 落地；三语 329 keys；详见 ROUND13.md。
+
+### Round 14（已完成）
+
+首屏/区块节奏、下载推荐卡、FAQ 深色、工程卫生与文案第十一轮。详见 ROUND14.md。
+
+- [x] Hero 首屏节奏（`b93760e`）
+- [x] FreeModels + Stats 留白（`9afde4a`）
+- [x] Feature sticky 节奏（`847b01b`）
+- [x] Download 推荐卡 focus（`da70fb0`）
+- [x] FAQ 深色打开态（`30ae6df`）
+- [x] meta/OG 核对（无需改动）
+- [x] shadow token 卫生扫描（代码零残留）
+- [x] zh hero preview 文案（`5d9bea3`）
+- [x] en / zh-Hant 同步（`31adbd3`）
+- [x] ROUND13 验收 + PROGRESS（`87c683c` / 本轮文档）
+
+验收：10/10 落地；详见 ROUND14.md。
+
+### Round 15（已完成）
+
+品牌触控图标、区块衔接、skip link、policy/footer 文案第十二轮。详见 ROUND15.md。
+
+- [x] apple-touch-icon（`3012133`）
+- [x] TopNav 滚动态品牌（`b0f578e`）
+- [x] Architecture ↔ FAQ 留白（`d5f615f`）
+- [x] Download 空态深色（`c28a882`）
+- [x] Skip link 着陆偏移（`d413874`）
+- [x] llms.txt 品牌句（`325983f`）
+- [x] Analytics ↔ 隐私核对（无需改动）
+- [x] zh policy 文案第十二轮（`a06a862`）
+- [x] en / zh-Hant 同步（`cc972d0`）
+- [x] ROUND14 验收 + PROGRESS（`5e8c6bc` / 本轮文档）
+
+验收：10/10 落地；详见 ROUND15.md。
+
+### Round 16（已完成）
+
+文档站细节、动效/触控一致性、feature 文案第十三轮。详见 ROUND16.md。
+
+- [x] VitePress 搜索深色 focus（`8292445`）
+- [x] Docs 链接 focus-ring（`fe9aef7`）
+- [x] Hero GitHub CTA（`c5a8ad3`）
+- [x] Stats reduced-motion（`6321035`）
+- [x] Screenshot frame 边框一致（`7a6c715`）
+- [x] touch-manipulation 扫尾（`5a965b5`）
+- [x] touch-icon 版本戳（`dc4bbdc`）
+- [x] zh feature 文案第十三轮（`d9b1eef`）
+- [x] en / zh-Hant 同步（`f7de4d7`）
+- [x] ROUND15 验收 + PROGRESS（`7e0603b` / 本轮文档）
+
+验收：10/10 落地；详见 ROUND16.md。
+
+### Round 17（已完成）
+
+下载流控件、Policy/Architecture/LazyImage 微打磨、短标签文案第十四轮。详见 ROUND17.md。
+
+- [x] Download 回首页触控（`fc3f215`）
+- [x] Download CTA 深色 pressed（`5fea3cc`）
+- [x] PolicyModal 标题尺度（`3d0b9ef`）
+- [x] Mobile nav iOS 滚动锁（`5fa2d01`）
+- [x] Architecture 箭头深色（`b06736c`）
+- [x] LazyImage LQIP / reduced-motion（`e2a7ea8`）
+- [x] VitePress 正文字号（`4b583be`）
+- [x] zh download 短标签（`0db6566`）
+- [x] en / zh-Hant 同步（`a36c4d6`）
+- [x] ROUND16 验收 + PROGRESS（`1c2bc4a` / 本轮文档）
+
+验收：10/10 落地；详见 ROUND17.md。
+
+### Round 18（已完成）
+
+外链安全属性、构建体积快扫、键盘烟雾与 stats 文案第十五轮。详见 ROUND18.md。
+
+- [x] 营销→文档导航 focus（`b379816`）
+- [x] FreeModels 外链核对（已合规）
+- [x] 外链 rel 扫尾（`1c470ea`）
+- [x] 构建体积快扫（`bf93b41`）
+- [x] ink-secondary 对比（`b6275e6`）
+- [x] Tab 顺序烟雾（`01990bb`）
+- [x] SiliconFlow logo 路径（`d581643`）
+- [x] zh stats 文案第十五轮（`927b0c4`）
+- [x] en / zh-Hant 同步（`4b14fd4`）
+- [x] ROUND17 验收 + PROGRESS（`8409088` / 本轮文档）
+
+验收：10/10 落地；主包 gzip ~111 kB；详见 ROUND18.md。
+
+### Round 19（已完成）
+
+深色细节、FAQ/Footer/Policy 触控、FAQ 文案第十六轮。详见 ROUND19.md。
+
+- [x] TopNav 深色滚动 chrome（`66fd502`）
+- [x] Hero 主 CTA 深色 pressed（`f04e397`）
+- [x] FAQ 答案间距/触控（`d693e85`）
+- [x] Footer 换行节奏（`518baeb`）
+- [x] PolicyModal 关闭触控（`39c37b3`）
+- [x] Docs 品牌句（`c2f22cf`）
+- [x] favicon 脚本路径（`2d4ffd1`）
+- [x] zh FAQ 文案第十六轮（`dc53f9a`）
+- [x] en / zh-Hant 同步（`2e3dc1f`）
+- [x] ROUND18 验收 + PROGRESS（`021fa0f` / 本轮文档）
+
+验收：10/10 落地；详见 ROUND19.md。
+
+### Round 20（进行中）· ≥20 里程碑轮
+
+全站一致性收口、文案第十七轮，并标记持续优化。详见 ROUND20.md。
+
+## 待办（后续轮次）
+
+- [ ] 持续多轮至用户叫停（已达 ≥20 轮里程碑，仍继续）
+- [ ] 可选：软件主页图 PNG 切片相对 webp 仍陈旧（已记录；勿强行提交大图除非有导出流程）
+
+## PR 列表
+
+| PR | 分支 | 状态 |
+|----|------|------|
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 19 验收完成 · Round 20 进行中（≥20 里程碑） |
+
+### Round 1 子代理完成项
+
+- [x] zh / en / zh-Hant 文案人性化
+- [x] mobile-nav-menu Apple 级动效
+- [x] theme-toggle / locale-toggle 微交互
+- [x] button / card  primitives
+- [x] index.html meta 与 SEO
+- [x] index.css typography utilities
+- [x] tailwind Apple keyframes
