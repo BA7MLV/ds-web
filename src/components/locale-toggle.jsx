@@ -172,54 +172,113 @@ export const useLocale = () => {
   }
 }
 
+const LOCALE_OPTIONS = [
+  { value: 'zh', short: '简', lang: 'zh-CN', labelKey: 'locale.zh', fallback: '简体中文' },
+  { value: 'zh-Hant', short: '繁', lang: 'zh-Hant', labelKey: 'locale.zhHant', fallback: '繁體中文' },
+  { value: 'en', short: 'EN', lang: 'en', labelKey: 'locale.en', fallback: 'English' },
+]
+
+// Segmented pill in the spirit of Apple's region/language picker:
+// sliding thumb highlights the active locale, arrow keys roam the group.
 export const LocaleToggle = ({ className = '', compact = false }) => {
   const { locale, setLocale, t } = useLocale()
+  const buttonRefs = useRef([])
+
+  const selectedIndex = Math.max(
+    0,
+    LOCALE_OPTIONS.findIndex((option) => option.value === locale)
+  )
+
+  const selectByIndex = (index) => {
+    const next = (index + LOCALE_OPTIONS.length) % LOCALE_OPTIONS.length
+    setLocale(LOCALE_OPTIONS[next].value)
+    buttonRefs.current[next]?.focus()
+  }
+
+  const handleKeyDown = (event) => {
+    switch (event.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        event.preventDefault()
+        selectByIndex(selectedIndex + 1)
+        break
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        event.preventDefault()
+        selectByIndex(selectedIndex - 1)
+        break
+      case 'Home':
+        event.preventDefault()
+        selectByIndex(0)
+        break
+      case 'End':
+        event.preventDefault()
+        selectByIndex(LOCALE_OPTIONS.length - 1)
+        break
+      default:
+        break
+    }
+  }
 
   return (
-    <div className={cn('relative inline-flex items-center w-full', className)}>
-      <label className="sr-only" htmlFor="ds-locale-select">
-        {t('locale.select', 'Language')}
-      </label>
-      <select
-        id="ds-locale-select"
-        value={locale}
-        onChange={(event) => setLocale(event.target.value)}
-        className={cn(
-          'focus-ring appearance-none cursor-pointer',
-          compact ? 'h-8 w-full rounded-full' : 'h-9 w-full rounded-full',
-          'bg-[color:var(--apple-btn-secondary-bg)] border border-[color:var(--apple-line)]',
-          'backdrop-blur-xl backdrop-saturate-[180%]',
-          'shadow-[var(--apple-shadow-sm)]',
-          compact
-            ? 'text-[color:var(--apple-ink)] text-[12px] font-medium'
-            : 'text-[color:var(--apple-ink)] text-[13px] font-medium',
-          'pl-3 pr-10 leading-none text-left',
-          'hover:bg-[color:var(--apple-btn-secondary-bg-hover)]'
-        )}
-        aria-label={t('locale.select', 'Language')}
-      >
-        <option value="zh">{t('locale.zh', '简体中文')}</option>
-        <option value="zh-Hant">{t('locale.zhHant', '繁體中文')}</option>
-        <option value="en">{t('locale.en', 'English')}</option>
-      </select>
+    <div
+      role="radiogroup"
+      aria-label={t('locale.select', 'Language')}
+      onKeyDown={handleKeyDown}
+      className={cn(
+        'relative w-full select-none rounded-full p-0.5',
+        compact ? 'h-8' : 'h-9',
+        'bg-[color:var(--apple-btn-secondary-bg)] border border-[color:var(--apple-line)]',
+        'backdrop-blur-xl backdrop-saturate-[180%]',
+        'shadow-[var(--apple-shadow-sm)]',
+        className
+      )}
+    >
       <span
-        className={cn(
-          'pointer-events-none absolute inset-y-0 right-4 flex items-center text-[color:var(--apple-muted)] opacity-75'
-        )}
         aria-hidden="true"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'}
-        >
-          <path d="M6 9l6 6 6-6" />
-        </svg>
-      </span>
+        className={cn(
+          'absolute inset-y-0.5 left-0.5 w-[calc((100%-0.25rem)/3)] rounded-full',
+          'bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)]',
+          'shadow-[var(--apple-shadow-sm)]',
+          'transition-transform duration-200 ease-out motion-reduce:transition-none',
+          selectedIndex === 1 && 'translate-x-full',
+          selectedIndex === 2 && 'translate-x-[200%]'
+        )}
+      />
+      <div className="relative grid h-full grid-cols-3">
+        {LOCALE_OPTIONS.map((option, index) => {
+          const isSelected = index === selectedIndex
+          const fullLabel = t(option.labelKey, option.fallback)
+          return (
+            <button
+              key={option.value}
+              ref={(node) => {
+                buttonRefs.current[index] = node
+              }}
+              type="button"
+              role="radio"
+              aria-checked={isSelected}
+              tabIndex={isSelected ? 0 : -1}
+              lang={option.lang}
+              title={fullLabel}
+              aria-label={fullLabel}
+              onClick={() => setLocale(option.value)}
+              className={cn(
+                'focus-ring flex items-center justify-center rounded-full leading-none',
+                compact ? 'text-[12px]' : 'text-[13px]',
+                'font-medium tracking-[0.01em]',
+                'transition-[color,transform] duration-200 active:scale-[0.96]',
+                'motion-reduce:transition-none',
+                isSelected
+                  ? 'text-[color:var(--apple-ink)]'
+                  : 'text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)]'
+              )}
+            >
+              {option.short}
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }
