@@ -2,8 +2,13 @@ import { forwardRef, useState, useEffect, useRef } from 'react'
 import { useImageLoader } from '../hooks/useImageLoader'
 import { useLocale } from './locale-toggle'
 
+// 同步读取初值，避免 reduced-motion 用户在首帧仍触发淡入动画
+const getInitialReducedMotion = () =>
+  typeof window !== 'undefined'
+  && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
 const usePrefersReducedMotion = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(getInitialReducedMotion)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -63,7 +68,10 @@ const LazyImageWithFallback = forwardRef(({
     rootMargin,
   })
 
-  const enableBlurUp = blurUp && placeholderSrc && !prefersReducedMotion
+  // LQIP 本身是静态内容：reduced-motion 只去掉 blur-up 过渡动画，
+  // 占位图仍保留（比 skeleton 更有信息量，且无脉冲干扰）
+  const hasLqip = blurUp && placeholderSrc
+  const enableBlurUp = hasLqip && !prefersReducedMotion
   const effectiveDuration = prefersReducedMotion ? 0 : blurDuration
   // 占位层比主图晚一点开始淡出，交叉过渡期间不会露出底色
   const placeholderDelay = effectiveDuration > 0 ? 100 : 0
@@ -127,7 +135,7 @@ const LazyImageWithFallback = forwardRef(({
       )
     }
 
-    if (enableBlurUp) {
+    if (hasLqip) {
       return (
         <div
           className={`absolute inset-0 w-full h-full rounded-[6px] overflow-hidden ${className}`}
@@ -228,7 +236,8 @@ const LazyImageWithFallback = forwardRef(({
       transition: effectiveDuration > 0
         ? `opacity ${effectiveDuration}ms var(--ease-apple), filter ${effectiveDuration}ms var(--ease-apple), transform ${effectiveDuration}ms var(--ease-apple)`
         : 'none',
-      willChange: isReady ? 'auto' : 'opacity, filter, transform',
+      // 无过渡（reduced-motion）时不必提升合成层
+      willChange: !isReady && effectiveDuration > 0 ? 'opacity, filter, transform' : 'auto',
       ...(enableBlurUp && {
         filter: isReady ? 'blur(0px)' : 'blur(12px)',
         transform: isReady ? 'scale(1)' : 'scale(1.03)',
