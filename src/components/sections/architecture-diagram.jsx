@@ -99,22 +99,24 @@ const ArchMemoryIcon = ({ size = 32 }) => (
   </svg>
 )
 
-// 开放式箭头头部：比实心三角更轻盈，贴近 Apple 图示语言
+// 开放式箭头头部：比实心三角更轻盈，贴近 Apple 图示语言；
+// 箭头是流向的关键指示物，深色下升到满不透明（muted@1 ≈ 4.6:1），不能比线更淡
 const ArrowHeadMarker = ({ id }) => (
   <marker id={id} viewBox="0 0 8 8" refX="6.2" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-    <path d="M1.5 1L6.5 4L1.5 7" stroke="var(--apple-muted)" strokeWidth="1.4" strokeOpacity="0.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    <path d="M1.5 1L6.5 4L1.5 7" stroke="var(--apple-muted)" strokeWidth="1.4" strokeOpacity="0.8" strokeLinecap="round" strokeLinejoin="round" fill="none" className="dark:[stroke-opacity:1]"/>
   </marker>
 )
 
 // dasharray 取 0.1 配合 round 线帽渲染为正圆点，比短划线更接近 Apple 图示的点线；
-// 深色下 muted@0.5 对黑底仅约 2.1:1，提到 0.7（约 3.2:1）满足 WCAG 1.4.11 的非文本 3:1
+// 深色下 muted@0.5 对黑底仅约 2.1:1；圆点因面积小需要留裕量，取 0.8（约 3.7:1），
+// 稳过 WCAG 1.4.11 的非文本 3:1 且仍弱于满不透明的箭头头部，保持视觉层级
 const flowLineProps = {
   stroke: 'var(--apple-muted)',
   strokeOpacity: '0.5',
   strokeWidth: '1.4',
   strokeLinecap: 'round',
   strokeDasharray: '0.1 7.1',
-  className: 'dark:[stroke-opacity:0.7]',
+  className: 'dark:[stroke-opacity:0.8]',
 }
 
 // 偏移量为点距（7.2）的整数倍，动画循环处无跳变
@@ -122,9 +124,9 @@ const FlowDashAnimation = () => (
   <animate attributeName="stroke-dashoffset" from="0" to="-14.4" dur="2.8s" repeatCount="indefinite"/>
 )
 
-// 连线起点的端口圆点：让线读作"从节点出发"，仅用于单向线（深色下与点线同步提亮到 ≥3:1）
+// 连线起点的端口圆点：让线读作"从节点出发"，仅用于单向线（深色下与点线同步提亮到 0.8）
 const FlowOriginDot = ({ cx, cy }) => (
-  <circle cx={cx} cy={cy} r="2" fill="var(--apple-muted)" opacity="0.45" className="dark:opacity-70"/>
+  <circle cx={cx} cy={cy} r="2" fill="var(--apple-muted)" opacity="0.45" className="dark:opacity-80"/>
 )
 
 // 水平连接线（细点线 + 流动动画）
