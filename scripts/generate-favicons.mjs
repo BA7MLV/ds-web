@@ -70,6 +70,8 @@ const main = async () => {
   )
   const appleTouch = renderPng(svg, 180, appleTouchBackground)
 
+  // After regenerating, bump the apple-touch-icon `?v=` stamp in index.html
+  // (and docs/.vitepress/config.js if the docs icon changed) so caches refresh.
   const outputs = [
     ['public/favicon.ico', ico],
     ['public/apple-touch-icon.png', appleTouch],
