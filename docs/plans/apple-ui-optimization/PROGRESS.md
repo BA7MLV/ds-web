@@ -30,9 +30,16 @@
 
 **父代理**：Hero / TopNav / Download / 占位图 / 进度文档 — ✅
 
-### Round 2（进行中）
+### Round 2（进行中 → 大部分完成）
 
-组件拆分与区块深化（10 路子代理并行）。
+- [x] `App.jsx` 拆分为 `src/components/sections/*`（~400 行路由壳）
+- [x] ArchitectureDiagram 视觉升级
+- [x] PolicyModal 提取与动效
+- [x] FreeModelsCallout 玻璃卡片
+- [x] FeatureScreenshotFrame 统一主图框
+- [x] LazyImage LQIP 交叉淡入
+- [x] VitePress CustomHome 样式对齐
+- [ ] Stats 区块（待 Round 3）
 
 ## 待办（后续轮次）
 
