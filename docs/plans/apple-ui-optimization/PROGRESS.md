@@ -70,9 +70,23 @@
 - [x] Landmarks + skip link（`e353cb0`）
 - [x] 进度文档同步（`b732c80`）
 
-### Round 5（进行中）
+### Round 5（已完成）
 
-文案第三轮、动效一致性、移动端触控审计、文档站首页挂载评估。
+- [x] zh hero/freeModels/stats 文案第三轮（`9f9d3d1`）
+- [x] en / zh-Hant 同步（`8424af2`）
+- [x] Architecture 玻璃态与连接线（`9efdfee`）
+- [x] Sticky 移动端 fallback 触控（`669dab0`）
+- [x] Download 空态/回退（`8a88256`）
+- [x] TopNav 滚动 chrome（`cf82c18`）
+- [x] Footer i18n / aria（`b3f8a43`）
+- [x] Docs home `.doc-hero` 对齐（`c8fda15`）
+- [x] reduced-motion 全站审计（`1a17f9c`）
+- [x] ROUND4 验收回填（`022983f`）
+- [x] Apple shadow token 修复（`5493829` / `b35a8a9`）
+
+### Round 6（进行中）
+
+视觉回归、按钮体系统一、深色模式二次审计、截图占位与性能收尾。
 
 - [x] Feature 移动端交错图文节奏：`ScrollRevealItem` 子功能截图复用 `FeatureScreenshotFrame`（圆角/描边/阴影与主图一致），`ImagePlaceholder` 圆角对齐 `rounded-[6px]`，移动端项内 `gap-5` / 项间 `space-y-[3.5rem]` 收紧节奏
 - [x] VitePress 首页挂载评估 + token 对齐：结论为暂不整页挂载 CustomHome（营销落地页与官网 `/` 重复，组件内 `./guide/*` 链接不存在、文案未按主项目校准，整页挂载还会丢失「简介」侧边栏），改为 `docs/index.md` 新增 `.doc-hero` 头部——eyebrow / 渐变标题 / primary+secondary 按钮逐项复用 Layout.vue 的 `--apple-*` token，配方与 CustomHome hero 一致（尺寸按文档栏收窄），含 639px 断点与 reduced-motion 守卫；CustomHome 保持全局注册以便后续按需挂载
