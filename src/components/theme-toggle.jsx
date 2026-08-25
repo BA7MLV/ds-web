@@ -221,7 +221,7 @@ export const ThemeToggle = ({ className = '' }) => {
         w-7 h-7 rounded-full
         text-[color:var(--apple-muted)]
         hover:text-[color:var(--apple-ink)]
-        hover:bg-[color:var(--apple-card)]
+        hover:bg-[color:var(--apple-btn-secondary-bg)]
         active:scale-[0.88] active:duration-100 active:ease-out
         transition-[transform,background-color,color,box-shadow]
         duration-300 ${SPRING_EASE}
@@ -323,7 +323,7 @@ export const ThemeSelector = ({ className = '' }) => {
                   transition-colors duration-150
                   ${isSelected 
                     ? 'text-[color:var(--apple-blue)] bg-[color:var(--apple-blue-soft)]' 
-                    : 'text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-card-hover)]'
+                    : 'text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg)]'
                   }
                 `}
                 role="option"

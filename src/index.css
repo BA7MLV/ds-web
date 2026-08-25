@@ -39,6 +39,8 @@
     --apple-blue-hover: #0077ed;
     --apple-blue-soft: rgba(0, 113, 227, 0.12);
     --apple-glow: rgba(0, 113, 227, 0.15);
+    /* Segmented control thumb (light: translucent white pill) */
+    --apple-seg-thumb: rgba(255, 255, 255, 0.85);
     --apple-purple: #bf5af2;
     --apple-pink: #ff375f;
     
@@ -109,9 +111,13 @@
     --apple-card-hover: rgba(44, 44, 46, 0.85);
     /* Monochrome premium look - replacing blue with white */
     --apple-blue: #0a84ff;
-    --apple-blue-hover: #0077ed;
+    /* Hover must lighten in dark mode; #0077ed was darker than the resting
+       #0a84ff and dropped link contrast below AA on near-black surfaces. */
+    --apple-blue-hover: #409cff;
     --apple-blue-soft: rgba(10, 132, 255, 0.15);
     --apple-glow: rgba(10, 132, 255, 0.25);
+    /* systemGray thumb: ~3:1 against the dark segmented track (WCAG 1.4.11) */
+    --apple-seg-thumb: #636366;
     --apple-purple: #bf5af2;
     --apple-pink: #ff375f;
     
@@ -240,7 +246,8 @@
   }
 
   .dark .focus-ring {
-    --tw-ring-color: rgba(255, 255, 255, 0.3);
+    /* >=3:1 against near-black surfaces (was 0.3, ~2.3:1) */
+    --tw-ring-color: rgba(255, 255, 255, 0.5);
     --tw-ring-offset-color: rgba(0, 0, 0, 0.9);
   }
 

@@ -238,7 +238,7 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
         aria-hidden="true"
         className={cn(
           'absolute inset-y-0.5 left-0.5 w-[calc((100%-0.25rem)/3)] rounded-full',
-          'bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)]',
+          'bg-[color:var(--apple-seg-thumb)] border border-[color:var(--apple-line)]',
           'shadow-[var(--apple-shadow-sm)]',
           'transition-transform duration-200 ease-out motion-reduce:transition-none',
           selectedIndex === 1 && 'translate-x-full',
