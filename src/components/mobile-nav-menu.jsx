@@ -20,7 +20,9 @@ const usePrefersReducedMotion = () => {
   return prefersReduced
 }
 
-export const MobileNavMenu = ({ onDownload = () => {} }) => {
+// `brand` receives TopNav's brand lockup so the overlay keeps the exact same
+// wordmark tracking/size rhythm instead of hiding the brand behind the backdrop.
+export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -242,6 +244,19 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
           isClosing ? 'ds-menu-backdrop-exit' : 'ds-menu-backdrop-enter'
         }`}
       />
+      {brand ? (
+        // Mirrors the top-nav row (h-14 below --sat, same responsive padding) so
+        // the brand appears to stay in place while the menu opens. Sits outside
+        // the dialog so the panel's scale animation never distorts the wordmark.
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-x-0 top-safe flex h-14 items-center pl-[max(1rem,var(--sal))] pr-[max(1rem,var(--sar))] sm:pl-[max(1.5rem,var(--sal))] sm:pr-[max(1.5rem,var(--sar))] ${
+            isClosing ? 'ds-menu-brand-exit' : 'ds-menu-brand-enter'
+          }`}
+        >
+          {brand}
+        </div>
+      ) : null}
       <div
         ref={dialogRef}
         id={menuId}
@@ -417,6 +432,8 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
         }
         .ds-menu-backdrop-enter { animation: dsMenuFadeIn 0.45s var(--ease-apple) both; }
         .ds-menu-backdrop-exit { animation: dsMenuFadeOut 0.26s var(--ease-apple) both; }
+        .ds-menu-brand-enter { animation: dsMenuFadeIn 0.45s var(--ease-apple) both; }
+        .ds-menu-brand-exit { animation: dsMenuFadeOut 0.26s var(--ease-apple) both; }
         .ds-menu-panel-enter {
           animation: dsMenuPanelIn 0.5s var(--ease-apple) both;
           transform-origin: 85% 6%;
@@ -429,6 +446,8 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
         @media (prefers-reduced-motion: reduce) {
           .ds-menu-backdrop-enter,
           .ds-menu-backdrop-exit,
+          .ds-menu-brand-enter,
+          .ds-menu-brand-exit,
           .ds-menu-panel-enter,
           .ds-menu-panel-exit,
           .ds-menu-item-enter {
