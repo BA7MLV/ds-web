@@ -456,13 +456,13 @@
     font-size: 15px;
     font-weight: 500;
     white-space: nowrap;
-    color: var(--apple-surface);
-    background-color: var(--apple-ink);
-    transition: opacity 0.2s ease, transform 0.2s var(--ease-apple);
+    color: var(--apple-btn-primary-text);
+    background-color: var(--apple-btn-primary-bg);
+    transition: background-color 0.2s ease, transform 0.2s var(--ease-apple);
   }
 
   .btn-apple-primary:hover {
-    opacity: 0.92;
+    background-color: var(--apple-btn-primary-bg-hover);
   }
 
   .btn-apple-primary:active {
@@ -486,11 +486,17 @@
   }
 
   .btn-apple-secondary:hover {
-    background: var(--apple-card);
+    background: var(--apple-btn-secondary-bg-hover);
   }
 
   .btn-apple-secondary:active {
     transform: scale(0.98);
+  }
+
+  .btn-apple-primary:focus-visible,
+  .btn-apple-secondary:focus-visible {
+    outline: 2px solid var(--apple-ink);
+    outline-offset: 2px;
   }
 }
 
@@ -523,6 +529,16 @@
   }
 
   .hover-lift:hover {
+    transform: none;
+  }
+
+  .btn-apple-primary,
+  .btn-apple-secondary {
+    transition: none;
+  }
+
+  .btn-apple-primary:active,
+  .btn-apple-secondary:active {
     transform: none;
   }
 }
