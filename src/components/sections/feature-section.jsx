@@ -177,7 +177,7 @@ export const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, a
   return (
     <div
       ref={itemRef}
-      className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 sm:gap-6 md:gap-12 transition-all duration-500 md:duration-700 ease-apple motion-reduce:transition-none md:delay-[var(--reveal-delay,0ms)] ${isVisible ? anim.visible : anim.hidden}`}
+      className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 sm:gap-6 md:gap-12 transition-[opacity,transform,filter] duration-500 md:duration-700 ease-apple motion-reduce:transition-none md:delay-[var(--reveal-delay,0ms)] ${isVisible ? anim.visible : anim.hidden}`}
       style={{ '--reveal-delay': `${Math.min(index * 100, 400)}ms` }}
     >
       <div className="w-full md:w-[66%] md:flex-shrink-0">
@@ -337,6 +337,9 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
             <div ref={mediaFrameRef} className="relative aspect-video rounded-[6px] flex items-center justify-center">
               {items.map((sf, i) => {
                 const isActive = i === activeIndex
+                // 仅给参与当前 crossfade 的相邻层保留合成层提示：
+                // 全量 will-change 会让每张截图长期各占一份 GPU 纹理，长页滚动时内存压力大
+                const isNearActive = Math.abs(i - activeIndex) <= 1
                 return (
                   <div
                     key={sf.labelKey}
@@ -345,7 +348,7 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                         ? 'opacity-100 motion-safe:scale-100'
                         : 'opacity-0 pointer-events-none motion-safe:scale-[1.015]'
                     }`}
-                    style={{ willChange: isInView ? 'transform, opacity' : 'auto' }}
+                    style={{ willChange: isInView && isNearActive ? 'transform, opacity' : 'auto' }}
                     aria-hidden={!isActive}
                   >
                     {sf.imgSrc ? (
@@ -380,7 +383,7 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
               {items.map((sf, i) => (
                 <div
                   key={sf.labelKey}
-                  className={`h-1.5 rounded-full transition-all duration-300 ease-apple ${
+                  className={`h-1.5 rounded-full transition-[width,background-color,box-shadow] duration-300 ease-apple ${
                     i === activeIndex
                       ? 'w-6 bg-[color:var(--apple-ink)] [box-shadow:var(--apple-shadow-sm)]'
                       : 'w-1.5 bg-[color:var(--apple-line-strong)]'
@@ -408,7 +411,8 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                         ? 'opacity-100 motion-safe:translate-x-0'
                         : 'opacity-30 motion-safe:translate-x-2'
                     }`}
-                    style={{ willChange: isInView ? 'transform, opacity' : 'auto' }}
+                    // 与左侧图层同策略：只提升 active±1 的文字块，其余归还 auto
+                    style={{ willChange: isInView && Math.abs(index - activeIndex) <= 1 ? 'transform, opacity' : 'auto' }}
                   >
                     <div className="flex items-center gap-3 mb-3">
                       <span
