@@ -5,11 +5,12 @@ const logoFooter = '/logo-r.svg'
 const logoFooterDark = '/logo-r-dark.svg'
 const buildHash = import.meta.env.VITE_BUILD_HASH || 'dev'
 
-// Shared footer nav link treatment: vertical tap padding is offset with
+// Shared footer nav link treatment: tap padding on both axes is offset with
 // negative margin so the visual rhythm stays intact while the touch
-// target grows, and the rounded corners keep the focus ring snug.
+// target grows, and the horizontal padding keeps the focus ring from
+// hugging the text edges.
 const footerNavLinkClass =
-  'focus-ring rounded-md py-1 -my-1 transition-colors duration-200 hover:text-[color:var(--apple-ink)] motion-reduce:transition-none'
+  'focus-ring rounded-md px-1 -mx-1 py-1 -my-1 transition-colors duration-200 hover:text-[color:var(--apple-ink)] motion-reduce:transition-none'
 
 // Apple-style social pill: gentle lift + sharper edge + soft shadow on
 // hover, settling back on press. Transforms are disabled entirely under
@@ -25,7 +26,7 @@ export const Footer = ({ onOpenPolicy = () => {} }) => {
   const { t } = useLocale()
   return (
     <footer className="border-t border-[color:var(--apple-line)] mt-4 sm:mt-6 bg-[color:var(--apple-card)] backdrop-blur-2xl px-safe">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12 pb-[calc(2.5rem+env(safe-area-inset-bottom))] sm:pb-[calc(3rem+env(safe-area-inset-bottom))]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12 pb-[calc(2.5rem+var(--sab))] sm:pb-[calc(3rem+var(--sab))]">
         <div className="flex flex-col gap-8 sm:gap-10">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_auto] md:gap-12 items-start">
             <div className="flex justify-center md:justify-start">
@@ -35,7 +36,7 @@ export const Footer = ({ onOpenPolicy = () => {} }) => {
               </div>
             </div>
             <nav
-              className="flex flex-wrap justify-center md:justify-end gap-x-8 gap-y-4 text-[13px] text-[color:var(--apple-muted)] font-medium"
+              className="flex flex-wrap justify-center md:justify-end gap-x-6 sm:gap-x-8 gap-y-4 text-[13px] text-[color:var(--apple-muted)] font-medium"
               aria-label={t('footer.navLabel', 'Footer links')}
             >
               <button type="button" onClick={() => onOpenPolicy('privacy')} className={footerNavLinkClass}>
