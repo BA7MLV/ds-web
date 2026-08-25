@@ -3,6 +3,7 @@ import { Analytics51la } from './components/Analytics51la'
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
 import { MobileNavMenu } from './components/mobile-nav-menu'
+import { FreeModelsCallout } from './components/sections/free-models-callout'
 import sharedDownloads from './data/downloads.json'
 import { buildWebsiteDownloads } from './lib/website-downloads'
 import {
@@ -1511,114 +1512,6 @@ const heroPreviewItems = [
   { id: 'knowledge', labelKey: 'hero.preview.knowledge', subtextKey: 'hero.preview.subtext.knowledge' },
   { id: 'providers', labelKey: 'hero.preview.providers', subtextKey: 'hero.preview.subtext.providers' },
 ]
-
-
-const freeModels = [
-  { id: 'qwen3-8b', label: 'Qwen3-8B' },
-  { id: 'glm-4.1v', label: 'GLM-4.1V' },
-  { id: 'bge-m3', label: 'BGE-M3' },
-]
-
-const FreeModelLogo = ({ id, className = 'h-4 w-4' }) => {
-  switch (id) {
-    case 'qwen3-8b':
-      return (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={className}
-          aria-hidden="true"
-        >
-          <circle cx="11" cy="11" r="7" />
-          <path d="M15.75 15.75L20 20" />
-        </svg>
-      )
-    case 'glm-4.1v':
-      return (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={className}
-          aria-hidden="true"
-        >
-          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z" />
-          <circle cx="12" cy="12" r="2.5" />
-        </svg>
-      )
-    case 'bge-m3':
-      return (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={className}
-          aria-hidden="true"
-        >
-          <circle cx="7" cy="12" r="2" />
-          <circle cx="17" cy="7" r="2" />
-          <circle cx="17" cy="17" r="2" />
-          <path d="M8.7 11.2L15.3 8.2" />
-          <path d="M8.7 12.8L15.3 15.8" />
-        </svg>
-      )
-    default:
-      return null
-  }
-}
-
-const FreeModelsCallout = () => {
-  const { t } = useLocale()
-
-  const siliconflowLogo = '/siliconflow_Chinese%20and%20English%20LOGO.svg'
-  const siliconflowLogoDark = '/siliconflow_Chinese%20and%20English%20LOGO_dark.svg'
-
-  return (
-    <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] rounded-[2rem] p-6 sm:p-8">
-      <div className="flex flex-wrap gap-2 justify-center">
-        {freeModels.map((model) => (
-          <span
-            key={model.id}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] text-[12px] font-medium text-[color:var(--apple-ink)]"
-          >
-            <FreeModelLogo id={model.id} />
-            <span>{model.label}</span>
-          </span>
-        ))}
-      </div>
-
-      <div className="mt-4 flex flex-col items-center gap-2 text-[11px] text-[color:var(--apple-muted)] text-center">
-        <div>{t('freeModels.poweredBy', 'Powered by SiliconFlow')}</div>
-        <div className="flex items-center justify-center">
-          <img
-            src={siliconflowLogo}
-            alt="SiliconFlow"
-            className="h-8 sm:h-9 w-auto dark:hidden"
-            loading="lazy"
-            draggable="false"
-          />
-          <img
-            src={siliconflowLogoDark}
-            alt="SiliconFlow"
-            className="h-8 sm:h-9 w-auto hidden dark:block"
-            loading="lazy"
-            draggable="false"
-          />
-        </div>
-      </div>
-    </div>
-  )
-}
 
 const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]' }) => {
   const heroImageSrc = '/img/example/软件主页图.png'
