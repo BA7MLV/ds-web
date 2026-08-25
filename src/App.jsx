@@ -1242,30 +1242,32 @@ const App = () => {
 const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
   return (
-    <nav className="sticky top-0 z-[10010] pt-safe bg-white/75 backdrop-blur-[20px] backdrop-saturate-[180%] dark:bg-[color:var(--apple-nav-bg)]">
-      <div className="max-w-6xl mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a href="/" className="flex items-center gap-2.5 font-semibold text-slate-900 transition-opacity hover:opacity-80 dark:text-[color:var(--apple-ink)]">
+    <nav
+      className="top-nav-safe-area sticky top-0 z-[10010] border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]"
+      aria-label="主导航"
+    >
+      <div className="top-nav-content max-w-6xl mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a
+          href="/"
+          className="focus-ring flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] transition-opacity hover:opacity-80"
+        >
           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" loading="lazy" decoding="async" />
           <span className="text-[15px] tracking-tight">DeepStudent</span>
         </a>
-        <div className="flex items-center gap-4">
-          {/* Desktop navigation links */}
-          <div className="hidden items-center gap-3 text-[11px] font-normal text-slate-500 lg:flex lg:gap-4 lg:text-[12px] dark:text-[color:var(--apple-muted)]">
-            <a href="#features" className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="hidden items-center gap-4 text-[12px] font-normal text-[color:var(--apple-muted)] lg:flex">
+            <a href="#features" className="focus-ring transition-colors hover:text-[color:var(--apple-ink)]">
               {t('nav.features')}
             </a>
-            <a href="#qa" className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]">
+            <a href="#qa" className="focus-ring transition-colors hover:text-[color:var(--apple-ink)]">
               {t('nav.qa')}
             </a>
-            <a
-              href="/docs/"
-              className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]"
-            >
+            <a href="/docs/" className="focus-ring transition-colors hover:text-[color:var(--apple-ink)]">
               {t('nav.docs')}
             </a>
             <a
               href="https://github.com/helixnow/deep-student"
-              className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]"
+              className="focus-ring transition-colors hover:text-[color:var(--apple-ink)]"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -1273,13 +1275,19 @@ const TopNav = ({ onDownload = () => {} }) => {
             </a>
             <a
               href="#download"
-              onClick={(e) => { e.preventDefault(); onDownload(); }}
-              className="focus-ring text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] transition-colors font-normal"
+              onClick={(e) => {
+                e.preventDefault()
+                onDownload()
+              }}
+              className="focus-ring text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] transition-colors"
             >
               {t('nav.download')}
             </a>
           </div>
-          {/* Mobile hamburger menu */}
+          <div className="hidden lg:flex items-center gap-1.5 pl-2 border-l border-[color:var(--apple-line)]">
+            <ThemeToggle />
+            <LocaleToggle compact className="w-[8.75rem]" />
+          </div>
           <MobileNavMenu onDownload={onDownload} />
         </div>
       </div>
@@ -1369,10 +1377,15 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
       >
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.76fr)_minmax(0,1.9fr)] gap-8 sm:gap-10 lg:gap-8 xl:gap-12 items-center">
           <div className="flex flex-col items-start text-left order-2 lg:order-1">
-            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold tracking-[-0.02em] mb-4 leading-[1.1] text-[color:var(--apple-ink)]">
+            <p className="mb-3 text-[11px] sm:text-xs font-semibold tracking-[0.12em] uppercase text-[color:var(--apple-muted)]">
+              DeepStudent
+            </p>
+            <h1 className="text-[clamp(2.25rem,5vw,3.5rem)] font-semibold tracking-[-0.03em] mb-4 leading-[1.08] text-[color:var(--apple-ink)] text-balance">
               {t('hero.headline.top')}
               <br />
-              <span className={isChinese ? 'inline-block whitespace-nowrap' : 'whitespace-normal break-words text-balance'}>{t('hero.headline.bottom')}</span>
+              <span className={isChinese ? 'inline-block whitespace-nowrap' : 'whitespace-normal break-words'}>
+                {t('hero.headline.bottom')}
+              </span>
             </h1>
 
             <button
@@ -1393,15 +1406,15 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               </span>
             </button>
             
-            <div className="flex flex-col sm:flex-row gap-3 mb-10 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-3 mb-6 w-full sm:w-auto">
               <button
                 type="button"
                 onClick={handleDownloadClick}
-                className="group inline-flex w-full sm:w-auto items-center justify-center gap-1.5 px-8 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-lg font-medium text-[15px] whitespace-nowrap hover:opacity-90 active:scale-[0.98] transition-all duration-200"
+                className="btn-apple-primary group w-full sm:w-auto"
               >
                 <span className="whitespace-nowrap">{t('hero.cta.download')}</span>
                 <svg
-                  className="w-4 h-4 shrink-0 opacity-90 transition-[transform,opacity] duration-150 ease-out motion-reduce:transform-none group-hover:translate-x-1 group-hover:opacity-100"
+                  className="w-4 h-4 shrink-0 opacity-90 transition-[transform,opacity] duration-150 ease-out motion-reduce:transform-none group-hover:translate-x-0.5 group-hover:opacity-100"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -1414,17 +1427,45 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </button>
-              <a
-                href="https://github.com/helixnow/deep-student"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-3 bg-transparent text-[color:var(--apple-ink)] border border-[color:var(--apple-line-strong)] rounded-lg font-medium text-[15px] hover:bg-[color:var(--apple-card)] transition-all duration-200"
+              <button
+                type="button"
+                onClick={handleExploreClick}
+                className="btn-apple-secondary w-full sm:w-auto"
               >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" aria-hidden="true">
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                </svg>
-                GitHub
-              </a>
+                {t('hero.cta.explore')}
+              </button>
+            </div>
+            <a
+              href="https://github.com/helixnow/deep-student"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring inline-flex items-center gap-2 text-[13px] font-medium text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] transition-colors mb-8"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 opacity-80" aria-hidden="true">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
+              <span>在 GitHub 上查看源码</span>
+            </a>
+            <div className="flex items-center gap-2 mb-2" role="tablist" aria-label="功能预览">
+              {heroPreviewItems.map((item) => {
+                const isActive = item.id === activePreviewId
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => {
+                      if (item.id === activePreviewId || isSubtextAnimating) return
+                      setActivePreviewId(item.id)
+                    }}
+                    className={`focus-ring h-1.5 rounded-full transition-all duration-300 ease-apple ${
+                      isActive ? 'w-6 bg-[color:var(--apple-ink)]' : 'w-1.5 bg-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-muted)]'
+                    }`}
+                    aria-label={t(item.labelKey)}
+                  />
+                )
+              })}
             </div>
 
             {showScrollHint && (
@@ -1583,26 +1624,27 @@ const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max
   const heroImageSrc = '/img/example/软件主页图.png'
 
   return (
-    <div
-      className={`relative w-full ${className}`}
-      style={style}
-    >
-      <div className="relative">
-        <div
-          className="relative z-10"
-        >
-          <OptimizedImage
-            src={heroImageSrc}
-            alt="DeepStudent 主页面预览"
-            className="block w-full h-auto object-contain"
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-            sizes="(min-width: 1536px) 66vw, (min-width: 1024px) 72vw, 96vw"
-            draggable="false"
-          />
-        </div>
+    <div className={`relative w-full ${className}`} style={style}>
+      <div
+        className="relative overflow-hidden rounded-[1.25rem] sm:rounded-[1.5rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-surface-elevated)] shadow-[var(--apple-shadow-xl)] ring-1 ring-black/[0.04] dark:ring-white/[0.06]"
+        style={{ transform: 'translateZ(0)' }}
+      >
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/40 via-transparent to-black/[0.02] dark:from-white/[0.04] dark:to-transparent" aria-hidden />
+        <OptimizedImage
+          src={heroImageSrc}
+          alt="DeepStudent 主页面预览"
+          className="block w-full h-auto object-contain"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          sizes="(min-width: 1536px) 66vw, (min-width: 1024px) 72vw, 96vw"
+          draggable="false"
+        />
       </div>
+      <div
+        className="absolute -inset-x-[8%] -bottom-[12%] h-[40%] rounded-[50%] bg-[radial-gradient(ellipse_at_center,var(--apple-glow),transparent_70%)] blur-2xl opacity-60 pointer-events-none"
+        aria-hidden
+      />
     </div>
   )
 }
@@ -1689,9 +1731,9 @@ const DownloadPage = ({ onBack = () => {} }) => {
           >
 ← {t('download.backHome')}
           </button>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <ThemeToggle />
-            <span className="text-xs text-[color:var(--apple-muted)]">{t('nav.download')}</span>
+            <LocaleToggle compact className="w-[8.75rem]" />
           </div>
         </div>
       </div>
@@ -1734,13 +1776,17 @@ const DownloadPage = ({ onBack = () => {} }) => {
           {filteredDownloads.map((platform) => (
               <article
                 key={platform.id}
-                className="rounded-[1.5rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] p-[1.5rem] sm:p-[1.75rem] shadow-[var(--apple-shadow-sm)]"
+                className={`rounded-[1.5rem] bg-[color:var(--apple-card)] border p-[1.5rem] sm:p-[1.75rem] shadow-[var(--apple-shadow-sm)] transition-all duration-300 ease-apple hover-lift ${
+                  platform.id === recommendedId
+                    ? 'border-[color:var(--apple-blue)]/30 ring-1 ring-[color:var(--apple-blue)]/15'
+                    : 'border-[color:var(--apple-line)]'
+                }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
                     <p className="text-base font-semibold text-[color:var(--apple-ink)]">{platform.platform}</p>
                     {platform.id === recommendedId ? (
-                      <span className="rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-2 py-0.5 text-[10px] font-semibold text-[color:var(--apple-ink)]">
+                      <span className="rounded-full bg-[color:var(--apple-blue-soft)] px-2.5 py-0.5 text-[10px] font-semibold text-[color:var(--apple-blue)]">
                         {t('download.recommended', '推荐')}
                       </span>
                     ) : null}
@@ -1880,17 +1926,34 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
   )
 }
 
-// 占位图组件 - shimmer 动画，后续替换为真实截图
+// 占位图组件 - 精致 shimmer，后续替换为真实截图
 const ImagePlaceholder = ({ label }) => (
-  <div className="w-full aspect-video rounded-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden">
-    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
-    <div className="z-10 flex flex-col items-center gap-2">
-      <svg className="w-8 h-8 text-[color:var(--apple-muted)] opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <rect x="3" y="3" width="18" height="18" rx="3" />
-        <circle cx="8.5" cy="8.5" r="1.5" />
-        <path d="M21 15l-5-5L5 21" />
-      </svg>
-      <span className="text-[12px] sm:text-[13px] text-[color:var(--apple-muted)] font-medium opacity-60">{label}</span>
+  <div
+    className="w-full aspect-[16/10] rounded-[1rem] sm:rounded-[1.25rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden shadow-[var(--apple-shadow-sm)]"
+    role="img"
+    aria-label={label}
+  >
+    <div
+      className="absolute inset-0 opacity-80"
+      style={{
+        background:
+          'radial-gradient(ellipse 80% 60% at 30% 20%, var(--apple-blue-soft), transparent 55%), radial-gradient(ellipse 70% 50% at 80% 80%, rgba(191, 90, 242, 0.08), transparent 50%)',
+      }}
+      aria-hidden
+    />
+    <div className="absolute inset-0 skeleton opacity-30" aria-hidden />
+    <div className="z-10 flex flex-col items-center gap-3 px-6 text-center">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--apple-surface-elevated)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)]">
+        <svg className="w-5 h-5 text-[color:var(--apple-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+          <rect x="3" y="3" width="18" height="18" rx="4" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <path d="M21 15l-5-5L5 21" />
+        </svg>
+      </div>
+      <span className="text-[12px] sm:text-[13px] text-[color:var(--apple-muted)] font-medium leading-snug max-w-[16rem]">
+        {label}
+      </span>
+      <span className="text-[10px] uppercase tracking-widest text-[color:var(--apple-muted)] opacity-50">Preview</span>
     </div>
   </div>
 )

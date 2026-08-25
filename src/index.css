@@ -426,6 +426,72 @@
     transform: translateY(-2px);
     box-shadow: var(--apple-shadow-lg);
   }
+
+  .text-hero {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+  }
+
+  .text-section-title {
+    font-size: clamp(1.75rem, 3.5vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .text-body-large {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    line-height: 1.65;
+  }
+
+  .btn-apple-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.75rem 2rem;
+    border-radius: 0.75rem;
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--apple-surface);
+    background-color: var(--apple-ink);
+    transition: opacity 0.2s ease, transform 0.2s var(--ease-apple);
+  }
+
+  .btn-apple-primary:hover {
+    opacity: 0.92;
+  }
+
+  .btn-apple-primary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-apple-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    border-radius: 0.75rem;
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--apple-ink);
+    border: 1px solid var(--apple-line-strong);
+    background: transparent;
+    transition: background-color 0.2s ease, transform 0.2s var(--ease-apple);
+  }
+
+  .btn-apple-secondary:hover {
+    background: var(--apple-card);
+  }
+
+  .btn-apple-secondary:active {
+    transform: scale(0.98);
+  }
 }
 
 /* Theme transition - respect reduced motion */
@@ -450,6 +516,14 @@
 
   .gradient-text-animated {
     animation: none;
+  }
+
+  .hover-lift {
+    transition: none;
+  }
+
+  .hover-lift:hover {
+    transform: none;
   }
 }
 
