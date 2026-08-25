@@ -284,10 +284,11 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               </svg>
               <span>{t('hero.github')}</span>
             </a>
-            {/* gap-3 leaves 6px per side for the invisible before: hit area (~38px tall)
-                without adjacent targets overlapping. */}
+            {/* Each tab is a full 44x44px (w-11/h-11) touch target per Apple HIG; the
+                visible dot is the inner span so adjacent targets never overlap.
+                -ml-2.5 keeps the default active dot (24px wide) flush with the left edge. */}
             <div
-              className="flex items-center gap-3 mb-2"
+              className="flex items-center -ml-2.5 mb-2"
               role="tablist"
               aria-label={t('hero.preview.label')}
             >
@@ -303,11 +304,16 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
                     tabIndex={isActive ? 0 : -1}
                     onClick={() => selectPreview(item.id)}
                     onKeyDown={handlePreviewKeyDown}
-                    className={`focus-ring relative h-1.5 rounded-full touch-manipulation transition-all duration-300 ease-apple motion-reduce:transition-none before:absolute before:-inset-x-1.5 before:-inset-y-4 before:content-[''] ${
-                      isActive ? 'w-6 bg-[color:var(--apple-ink)]' : 'w-1.5 bg-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-muted)]'
-                    }`}
+                    className="focus-ring group inline-flex h-11 w-11 items-center justify-center rounded-full touch-manipulation"
                     aria-label={t(item.labelKey)}
-                  />
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={`h-1.5 rounded-full transition-all duration-300 ease-apple motion-reduce:transition-none ${
+                        isActive ? 'w-6 bg-[color:var(--apple-ink)]' : 'w-1.5 bg-[color:var(--apple-line-strong)] group-hover:bg-[color:var(--apple-muted)]'
+                      }`}
+                    />
+                  </button>
                 )
               })}
             </div>
