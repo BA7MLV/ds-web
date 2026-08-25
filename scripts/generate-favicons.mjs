@@ -57,7 +57,8 @@ const main = async () => {
   const wasmPath = path.join(rootDir, 'node_modules/@resvg/resvg-wasm/index_bg.wasm')
   await initWasm(fs.readFileSync(wasmPath))
 
-  const svgPath = process.argv[2] ?? path.join(rootDir, 'public/favicon.svg')
+  // Source SVG lives in docs/public; the old public/favicon.svg copy was removed.
+  const svgPath = process.argv[2] ?? path.join(rootDir, 'docs/public/favicon.svg')
   const svg = readUtf8(svgPath)
 
   // Transparent favicon keeps the browser tab UI background.
