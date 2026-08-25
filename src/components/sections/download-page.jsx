@@ -199,7 +199,10 @@ export const DownloadPage = ({ onBack = () => {} }) => {
           /* 深色下 --apple-shadow-sm（纯黑投影）在黑底上不可见，空态卡片只剩 8% 白
              的 --apple-line 描边，边界过弱；升级为 --apple-line-strong（12%）。图标
              底盘同理：8% 白的 secondary-bg 几乎隐形，深色改用 iOS tertiaryFill
-             （rgba(118,118,128,0.24)，与上方分段控件轨道一致）并加 --apple-line 内描边 */
+             （rgba(118,118,128,0.24)，与上方分段控件轨道一致）。复检：底盘内描边
+             此前仍用 --apple-line —— 深色 8% 白叠在 24% 灰盘边缘（≈#3b3b3f）上与
+             盘面几乎同色，描边形同虚设；与卡片边框/CTA 同规格升级为深色
+             --apple-line-strong（12%），浅色保持 --apple-line 标准发丝线不变 */
           <div
             role="tabpanel"
             id="platform-tabpanel"
@@ -208,7 +211,7 @@ export const DownloadPage = ({ onBack = () => {} }) => {
           >
             <div
               aria-hidden="true"
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] dark:bg-[rgba(118,118,128,0.24)] ring-1 ring-inset ring-[color:var(--apple-line)] text-[color:var(--apple-muted)]"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] dark:bg-[rgba(118,118,128,0.24)] ring-1 ring-inset ring-[color:var(--apple-line)] dark:ring-[color:var(--apple-line-strong)] text-[color:var(--apple-muted)]"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none">
                 <path
