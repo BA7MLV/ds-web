@@ -98,7 +98,7 @@ export const DownloadPage = ({ onBack = () => {} }) => {
   const releaseUpdatedAt = formatReleaseDate(updatedAtRaw, locale)
   return (
     <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[calc(6.854rem+var(--sab))] sm:pb-[calc(11.09rem+var(--sab))]">
-      <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl pt-safe">
+      <div className="sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%] pt-safe">
         <div className="max-w-5xl mx-auto flex items-center justify-between py-1.5 pl-[max(1rem,var(--sal))] pr-[max(1rem,var(--sar))] sm:pl-[max(1.5rem,var(--sal))] sm:pr-[max(1.5rem,var(--sar))]">
           <button
             type="button"

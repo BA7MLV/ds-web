@@ -208,15 +208,15 @@ export const PolicyModal = ({ type, onClose }) => {
       />
       <div
         ref={dialogRef}
-        className="policy-modal-panel relative flex w-full max-w-2xl max-h-[80vh] max-h-[80svh] flex-col overflow-hidden bg-[color:var(--apple-card)] backdrop-blur-xl border border-[color:var(--apple-line)] rounded-[2.618rem] shadow-[var(--apple-shadow-xl)]"
+        className="policy-modal-panel relative flex w-full max-w-2xl max-h-[80vh] max-h-[80svh] flex-col overflow-hidden bg-[color:var(--apple-card)] backdrop-blur-xl border border-[color:var(--apple-line)] rounded-[2rem] shadow-[var(--apple-shadow-xl)]"
         onClick={(event) => event.stopPropagation()}
         tabIndex={-1}
       >
-        <div className="flex-shrink-0 flex items-start justify-between gap-[1.618rem] border-b border-[color:var(--apple-line)] px-[1.618rem] sm:px-[2.618rem] pt-[1.618rem] sm:pt-[2.618rem] pb-[1.618rem]">
+        <div className="flex-shrink-0 flex items-start justify-between gap-4 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] px-6 sm:px-8 py-5 sm:py-6">
           <div>
             <h3
               id={titleId}
-              className="text-2xl font-semibold text-[color:var(--apple-ink)] mb-3 font-display"
+              className="text-xl sm:text-2xl font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] mb-3 font-display"
             >
               {data.title}
             </h3>
@@ -227,7 +227,7 @@ export const PolicyModal = ({ type, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="focus-ring flex-shrink-0 w-[2.618rem] h-[2.618rem] rounded-full border border-[color:var(--apple-line)] text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:border-[color:var(--apple-line-strong)] flex items-center justify-center transition-colors bg-[color:var(--apple-card-strong)]"
+            className="focus-ring touch-manipulation flex-shrink-0 w-11 h-11 rounded-full border border-[color:var(--apple-line)] text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:border-[color:var(--apple-line-strong)] flex items-center justify-center transition-colors bg-[color:var(--apple-card-strong)]"
             aria-label={t('policy.close', 'Close dialog')}
             ref={closeButtonRef}
           >
@@ -235,12 +235,12 @@ export const PolicyModal = ({ type, onClose }) => {
           </button>
         </div>
 
-        <div className="policy-modal-scroll flex-1 min-h-0 overflow-y-auto px-[1.618rem] sm:px-[2.618rem] py-[1.618rem]">
+        <div className="policy-modal-scroll flex-1 min-h-0 overflow-y-auto px-6 sm:px-8 py-6">
           <div className="space-y-6">
             {data.sections.map((section) => (
               <div
                 key={section.title}
-                className="border border-[color:var(--apple-line)] rounded-[1.618rem] p-[1.618rem] bg-[color:var(--apple-card-strong)]"
+                className="border border-[color:var(--apple-line)] rounded-[1.5rem] p-[1.5rem] sm:p-[1.75rem] bg-[color:var(--apple-card-strong)]"
               >
                 <h4 className="text-sm font-semibold text-[color:var(--apple-ink)] mb-2 font-display">
                   {section.title}
@@ -262,11 +262,11 @@ export const PolicyModal = ({ type, onClose }) => {
           ) : null}
         </div>
 
-        <div className="flex-shrink-0 border-t border-[color:var(--apple-line)] px-[1.618rem] sm:px-[2.618rem] pt-[1rem] pb-[1.618rem] sm:pb-[1.618rem]">
+        <div className="flex-shrink-0 border-t border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] px-6 sm:px-8 pt-4 pb-5 sm:pb-6">
           <button
             type="button"
             onClick={onClose}
-            className="focus-ring w-full py-[0.95rem] sm:py-[1.15rem] md:py-[1.35rem] rounded-[1.618rem] bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] text-sm md:text-base font-semibold hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-[0.98] transition-all shadow-[var(--apple-shadow-md)]"
+            className="focus-ring touch-manipulation inline-flex w-full min-h-[2.75rem] items-center justify-center gap-2 rounded-full px-6 text-sm font-medium leading-snug bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-[0.97] transition-all shadow-[var(--apple-shadow-sm)]"
           >
             {t('policy.understood', 'I Understand')}
           </button>
