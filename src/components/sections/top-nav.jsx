@@ -13,10 +13,19 @@ const SCROLL_CHROME_THRESHOLD = 8
 // Single source of truth for the brand lockup: rendered in the nav bar and
 // passed to MobileNavMenu so the overlay reuses identical tracking/size rhythm.
 // The wordmark steps 15px -> 17px in lockstep with the logo's h-5 -> h-6.
-const brandLockup = (
+// Once the scrolled chrome appears the wordmark tracking tightens a touch
+// (-0.025em -> -0.032em) so the lockup reads denser against the hairline bar;
+// weight stays semibold so the lockup never reflows horizontally.
+const renderBrandLockup = (isScrolled = false) => (
   <span className="inline-flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)]">
     <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" loading="lazy" decoding="async" />
-    <span className="text-[15px] tracking-tight sm:text-[17px]">DeepStudent</span>
+    <span
+      className={`text-[15px] sm:text-[17px] transition-[letter-spacing] duration-300 ease-apple motion-reduce:transition-none ${
+        isScrolled ? 'tracking-[-0.032em]' : 'tracking-tight'
+      }`}
+    >
+      DeepStudent
+    </span>
   </span>
 )
 
@@ -37,7 +46,7 @@ export const TopNav = ({ onDownload = () => {} }) => {
         className="top-nav-content max-w-6xl mx-auto flex h-14 items-center justify-between pl-[max(1rem,var(--sal))] pr-[max(1rem,var(--sar))] sm:pl-[max(1.5rem,var(--sal))] sm:pr-[max(1.5rem,var(--sar))] lg:pl-[max(2rem,var(--sal))] lg:pr-[max(2rem,var(--sar))]"
       >
         <a href="/" className="focus-ring inline-flex items-center transition-opacity hover:opacity-80">
-          {brandLockup}
+          {renderBrandLockup(isScrolled)}
         </a>
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="hidden items-center gap-4 text-[12px] font-normal text-[color:var(--apple-muted)] lg:flex">
@@ -73,7 +82,10 @@ export const TopNav = ({ onDownload = () => {} }) => {
             <ThemeToggle />
             <LocaleToggle compact className="w-[8.75rem]" />
           </div>
-          <MobileNavMenu onDownload={onDownload} brand={brandLockup} />
+          {/* Overlay always shows the at-rest lockup: the scroll lock zeroes
+              window.scrollY while the menu is open, so pinning the relaxed
+              tracking keeps the overlay brand stable for the whole session. */}
+          <MobileNavMenu onDownload={onDownload} brand={renderBrandLockup(false)} />
         </div>
       </nav>
     </header>
