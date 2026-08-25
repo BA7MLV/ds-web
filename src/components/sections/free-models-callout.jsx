@@ -106,9 +106,13 @@ const useRevealOnce = () => {
   return { ref, revealed }
 }
 
+// Pills are informational (no action to trigger), so they stay out of the tab
+// order — fake tab stops would only add noise for keyboard users. They render
+// as a semantic list instead, and min-h-9 keeps each chip a comfortable
+// ~36px touch/read target on small screens.
 const ModelPill = ({ model, revealed, delayMs }) => (
-  <span
-    className={`group inline-flex select-none items-center gap-2 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-3.5 py-1.5 text-[12px] font-medium text-[color:var(--apple-ink)] [box-shadow:var(--apple-shadow-sm)] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-card-hover)] hover:[box-shadow:var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98] motion-reduce:transition-none ${
+  <li
+    className={`group inline-flex min-h-9 select-none items-center gap-2 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-3.5 py-1.5 text-[12px] font-medium text-[color:var(--apple-ink)] [box-shadow:var(--apple-shadow-sm)] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-card-hover)] hover:[box-shadow:var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98] motion-reduce:transition-none ${
       revealed ? 'motion-safe:animate-fade-in-up' : 'motion-safe:opacity-0'
     }`}
     style={revealed ? { animationDelay: `${delayMs}ms` } : undefined}
@@ -120,7 +124,7 @@ const ModelPill = ({ model, revealed, delayMs }) => (
       className="h-4 w-4 transition-[color,transform] duration-300 ease-apple group-hover:text-[color:var(--apple-blue)] motion-safe:group-hover:-rotate-6 motion-safe:group-hover:scale-110 motion-reduce:transition-none"
     />
     <span>{model.label}</span>
-  </span>
+  </li>
 )
 
 export const FreeModelsCallout = () => {
@@ -142,11 +146,12 @@ export const FreeModelsCallout = () => {
         className="pointer-events-none absolute -top-24 left-1/2 h-44 w-[130%] -translate-x-1/2 rounded-[100%] bg-gradient-to-b from-white/45 to-transparent blur-2xl dark:from-white/[0.05]"
       />
 
-      <div className="relative flex flex-wrap justify-center gap-2">
+      {/* role="list" restores list semantics that list-style-none strips in Safari/VoiceOver */}
+      <ul role="list" className="relative flex list-none flex-wrap justify-center gap-2 p-0">
         {freeModels.map((model, index) => (
           <ModelPill key={model.id} model={model} revealed={revealed} delayMs={index * 90} />
         ))}
-      </div>
+      </ul>
 
       {/* Dark cards sit on near-black, so the hairline divider needs the
           stronger line token to stay visible there. */}
@@ -155,12 +160,24 @@ export const FreeModelsCallout = () => {
           <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--apple-muted)]">
             {t('freeModels.poweredBy', 'Powered by SiliconFlow')}
           </span>
-          <span className="group relative inline-flex items-center overflow-hidden rounded-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-5 py-2.5 [box-shadow:var(--apple-shadow-sm)] transition-[border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:[box-shadow:var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.99] motion-reduce:transition-none">
-            {/* Shimmer sweeps in on hover only; on hover-out it snaps back
-                off-screen instead of visibly sliding backwards over the logo. */}
+          {/* The card was a hover-only <span>: it looked interactive but touch and
+              keyboard users could not reach it. It is now a real link to the
+              SiliconFlow site — min-h keeps the target at the 44px HIG minimum,
+              and focus-visible mirrors the hover border/shadow treatment. The
+              box-shadow composes the --tw-ring-* vars (same trick as the outer
+              card) so the focus-ring is not clobbered by the Apple shadow token. */}
+          <a
+            href="https://siliconflow.cn"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus-ring group relative inline-flex min-h-[44px] items-center overflow-hidden rounded-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-5 py-2.5 [box-shadow:var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--apple-shadow-sm)] transition-[border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:[box-shadow:var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--apple-shadow-md)] focus-visible:border-[color:var(--apple-line-strong)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.99] motion-reduce:transition-none"
+          >
+            {/* Shimmer sweeps in on hover/keyboard focus only; on the way out it
+                snaps back off-screen instead of visibly sliding backwards over
+                the logo. */}
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/50 to-transparent dark:via-white/10 motion-safe:group-hover:translate-x-full motion-safe:group-hover:transition-transform motion-safe:group-hover:duration-700 motion-safe:group-hover:ease-out"
+              className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/50 to-transparent dark:via-white/10 motion-safe:group-hover:translate-x-full motion-safe:group-hover:transition-transform motion-safe:group-hover:duration-700 motion-safe:group-hover:ease-out motion-safe:group-focus-visible:translate-x-full motion-safe:group-focus-visible:transition-transform motion-safe:group-focus-visible:duration-700 motion-safe:group-focus-visible:ease-out"
             />
             <img
               src={siliconflowLogo}
@@ -176,7 +193,7 @@ export const FreeModelsCallout = () => {
               loading="lazy"
               draggable="false"
             />
-          </span>
+          </a>
         </div>
       </div>
     </div>
