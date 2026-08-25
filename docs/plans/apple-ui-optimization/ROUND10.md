@@ -37,6 +37,23 @@ Round 10 营销页性能预算扫描（`vite build`，vite 7.2.4，构建产物 
 
 ## 验收
 
+按 `git log --grep='Round 10'` 核对（截至本次写入；SHA 均为分支上已落地提交）：
+
+| # | 事项 | 状态 | SHA |
+|---|------|------|-----|
+| 1 | 移除未使用 `@radix-ui/react-switch` 依赖 | ✅ | `e13b108` |
+| 2 | 软件主页图 png vs webp 宽高比记录/修复 | 进行中 | — |
+| 3 | 营销页性能预算扫描（主包 / locale chunk / LCP） | ✅ | `c853cb1` |
+| 4 | FAQ 手风琴动效与 reduced-motion 再验 | ✅ | `3e2ef23` |
+| 5 | PolicyModal 深色对比与焦点环再验 | ✅ | `8b790f7` |
+| 6 | Hero 移动端排版微打磨 | ✅ | `42d25ee` |
+| 7 | VitePress `.doc-hero` 深色模式间距与对比 | 进行中 | — |
+| 8 | 全站 `prefers-reduced-motion` 二次扫描 | 进行中 | — |
+| 9 | zh 文案第七轮（nav / a11y / placeholder） | ✅ | `cca8d00` |
+| 10 | en / zh-Hant 同步本轮 copy + PROGRESS 核对 | 进行中 | — |
+
+- 已落地 6/10；其余 4 路进行中，落地后回填 SHA。
+- 视觉验证截图（hero webp）留作本地 artifacts，不入仓。
 - build 通过
 - 三语 key 对齐
 - PROGRESS / ROUND10 更新

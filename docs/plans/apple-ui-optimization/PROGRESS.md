@@ -148,9 +148,20 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 验收：10/10 落地；详见 ROUND9.md。
 
-### Round 10（进行中）
+### Round 10（进行中，6/10 已落地）
 
 性能预算、深色/动效再验、文案第七轮与资源一致性。详见 ROUND10.md。
+
+- [x] 移除未使用 `@radix-ui/react-switch` 依赖（`e13b108`）
+- [ ] 软件主页图 png/webp 宽高比记录/修复（进行中）
+- [x] 营销页性能预算扫描（`c853cb1`）
+- [x] FAQ 手风琴动效与 reduced-motion 再验（`3e2ef23`）
+- [x] PolicyModal 深色对比与焦点环再验（`8b790f7`）
+- [x] Hero 移动端排版微打磨（`42d25ee`）
+- [ ] VitePress `.doc-hero` 深色间距与对比（进行中）
+- [ ] 全站 `prefers-reduced-motion` 二次扫描（进行中）
+- [x] zh 文案第七轮 nav/a11y/placeholder（`cca8d00`）
+- [ ] en / zh-Hant 同步本轮 copy + PROGRESS 核对（进行中）
 
 ## 待办（后续轮次）
 
