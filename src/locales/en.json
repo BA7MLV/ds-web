@@ -1,4 +1,6 @@
 {
+  "a11y.skipToContent": "Skip to main content",
+  "nav.ariaLabel": "Primary",
   "nav.features": "Features",
   "nav.qa": "Q&A",
   "nav.docs": "Docs",

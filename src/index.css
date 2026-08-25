@@ -251,6 +251,40 @@
     --tw-ring-offset-color: rgba(0, 0, 0, 0.9);
   }
 
+  /* Skip link: visually hidden until keyboard focus, then pinned above the
+     sticky nav (z 10010) inside the safe area. */
+  .skip-link {
+    position: fixed;
+    top: calc(0.75rem + var(--sat, 0px));
+    left: calc(0.75rem + var(--sal, 0px));
+    z-index: 10020;
+    padding: 0.625rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--apple-btn-primary-text);
+    background-color: var(--apple-btn-primary-bg);
+    box-shadow: var(--apple-shadow-lg);
+  }
+
+  .skip-link:not(:focus) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .skip-link:focus-visible {
+    outline: 2px solid var(--apple-ink);
+    outline-offset: 2px;
+  }
+
   .segmented-control-wrap {
     max-width: min(100%, calc(100vw - 1.5rem));
     overflow-x: auto;

@@ -1,4 +1,6 @@
 {
+  "a11y.skipToContent": "跳到主要内容",
+  "nav.ariaLabel": "主导航",
   "nav.features": "功能",
   "nav.qa": "QA",
   "nav.docs": "文档",
