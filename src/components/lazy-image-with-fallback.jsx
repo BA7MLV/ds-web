@@ -162,9 +162,11 @@ const LazyImageWithFallback = forwardRef(({
 
     const message = errorText || errorMessage || (isOffline ? '网络已断开' : '加载失败')
 
+    // 与 ImagePlaceholder / FeatureScreenshotFrame 同族：6px 圆角、apple-line 描边、
+    // card-strong 玻璃底（backdrop blur）与 shadow-md
     return (
       <div
-        className={`relative w-full h-full min-h-[120px] rounded-[6px] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center overflow-hidden shadow-[var(--apple-shadow-sm)] ${className}`}
+        className={`relative w-full h-full min-h-[120px] rounded-[6px] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] backdrop-blur-2xl flex items-center justify-center overflow-hidden shadow-[var(--apple-shadow-md)] ${className}`}
         style={aspectRatio ? { aspectRatio } : undefined}
         role="img"
         aria-label={message}
@@ -187,7 +189,7 @@ const LazyImageWithFallback = forwardRef(({
               <svg className="w-5 h-5 text-[color:var(--apple-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
                 <rect x="3" y="3" width="18" height="18" rx="4" />
                 <circle cx="8.5" cy="8.5" r="1.5" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
+                <path d="M21 15l-5-5L5 21" />
               </svg>
             )}
           </div>
@@ -203,6 +205,9 @@ const LazyImageWithFallback = forwardRef(({
               重新加载
             </button>
           )}
+          <span className="text-[10px] uppercase tracking-widest text-[color:var(--apple-muted)] opacity-50">
+            {isOffline ? 'Offline' : 'Error'}
+          </span>
         </div>
       </div>
     )
