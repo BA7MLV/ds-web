@@ -218,7 +218,12 @@ export const StatsSection = ({ motionScale = 1 }) => {
     shouldAnimate && revealed ? { animationDelay: `${Math.round(ms * motionAmount)}ms` } : undefined
 
   return (
-    <section ref={ref} className="px-4 pt-20 sm:px-6 sm:pt-28" aria-labelledby="stats-heading">
+    // pb 让与下方架构图的衔接留白不只依赖对方的 pt-8/12，避免这一处接缝明显紧于全站其他区块
+    <section
+      ref={ref}
+      className="px-4 pb-4 pt-20 sm:px-6 sm:pb-6 sm:pt-28"
+      aria-labelledby="stats-heading"
+    >
       <div className="mx-auto max-w-[80rem]">
         <div className="mb-10 text-center sm:mb-14">
           <h2

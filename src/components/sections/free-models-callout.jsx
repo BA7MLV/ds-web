@@ -158,8 +158,9 @@ export const FreeModelsCallout = () => {
       </ul>
 
       {/* Dark cards sit on near-black, so the hairline divider needs the
-          stronger line token to stay visible there. */}
-      <div className="relative mt-6 border-t border-[color:var(--apple-line)] pt-5 dark:border-[color:var(--apple-line-strong)]">
+          stronger line token to stay visible there. Divider spacing tracks the
+          card padding step (p-6 -> sm:p-8) so both halves keep the same rhythm. */}
+      <div className="relative mt-6 border-t border-[color:var(--apple-line)] pt-5 dark:border-[color:var(--apple-line-strong)] sm:mt-8 sm:pt-6">
         <div className="flex flex-col items-center gap-3 text-center">
           <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--apple-muted)]">
             {t('freeModels.poweredBy', 'Powered by SiliconFlow')}
