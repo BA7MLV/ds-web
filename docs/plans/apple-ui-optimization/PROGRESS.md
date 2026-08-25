@@ -148,34 +148,31 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 验收：10/10 落地；详见 ROUND9.md。
 
-### Round 10（进行中，6/10 已落地）
+### Round 10（已完成，10/10）
 
 性能预算、深色/动效再验、文案第七轮与资源一致性。详见 ROUND10.md。
 
 - [x] 移除未使用 `@radix-ui/react-switch` 依赖（`e13b108`）
-- [ ] 软件主页图 png/webp 宽高比记录/修复（进行中）
+- [x] 软件主页图 png/webp 宽高比记录/修复（`e19144e`）
 - [x] 营销页性能预算扫描（`c853cb1`）
 - [x] FAQ 手风琴动效与 reduced-motion 再验（`3e2ef23`）
 - [x] PolicyModal 深色对比与焦点环再验（`8b790f7`）
 - [x] Hero 移动端排版微打磨（`42d25ee`）
-- [ ] VitePress `.doc-hero` 深色间距与对比（进行中）
-- [ ] 全站 `prefers-reduced-motion` 二次扫描（进行中）
+- [x] VitePress `.doc-hero` 深色间距与对比（`9df1d7d`）
+- [x] 全站 `prefers-reduced-motion` 二次扫描（`601bdc8`）
 - [x] zh 文案第七轮 nav/a11y/placeholder（`cca8d00`）
-- [ ] en / zh-Hant 同步本轮 copy + PROGRESS 核对（进行中）
+- [x] en / zh-Hant 同步本轮 copy + PROGRESS 核对（`6e95af2`）
 
 ## 待办（后续轮次）
 
-- [ ] 可选清理 `@radix-ui/react-switch` 依赖
-- [ ] 软件主页图 png/webp 比例不一致
-- [ ] 性能预算 / FAQ 动效 / Policy 深色 / Hero 移动端排版
-- [ ] doc-hero 深色 / reduced-motion 再验 / 文案第七轮
+- [ ] 清理 `src/` 零引用依赖（`@tsparticles/*`、`motion`、`lucide-react` 等，见 ROUND10 性能扫描）
 - [ ] 持续多轮至 ≥20（用户未叫停前不停止）
 
 ## PR 列表
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 10 进行中 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 10 验收完成 |
 
 ### Round 1 子代理完成项
 
