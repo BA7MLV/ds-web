@@ -39,7 +39,7 @@
 - [x] FeatureScreenshotFrame 统一主图框
 - [x] LazyImage LQIP 交叉淡入
 - [x] VitePress CustomHome 样式对齐
-- [ ] Stats 区块（待 Round 3）
+- [x] Stats 区块（`stats-section.jsx` + 三语 `*Unit` keys）
 
 ## 待办（后续轮次）
 
