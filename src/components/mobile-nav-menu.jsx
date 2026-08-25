@@ -439,9 +439,13 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
           <div className="mt-auto flex flex-col">
             {/* Theme + locale controls so the 768–1024 breakpoint (desktop
                 toggles hidden until lg) can still switch appearance/language.
-                Settings-style rows: label left, control right, ≥48px tall. */}
+                Settings-style rows: label left, control right, ≥48px tall.
+                gap-1 keeps the toggles' extended 44px hit areas (ThemeToggle
+                before:-inset-2, LocaleToggle after:-inset-y-2) from nearly
+                abutting across the row boundary, so a thumb aimed at one
+                control can't graze the other. */}
             <div
-              className="ds-menu-item-enter flex flex-col border-t border-[color:var(--apple-line)] py-2"
+              className="ds-menu-item-enter flex flex-col gap-1 border-t border-[color:var(--apple-line)] py-2 md:gap-1.5"
               style={{ animationDelay: `${80 + navItems.length * 45}ms` }}
             >
               <div
