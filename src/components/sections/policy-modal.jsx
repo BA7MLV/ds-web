@@ -216,7 +216,9 @@ export const PolicyModal = ({ type, onClose }) => {
           <div>
             <h3
               id={titleId}
-              className="text-xl sm:text-2xl font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] mb-3 font-display"
+              // 与 text-section-title 同节奏（600/-0.02em/1.1），字号取该梯度下限：
+              // 固定宽度弹窗里 clamp 到 3rem 会失衡，故用 1.5rem → 1.75rem 等价档
+              className="mb-3 font-display text-[1.5rem] font-semibold leading-[1.1] tracking-[-0.02em] text-[color:var(--apple-ink)] sm:text-[1.75rem]"
             >
               {data.title}
             </h3>

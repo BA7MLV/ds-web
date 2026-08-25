@@ -42,7 +42,7 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
       style={shouldAnimate ? { animationDelay: '0.12s' } : undefined}
     >
       <div className="text-center">
-        <h2 className="mb-3 font-display text-[1.75rem] font-semibold leading-[1.1] tracking-[-0.02em] text-[color:var(--apple-ink)] sm:mb-4 sm:text-[2.5rem]">
+        <h2 className="mb-3 font-display text-section-title text-[color:var(--apple-ink)] sm:mb-4">
           {t('faq.title')}
         </h2>
         <p className="mx-auto max-w-2xl text-[15px] leading-relaxed text-[color:var(--apple-muted)] sm:text-[17px]">
