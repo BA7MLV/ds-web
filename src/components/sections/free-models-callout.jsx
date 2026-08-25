@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 
 import { useLocale } from '../locale-toggle'
 
-const siliconflowLogo = '/siliconflow_Chinese%20and%20English%20LOGO.svg'
-const siliconflowLogoDark = '/siliconflow_Chinese%20and%20English%20LOGO_dark.svg'
+// Space-free filenames (renamed from the vendor's original "siliconflow_Chinese
+// and English LOGO*.svg") so the URLs need no percent-encoding.
+const siliconflowLogo = '/siliconflow-logo.svg'
+const siliconflowLogoDark = '/siliconflow-logo-dark.svg'
 
 export const freeModels = [
   { id: 'qwen3-8b', label: 'Qwen3-8B' },
