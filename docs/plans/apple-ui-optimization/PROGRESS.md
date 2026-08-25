@@ -166,20 +166,37 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 验收：10/10 落地；详见 ROUND10.md。
 
 
-### Round 11（进行中）
+### Round 11（已完成）
 
 未使用依赖清理、导航/Stats/Feature a11y 与文案第八轮。详见 ROUND11.md。
 
+- [x] 移除 `@tsparticles/*`（`5898011`）
+- [x] 移除 `motion`（`f79d319`）
+- [x] 移除 lucide / lazy-image / cva（`93ce963`）
+- [x] TopNav 深色 focus（`f050448`）
+- [x] FreeModels 触控与键盘（`a7e1f3b` / `467ca46`）
+- [x] Stats reduced-motion（`c84ca7a`）
+- [x] Feature sticky 焦点顺序（`ceea1c6`）
+- [x] zh stats/freeModels/footer 文案第八轮（`6e8860d`）
+- [x] en / zh-Hant 同步（`ebd8309`）
+- [x] ROUND10 验收核对 + PROGRESS（本轮文档提交）
+
+验收：10/10 落地；三语 326 keys；详见 ROUND11.md。
+
+### Round 12（进行中）
+
+死 primitive 清理、离线 Toast i18n/a11y、键盘扫尾与文案第九轮。详见 ROUND12.md。
+
 ## 待办（后续轮次）
 
-- [ ] 清理 `src/` 零引用依赖（`@tsparticles/*`、`motion`、`lucide-react` 等，见 ROUND10 性能扫描）
 - [ ] 持续多轮至 ≥20（用户未叫停前不停止）
+- [ ] 可选：软件主页图 PNG 切片相对 webp 仍陈旧（已记录；勿强行提交大图除非有导出流程）
 
 ## PR 列表
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 10 验收完成 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 11 验收完成 · Round 12 进行中 |
 
 ### Round 1 子代理完成项
 
