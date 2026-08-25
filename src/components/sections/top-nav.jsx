@@ -55,7 +55,7 @@ export const TopNav = ({ onDownload = () => {} }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              GitHub
+              {t('nav.github', 'GitHub')}
             </a>
             <a
               href="#download"

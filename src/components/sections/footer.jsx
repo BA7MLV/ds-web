@@ -53,7 +53,7 @@ export const Footer = ({ onOpenPolicy = () => {} }) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                GitHub
+                {t('footer.github', 'GitHub')}
               </a>
             </nav>
           </div>
