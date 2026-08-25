@@ -355,9 +355,11 @@ export const ArchitectureDiagram = ({ motionScale = 1 }) => {
 
   // 本区块与上方 Stats 共用同一个标题（#stats-heading），因此这里刻意不再放第二个 h2；
   // 顶部间距压到组内节奏（2rem/3rem），让数字卡片与架构图读作同一叙事块。
+  // 刻意不加 aria-labelledby：引用同一 #stats-heading 会产生两个同名 region
+  // landmark（axe landmark-unique）；无命名的 section 不构成 landmark，
+  // 读屏用户经 Stats region 进入后顺序阅读即可覆盖本块。
   return (
     <section
-      aria-labelledby="stats-heading"
       className={`px-4 pt-8 pb-20 sm:px-6 sm:pt-12 sm:pb-28 ${shouldAnimate ? 'animate-fade-in' : ''}`}
       style={shouldAnimate ? { animationDelay: '0.24s' } : undefined}
     >
