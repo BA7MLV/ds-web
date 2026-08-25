@@ -183,9 +183,26 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 验收：10/10 落地；三语 326 keys；详见 ROUND11.md。
 
-### Round 12（进行中）
+### Round 12（已完成）
 
 死 primitive 清理、离线 Toast i18n/a11y、键盘扫尾与文案第九轮。详见 ROUND12.md。
+
+- [x] 删除无引用 `button.jsx`（`1349863`）
+- [x] 删除无引用 `card.jsx`（`ba870a9`）
+- [x] Network Toast i18n / live region（`d410e96`）
+- [x] Mobile nav 焦点陷阱加固（`a9b97e1`）
+- [x] Download segmented 键盘（`58a76e2`）
+- [x] Architecture a11y / 深色分割线（`a0fc03f`）
+- [x] LazyImage 重试触控（`4a8aadf`）
+- [x] zh architecture/agent 文案第九轮（`c4250de`）
+- [x] en / zh-Hant 同步（`d410e96` / `ac0c385`）
+- [x] ROUND11 验收 + PROGRESS（`65f3ce4` / 本轮文档）
+
+验收：10/10 落地；三语 329 keys；详见 ROUND12.md。
+
+### Round 13（进行中）
+
+控件焦点再验、下载文案第十轮、文档站与截图框扫尾。详见 ROUND13.md。
 
 ## 待办（后续轮次）
 
@@ -196,7 +213,7 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 11 验收完成 · Round 12 进行中 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 12 验收完成 · Round 13 进行中 |
 
 ### Round 1 子代理完成项
 

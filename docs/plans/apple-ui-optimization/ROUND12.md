@@ -24,3 +24,22 @@
 - Network toast 无硬编码用户可见中文
 - 三语 key 对齐
 - PROGRESS 更新
+
+## 验收结果（已完成）
+
+10/10 全部落地。
+
+| # | 事项 | 状态 | SHA |
+|---|------|------|-----|
+| 1 | 删除无引用 `button.jsx` | ✅ | `1349863` |
+| 2 | 删除无引用 `card.jsx` | ✅ | `ba870a9` |
+| 3 | Network Toast i18n + live region + shadow token | ✅ | `d410e96` |
+| 4 | Mobile nav 焦点陷阱 / 退出动画窗口加固 | ✅ | `a9b97e1` |
+| 5 | Download segmented 键盘 / roving tabindex | ✅ | `58a76e2` |
+| 6 | Architecture 装饰 SVG + 深色分割线 | ✅ | `a0fc03f` |
+| 7 | LazyImage 重试触控 / focus | ✅ | `4a8aadf` |
+| 8 | zh architecture / agent 等文案第九轮 | ✅ | `c4250de` |
+| 9 | en / zh-Hant 同步（含 network.*） | ✅ | `d410e96` + `ac0c385` |
+| 10 | ROUND11 验收 + PROGRESS / 本轮关闭 | ✅ | 见本提交 |
+
+补充：`src/components/ui/` 仅剩 `feature-screenshot-frame.jsx`；三语 329 keys；`npm run build` 于本轮收尾复验通过。
