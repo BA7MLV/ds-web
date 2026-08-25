@@ -30,9 +30,9 @@
 
 **父代理**：Hero / TopNav / Download / 占位图 / 进度文档 — ✅
 
-### Round 2（进行中 → 大部分完成）
+### Round 2（已完成）
 
-- [x] `App.jsx` 拆分为 `src/components/sections/*`（~400 行路由壳）
+- [x] `App.jsx` 拆分为 `src/components/sections/*`（~359 行路由壳）
 - [x] ArchitectureDiagram 视觉升级
 - [x] PolicyModal 提取与动效
 - [x] FreeModelsCallout 玻璃卡片
@@ -40,6 +40,11 @@
 - [x] LazyImage LQIP 交叉淡入
 - [x] VitePress CustomHome 样式对齐
 - [x] Stats 区块（`stats-section.jsx` + 三语 `*Unit` keys）
+- [x] Hero / TopNav 统一 `useScroll`（去重复 scroll listener）
+
+### Round 3（进行中）
+
+视觉与交互深化：Hero / Feature sticky / Download / FAQ / Footer / 深色模式 / 安全区 / 文案第二轮。
 
 ## 待办（后续轮次）
 
