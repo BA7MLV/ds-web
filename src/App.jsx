@@ -9,6 +9,7 @@ import { Footer } from './components/sections/footer'
 import { FreeModelsCallout } from './components/sections/free-models-callout'
 import { HeroSection } from './components/sections/hero-section'
 import { PolicyModal } from './components/sections/policy-modal'
+import { StatsSection } from './components/sections/stats-section'
 import { TopNav } from './components/sections/top-nav'
 import { FeatureScreenshotFrame } from './components/ui/feature-screenshot-frame'
 
@@ -137,6 +138,7 @@ const App = () => {
             <TopNav onDownload={handleDownloadOpen} />
             <HeroSection onDownload={handleDownloadOpen} motionScale={motionScale} />
 
+            <StatsSection motionScale={motionScale} />
             <ArchitectureDiagram motionScale={motionScale} />
 
             <main

@@ -336,20 +336,10 @@ export const ArchitectureDiagram = ({ motionScale = 1 }) => {
 
   return (
     <section
-      className={`px-4 py-20 sm:px-6 sm:py-28 ${shouldAnimate ? 'animate-fade-in' : ''}`}
+      className={`px-4 pt-12 pb-20 sm:px-6 sm:pt-16 sm:pb-28 ${shouldAnimate ? 'animate-fade-in' : ''}`}
       style={shouldAnimate ? { animationDelay: '0.24s' } : undefined}
     >
       <div className="mx-auto max-w-[80rem]">
-        {/* 标题 */}
-        <div className="mb-14 text-center sm:mb-20">
-          <h2 className="mb-3 font-display text-[1.75rem] font-semibold leading-[1.1] tracking-[-0.02em] text-[color:var(--apple-ink)] sm:mb-4 sm:text-[2.5rem]">
-            {t('stats.title', '为深度学习而生')}
-          </h2>
-          <p className="mx-auto max-w-2xl text-[15px] leading-relaxed text-[color:var(--apple-muted)] sm:text-[17px]">
-            {t('stats.subtitle', '从对话入口到数据底座，前后端围绕学习闭环协同设计')}
-          </p>
-        </div>
-
         {/* 桌面端：三列 Grid 布局（md+） */}
         <div className="hidden md:block max-w-[720px] mx-auto">
           <div className="grid grid-cols-[1fr_auto_1fr]">
