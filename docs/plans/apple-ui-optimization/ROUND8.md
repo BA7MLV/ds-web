@@ -36,9 +36,9 @@
 6. FreeModels + Stats 深色微对比与 hover 再验 — `2ccce33`
 7. FAQ / Architecture zh 文案第五轮 — `cab1907`
 8. en / zh-Hant 同步本轮 copy keys — `c01196e`
-9. VitePress 搜索框 / 本地 nav 与 `--apple-*` 再对齐 — 进行中（截至本次验收暂无对应 commit）
+9. VitePress 搜索框 / 本地 nav 与 `--apple-*` 再对齐 — `58b8e82`
 10. ROUND7 验收清单核对 + 视觉 QA 记录 — 随本提交落地（ROUND7 验收结果已在 `8dd7180` 回填并复核）
 
 **视觉 QA 记录**：Hero 区块在浅色首屏与滚动态各截图复核一次（含滚动指示器与预览提示），未见回归；截图作为本地 artifacts 保留（`deepstudent-hero-round1*.webp` / `hero-section-verification.md`），按约定不提交大图进仓库。
 
-#9 待对应 commit 落地后由后续轮次（Round 9）收尾。
+10 路全部落地；build 与三语 key 对齐见各提交说明。

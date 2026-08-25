@@ -114,7 +114,7 @@
 
 验收：`npm run build` 于 `b5f8ee3` 通过；三语 317 keys；详见 ROUND7.md。
 
-### Round 8（进行中，9/10 已落地）
+### Round 8（已完成）
 
 i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。详见 ROUND8.md。
 
@@ -126,8 +126,10 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 - [x] FreeModels + Stats 深色微对比（`2ccce33`）
 - [x] FAQ / Architecture zh 文案第五轮（`cab1907`）
 - [x] en / zh-Hant 同步（`c01196e`）
-- [ ] VitePress 搜索框 / nav token 再对齐 — 进行中
+- [x] VitePress 搜索框 / nav token 再对齐（`58b8e82`）
 - [x] ROUND7 验收核对 + 视觉 QA 记录（随本轮验收文档落地；截图留作本地 artifacts 不入仓）
+
+验收：10/10 落地（含 VitePress 搜索 `58b8e82`）；详见 ROUND8.md。
 
 ### Round 9（进行中）
 
@@ -135,7 +137,6 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 ## 待办（后续轮次）
 
-- [ ] Round 8 #9 / Round 9 #1 VitePress 搜索 token
 - [ ] 删除无用 `switch.jsx`
 - [ ] locale 动静态 import 警告
 - [ ] CustomHome / landmarks / Download 深色 / Footer a11y
