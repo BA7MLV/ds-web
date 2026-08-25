@@ -180,7 +180,11 @@ export const DownloadPage = ({ onBack = () => {} }) => {
                     tabIndex={active ? 0 : -1}
                     onClick={() => setActiveTab(tab.id)}
                     onKeyDown={handleTabKeyDown}
-                    className={`focus-ring touch-manipulation relative z-[1] flex h-11 select-none items-center justify-center rounded-full px-2 text-[13px] transition-colors duration-200 ${
+                    /* reduced-motion 复检：thumb 已 motion-reduce 即时归位，但标签的
+                       200ms 颜色过渡未禁用——thumb 瞬移后选中标签仍在淡入，出现
+                       “thumb 已到、文字未亮”的短暂错位；比照 LocaleToggle/footer
+                       的惯例（纯颜色过渡也挂 motion-reduce:transition-none）补齐 */
+                    className={`focus-ring touch-manipulation relative z-[1] flex h-11 select-none items-center justify-center rounded-full px-2 text-[13px] transition-colors duration-200 motion-reduce:transition-none ${
                       active
                         ? 'font-semibold text-[color:var(--apple-ink)]'
                         : 'font-medium text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)]'
