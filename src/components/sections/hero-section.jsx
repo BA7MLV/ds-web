@@ -208,10 +208,10 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
             <p className="mb-3 text-[11px] sm:text-xs font-semibold tracking-[0.12em] uppercase text-[color:var(--apple-muted)]">
               DeepStudent
             </p>
-            {/* Apple headline tokens: ~40px uses 1.1/0em, ~56px uses 1.07/-0.007em */}
+            {/* Apple headline tokens: ~34px uses 1.12/0em, ~40px uses 1.1/0em, ~56px uses 1.07/-0.007em */}
             <h1
               id="hero-heading"
-              className="text-[clamp(2.25rem,5vw,3.5rem)] font-semibold mb-4 leading-[1.1] tracking-[-0.002em] sm:leading-[1.07] sm:tracking-[-0.007em] text-[color:var(--apple-ink)] text-balance"
+              className="text-[clamp(2.125rem,6vw,3.5rem)] font-semibold mb-4 leading-[1.12] tracking-normal sm:leading-[1.07] sm:tracking-[-0.007em] text-[color:var(--apple-ink)] text-balance"
             >
               {t('hero.headline.top')}
               <br />
@@ -227,7 +227,7 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               onClick={handleSubtextClick}
               aria-disabled={isSubtextAnimating}
               aria-describedby="hero-preview-subtext-hint"
-              className="focus-ring rounded-lg text-left mb-8 cursor-pointer transition-opacity duration-150 ease-out motion-reduce:transition-none hover:opacity-85"
+              className="focus-ring rounded-lg text-left mb-7 sm:mb-8 cursor-pointer transition-opacity duration-150 ease-out motion-reduce:transition-none hover:opacity-85"
             >
               <span id="hero-preview-subtext-hint" className="sr-only">
                 {t('hero.preview.hint')}
@@ -235,7 +235,7 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               <span className="relative inline-flex min-h-[3.2em] sm:min-h-[2.4em] items-start overflow-visible align-top">
                 <span
                   aria-live="polite"
-                  className={`text-base sm:text-lg leading-relaxed text-[color:var(--apple-muted)] whitespace-normal break-words text-pretty transition-opacity duration-200 ease-out motion-reduce:transition-none ${
+                  className={`text-base sm:text-lg leading-[1.55] sm:leading-relaxed text-[color:var(--apple-muted)] whitespace-normal break-words text-pretty transition-opacity duration-200 ease-out motion-reduce:transition-none ${
                     isSubtextVisible ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
@@ -244,7 +244,7 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               </span>
             </button>
             
-            <div className="flex flex-col sm:flex-row gap-3 mb-6 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mb-5 sm:mb-6 w-full sm:w-auto">
               <button
                 type="button"
                 onClick={handleDownloadClick}
