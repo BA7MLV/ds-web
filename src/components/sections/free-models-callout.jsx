@@ -113,9 +113,11 @@ const ModelPill = ({ model, revealed, delayMs }) => (
     }`}
     style={revealed ? { animationDelay: `${delayMs}ms` } : undefined}
   >
+    {/* Hover tints the glyph brand blue (same cue as the stat numbers), which
+        reads clearer on dark cards than the border change alone. */}
     <FreeModelLogo
       id={model.id}
-      className="h-4 w-4 transition-transform duration-300 ease-apple motion-safe:group-hover:-rotate-6 motion-safe:group-hover:scale-110 motion-reduce:transition-none"
+      className="h-4 w-4 transition-[color,transform] duration-300 ease-apple group-hover:text-[color:var(--apple-blue)] motion-safe:group-hover:-rotate-6 motion-safe:group-hover:scale-110 motion-reduce:transition-none"
     />
     <span>{model.label}</span>
   </span>
@@ -146,7 +148,9 @@ export const FreeModelsCallout = () => {
         ))}
       </div>
 
-      <div className="relative mt-6 border-t border-[color:var(--apple-line)] pt-5">
+      {/* Dark cards sit on near-black, so the hairline divider needs the
+          stronger line token to stay visible there. */}
+      <div className="relative mt-6 border-t border-[color:var(--apple-line)] pt-5 dark:border-[color:var(--apple-line-strong)]">
         <div className="flex flex-col items-center gap-3 text-center">
           <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--apple-muted)]">
             {t('freeModels.poweredBy', 'Powered by SiliconFlow')}
