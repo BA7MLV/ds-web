@@ -6,6 +6,7 @@
         <div class="hero-grid">
           <!-- 左侧内容 -->
           <div class="hero-content">
+            <p class="hero-eyebrow">DeepStudent</p>
             <h1 class="hero-title">
               优化您的<br />
               <span class="highlight">终身学习空间</span>
@@ -17,37 +18,43 @@
               本地优先，私密可控，知识可扩展
             </p>
             <div class="hero-actions">
-              <a href="./guide/download.html" class="btn btn-primary">立即下载</a>
+              <a href="./guide/download.html" class="btn btn-primary">
+                <span>立即下载</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </a>
               <a href="./guide/index.html" class="btn btn-secondary">了解更多</a>
             </div>
-            
+
             <!-- 核心特性列表 -->
             <div class="hero-features">
               <div class="feature-item">
-                <span class="feature-dot"></span>
+                <span class="feature-dot" aria-hidden="true"></span>
                 <span>AI 驱动的智能错题分析</span>
               </div>
               <div class="feature-item">
-                <span class="feature-dot"></span>
+                <span class="feature-dot" aria-hidden="true"></span>
                 <span>一键生成 ANKI 记忆卡片</span>
               </div>
               <div class="feature-item">
-                <span class="feature-dot"></span>
+                <span class="feature-dot" aria-hidden="true"></span>
                 <span>RAG 增强的知识库追问</span>
               </div>
               <div class="feature-item">
-                <span class="feature-dot"></span>
+                <span class="feature-dot" aria-hidden="true"></span>
                 <span>本地数据，隐私安全</span>
               </div>
             </div>
           </div>
-          
+
           <!-- 右侧产品展示 -->
           <div class="hero-visual">
             <div class="app-showcase">
               <div class="app-window">
                 <div class="window-header">
-                  <div class="window-dots">
+                  <div class="window-dots" aria-hidden="true">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -90,7 +97,7 @@
                 </div>
               </div>
               <!-- 装饰元素 -->
-              <div class="glow-effect"></div>
+              <div class="glow-effect" aria-hidden="true"></div>
             </div>
           </div>
         </div>
@@ -146,7 +153,7 @@
           <div class="cta-actions">
             <a href="./guide/download.html" class="btn btn-primary btn-large">免费下载</a>
             <a href="https://github.com/BA7MLV/ds-web" target="_blank" class="btn btn-secondary btn-large">
-              <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
               </svg>
               GitHub
@@ -216,3 +223,688 @@ const advantages = [
   }
 ]
 </script>
+
+<style>
+/* ============================================================
+   与官网（src/index.css）对齐的设计 token：
+   ink / muted 文本层级、线条、玻璃卡片、阴影与缓动。
+   全部选择器收敛在 .landing-page 命名空间内，避免污染主题。
+   ============================================================ */
+.landing-page {
+  --apple-ink: #1d1d1f;
+  --apple-ink-secondary: #48484a;
+  --apple-muted: #86868b;
+  --apple-line: rgba(0, 0, 0, 0.08);
+  --apple-line-strong: rgba(0, 0, 0, 0.12);
+  --apple-surface: #fbfbfd;
+  --apple-surface-elevated: #ffffff;
+  --apple-card: rgba(255, 255, 255, 0.65);
+  --apple-card-strong: rgba(255, 255, 255, 0.85);
+  --apple-shadow-sm:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 8px rgba(0, 0, 0, 0.02);
+  --apple-shadow-md:
+    0 4px 12px rgba(0, 0, 0, 0.03),
+    0 12px 32px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(0, 0, 0, 0.02);
+  --apple-shadow-lg:
+    0 8px 24px rgba(0, 0, 0, 0.04),
+    0 24px 64px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.02);
+  --apple-title-gradient: linear-gradient(135deg, #1d1d1f 0%, #434344 100%);
+  --apple-btn-primary-bg: #1d1d1f;
+  --apple-btn-primary-bg-hover: #3a3a3c;
+  --apple-btn-primary-text: #ffffff;
+  --apple-btn-secondary-bg-hover: rgba(0, 0, 0, 0.08);
+  --apple-glow-orb: rgba(120, 119, 126, 0.05);
+  --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-lift: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', ui-sans-serif, sans-serif;
+  color: var(--apple-ink);
+  background-color: var(--apple-surface);
+  background-image:
+    radial-gradient(ellipse 120% 80% at 50% -20%, var(--apple-glow-orb), transparent 50%),
+    linear-gradient(180deg, #fbfbfd 0%, #ffffff 20%, #f5f5f7 60%, #fbfbfd 100%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+.dark .landing-page {
+  --apple-ink: #f5f5f7;
+  --apple-ink-secondary: #a1a1a6;
+  --apple-muted: #86868b;
+  --apple-line: rgba(255, 255, 255, 0.08);
+  --apple-line-strong: rgba(255, 255, 255, 0.12);
+  --apple-surface: #000000;
+  --apple-surface-elevated: #1c1c1e;
+  --apple-card: rgba(28, 28, 30, 0.65);
+  --apple-card-strong: rgba(44, 44, 46, 0.75);
+  --apple-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --apple-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  --apple-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  --apple-title-gradient: linear-gradient(135deg, #ffffff 0%, #e5e5e5 50%, #a1a1a6 100%);
+  --apple-btn-primary-bg: #ffffff;
+  --apple-btn-primary-bg-hover: #f2f2f7;
+  --apple-btn-primary-text: #000000;
+  --apple-btn-secondary-bg-hover: rgba(255, 255, 255, 0.12);
+  --apple-glow-orb: rgba(255, 255, 255, 0.08);
+
+  background-image:
+    radial-gradient(ellipse 100% 80% at 20% -30%, var(--apple-glow-orb), transparent 50%),
+    linear-gradient(180deg, #000000 0%, #000000 100%);
+}
+
+.landing-page ::selection {
+  background: rgba(0, 113, 227, 0.15);
+}
+
+.dark .landing-page ::selection {
+  background: rgba(10, 132, 255, 0.25);
+  color: #ffffff;
+}
+
+/* ---------- 布局容器 ---------- */
+.landing-page .container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-inline: clamp(1.25rem, 5vw, 2rem);
+}
+
+/* ---------- Hero：与官网一致的排版节奏 ---------- */
+.landing-page .hero {
+  padding-block: clamp(4rem, 12vh, 7.5rem) clamp(3.5rem, 9vw, 6rem);
+}
+
+.landing-page .hero-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: center;
+}
+
+.landing-page .hero-eyebrow {
+  margin: 0 0 0.75rem;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--apple-muted);
+}
+
+.landing-page .hero-title {
+  margin: 0 0 1rem;
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  color: var(--apple-ink);
+  text-wrap: balance;
+}
+
+.landing-page .hero-title .highlight {
+  background: var(--apple-title-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.landing-page .hero-subtitle {
+  margin: 0 0 0.375rem;
+  font-size: clamp(1.0625rem, 1.5vw, 1.1875rem);
+  line-height: 1.65;
+  color: var(--apple-ink-secondary);
+}
+
+.landing-page .hero-tagline {
+  margin: 0 0 2rem;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--apple-muted);
+}
+
+.landing-page .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2.25rem;
+}
+
+/* ---------- 按钮：对齐官网 btn-apple-primary / secondary ---------- */
+.landing-page .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.75rem 2rem;
+  border-radius: 0.75rem;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s var(--ease-apple);
+}
+
+.landing-page .btn:active {
+  transform: scale(0.98);
+}
+
+.landing-page .btn:focus-visible {
+  outline: 2px solid var(--apple-ink);
+  outline-offset: 2px;
+}
+
+.landing-page .btn-primary {
+  color: var(--apple-btn-primary-text);
+  background-color: var(--apple-btn-primary-bg);
+}
+
+.landing-page .btn-primary:hover {
+  color: var(--apple-btn-primary-text);
+  background-color: var(--apple-btn-primary-bg-hover);
+}
+
+.landing-page .btn-secondary {
+  color: var(--apple-ink);
+  background: transparent;
+  border: 1px solid var(--apple-line-strong);
+}
+
+.landing-page .btn-secondary:hover {
+  color: var(--apple-ink);
+  background: var(--apple-btn-secondary-bg-hover);
+}
+
+.landing-page .btn-arrow {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  opacity: 0.9;
+  transition: transform 0.15s ease-out, opacity 0.15s ease-out;
+}
+
+.landing-page .btn-primary:hover .btn-arrow {
+  transform: translateX(2px);
+  opacity: 1;
+}
+
+.landing-page .btn-large {
+  padding: 0.875rem 2.25rem;
+  font-size: 16px;
+}
+
+.landing-page .btn-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* ---------- Hero 特性列表 ---------- */
+.landing-page .hero-features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1.5rem;
+}
+
+.landing-page .feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--apple-ink-secondary);
+}
+
+.landing-page .feature-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--apple-muted);
+  flex-shrink: 0;
+}
+
+/* ---------- Hero 产品视觉 ---------- */
+.landing-page .hero-visual {
+  min-width: 0;
+}
+
+.landing-page .app-showcase {
+  position: relative;
+}
+
+.landing-page .glow-effect {
+  position: absolute;
+  inset: -12% -8%;
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, var(--apple-glow-orb), transparent 70%);
+  filter: blur(24px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.landing-page .app-window {
+  position: relative;
+  z-index: 1;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  background: var(--apple-card-strong);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid var(--apple-line);
+  box-shadow: var(--apple-shadow-lg);
+}
+
+.landing-page .window-header {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--apple-line);
+}
+
+.landing-page .window-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.landing-page .window-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--apple-line-strong);
+}
+
+.landing-page .window-content {
+  padding: 1.25rem;
+}
+
+.landing-page .mockup-content {
+  display: flex;
+  gap: 1rem;
+}
+
+.landing-page .mockup-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.landing-page .mockup-nav-item {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--apple-line);
+}
+
+.landing-page .mockup-nav-item.active {
+  background: var(--apple-muted);
+}
+
+.landing-page .mockup-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.landing-page .mockup-card {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--apple-surface-elevated);
+  border: 1px solid var(--apple-line);
+  box-shadow: var(--apple-shadow-sm);
+}
+
+.landing-page .mockup-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.landing-page .mockup-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--apple-line-strong);
+  flex-shrink: 0;
+}
+
+.landing-page .mockup-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.landing-page .mockup-card-body {
+  margin-top: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.landing-page .mockup-line {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--apple-line);
+}
+
+.landing-page .mockup-line.short {
+  width: 40%;
+}
+
+.landing-page .mockup-line.medium {
+  width: 65%;
+}
+
+/* ---------- 功能亮点 ---------- */
+.landing-page .highlights {
+  padding-block: clamp(3.5rem, 9vw, 6.5rem);
+}
+
+.landing-page .section-header {
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+.landing-page .section-title {
+  margin: 0 0 0.75rem;
+  border: none;
+  padding: 0;
+  font-size: clamp(1.75rem, 3.5vw, 3rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--apple-ink);
+}
+
+.landing-page .section-desc {
+  margin: 0;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.65;
+  color: var(--apple-muted);
+}
+
+.landing-page .highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.landing-page .highlight-card {
+  padding: 1.75rem;
+  border-radius: 1.25rem;
+  background: var(--apple-card);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid var(--apple-line);
+  box-shadow: var(--apple-shadow-sm);
+  transition: transform 0.3s var(--ease-lift), box-shadow 0.3s ease;
+}
+
+.landing-page .highlight-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--apple-shadow-lg);
+}
+
+.landing-page .highlight-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 1.125rem;
+  border-radius: 12px;
+  background: var(--apple-line);
+  color: var(--apple-ink);
+}
+
+.landing-page .highlight-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.landing-page .highlight-title {
+  margin: 0 0 0.5rem;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--apple-ink);
+}
+
+.landing-page .highlight-desc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--apple-ink-secondary);
+  text-wrap: pretty;
+}
+
+/* ---------- 优势展示 ---------- */
+.landing-page .advantages {
+  padding-block: clamp(1rem, 3vw, 2rem);
+}
+
+.landing-page .advantage-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: center;
+  padding-block: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.landing-page .advantage-row + .advantage-row {
+  border-top: 1px solid var(--apple-line);
+}
+
+.landing-page .advantage-row.reversed .advantage-content {
+  order: 2;
+}
+
+.landing-page .advantage-number {
+  display: block;
+  margin-bottom: 0.875rem;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  color: var(--apple-muted);
+}
+
+.landing-page .advantage-title {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--apple-ink);
+  text-wrap: balance;
+}
+
+.landing-page .advantage-desc {
+  margin: 0 0 1.5rem;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.65;
+  color: var(--apple-ink-secondary);
+}
+
+.landing-page .advantage-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.landing-page .advantage-list li {
+  position: relative;
+  padding-left: 1.125rem;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--apple-ink-secondary);
+}
+
+.landing-page .advantage-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--apple-muted);
+}
+
+.landing-page .visual-placeholder {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  border-radius: 1.5rem;
+  background: var(--apple-card);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid var(--apple-line);
+  box-shadow: var(--apple-shadow-md);
+  color: var(--apple-muted);
+}
+
+.landing-page .visual-placeholder svg {
+  width: min(180px, 55%);
+  height: auto;
+}
+
+/* ---------- CTA ---------- */
+.landing-page .cta-section {
+  padding-block: clamp(3.5rem, 9vw, 6.5rem);
+}
+
+.landing-page .cta-box {
+  text-align: center;
+  padding: clamp(3rem, 7vw, 5rem) clamp(1.5rem, 5vw, 3rem);
+  border-radius: 1.75rem;
+  background: var(--apple-card-strong);
+  backdrop-filter: saturate(200%) blur(30px);
+  -webkit-backdrop-filter: saturate(200%) blur(30px);
+  border: 1px solid var(--apple-line);
+  box-shadow: var(--apple-shadow-lg);
+}
+
+.landing-page .cta-title {
+  margin: 0 0 0.625rem;
+  border: none;
+  padding: 0;
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--apple-ink);
+  text-wrap: balance;
+}
+
+.landing-page .cta-desc {
+  margin: 0 0 2rem;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.65;
+  color: var(--apple-muted);
+}
+
+.landing-page .cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* ---------- 响应式：平板 ---------- */
+@media (max-width: 959px) {
+  .landing-page .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-page .hero-visual {
+    max-width: 520px;
+  }
+
+  .landing-page .highlights-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .landing-page .advantage-row {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .landing-page .advantage-row.reversed .advantage-content {
+    order: 0;
+  }
+}
+
+/* ---------- 响应式：手机 ---------- */
+@media (max-width: 639px) {
+  .landing-page .hero {
+    padding-block: clamp(2.75rem, 8vh, 4rem) 3rem;
+  }
+
+  .landing-page .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .landing-page .btn {
+    width: 100%;
+  }
+
+  .landing-page .hero-features {
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+  }
+
+  .landing-page .highlights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-page .highlight-card {
+    padding: 1.5rem;
+  }
+
+  .landing-page .window-content {
+    padding: 1rem;
+  }
+
+  .landing-page .mockup-sidebar {
+    width: 52px;
+  }
+
+  .landing-page .cta-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* ---------- 减少动效偏好 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .landing-page .btn,
+  .landing-page .btn-arrow,
+  .landing-page .highlight-card {
+    transition: none;
+  }
+
+  .landing-page .btn:active {
+    transform: none;
+  }
+
+  .landing-page .btn-primary:hover .btn-arrow {
+    transform: none;
+  }
+
+  .landing-page .highlight-card:hover {
+    transform: none;
+  }
+}
+</style>
