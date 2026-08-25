@@ -118,13 +118,16 @@ export const ImagePlaceholder = ({ label }) => (
 )
 
 // 动画变体定义
+// 移动端（< md）统一收敛为轻量上浮淡入：横向位移在触控滚动时会造成
+// 页面横向溢出/晃动，blur 滤镜在移动端 GPU 上开销偏高；
+// md 及以上保留各变体的方向差异，维持桌面端视觉节奏
 export const revealAnimations = {
-  'fade-up':    { hidden: 'opacity-0 translate-y-10',  visible: 'opacity-100 translate-y-0' },
-  'fade-down':  { hidden: 'opacity-0 -translate-y-10', visible: 'opacity-100 translate-y-0' },
-  'fade-left':  { hidden: 'opacity-0 translate-x-12',  visible: 'opacity-100 translate-x-0' },
-  'fade-right': { hidden: 'opacity-0 -translate-x-12', visible: 'opacity-100 translate-x-0' },
-  'scale-up':   { hidden: 'opacity-0 scale-90',        visible: 'opacity-100 scale-100' },
-  'blur-in':    { hidden: 'opacity-0 blur-[6px] scale-[0.97]', visible: 'opacity-100 blur-0 scale-100' },
+  'fade-up':    { hidden: 'opacity-0 translate-y-6 md:translate-y-10',  visible: 'opacity-100 translate-y-0' },
+  'fade-down':  { hidden: 'opacity-0 translate-y-6 md:-translate-y-10', visible: 'opacity-100 translate-y-0' },
+  'fade-left':  { hidden: 'opacity-0 translate-y-6 md:translate-y-0 md:translate-x-12',  visible: 'opacity-100 translate-y-0 translate-x-0' },
+  'fade-right': { hidden: 'opacity-0 translate-y-6 md:translate-y-0 md:-translate-x-12', visible: 'opacity-100 translate-y-0 translate-x-0' },
+  'scale-up':   { hidden: 'opacity-0 translate-y-6 md:translate-y-0 md:scale-90',        visible: 'opacity-100 translate-y-0 scale-100' },
+  'blur-in':    { hidden: 'opacity-0 translate-y-6 md:translate-y-0 md:blur-[6px] md:scale-[0.97]', visible: 'opacity-100 translate-y-0 blur-0 scale-100' },
 }
 
 // 根据 index 自动选择动画变体，形成视觉节奏
@@ -152,7 +155,8 @@ export const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, a
           observer.unobserve(el)
         }
       },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      // 阈值略低、下边距略收，触控快速滑动时浮现不迟到
+      { threshold: 0.08, rootMargin: '0px 0px -32px 0px' }
     )
     observer.observe(el)
     return () => observer.disconnect()
@@ -162,15 +166,23 @@ export const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, a
   const anim = revealAnimations[variant] || revealAnimations['fade-up']
   const isLeft = align === 'left'
 
+  // 交错延迟仅在 md 及以上生效：移动端条目独占视口宽度、逐个进入，
+  // 叠加索引延迟只会让触控滚动时的浮现显得迟钝
   return (
     <div
       ref={itemRef}
-      className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-5 sm:gap-7 md:gap-12 transition-all duration-700 ease-out ${isVisible ? anim.visible : anim.hidden}`}
-      style={{ transitionDelay: `${Math.min(index * 100, 400)}ms` }}
+      className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 sm:gap-6 md:gap-12 transition-all duration-500 md:duration-700 ease-apple motion-reduce:transition-none md:delay-[var(--reveal-delay,0ms)] ${isVisible ? anim.visible : anim.hidden}`}
+      style={{ '--reveal-delay': `${Math.min(index * 100, 400)}ms` }}
     >
       <div className="w-full md:w-[66%] md:flex-shrink-0">
         {imgSrc ? (
-          <FeatureScreenshotFrame src={imgSrc} alt={title} loading="lazy" />
+          <FeatureScreenshotFrame
+            src={imgSrc}
+            alt={title}
+            loading="lazy"
+            // 触控设备上 tap 会残留 :hover 态：md 以下取消悬停放大与阴影加深，避免“粘住”的缩放
+            className="hover:scale-100 motion-safe:hover:scale-100 hover:shadow-[var(--apple-shadow-xl)] md:motion-safe:hover:scale-[1.02] md:hover:shadow-[var(--apple-shadow-2xl)]"
+          />
         ) : (
           <ImagePlaceholder label={title} />
         )}
@@ -295,8 +307,8 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
 
   return (
     <div ref={containerRef} className="relative">
-      {/* 移动端：普通流式布局，带多样化进入动画 */}
-      <div className="md:hidden space-y-[2.5rem]">
+      {/* 移动端：普通流式布局，带多样化进入动画；组间距与 AlternatingFeatureGroup 移动端节奏对齐 */}
+      <div className="md:hidden space-y-[3.5rem] sm:space-y-[4.5rem]">
         {items.map((sf, index) => (
           <ScrollRevealItem
             key={sf.labelKey}
@@ -339,7 +351,7 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center relative">
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent motion-safe:animate-shimmer" />
                         <div className="z-10 flex flex-col items-center gap-3">
                           <svg className="w-10 h-10 text-[color:var(--apple-muted)] opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
                             <rect x="3" y="3" width="18" height="18" rx="3" />
