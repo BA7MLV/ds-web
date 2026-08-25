@@ -159,8 +159,12 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
   }, [isOpen])
 
   // Move focus into the dialog on open, restore it to the trigger on close.
+  // Keyed on isClosing too so the animated exit returns focus to the hamburger
+  // the moment the dismissal starts (matching the reduced-motion path) instead
+  // of leaving keyboard focus inside the fading dialog for EXIT_DURATION_MS.
+  // If the menu is reopened mid-exit, the rAF re-focuses the close button.
   useEffect(() => {
-    if (!isOpen) return undefined
+    if (!isOpen || isClosing) return undefined
     const trigger = triggerRef.current
     const frame = window.requestAnimationFrame(() => {
       if (closeButtonRef.current) closeButtonRef.current.focus({ preventScroll: true })
@@ -169,15 +173,18 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
       window.cancelAnimationFrame(frame)
       if (trigger) trigger.focus({ preventScroll: true })
     }
-  }, [isOpen])
+  }, [isOpen, isClosing])
 
-  // Escape closes the menu; Tab is trapped inside the dialog.
+  // Escape closes the menu; Tab is trapped inside the dialog. Suspended while
+  // isClosing: focus has already returned to the trigger and the dismissing
+  // overlay is inert, so the trap must not pull focus back into it.
   useEffect(() => {
-    if (!isOpen) return undefined
+    if (!isOpen || isClosing) return undefined
 
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         event.preventDefault()
+        event.stopPropagation()
         closeMenu()
         return
       }
@@ -207,7 +214,7 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
 
     document.addEventListener('keydown', handleKeyDown, true)
     return () => document.removeEventListener('keydown', handleKeyDown, true)
-  }, [isOpen, closeMenu])
+  }, [isOpen, isClosing, closeMenu])
 
   const handleLinkClick = useCallback((event) => {
     const href = event.currentTarget.getAttribute('href')
@@ -248,7 +255,13 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
   ]
 
   const menuOverlay = isOpen && mounted ? (
-    <div className={`fixed inset-0 z-[99999] lg:hidden ${isClosing ? 'pointer-events-none' : ''}`}>
+    // `inert` during the exit animation: pointer-events-none already blocks
+    // clicks, but without inert the fading dialog's links/buttons would remain
+    // keyboard-focusable (and Enter-activatable) until the unmount timer fires.
+    <div
+      inert={isClosing}
+      className={`fixed inset-0 z-[99999] lg:hidden ${isClosing ? 'pointer-events-none' : ''}`}
+    >
       <div
         aria-hidden="true"
         onClick={closeMenu}
