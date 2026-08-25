@@ -1,5 +1,6 @@
 import { forwardRef, useState, useEffect, useRef } from 'react'
 import { useImageLoader } from '../hooks/useImageLoader'
+import { useLocale } from './locale-toggle'
 
 const usePrefersReducedMotion = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
@@ -40,6 +41,7 @@ const LazyImageWithFallback = forwardRef(({
   blurDuration = 400,
   ...imgProps
 }, forwardedRef) => {
+  const { t } = useLocale()
   const prefersReducedMotion = usePrefersReducedMotion()
   const [isReady, setIsReady] = useState(false)
   const [placeholderDone, setPlaceholderDone] = useState(false)
@@ -160,7 +162,8 @@ const LazyImageWithFallback = forwardRef(({
       return <CustomFallback error={errorMessage} onRetry={handleRetry} />
     }
 
-    const message = errorText || errorMessage || (isOffline ? '网络已断开' : '加载失败')
+    const message = errorText || errorMessage
+      || (isOffline ? t('placeholder.offlineMessage') : t('placeholder.errorMessage'))
 
     // 与 ImagePlaceholder / FeatureScreenshotFrame 同族：6px 圆角、apple-line 描边、
     // card-strong 玻璃底（backdrop blur）与 shadow-md
@@ -202,11 +205,11 @@ const LazyImageWithFallback = forwardRef(({
               onClick={handleRetry}
               className="focus-ring rounded-full bg-[color:var(--apple-blue-soft)] px-3.5 py-1.5 text-xs font-medium text-[color:var(--apple-blue)] hover:bg-[color:var(--apple-blue)] hover:text-white active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
             >
-              重新加载
+              {t('placeholder.retry')}
             </button>
           )}
           <span className="text-[10px] uppercase tracking-widest text-[color:var(--apple-muted)] opacity-50">
-            {isOffline ? 'Offline' : 'Error'}
+            {isOffline ? t('placeholder.status.offline') : t('placeholder.status.error')}
           </span>
         </div>
       </div>

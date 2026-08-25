@@ -90,36 +90,36 @@ export const ImagePlaceholder = ({ label }) => {
   const { t } = useLocale()
 
   return (
-  <div
-    className="w-full aspect-[16/10] rounded-[6px] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden [box-shadow:var(--apple-shadow-md)]"
-    role="img"
-    aria-label={label}
-  >
     <div
-      className="absolute inset-0 opacity-80"
-      style={{
-        background:
-          'radial-gradient(ellipse 80% 60% at 30% 20%, var(--apple-blue-soft), transparent 55%), radial-gradient(ellipse 70% 50% at 80% 80%, rgba(191, 90, 242, 0.08), transparent 50%)',
-      }}
-      aria-hidden
-    />
-    <div className="absolute inset-0 skeleton opacity-30" aria-hidden />
-    <div className="z-10 flex flex-col items-center gap-3 px-6 text-center">
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--apple-surface-elevated)] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)]">
-        <svg className="w-5 h-5 text-[color:var(--apple-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
-          <rect x="3" y="3" width="18" height="18" rx="4" />
-          <circle cx="8.5" cy="8.5" r="1.5" />
-          <path d="M21 15l-5-5L5 21" />
-        </svg>
+      className="w-full aspect-[16/10] rounded-[6px] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden [box-shadow:var(--apple-shadow-md)]"
+      role="img"
+      aria-label={label}
+    >
+      <div
+        className="absolute inset-0 opacity-80"
+        style={{
+          background:
+            'radial-gradient(ellipse 80% 60% at 30% 20%, var(--apple-blue-soft), transparent 55%), radial-gradient(ellipse 70% 50% at 80% 80%, rgba(191, 90, 242, 0.08), transparent 50%)',
+        }}
+        aria-hidden
+      />
+      <div className="absolute inset-0 skeleton opacity-30" aria-hidden />
+      <div className="z-10 flex flex-col items-center gap-3 px-6 text-center">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--apple-surface-elevated)] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)]">
+          <svg className="w-5 h-5 text-[color:var(--apple-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+            <rect x="3" y="3" width="18" height="18" rx="4" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <path d="M21 15l-5-5L5 21" />
+          </svg>
+        </div>
+        <span className="text-[12px] sm:text-[13px] text-[color:var(--apple-muted)] font-medium leading-snug max-w-[16rem]">
+          {label}
+        </span>
+        <span className="text-[10px] uppercase tracking-widest text-[color:var(--apple-muted)] opacity-50">
+          {t('placeholder.status.preview')}
+        </span>
       </div>
-      <span className="text-[12px] sm:text-[13px] text-[color:var(--apple-muted)] font-medium leading-snug max-w-[16rem]">
-        {label}
-      </span>
-      <span className="text-[10px] uppercase tracking-widest text-[color:var(--apple-muted)] opacity-50">
-        {t('placeholder.status.preview')}
-      </span>
     </div>
-  </div>
   )
 }
 
