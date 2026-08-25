@@ -51,12 +51,17 @@ export default {
           '0%': { transform: 'translateY(100%)' },
           '100%': { transform: 'translateY(0)' },
         },
+        'shimmer': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 0.9s ease forwards',
         'fade-in-up': 'fade-in-up 0.7s cubic-bezier(0.32, 0.72, 0, 1) both',
         'scale-in': 'scale-in 0.5s cubic-bezier(0.32, 0.72, 0, 1) both',
         'slide-up': 'slide-up 0.6s cubic-bezier(0.32, 0.72, 0, 1) both',
+        'shimmer': 'shimmer 2.4s ease-in-out infinite',
       },
       transitionTimingFunction: {
         'apple': 'cubic-bezier(0.32, 0.72, 0, 1)',

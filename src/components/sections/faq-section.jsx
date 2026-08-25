@@ -88,7 +88,7 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
                   <button
                     type="button"
                     onClick={item.onAction}
-                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all"
+                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
                   >
                     {item.actionLabel}
                   </button>
@@ -96,7 +96,7 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
                 {item.linkHref ? (
                   <a
                     href={item.linkHref}
-                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all"
+                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
                     target={item.linkHref.startsWith('http') ? '_blank' : undefined}
                     rel={item.linkHref.startsWith('http') ? 'noopener noreferrer' : undefined}
                   >

@@ -266,7 +266,7 @@ export const PolicyModal = ({ type, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="focus-ring touch-manipulation inline-flex w-full min-h-[2.75rem] items-center justify-center gap-2 rounded-full px-6 text-sm font-medium leading-snug bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-[0.97] transition-all shadow-[var(--apple-shadow-sm)]"
+            className="focus-ring touch-manipulation inline-flex w-full min-h-[2.75rem] items-center justify-center gap-2 rounded-full px-6 text-sm font-medium leading-snug bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-[0.97] transition-all motion-reduce:transition-none motion-reduce:active:scale-100 shadow-[var(--apple-shadow-sm)]"
           >
             {t('policy.understood', 'I Understand')}
           </button>

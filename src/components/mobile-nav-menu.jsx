@@ -260,7 +260,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
           ref={closeButtonRef}
           type="button"
           onClick={closeMenu}
-          className="focus-ring group absolute z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card-strong)] text-[color:var(--apple-ink)] shadow-[var(--apple-shadow-sm)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-card-hover)] active:scale-95 motion-reduce:transition-none"
+          className="focus-ring group absolute z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card-strong)] text-[color:var(--apple-ink)] shadow-[var(--apple-shadow-sm)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-card-hover)] active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100"
           style={{ top: 'calc(var(--sat) + 0.875rem)', right: 'max(1.375rem, var(--sar))' }}
           aria-label={closeLabel}
         >
@@ -272,7 +272,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden="true"
-            className="h-5 w-5 transition-transform duration-300 ease-apple group-hover:rotate-90 motion-reduce:transition-none"
+            className="h-5 w-5 transition-transform duration-300 ease-apple group-hover:rotate-90 motion-reduce:transition-none motion-reduce:group-hover:rotate-0"
           >
             <path d="M18 6 6 18" />
             <path d="m6 6 12 12" />
@@ -349,7 +349,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 aria-hidden="true"
-                className="ml-auto h-4 w-4 opacity-60 transition-transform duration-300 ease-apple group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none"
+                className="ml-auto h-4 w-4 opacity-60 transition-transform duration-300 ease-apple group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:transform-none"
               >
                 <path d="M7 17 17 7" />
                 <path d="M7 7h10v10" />
@@ -367,7 +367,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
         ref={triggerRef}
         type="button"
         onClick={handleToggle}
-        className="focus-ring relative z-[99999] flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--apple-ink)] transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg)] active:scale-95 motion-reduce:transition-none"
+        className="focus-ring relative z-[99999] flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--apple-ink)] transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg)] active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100"
         aria-label={menuVisuallyOpen ? closeLabel : openLabel}
         aria-expanded={menuVisuallyOpen}
         aria-haspopup="dialog"

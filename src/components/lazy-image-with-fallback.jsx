@@ -200,7 +200,7 @@ const LazyImageWithFallback = forwardRef(({
             <button
               type="button"
               onClick={handleRetry}
-              className="focus-ring rounded-full bg-[color:var(--apple-blue-soft)] px-3.5 py-1.5 text-xs font-medium text-[color:var(--apple-blue)] hover:bg-[color:var(--apple-blue)] hover:text-white active:scale-95 transition-all"
+              className="focus-ring rounded-full bg-[color:var(--apple-blue-soft)] px-3.5 py-1.5 text-xs font-medium text-[color:var(--apple-blue)] hover:bg-[color:var(--apple-blue)] hover:text-white active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
             >
               重新加载
             </button>

@@ -565,6 +565,11 @@
     animation: none;
   }
 
+  /* Segmented thumb snaps instead of sliding */
+  .segmented-control__slider {
+    transition: none;
+  }
+
   .hover-lift {
     transition: none;
   }
