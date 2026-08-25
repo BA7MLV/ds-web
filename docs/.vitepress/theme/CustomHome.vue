@@ -1,3 +1,13 @@
+<!--
+  ⚠ 状态说明（Round 9 审计）：本组件【未使用/legacy】，未在任何页面挂载。
+  - 营销首页由官网（src/ 主站 /）承担，docs 首页为 index.md 的 .doc-hero；
+    本组件是官网 Hero/功能区的 Vue 版镜像，仅作为可选着陆页存档保留。
+  - 已从 theme/index.js 移除全局注册：VitePress 会把被引用组件的 CSS
+    合并进单一 style.css，注册状态下约 630 行未使用样式会打进每个页面。
+    如需恢复，在 theme/index.js 重新 import 并 app.component 注册即可。
+  - 样式全部收敛在 .landing-page 命名空间，token 依赖 Layout.vue
+    全局定义的 --apple-*；若官网视觉配方更新，此处需同步或直接删除本文件。
+-->
 <template>
   <div class="landing-page">
     <!-- Hero 区域 -->
