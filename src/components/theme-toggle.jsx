@@ -273,6 +273,8 @@ export const ThemeSelector = ({ className = '' }) => {
 
   return (
     <div className={`relative ${className}`}>
+      {/* 触控目标：视觉高度保持紧凑，伪元素向上下各扩展 8px，
+          使命中区域达到 ≥44px（Apple HIG 最小触控目标），与 LocaleToggle 一致 */}
       <button
         type="button"
         onClick={(e) => {
@@ -280,8 +282,9 @@ export const ThemeSelector = ({ className = '' }) => {
           setIsOpen(!isOpen)
         }}
         className="
-          focus-ring flex items-center gap-2 
+          focus-ring relative flex items-center gap-2
           px-3 py-1.5 rounded-full
+          after:content-[''] after:absolute after:inset-x-0 after:-inset-y-2
           text-xs font-medium
           bg-[color:var(--apple-card)] 
           border border-[color:var(--apple-line)]
@@ -322,7 +325,7 @@ export const ThemeSelector = ({ className = '' }) => {
                   setIsOpen(false)
                 }}
                 className={`
-                  focus-ring w-full flex items-center gap-2.5 px-3 py-2
+                  focus-ring w-full flex items-center gap-2.5 px-3 py-2 min-h-11
                   text-xs font-medium text-left
                   transition-colors duration-150
                   motion-reduce:transition-none

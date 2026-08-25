@@ -93,8 +93,10 @@
        keeps AA contrast no matter what scrolls behind the blur */
     --apple-menu-bg: rgba(251, 251, 253, 0.92);
 
-    /* Focus ring (consumed by .focus-ring); dark values live in .dark */
-    --apple-focus-ring: rgba(29, 29, 31, 0.2);
+    /* Focus ring (consumed by .focus-ring); dark values live in .dark.
+       0.55 keeps the ring ≥3:1 on the near-white page and light surfaces
+       (0.2 rendered at only ~1.5:1, effectively invisible) */
+    --apple-focus-ring: rgba(29, 29, 31, 0.55);
     --apple-focus-ring-offset: rgba(255, 255, 255, 0.9);
 
     /* Selection */
