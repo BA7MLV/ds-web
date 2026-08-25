@@ -136,6 +136,10 @@ export const PolicyModal = ({ type, onClose }) => {
   const data = type ? getPolicyContent(t)[type] : null
   const dialogRef = useRef(null)
   const closeButtonRef = useRef(null)
+  // 保持 onClose 最新引用，避免父组件每次渲染重建回调时
+  // 重跑 effect（会重置初始焦点与滚动锁）
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
   const titleId = type ? `policy-${type}-title` : undefined
   const descriptionId = type ? `policy-${type}-description` : undefined
 
@@ -143,14 +147,22 @@ export const PolicyModal = ({ type, onClose }) => {
     if (!type) return
     const previousActiveElement = document.activeElement
     const previousOverflow = document.body.style.overflow
+    const previousPaddingRight = document.body.style.paddingRight
+    // 锁滚动时补偿滚动条宽度，避免桌面端内容横向跳动
+    const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
     document.body.style.overflow = 'hidden'
+    if (scrollbarGap > 0) document.body.style.paddingRight = `${scrollbarGap}px`
 
     const getFocusableElements = () => {
       if (!dialogRef.current) return []
       return Array.from(
         dialogRef.current.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
         )
+      ).filter(
+        (el) =>
+          el.getAttribute('aria-hidden') !== 'true' &&
+          (el.offsetParent !== null || el === document.activeElement)
       )
     }
 
@@ -166,18 +178,29 @@ export const PolicyModal = ({ type, onClose }) => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         event.preventDefault()
-        onClose()
+        onCloseRef.current()
         return
       }
       if (event.key !== 'Tab') return
       const focusables = getFocusableElements()
-      if (!focusables.length) return
+      if (!focusables.length) {
+        event.preventDefault()
+        dialogRef.current?.focus()
+        return
+      }
       const first = focusables[0]
       const last = focusables[focusables.length - 1]
-      if (event.shiftKey && document.activeElement === first) {
+      const active = document.activeElement
+      // 焦点已逃出对话框（如落在 body）时，Tab 强制拉回陷阱内
+      if (!dialogRef.current?.contains(active)) {
+        event.preventDefault()
+        ;(event.shiftKey ? last : first).focus()
+        return
+      }
+      if (event.shiftKey && active === first) {
         event.preventDefault()
         last.focus()
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (!event.shiftKey && active === last) {
         event.preventDefault()
         first.focus()
       }
@@ -188,9 +211,16 @@ export const PolicyModal = ({ type, onClose }) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = previousOverflow
-      if (previousActiveElement?.focus) previousActiveElement.focus()
+      document.body.style.paddingRight = previousPaddingRight
+      // 打开者可能已卸载（如路由变化），仅在仍挂载时归还焦点
+      if (
+        previousActiveElement instanceof HTMLElement &&
+        document.contains(previousActiveElement)
+      ) {
+        previousActiveElement.focus()
+      }
     }
-  }, [type, onClose])
+  }, [type])
 
   if (!type || !data) return null
 
