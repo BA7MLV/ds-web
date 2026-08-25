@@ -27,6 +27,7 @@
   "hero.preview.imageAlt": "DeepStudent home screen preview",
   "freeModels.title": "Free models, zero setup",
   "freeModels.desc": "Free SiliconFlow models come built in — no API key needed. Install and start chatting.",
+  "freeModels.listLabel": "Built-in free models",
   "freeModels.poweredBy": "Powered by SiliconFlow",
   "feature.agent.title": "One agent, every task",
   "feature.agent.desc": "One message in Chat V2 puts Learning Hub, Skills, and CardForge to work. 11 built-in skills read and write Word, Excel, and PPT.",

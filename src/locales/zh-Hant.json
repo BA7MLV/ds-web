@@ -27,6 +27,7 @@
   "hero.preview.imageAlt": "DeepStudent 主頁面預覽",
   "freeModels.title": "免費模型，打開就能用",
   "freeModels.desc": "內建硅基流動免費模型，不用申請 API Key，裝好就能聊。",
+  "freeModels.listLabel": "內建免費模型",
   "freeModels.poweredBy": "Powered by SiliconFlow",
   "feature.agent.title": "一個智慧體，樣樣在行",
   "feature.agent.desc": "在 Chat V2 說一句話，即可調動 Learning Hub、Skills 與製卡任務。內建 11 項技能，Word、Excel、PPT 可讀可寫。",

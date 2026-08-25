@@ -108,11 +108,11 @@ const useRevealOnce = () => {
 
 // Pills are informational (no action to trigger), so they stay out of the tab
 // order — fake tab stops would only add noise for keyboard users. They render
-// as a semantic list instead, and min-h-9 keeps each chip a comfortable
-// ~36px touch/read target on small screens.
+// as a semantic list instead, and min-h-[44px] keeps each chip at the HIG
+// 44px touch/read target on small screens.
 const ModelPill = ({ model, revealed, delayMs }) => (
   <li
-    className={`group inline-flex min-h-9 select-none items-center gap-2 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-3.5 py-1.5 text-[12px] font-medium text-[color:var(--apple-ink)] [box-shadow:var(--apple-shadow-sm)] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-card-hover)] hover:[box-shadow:var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98] motion-reduce:transition-none ${
+    className={`group inline-flex min-h-[44px] select-none items-center gap-2 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-3.5 py-1.5 text-[12px] font-medium text-[color:var(--apple-ink)] [box-shadow:var(--apple-shadow-sm)] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-card-hover)] hover:[box-shadow:var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98] motion-reduce:transition-none ${
       revealed ? 'motion-safe:animate-fade-in-up' : 'motion-safe:opacity-0'
     }`}
     style={revealed ? { animationDelay: `${delayMs}ms` } : undefined}
@@ -147,7 +147,11 @@ export const FreeModelsCallout = () => {
       />
 
       {/* role="list" restores list semantics that list-style-none strips in Safari/VoiceOver */}
-      <ul role="list" className="relative flex list-none flex-wrap justify-center gap-2 p-0">
+      <ul
+        role="list"
+        aria-label={t('freeModels.listLabel', 'Built-in free models')}
+        className="relative flex list-none flex-wrap justify-center gap-2 p-0"
+      >
         {freeModels.map((model, index) => (
           <ModelPill key={model.id} model={model} revealed={revealed} delayMs={index * 90} />
         ))}
@@ -166,10 +170,15 @@ export const FreeModelsCallout = () => {
               and focus-visible mirrors the hover border/shadow treatment. The
               box-shadow composes the --tw-ring-* vars (same trick as the outer
               card) so the focus-ring is not clobbered by the Apple shadow token. */}
+          {/* The accessible name lives on the link itself: the two theme-variant
+              logos are swapped via display, so naming either img alone would
+              leave the link unnamed in the other theme. Both imgs stay alt=""
+              so "SiliconFlow" is announced exactly once. */}
           <a
             href="https://siliconflow.cn"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="SiliconFlow"
             className="focus-ring group relative inline-flex min-h-[44px] items-center overflow-hidden rounded-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-5 py-2.5 [box-shadow:var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--apple-shadow-sm)] transition-[border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:[box-shadow:var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--apple-shadow-md)] focus-visible:border-[color:var(--apple-line-strong)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.99] motion-reduce:transition-none"
           >
             {/* Shimmer sweeps in on hover/keyboard focus only; on the way out it
@@ -181,14 +190,14 @@ export const FreeModelsCallout = () => {
             />
             <img
               src={siliconflowLogo}
-              alt="SiliconFlow"
+              alt=""
               className="h-8 w-auto dark:hidden sm:h-9"
               loading="lazy"
               draggable="false"
             />
             <img
               src={siliconflowLogoDark}
-              alt="SiliconFlow"
+              alt=""
               className="hidden h-8 w-auto dark:block sm:h-9"
               loading="lazy"
               draggable="false"
