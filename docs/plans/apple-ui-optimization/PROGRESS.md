@@ -97,29 +97,44 @@
 - [x] Docs doc-hero 间距（`adc7150`）
 - [x] ROUND5 验收回填（`b07ba3a`）
 
-### Round 7（进行中）
+### Round 7（已完成）
 
 平板断点体验、主题切换进移动菜单、性能与文案第四轮。
 
-- [x] ROUND6 验收清单回填：ROUND6.md 补记 10 路提交号与补充修复（`33df97d` / `24470f8`），验收复验通过（`npm run build` 于 `c9b7050` 干净 worktree 无错误、无 `shadow-[var(--apple-shadow` 残留、Round 6 清单与 git 提交逐条核对一致）
-- [x] Download CTA 与 btn-apple 最终对齐复查：两处 CTA（平台卡片 + 空态 Releases）把 `transition-all`（默认 150ms/ease，且会连带动画 focus ring）收敛为 `transition-[background-color,transform] duration-200 ease-apple`，与 `.btn-apple-*` 的 0.2s 规格一致；空态 CTA 补齐共享规格缺的 `gap-2` / `leading-snug`（对齐卡片 CTA 与 Policy CTA）；两处补 `select-none` 对齐 `ui/button.jsx` base 与页内 Tab；卡片 CTA 上方补注释固定共享规格、standing 例外仅 `whitespace-normal`（i18n 文案换行）
-- [x] VitePress 侧栏/导航与 `--apple-*` token 再对齐（Layout.vue）：补定义官网 `--apple-nav-bg` / `--apple-nav-border` 两个 nav token；`--vp-nav-bg-color`、`--vp-local-nav-bg-color` 走半透明 nav 底并给 VPNavBar / VPLocalNav 加 blur(20px) saturate(180%) 玻璃态（同 top-nav.jsx）；`--vp-c-gutter` 全局收敛为 `--apple-line`（修掉深色模式纯黑分隔线）、导航范围内再换乘 `--apple-nav-border`；侧栏桌面轨道贴合 `--apple-surface` + `--apple-line` 发丝右缘、移动抽屉用 `--apple-surface-elevated` + `--apple-shadow-lg`；分组标题复用 doc-hero eyebrow 尺度（12px/600/muted），条目对齐 TopNav 链接节奏（13px/400，激活 500，悬停/激活颜色经 brand→ink 流转）
+- [x] 移动菜单 ThemeToggle + LocaleToggle（`d4b9e6d`）
+- [x] Hero GitHub / preview i18n（随 `d4b9e6d`）
+- [x] Feature 滚动性能（`17f9865`）
+- [x] Stats 入场动画（`b60773a`）
+- [x] Download CTA 对齐 btn-apple（`cd89b56`）
+- [x] FAQ disclosure a11y（`3e50492`）
+- [x] zh feature.*.desc 第四轮（`58848b7` / 内容于 `7dac8f7`）
+- [x] en / zh-Hant feature 同步（`b5f8ee3`）
+- [x] VitePress 侧栏 Apple token（`5fdd25a`）
+- [x] ROUND6 验收回填（`7dac8f7`）
+
+验收：`npm run build` 于 `b5f8ee3` 通过；三语 317 keys；详见 ROUND7.md。
+
+### Round 8（进行中）
+
+i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。详见 ROUND8.md。
 
 ## 待办（后续轮次）
 
-- [ ] 将 `App.jsx` 拆分为独立 section 组件
-- [ ] ArchitectureDiagram 视觉升级
-- [ ] Download 页平台卡片与推荐逻辑 UX
-- [ ] Feature sticky scroll 性能与移动端体验
-- [ ] 占位图组件统一（缺失截图）
-- [ ] 深色模式对比度审计
-- [ ] 文档站 VitePress 主题对齐官网
+- [ ] `useImageLoader` 硬编码中文错误串 i18n
+- [ ] 导航/页脚硬编码 GitHub 标签 i18n
+- [ ] ModeSwitchPanel 使用审计
+- [ ] 截图资源 aspect-ratio 核对
+- [ ] 平板菜单打开态二次打磨
+- [ ] FreeModels / Stats 深色微对比
+- [ ] FAQ / Architecture 文案第五轮
+- [ ] VitePress 搜索框 token 对齐
+- [ ] 持续多轮至 ≥20（用户未叫停前不停止）
 
 ## PR 列表
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 1 进行中 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 8 进行中 |
 
 ### Round 1 子代理完成项
 
