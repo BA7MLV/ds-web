@@ -526,6 +526,8 @@
     font-size: 0.875rem;
     font-weight: 500;
     white-space: nowrap;
+    /* Primary tap target: skip the double-tap-to-zoom delay on touch devices */
+    touch-action: manipulation;
     color: var(--apple-btn-primary-text);
     background-color: var(--apple-btn-primary-bg);
     box-shadow: var(--apple-shadow-sm);
@@ -551,6 +553,8 @@
     font-size: 0.875rem;
     font-weight: 500;
     white-space: nowrap;
+    /* Primary tap target: skip the double-tap-to-zoom delay on touch devices */
+    touch-action: manipulation;
     color: var(--apple-ink);
     border: 1px solid var(--apple-line-strong);
     background: transparent;

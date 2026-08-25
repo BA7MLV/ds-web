@@ -229,7 +229,7 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               onClick={handleSubtextClick}
               aria-disabled={isSubtextAnimating}
               aria-describedby="hero-preview-subtext-hint"
-              className="focus-ring rounded-lg text-left mb-7 sm:mb-8 cursor-pointer transition-opacity duration-150 ease-out motion-reduce:transition-none hover:opacity-85"
+              className="focus-ring touch-manipulation rounded-lg text-left mb-7 sm:mb-8 cursor-pointer transition-opacity duration-150 ease-out motion-reduce:transition-none hover:opacity-85"
             >
               <span id="hero-preview-subtext-hint" className="sr-only">
                 {t('hero.preview.hint')}

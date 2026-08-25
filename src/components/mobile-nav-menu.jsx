@@ -296,7 +296,7 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
           ref={closeButtonRef}
           type="button"
           onClick={closeMenu}
-          className="focus-ring group absolute z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card-strong)] text-[color:var(--apple-ink)] [box-shadow:var(--apple-shadow-sm)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-card-hover)] active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100"
+          className="focus-ring touch-manipulation group absolute z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card-strong)] text-[color:var(--apple-ink)] [box-shadow:var(--apple-shadow-sm)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-card-hover)] active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100"
           // right = nav padding max(1.5rem, --sar) minus half the 0.25rem size
           // difference (11 vs 10) so the ✕ stays centered over the hamburger
           // even when a landscape notch pushes --sar past 1.5rem.
@@ -340,7 +340,7 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
                   <a
                     href={item.href}
                     onClick={item.onClick}
-                    className={`focus-ring group flex min-h-14 items-center gap-4 rounded-2xl px-3 py-3.5 transition-colors duration-300 ease-apple motion-reduce:transition-none md:min-h-16 md:gap-5 ${
+                    className={`focus-ring touch-manipulation group flex min-h-14 items-center gap-4 rounded-2xl px-3 py-3.5 transition-colors duration-300 ease-apple motion-reduce:transition-none md:min-h-16 md:gap-5 ${
                       item.isPrimary
                         ? 'text-[color:var(--apple-blue)] hover:bg-[color:var(--apple-blue-soft)]'
                         : 'text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg)] active:bg-[color:var(--apple-btn-secondary-bg-hover)]'
@@ -415,7 +415,7 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
                 href="https://github.com/helixnow/deep-student"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="focus-ring group flex min-h-12 items-center gap-3 rounded-xl px-3 py-3 text-[color:var(--apple-muted)] transition-colors duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg)] hover:text-[color:var(--apple-ink)] motion-reduce:transition-none md:min-h-14"
+                className="focus-ring touch-manipulation group flex min-h-12 items-center gap-3 rounded-xl px-3 py-3 text-[color:var(--apple-muted)] transition-colors duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg)] hover:text-[color:var(--apple-ink)] motion-reduce:transition-none md:min-h-14"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-5 w-5">
                   <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
@@ -448,7 +448,7 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
         ref={triggerRef}
         type="button"
         onClick={handleToggle}
-        className="focus-ring relative z-[99999] flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--apple-ink)] transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg)] active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100"
+        className="focus-ring touch-manipulation relative z-[99999] flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--apple-ink)] transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg)] active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100"
         aria-label={menuVisuallyOpen ? closeLabel : openLabel}
         aria-expanded={menuVisuallyOpen}
         aria-haspopup="dialog"

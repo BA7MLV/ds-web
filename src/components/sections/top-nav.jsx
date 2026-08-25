@@ -45,23 +45,23 @@ export const TopNav = ({ onDownload = () => {} }) => {
         aria-label={t('nav.ariaLabel', '主导航')}
         className="top-nav-content max-w-6xl mx-auto flex h-14 items-center justify-between pl-[max(1rem,var(--sal))] pr-[max(1rem,var(--sar))] sm:pl-[max(1.5rem,var(--sal))] sm:pr-[max(1.5rem,var(--sar))] lg:pl-[max(2rem,var(--sal))] lg:pr-[max(2rem,var(--sar))]"
       >
-        <a href="/" className="focus-ring inline-flex items-center transition-opacity hover:opacity-80">
+        <a href="/" className="focus-ring touch-manipulation inline-flex items-center transition-opacity hover:opacity-80">
           {renderBrandLockup(isScrolled)}
         </a>
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="hidden items-center gap-4 text-[12px] font-normal text-[color:var(--apple-muted)] lg:flex">
-            <a href="#features" className="focus-ring transition-colors hover:text-[color:var(--apple-ink)]">
+            <a href="#features" className="focus-ring touch-manipulation transition-colors hover:text-[color:var(--apple-ink)]">
               {t('nav.features')}
             </a>
-            <a href="#qa" className="focus-ring transition-colors hover:text-[color:var(--apple-ink)]">
+            <a href="#qa" className="focus-ring touch-manipulation transition-colors hover:text-[color:var(--apple-ink)]">
               {t('nav.qa')}
             </a>
-            <a href="/docs/" className="focus-ring transition-colors hover:text-[color:var(--apple-ink)]">
+            <a href="/docs/" className="focus-ring touch-manipulation transition-colors hover:text-[color:var(--apple-ink)]">
               {t('nav.docs')}
             </a>
             <a
               href="https://github.com/helixnow/deep-student"
-              className="focus-ring transition-colors hover:text-[color:var(--apple-ink)]"
+              className="focus-ring touch-manipulation transition-colors hover:text-[color:var(--apple-ink)]"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -73,7 +73,7 @@ export const TopNav = ({ onDownload = () => {} }) => {
                 e.preventDefault()
                 onDownload()
               }}
-              className="focus-ring text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] transition-colors"
+              className="focus-ring touch-manipulation text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] transition-colors"
             >
               {t('nav.download')}
             </a>

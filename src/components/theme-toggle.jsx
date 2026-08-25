@@ -219,7 +219,7 @@ export const ThemeToggle = ({ className = '' }) => {
       type="button"
       onClick={() => setTheme(nextTheme)}
       className={`
-        focus-ring group relative flex items-center justify-center
+        focus-ring touch-manipulation group relative flex items-center justify-center
         w-7 h-7 rounded-full
         before:content-[''] before:absolute before:-inset-2 before:rounded-full
         text-[color:var(--apple-muted)]

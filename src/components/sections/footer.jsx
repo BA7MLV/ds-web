@@ -10,13 +10,13 @@ const buildHash = import.meta.env.VITE_BUILD_HASH || 'dev'
 // target grows, and the horizontal padding keeps the focus ring from
 // hugging the text edges.
 const footerNavLinkClass =
-  'focus-ring rounded-md px-1 -mx-1 py-1 -my-1 transition-colors duration-200 hover:text-[color:var(--apple-ink)] motion-reduce:transition-none'
+  'focus-ring touch-manipulation rounded-md px-1 -mx-1 py-1 -my-1 transition-colors duration-200 hover:text-[color:var(--apple-ink)] motion-reduce:transition-none'
 
 // Apple-style social pill: gentle lift + sharper edge + soft shadow on
 // hover, settling back on press. Transforms are disabled entirely under
 // reduced motion while color changes still apply instantly.
 const socialLinkClass =
-  'focus-ring group inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] backdrop-blur-xl transition-[background-color,border-color,color,box-shadow,transform] duration-300 ease-apple hover:-translate-y-0.5 hover:border-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:[box-shadow:var(--apple-shadow-sm)] active:translate-y-0 active:scale-95 motion-reduce:transition-none motion-reduce:transform-none'
+  'focus-ring touch-manipulation group inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] backdrop-blur-xl transition-[background-color,border-color,color,box-shadow,transform] duration-300 ease-apple hover:-translate-y-0.5 hover:border-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:[box-shadow:var(--apple-shadow-sm)] active:translate-y-0 active:scale-95 motion-reduce:transition-none motion-reduce:transform-none'
 
 const socialIconClass =
   'transition-transform duration-300 ease-apple group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none'

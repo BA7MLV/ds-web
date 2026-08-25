@@ -272,7 +272,7 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
               aria-label={fullLabel}
               onClick={() => setLocale(option.value)}
               className={cn(
-                'focus-ring relative flex items-center justify-center rounded-full leading-none',
+                'focus-ring touch-manipulation relative flex items-center justify-center rounded-full leading-none',
                 // 聚焦时提升层级，避免 ring-offset 外扩的焦点环被相邻分段的
                 // 命中区域伪元素/文字盖住（浅色与深色主题下同样生效）
                 'focus-visible:z-10',

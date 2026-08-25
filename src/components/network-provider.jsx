@@ -121,7 +121,7 @@ const NetworkToast = ({
             <button
               type="button"
               onClick={onDismiss}
-              className="focus-ring relative ml-2 p-1 hover:bg-black/10 rounded-full transition-colors motion-reduce:transition-none before:absolute before:-inset-2.5 before:content-['']"
+              className="focus-ring touch-manipulation relative ml-2 p-1 hover:bg-black/10 rounded-full transition-colors motion-reduce:transition-none before:absolute before:-inset-2.5 before:content-['']"
               aria-label={t('network.dismiss', '关闭提示')}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">

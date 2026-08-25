@@ -103,7 +103,7 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
             <summary
               aria-expanded={openIds.has(item.id)}
               aria-controls={`faq-panel-${item.id}`}
-              className="focus-ring flex min-h-[44px] items-center justify-between gap-4 p-[1.5rem] sm:p-[1.75rem] cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden"
+              className="focus-ring touch-manipulation flex min-h-[44px] items-center justify-between gap-4 p-[1.5rem] sm:p-[1.75rem] cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden"
             >
               <span
                 id={`faq-question-${item.id}`}
@@ -153,7 +153,7 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
                   <button
                     type="button"
                     onClick={item.onAction}
-                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
+                    className="focus-ring touch-manipulation inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
                   >
                     {item.actionLabel}
                   </button>
@@ -161,7 +161,7 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
                 {item.linkHref ? (
                   <a
                     href={item.linkHref}
-                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
+                    className="focus-ring touch-manipulation inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
                     target={item.linkHref.startsWith('http') ? '_blank' : undefined}
                     rel={item.linkHref.startsWith('http') ? 'noopener noreferrer' : undefined}
                   >
