@@ -1,13 +1,26 @@
 import { ThemeToggle } from '../theme-toggle'
 import { LocaleToggle, useLocale } from '../locale-toggle'
 import { MobileNavMenu } from '../mobile-nav-menu'
+import { useScrollY } from '../../hooks/useScroll'
 
 const logo = '/logo_mono_svg.svg'
 
+// Nav chrome (hairline border + soft shadow) appears once the page is
+// scrolled past this offset, so the bar blends into the hero at rest.
+const SCROLL_CHROME_THRESHOLD = 8
+
 export const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
+  const scrollY = useScrollY()
+  const isScrolled = scrollY > SCROLL_CHROME_THRESHOLD
   return (
-    <header className="top-nav-safe-area sticky top-0 z-[10010] border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]">
+    <header
+      className={`top-nav-safe-area sticky top-0 z-[10010] border-b bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%] transition-[border-color,box-shadow] duration-300 ease-apple motion-reduce:transition-none ${
+        isScrolled
+          ? 'border-[color:var(--apple-nav-border)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_20px_-14px_rgba(0,0,0,0.12)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.35),0_8px_20px_-14px_rgba(0,0,0,0.6)]'
+          : 'border-transparent shadow-none'
+      }`}
+    >
       <nav
         aria-label={t('nav.ariaLabel', '主导航')}
         className="top-nav-content max-w-6xl mx-auto flex h-14 items-center justify-between pl-[max(1rem,var(--sal))] pr-[max(1rem,var(--sar))] sm:pl-[max(1.5rem,var(--sal))] sm:pr-[max(1.5rem,var(--sar))] lg:pl-[max(2rem,var(--sal))] lg:pr-[max(2rem,var(--sar))]"
