@@ -264,11 +264,15 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
               aria-label={fullLabel}
               onClick={() => setLocale(option.value)}
               className={cn(
-                'focus-ring flex items-center justify-center rounded-full leading-none',
+                'focus-ring relative flex items-center justify-center rounded-full leading-none',
+                // 触控目标：视觉高度不变，伪元素向上下各扩展 8px，
+                // 使命中区域达到 ≥44px（Apple HIG 最小触控目标），与 ThemeToggle 一致；
+                // 仅纵向扩展，避免相邻分段的命中区域互相重叠
+                "after:content-[''] after:absolute after:inset-x-0 after:-inset-y-2",
                 compact ? 'text-[12px]' : 'text-[13px]',
                 'font-medium tracking-[0.01em]',
                 'transition-[color,transform] duration-200 active:scale-[0.96]',
-                'motion-reduce:transition-none',
+                'motion-reduce:transition-none motion-reduce:active:scale-100',
                 isSelected
                   ? 'text-[color:var(--apple-ink)]'
                   : 'text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)]'

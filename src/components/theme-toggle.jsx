@@ -204,6 +204,8 @@ export const ThemeToggle = ({ className = '' }) => {
 
   const nextTheme = THEME_ORDER[(THEME_ORDER.indexOf(theme) + 1) % THEME_ORDER.length]
 
+  // 触控目标：视觉尺寸保持 28px，通过伪元素向四周各扩展 8px，
+  // 使命中区域达到 44×44px（Apple HIG 最小触控目标），与 LocaleToggle 一致
   // 三个图标叠放在同一位置，激活的旋转归位并放大淡入，其余反向旋出并缩小淡出
   const iconClass = (isActive, hiddenTransform) => `
     absolute inset-0 flex items-center justify-center
@@ -219,6 +221,7 @@ export const ThemeToggle = ({ className = '' }) => {
       className={`
         focus-ring group relative flex items-center justify-center
         w-7 h-7 rounded-full
+        before:content-[''] before:absolute before:-inset-2 before:rounded-full
         text-[color:var(--apple-muted)]
         hover:text-[color:var(--apple-ink)]
         hover:bg-[color:var(--apple-btn-secondary-bg)]
@@ -286,6 +289,7 @@ export const ThemeSelector = ({ className = '' }) => {
           hover:text-[color:var(--apple-ink)]
           hover:bg-[color:var(--apple-card-hover)]
           transition-all duration-200
+          motion-reduce:transition-none
         "
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -321,6 +325,7 @@ export const ThemeSelector = ({ className = '' }) => {
                   w-full flex items-center gap-2.5 px-3 py-2
                   text-xs font-medium text-left
                   transition-colors duration-150
+                  motion-reduce:transition-none
                   ${isSelected 
                     ? 'text-[color:var(--apple-blue)] bg-[color:var(--apple-blue-soft)]' 
                     : 'text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg)]'
