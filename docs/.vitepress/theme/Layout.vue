@@ -185,6 +185,15 @@ import LastAuthor from './components/LastAuthor.vue'
   font-weight: 500;
 }
 
+/* 当前页指示条（Round 20 对比度复查）：默认主题只给 level-2~5 的
+   .indicator 上色，本站侧栏全部是 level-0 分组 + level-1 页面，
+   指示条始终透明——当前页只剩 ink 色 + 500 字重，而悬停同为 ink，
+   仅靠颜色无法锚定“当前页”。补上 level-1 指示条，经 --vp-c-brand-1
+   → --apple-ink 流转（亮 #1d1d1f / 暗 #f5f5f7，对侧栏底均 ≥12:1）。 */
+.VPSidebar .VPSidebarItem.level-1.is-active > .item > .indicator {
+  background-color: var(--vp-c-brand-1);
+}
+
 /* 字距对齐全站 eyebrow 节奏（hero / stats / doc-hero 均为 0.12em） */
 .VPSidebar .VPSidebarItem.level-0 > .item .text {
   font-size: 12px;
