@@ -131,16 +131,26 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 验收：10/10 落地（含 VitePress 搜索 `58b8e82`）；详见 ROUND8.md。
 
-### Round 9（进行中）
+### Round 9（已完成，#9 进行中）
 
-死代码清理、locale 加载警告、文档站与 a11y/文案再打磨。详见 ROUND9.md。Round 8 #9 VitePress 搜索若未落地则作为本轮 #1 收尾。
+死代码清理、locale 加载警告、文档站与 a11y/文案再打磨。详见 ROUND9.md。
+
+- [x] Round 8 #9 VitePress 搜索 token 收尾（已于 Round 8 落地 `58b8e82`，本轮跳过）
+- [x] 删除无引用 `switch.jsx`（`f8fcfc6`）
+- [x] locale-toggle 动静态 import 警告治理（`855f782`）
+- [x] VitePress CustomHome 审计（`690b072`）
+- [x] Skip link / landmarks 二次核对（`5a707dc`）
+- [x] Download 空态 / fallback 深色再验（`61ac76d`）
+- [x] Footer 社交链接 a11y（`e7548af`）
+- [x] zh download/policy 文案第六轮（`7aa6487`）
+- [ ] en / zh-Hant 同步本轮 copy — 进行中（提交未至，SHA 待补）
+- [x] ROUND8 验收回填 + PROGRESS 关闭 Round 8（`7ef31d7`）
+
+验收：9/10 落地，#9 待 en 同步提交后回填 SHA；详见 ROUND9.md。
 
 ## 待办（后续轮次）
 
-- [ ] 删除无用 `switch.jsx`
-- [ ] locale 动静态 import 警告
-- [ ] CustomHome / landmarks / Download 深色 / Footer a11y
-- [ ] download/policy 文案第六轮 + 三语同步
+- [ ] Round 9 #9：en / zh-Hant 同步 SHA 回填
 - [ ] 持续多轮至 ≥20（用户未叫停前不停止）
 
 ## PR 列表

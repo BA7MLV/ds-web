@@ -23,3 +23,20 @@
 - 无未使用 `switch.jsx`
 - Round 8 10/10 在文档中闭合
 - PROGRESS 更新
+
+## 验收结果（已完成）
+
+9/10 落地；#9（en / zh-Hant 同步）截至本次验收提交尚未推送，标记为进行中，不虚构 SHA。
+
+| # | 项目 | 状态 | Commit |
+|---|------|------|--------|
+| 1 | Round 8 #9：VitePress 搜索框 / nav `--apple-*` | ✅ 已于 Round 8 落地，跳过 | `58b8e82` |
+| 2 | 删除无引用 `switch.jsx` | ✅ | `f8fcfc6` |
+| 3 | `locale-toggle.jsx` 动静态 import 警告治理 | ✅ | `855f782` |
+| 4 | VitePress `CustomHome.vue` 审计 | ✅ | `690b072` |
+| 5 | Skip link / landmarks 二次核对 | ✅ | `5a707dc` |
+| 6 | Download 空态 / fallback 深色再验 | ✅ | `61ac76d` |
+| 7 | Footer 社交链接 a11y | ✅ | `e7548af` |
+| 8 | zh download.* / policy.* 文案第六轮 | ✅ | `7aa6487` |
+| 9 | en / zh-Hant 同步本轮 copy | 🔄 进行中 | 待补 |
+| 10 | ROUND8 验收回填 + PROGRESS 关闭 Round 8 | ✅ | `7ef31d7` |
