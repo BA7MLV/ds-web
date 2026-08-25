@@ -90,6 +90,7 @@
 
 - [x] ROUND5 验收清单回填：ROUND5.md 补记 10 路提交号与补充修复（`5493829` / `b35a8a9`），验收复验通过（`npm run build` 无错误、三语各 305 键同步）
 - [x] doc-hero 与 Layout 导航间距/字号一致性：`--vp-nav-height` 收至 56px 对齐官网 TopNav（h-14），`--vp-nav-logo-height` 按原 38/64 比例同步收至 32px；桌面导航链接对齐官网 12px / 常规字重 / muted→ink（悬停与激活）；`docs/index.md` doc-hero 顶部 margin 改 `clamp(0.75rem, 2.5vh, 1.5rem)` 补齐 nav→hero 节奏、底部 2.5rem 收尾，eyebrow 12px 与导航链接同级
+- [x] 按钮体系统一：`.btn-apple-*`（Hero CTA）从「12px 圆角 / 15px / active 0.98」改为与 `ui/button.jsx`、Download/Policy CTA 一致的共享规格——胶囊圆角、14px/500、44px 最小触控高度、active scale 0.97、primary 带 `--apple-shadow-sm`；`Button` default 尺寸对齐 `h-11 px-6`（44px 标准）；Download 空态 CTA 补上缺失的 `motion-reduce` 守卫；两处文档镜像（CustomHome `.landing-page .btn`、docs 首页 `.doc-hero-btn`）同步更新，保持「对齐官网」注释为真
 
 ## 待办（后续轮次）
 

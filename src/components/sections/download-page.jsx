@@ -207,7 +207,7 @@ export const DownloadPage = ({ onBack = () => {} }) => {
             </p>
             <a
               href={releaseUrl}
-              className="focus-ring touch-manipulation mt-6 inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-6 text-sm font-medium text-[color:var(--apple-btn-secondary-text)] transition-all hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-[0.97]"
+              className="focus-ring touch-manipulation mt-6 inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-6 text-sm font-medium text-[color:var(--apple-btn-secondary-text)] transition-all hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
             >
               {t('download.openReleases', '打开 GitHub Releases')}
             </a>

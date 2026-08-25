@@ -108,14 +108,16 @@ title: 简介
   gap: 0.75rem;
 }
 
+/* 共享 CTA 规格（同官网 btn-apple-*）：胶囊圆角、14px/500、44px 触控高度、active 0.97 */
 .doc-hero .doc-hero-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.375rem;
+  gap: 0.5rem;
+  min-height: 2.75rem;
   padding: 0.625rem 1.5rem;
-  border-radius: 0.75rem;
-  font-size: 15px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.4;
   white-space: nowrap;
@@ -127,7 +129,7 @@ title: 简介
 }
 
 .doc-hero .doc-hero-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .doc-hero .doc-hero-btn:focus-visible {
@@ -138,6 +140,7 @@ title: 简介
 .doc-hero .doc-hero-btn.primary {
   color: var(--apple-btn-primary-text);
   background-color: var(--apple-btn-primary-bg);
+  box-shadow: var(--apple-shadow-sm);
 }
 
 .doc-hero .doc-hero-btn.primary:hover {

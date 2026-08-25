@@ -321,15 +321,17 @@ const advantages = [
   margin-bottom: 2.25rem;
 }
 
-/* ---------- 按钮：对齐官网 btn-apple-primary / secondary ---------- */
+/* ---------- 按钮：对齐官网 btn-apple-primary / secondary ----------
+   共享 CTA 规格：胶囊圆角、14px/500、44px 最小触控高度、active scale 0.97 */
 .landing-page .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.375rem;
+  gap: 0.5rem;
+  min-height: 2.75rem;
   padding: 0.75rem 2rem;
-  border-radius: 0.75rem;
-  font-size: 15px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.4;
   white-space: nowrap;
@@ -341,7 +343,7 @@ const advantages = [
 }
 
 .landing-page .btn:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .landing-page .btn:focus-visible {
@@ -352,6 +354,7 @@ const advantages = [
 .landing-page .btn-primary {
   color: var(--apple-btn-primary-text);
   background-color: var(--apple-btn-primary-bg);
+  box-shadow: var(--apple-shadow-sm);
 }
 
 .landing-page .btn-primary:hover {

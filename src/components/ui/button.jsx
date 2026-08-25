@@ -17,8 +17,10 @@ const buttonVariants = (variant = 'default', size = 'default', className = '', r
     link: 'text-[color:var(--apple-blue)] underline-offset-4 hover:underline active:opacity-80',
   }
 
+  /* Default matches the shared CTA spec (44px pill, 14px/500) used by
+     .btn-apple-* and the Download/Policy CTAs. */
   const sizes = {
-    default: 'h-10 px-5',
+    default: 'h-11 px-6',
     sm: 'h-8 px-3 text-xs',
     lg: 'h-12 px-8 text-base',
     icon: 'h-10 w-10',
