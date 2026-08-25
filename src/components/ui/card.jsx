@@ -5,7 +5,7 @@ const Card = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      'rounded-[2rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] text-[color:var(--apple-ink)] shadow-[var(--apple-shadow-sm)] backdrop-blur-2xl transition-all duration-500 ease-apple hover:shadow-[var(--apple-shadow-lg)] hover:-translate-y-1',
+      'glass-card rounded-[2rem] text-[color:var(--apple-ink)] transition-[transform,box-shadow,background-color,border-color] duration-500 ease-apple hover:-translate-y-1 hover:bg-[color:var(--apple-card-hover)] hover:shadow-[var(--apple-shadow-lg)] motion-reduce:transition-none motion-reduce:hover:transform-none',
       className
     )}
     {...props}
@@ -13,10 +13,11 @@ const Card = React.forwardRef(({ className, ...props }, ref) => (
 ))
 Card.displayName = 'Card'
 
+/* Padding rhythm: 24px outer frame, 16px between header and content, 6px inside the header. */
 const CardHeader = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('flex flex-col gap-1.5 p-6', className)}
+    className={cn('flex flex-col gap-1.5 p-6 pb-4', className)}
     {...props}
   />
 ))
@@ -25,7 +26,7 @@ CardHeader.displayName = 'CardHeader'
 const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('text-lg font-semibold leading-none tracking-tight text-[color:var(--apple-ink)]', className)}
+    className={cn('text-lg font-semibold leading-snug tracking-tight text-[color:var(--apple-ink)]', className)}
     {...props}
   />
 ))
@@ -34,7 +35,7 @@ CardTitle.displayName = 'CardTitle'
 const CardDescription = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('text-sm text-[color:var(--apple-muted)]', className)}
+    className={cn('text-sm leading-relaxed text-[color:var(--apple-muted)]', className)}
     {...props}
   />
 ))
@@ -48,7 +49,7 @@ CardContent.displayName = 'CardContent'
 const CardFooter = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('flex items-center p-6 pt-0', className)}
+    className={cn('flex items-center gap-3 p-6 pt-0', className)}
     {...props}
   />
 ))
