@@ -92,7 +92,7 @@ export const ImagePlaceholder = ({ label }) => {
 
   return (
     <div
-      className="w-full aspect-[16/10] rounded-[6px] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden [box-shadow:var(--apple-shadow-md)]"
+      className="w-full aspect-[16/10] rounded-[6px] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden [box-shadow:var(--apple-shadow-md)]"
       role="img"
       aria-label={label}
     >
@@ -113,10 +113,11 @@ export const ImagePlaceholder = ({ label }) => {
             <path d="M21 15l-5-5L5 21" />
           </svg>
         </div>
-        <span className="text-[12px] sm:text-[13px] text-[color:var(--apple-muted)] font-medium leading-snug max-w-[16rem]">
+        {/* 深色下 --apple-muted 在 card-strong 上约 3.5:1（<AA），换用 ink-secondary */}
+        <span className="text-[12px] sm:text-[13px] text-[color:var(--apple-muted)] dark:text-[color:var(--apple-ink-secondary)] font-medium leading-snug max-w-[16rem]">
           {label}
         </span>
-        <span className="text-[10px] uppercase tracking-widest text-[color:var(--apple-muted)] opacity-50">
+        <span className="text-[10px] uppercase tracking-widest text-[color:var(--apple-muted)] opacity-50 dark:opacity-70">
           {t('placeholder.status.preview')}
         </span>
       </div>
@@ -191,8 +192,7 @@ export const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, a
             alt={title}
             loading="lazy"
             // 触控设备上 tap 会残留 :hover 态：md 以下取消悬停放大与阴影加深，避免“粘住”的缩放
-            // --apple-shadow-2xl 尚未定义，回退到 xl 以免悬停时阴影解析为 none 而消失
-            className="hover:scale-100 motion-safe:hover:scale-100 hover:[box-shadow:var(--apple-shadow-xl)] md:motion-safe:hover:scale-[1.02] md:hover:[box-shadow:var(--apple-shadow-2xl,var(--apple-shadow-xl))]"
+            className="hover:scale-100 motion-safe:hover:scale-100 hover:[box-shadow:var(--apple-shadow-xl)] md:motion-safe:hover:scale-[1.02] md:hover:[box-shadow:var(--apple-shadow-2xl)]"
           />
         ) : (
           <ImagePlaceholder label={title} />

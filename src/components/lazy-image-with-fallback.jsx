@@ -169,7 +169,7 @@ const LazyImageWithFallback = forwardRef(({
     // card-strong 玻璃底（backdrop blur）与 shadow-md
     return (
       <div
-        className={`relative w-full h-full min-h-[120px] rounded-[6px] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] backdrop-blur-2xl flex items-center justify-center overflow-hidden [box-shadow:var(--apple-shadow-md)] ${className}`}
+        className={`relative w-full h-full min-h-[120px] rounded-[6px] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card-strong)] backdrop-blur-2xl flex items-center justify-center overflow-hidden [box-shadow:var(--apple-shadow-md)] ${className}`}
         style={aspectRatio ? { aspectRatio } : undefined}
         role="img"
         aria-label={message}
@@ -196,7 +196,8 @@ const LazyImageWithFallback = forwardRef(({
               </svg>
             )}
           </div>
-          <span className="text-[12px] sm:text-[13px] text-[color:var(--apple-muted)] font-medium leading-snug max-w-[16rem]">
+          {/* 深色下 --apple-muted 在 card-strong 上约 3.5:1（<AA），换用 ink-secondary */}
+          <span className="text-[12px] sm:text-[13px] text-[color:var(--apple-muted)] dark:text-[color:var(--apple-ink-secondary)] font-medium leading-snug max-w-[16rem]">
             {message}
           </span>
           {!isOffline && maxRetries > 0 && (
@@ -210,7 +211,7 @@ const LazyImageWithFallback = forwardRef(({
               {t('placeholder.retry')}
             </button>
           )}
-          <span className="text-[10px] uppercase tracking-widest text-[color:var(--apple-muted)] opacity-50">
+          <span className="text-[10px] uppercase tracking-widest text-[color:var(--apple-muted)] opacity-50 dark:opacity-70">
             {isOffline ? t('placeholder.status.offline') : t('placeholder.status.error')}
           </span>
         </div>
