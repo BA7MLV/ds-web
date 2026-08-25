@@ -57,9 +57,22 @@
 
 验收：`npm run build` 通过（Round 4 开始时复验），无重复组件定义，详细清单见 ROUND3.md。
 
-### Round 4（进行中）
+### Round 4（已完成）
 
-性能、微交互、文档站对齐、组件一致性复审。
+- [x] Hero LCP / 字体 preload（`b9e9231`）
+- [x] Sticky feature 滚动性能（`ceb3ee9`）
+- [x] FreeModels 微交互（`f3ee834`）
+- [x] Theme / Locale toggle a11y（`afec727`）
+- [x] PolicyModal ↔ Download chrome 对齐（`9a3f98c`）
+- [x] VitePress Apple token 对齐（`bcd63d0`）
+- [x] Feature 排版统一（`d8ed7dc`）
+- [x] LazyImage 错误态对齐（`d1adb21`）
+- [x] Landmarks + skip link（`e353cb0`）
+- [x] 进度文档同步（`b732c80`）
+
+### Round 5（进行中）
+
+文案第三轮、动效一致性、移动端触控审计、文档站首页挂载评估。
 
 - [x] Feature 移动端交错图文节奏：`ScrollRevealItem` 子功能截图复用 `FeatureScreenshotFrame`（圆角/描边/阴影与主图一致），`ImagePlaceholder` 圆角对齐 `rounded-[6px]`，移动端项内 `gap-5` / 项间 `space-y-[3.5rem]` 收紧节奏
 
