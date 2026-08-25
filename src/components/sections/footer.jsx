@@ -36,7 +36,7 @@ export const Footer = ({ onOpenPolicy = () => {} }) => {
             </div>
             <nav
               className="flex flex-wrap justify-center md:justify-end gap-x-8 gap-y-4 text-[13px] text-[color:var(--apple-muted)] font-medium"
-              aria-label="Footer links"
+              aria-label={t('footer.navLabel', 'Footer links')}
             >
               <button type="button" onClick={() => onOpenPolicy('privacy')} className={footerNavLinkClass}>
                 {t('footer.privacy')}
@@ -86,8 +86,8 @@ export const Footer = ({ onOpenPolicy = () => {} }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={socialLinkClass}
-                aria-label={t('footer.qq', 'QQ')}
-                title={t('footer.qq', 'QQ')}
+                aria-label={t('footer.qq', 'QQ group')}
+                title={t('footer.qq', 'QQ group')}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" className={socialIconClass}>
                   <path
@@ -103,7 +103,9 @@ export const Footer = ({ onOpenPolicy = () => {} }) => {
                 <span className="font-mono text-[10px] leading-none tracking-[0.08em] opacity-60">
                   Build {buildHash}
                 </span>
-                <span className="text-[11px] leading-tight opacity-80">© 2026 DeepStudent Team.</span>
+                <span className="text-[11px] leading-tight opacity-80">
+                  {t('footer.copyright', '© {year} DeepStudent Team.', { year: new Date().getFullYear() })}
+                </span>
               </div>
             </div>
           </div>
