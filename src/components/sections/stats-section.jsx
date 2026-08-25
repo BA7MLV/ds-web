@@ -84,7 +84,7 @@ const StatCard = ({ stat, index, t, shouldAnimate, revealed }) => {
 
   return (
     <div
-      className={`group relative overflow-hidden rounded-[1.5rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-4 py-6 text-center backdrop-blur-xl transition-all duration-500 ease-apple hover:border-[color:var(--apple-line-strong)] hover:shadow-[var(--apple-shadow-lg)] motion-safe:hover:-translate-y-1 sm:rounded-[1.75rem] sm:px-6 sm:py-8 ${entranceClass}`}
+      className={`group relative overflow-hidden rounded-[1.5rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-4 py-6 text-center shadow-[var(--apple-shadow-sm)] backdrop-blur-xl transition-all duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:shadow-[var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 sm:rounded-[1.75rem] sm:px-6 sm:py-8 ${entranceClass}`}
       style={shouldAnimate && revealed ? { animationDelay: `${120 + index * 90}ms` } : undefined}
     >
       {/* 顶部发丝高光，与玻璃卡片风格保持一致 */}
@@ -97,7 +97,8 @@ const StatCard = ({ stat, index, t, shouldAnimate, revealed }) => {
         {t(stat.labelKey, stat.labelFallback)}
       </div>
 
-      <div className="mt-3 font-display text-[2.75rem] font-semibold leading-none tracking-[-0.03em] text-[color:var(--apple-ink)] transition-colors duration-500 group-hover:text-[color:var(--apple-blue)] sm:mt-4 sm:text-[3.5rem]">
+      {/* 数字降一档（36/44/48px）：给单位和说明留出呼吸感，避免窄卡片里数字压满 */}
+      <div className="mt-3 font-display text-[2.25rem] font-semibold leading-none tracking-[-0.02em] text-[color:var(--apple-ink)] transition-colors duration-300 group-hover:text-[color:var(--apple-blue)] sm:mt-3.5 sm:text-[2.75rem] lg:text-[3rem]">
         {stat.value}
       </div>
 
