@@ -143,10 +143,10 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 - [x] Download 空态 / fallback 深色再验（`61ac76d`）
 - [x] Footer 社交链接 a11y（`e7548af`）
 - [x] zh download/policy 文案第六轮（`7aa6487`）
-- [x] en / zh-Hant 同步本轮 copy（`5f34994`）（提交未至，SHA 待补）
-- [x] ROUND8 验收回填 + PROGRESS 关闭 Round 8（`7ef31d7`）
+- [x] en / zh-Hant 同步本轮 copy（`5f34994`）
+- [x] ROUND8 验收回填 + PROGRESS 关闭 Round 8（`7ef31d7` / `bcc4362`）
 
-验收：9/10 落地，#9 待 en 同步提交后回填 SHA；详见 ROUND9.md。
+验收：10/10 落地；详见 ROUND9.md。
 
 ### Round 10（进行中）
 
@@ -154,7 +154,10 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 ## 待办（后续轮次）
 
-- [ ] Round 9 #9：en / zh-Hant 同步 SHA 回填
+- [ ] 可选清理 `@radix-ui/react-switch` 依赖
+- [ ] 软件主页图 png/webp 比例不一致
+- [ ] 性能预算 / FAQ 动效 / Policy 深色 / Hero 移动端排版
+- [ ] doc-hero 深色 / reduced-motion 再验 / 文案第七轮
 - [ ] 持续多轮至 ≥20（用户未叫停前不停止）
 
 ## PR 列表
