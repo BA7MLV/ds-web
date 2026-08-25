@@ -176,10 +176,10 @@ export const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, a
         )}
       </div>
       <div className="flex-1 min-w-0 text-center md:text-left">
-        <h3 className="text-[1.125rem] sm:text-[1.25rem] font-semibold text-[color:var(--apple-ink)] mb-2 tracking-tight">
+        <h3 className="text-[clamp(1.125rem,1.8vw,1.25rem)] font-semibold text-[color:var(--apple-ink)] mb-2 tracking-tight leading-tight">
           {title}
         </h3>
-        <p className="text-[0.875rem] sm:text-[0.9375rem] text-[color:var(--apple-muted)] leading-relaxed max-w-md mx-auto md:mx-0">
+        <p className="text-body-large text-[color:var(--apple-muted)] max-w-md mx-auto md:mx-0">
           {desc}
         </p>
       </div>
@@ -210,15 +210,39 @@ export const AlternatingFeatureGroup = ({ items, t }) => {
 // 左侧使用原生 CSS sticky，右侧文字滚动触发图片 crossfade 切换
 export const StickyImageFeatureGroup = ({ items, t }) => {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isInView, setIsInView] = useState(false)
+  const containerRef = useRef(null)
   const leadingMarkerRef = useRef(null)
   const markerRefs = useRef([])
   const mediaFrameRef = useRef(null)
+
+  // 仅在组件接近/处于视口时才做滚动计算与合成层提示，
+  // 离开视口后移除 scroll 监听并把 will-change 归还为 auto
+  useEffect(() => {
+    const element = containerRef.current
+    if (!element || typeof window === 'undefined') return undefined
+    if (typeof IntersectionObserver === 'undefined') {
+      setIsInView(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry) return
+        setIsInView(entry.isIntersecting)
+      },
+      { rootMargin: '200px 0px' }
+    )
+
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
 
   // 使用统一滚动边界判定激活项：
   // 当「图片中心」对齐到「span 标记上方 1/4 图片高度」时触发切换
   // => spanTop <= imageTop + imageHeight * 3/4
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined
+    if (typeof window === 'undefined' || !isInView) return undefined
 
     let rafId = null
 
@@ -258,7 +282,7 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
 
     updateActiveByAnchor()
     window.addEventListener('scroll', onScrollOrResize, { passive: true })
-    window.addEventListener('resize', onScrollOrResize)
+    window.addEventListener('resize', onScrollOrResize, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', onScrollOrResize)
@@ -267,10 +291,10 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
         window.cancelAnimationFrame(rafId)
       }
     }
-  }, [items.length])
+  }, [items.length, isInView])
 
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative">
       {/* 移动端：普通流式布局，带多样化进入动画 */}
       <div className="md:hidden space-y-[2.5rem]">
         {items.map((sf, index) => (
@@ -302,6 +326,7 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                         ? 'opacity-100 motion-safe:scale-100'
                         : 'opacity-0 pointer-events-none motion-safe:scale-[1.015]'
                     }`}
+                    style={{ willChange: isInView ? 'transform, opacity' : 'auto' }}
                     aria-hidden={!isActive}
                   >
                     {sf.imgSrc ? (
@@ -380,10 +405,10 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                         isActive ? 'opacity-100 motion-safe:scale-x-100' : 'opacity-0 motion-safe:scale-x-0'
                       }`} />
                     </div>
-                    <h3 className="text-[1.25rem] sm:text-[1.375rem] font-semibold text-[color:var(--apple-ink)] mb-2.5 tracking-tight leading-tight">
+                    <h3 className="text-[clamp(1.25rem,1.6vw,1.375rem)] font-semibold text-[color:var(--apple-ink)] mb-2.5 tracking-tight leading-tight">
                       {t(sf.labelKey)}
                     </h3>
-                    <p className="text-[0.9375rem] text-[color:var(--apple-muted)] leading-relaxed">
+                    <p className="text-body-large text-[color:var(--apple-muted)]">
                       {t(sf.descKey)}
                     </p>
                   </div>
@@ -425,10 +450,10 @@ export const FeatureSection = ({ id, title, desc, align, children, motionScale =
             willChange: shouldAnimate ? 'transform, opacity' : 'auto',
           }}
         >
-          <h2 className="text-[2rem] sm:text-[3rem] font-semibold text-[color:var(--apple-ink)] mb-[1.5rem] tracking-tight font-display leading-[1.1]">
+          <h2 className="text-section-title font-display text-[color:var(--apple-ink)] mb-[1.5rem]">
             {title}
           </h2>
-          <p className="text-[color:var(--apple-muted)] leading-[1.6] text-[1.1rem] sm:text-[1.35rem] font-medium tracking-tight mx-auto md:mx-0">{desc}</p>
+          <p className="text-body-large font-medium text-[color:var(--apple-muted)] mx-auto md:mx-0">{desc}</p>
         </div>
 
         <div
