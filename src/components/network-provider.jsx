@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { useLocale } from './locale-toggle'
 
 const NetworkContext = createContext(null)
 
@@ -83,28 +84,28 @@ export const NetworkProvider = ({ children }) => {
     <NetworkContext.Provider value={value}>
       {children}
       <NetworkToast 
-        isOnline={isOnline}
         showOffline={showOfflineToast}
         showBackOnline={showBackOnlineToast}
         onDismiss={dismissOfflineToast}
-        connectionType={connectionType}
       />
     </NetworkContext.Provider>
   )
 }
 
 const NetworkToast = ({ 
-  isOnline, 
   showOffline, 
   showBackOnline, 
-  onDismiss, 
-  connectionType 
+  onDismiss 
 }) => {
+  const { t } = useLocale()
+
   if (!showOffline && !showBackOnline) return null
 
   return (
     <div 
-      className={`fixed top-[calc(1rem+var(--sat))] left-1/2 -translate-x-1/2 z-[100] px-4 py-3 rounded-full shadow-lg backdrop-blur-xl transition-all duration-300 motion-reduce:transition-none ${
+      role="status"
+      aria-live={showOffline ? 'assertive' : 'polite'}
+      className={`fixed top-[calc(1rem+var(--sat))] left-1/2 -translate-x-1/2 z-[100] px-4 py-3 rounded-full [box-shadow:var(--apple-shadow-lg)] backdrop-blur-xl transition-all duration-300 motion-reduce:transition-none ${
         showOffline 
           ? 'bg-[color:var(--apple-error-bg)] text-[color:var(--apple-error-text)] border border-[color:var(--apple-error-border)]' 
           : 'bg-[color:var(--apple-success-bg)] text-[color:var(--apple-success-text)] border border-[color:var(--apple-success-border)]'
@@ -113,27 +114,27 @@ const NetworkToast = ({
       <div className="flex items-center gap-3">
         {showOffline ? (
           <>
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-            <span className="text-sm font-medium">网络连接已断开</span>
+            <span className="text-sm font-medium">{t('network.offline', '网络连接已断开')}</span>
             <button
               type="button"
               onClick={onDismiss}
-              className="focus-ring ml-2 p-1 hover:bg-black/10 rounded-full transition-colors"
-              aria-label="关闭提示"
+              className="focus-ring relative ml-2 p-1 hover:bg-black/10 rounded-full transition-colors motion-reduce:transition-none before:absolute before:-inset-2.5 before:content-['']"
+              aria-label={t('network.dismiss', '关闭提示')}
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </>
         ) : (
           <>
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            <span className="text-sm font-medium">网络已恢复</span>
+            <span className="text-sm font-medium">{t('network.backOnline', '网络已恢复')}</span>
           </>
         )}
       </div>
