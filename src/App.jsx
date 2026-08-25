@@ -159,7 +159,8 @@ const App = () => {
                 }`}
                 style={motionScale > 0 ? { animationDelay: '0.18s' } : undefined}
               >
-                <div className="space-y-[6.854rem] sm:space-y-[11.09rem] lg:space-y-[17.944rem] pt-[4.236rem] sm:pt-[6.854rem]">
+                {/* pt 与架构图 pb（φ³/φ⁴）相加构成入口接缝；lg 补 φ⁵ 一档，随 space-y 的 φ⁶ 同步放大 */}
+                <div className="space-y-[6.854rem] sm:space-y-[11.09rem] lg:space-y-[17.944rem] pt-[4.236rem] sm:pt-[6.854rem] lg:pt-[11.09rem]">
                   <FeatureSection
                     id="feature-free-models"
                     title={t('freeModels.title', '免费模型，开箱即用')}

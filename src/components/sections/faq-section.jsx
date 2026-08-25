@@ -67,11 +67,13 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
     },
   ]
 
+  // 顶部留白升到 φ 刻度（φ²/φ³/φ⁴）：原 pt-2/3/4 叠加末尾特性区 pb 后仅 3.5–9rem，
+  // 是全页最挤的区块接缝，FAQ 读作上一特性的附属而非独立收束区
   return (
     <section
       id="qa"
       aria-labelledby="faq-title"
-      className={`px-4 sm:px-6 max-w-4xl mx-auto pt-2 sm:pt-3 md:pt-4 pb-3 sm:pb-4 md:pb-6 ${
+      className={`px-4 sm:px-6 max-w-4xl mx-auto pt-[2.618rem] sm:pt-[4.236rem] md:pt-[6.854rem] pb-3 sm:pb-4 md:pb-6 ${
         shouldAnimate ? 'animate-fade-in' : ''
       }`}
       style={shouldAnimate ? { animationDelay: '0.12s' } : undefined}

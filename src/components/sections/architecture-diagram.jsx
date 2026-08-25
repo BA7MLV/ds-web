@@ -358,12 +358,14 @@ export const ArchitectureDiagram = ({ motionScale = 1 }) => {
 
   // 本区块与上方 Stats 共用同一个标题（#stats-heading），因此这里刻意不再放第二个 h2；
   // 顶部间距压到组内节奏（2rem/3rem），让数字卡片与架构图读作同一叙事块。
+  // 底部留白取 φ 刻度（4.236/6.854rem），与 #features 的 pt 同尺同源相加，
+  // 让架构图 → 特性区的出口接缝与特性区内部节奏（φ⁴/φ⁵/φ⁶）同一数列。
   // 刻意不加 aria-labelledby：引用同一 #stats-heading 会产生两个同名 region
   // landmark（axe landmark-unique）；无命名的 section 不构成 landmark，
   // 读屏用户经 Stats region 进入后顺序阅读即可覆盖本块。
   return (
     <section
-      className={`px-4 pt-8 pb-20 sm:px-6 sm:pt-12 sm:pb-28 ${shouldAnimate ? 'animate-fade-in' : ''}`}
+      className={`px-4 pt-8 pb-[4.236rem] sm:px-6 sm:pt-12 sm:pb-[6.854rem] ${shouldAnimate ? 'animate-fade-in' : ''}`}
       style={shouldAnimate ? { animationDelay: '0.24s' } : undefined}
     >
       <div className="mx-auto max-w-[80rem]">
