@@ -107,7 +107,7 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
                 {item.question}
               </span>
               <span
-                className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-muted)] transition-[transform,background-color,color] duration-300 ease-apple group-hover:bg-[color:var(--apple-btn-secondary-bg-hover)] group-open:rotate-180 group-open:text-[color:var(--apple-ink)]"
+                className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-muted)] transition-[transform,background-color,color] duration-300 ease-apple motion-reduce:transition-none group-hover:bg-[color:var(--apple-btn-secondary-bg-hover)] group-open:rotate-180 group-open:text-[color:var(--apple-ink)]"
                 aria-hidden="true"
               >
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">

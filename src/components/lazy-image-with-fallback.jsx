@@ -269,7 +269,7 @@ const LazyImageWithFallback = forwardRef(({
       {showProgress && isLoading && (
         <div className="absolute inset-x-0 bottom-0 z-10 h-0.5 overflow-hidden bg-[color:var(--apple-line-strong)]">
           <div
-            className="h-full bg-[color:var(--apple-blue)] transition-[width] duration-300 ease-out"
+            className="h-full bg-[color:var(--apple-blue)] transition-[width] duration-300 ease-out motion-reduce:transition-none"
             style={{ width: `${progress}%` }}
           />
         </div>
