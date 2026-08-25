@@ -75,6 +75,7 @@
 文案第三轮、动效一致性、移动端触控审计、文档站首页挂载评估。
 
 - [x] Feature 移动端交错图文节奏：`ScrollRevealItem` 子功能截图复用 `FeatureScreenshotFrame`（圆角/描边/阴影与主图一致），`ImagePlaceholder` 圆角对齐 `rounded-[6px]`，移动端项内 `gap-5` / 项间 `space-y-[3.5rem]` 收紧节奏
+- [x] ROUND4 验收清单回填：ROUND4.md 补记 10 路提交号与验收结果（build 复验通过、无 slate 硬编码回流）
 
 ## 待办（后续轮次）
 
