@@ -89,6 +89,7 @@
 视觉回归、按钮体系统一、深色模式二次审计、截图占位与性能收尾。
 
 - [x] ROUND5 验收清单回填：ROUND5.md 补记 10 路提交号与补充修复（`5493829` / `b35a8a9`），验收复验通过（`npm run build` 无错误、三语各 305 键同步）
+- [x] doc-hero 与 Layout 导航间距/字号一致性：`--vp-nav-height` 收至 56px 对齐官网 TopNav（h-14），`--vp-nav-logo-height` 按原 38/64 比例同步收至 32px；桌面导航链接对齐官网 12px / 常规字重 / muted→ink（悬停与激活）；`docs/index.md` doc-hero 顶部 margin 改 `clamp(0.75rem, 2.5vh, 1.5rem)` 补齐 nav→hero 节奏、底部 2.5rem 收尾，eyebrow 12px 与导航链接同级
 
 ## 待办（后续轮次）
 

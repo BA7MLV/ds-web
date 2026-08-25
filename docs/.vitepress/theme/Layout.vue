@@ -77,7 +77,9 @@ import LastAuthor from './components/LastAuthor.vue'
    品牌色收敛为 ink 单色，文本/线条/表面/按钮跟随官网明暗两套值。
    ============================================================ */
 :root {
-  --vp-nav-logo-height: 38px;
+  /* 官网 TopNav 为 h-14（56px）；logo 高按原 38/64 比例同步收至 32px */
+  --vp-nav-height: 56px;
+  --vp-nav-logo-height: 32px;
   --vp-font-family-base: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', ui-sans-serif, sans-serif;
 
   --vp-c-brand-1: var(--apple-ink);
@@ -112,6 +114,21 @@ import LastAuthor from './components/LastAuthor.vue'
 .dark {
   --vp-c-bg-alt: var(--apple-surface-elevated);
   --vp-c-bg-soft: var(--apple-surface-elevated);
+}
+
+/* ============================================================
+   桌面导航链接对齐官网 TopNav（top-nav.jsx）：
+   12px / 常规字重 / muted 底色，悬停与激活回到 ink。
+   ============================================================ */
+.VPNavBarMenu .VPNavBarMenuLink {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--vp-c-text-3);
+}
+
+.VPNavBarMenu .VPNavBarMenuLink:hover,
+.VPNavBarMenu .VPNavBarMenuLink.active {
+  color: var(--vp-c-text-1);
 }
 
 /* 全站选区颜色与官网一致 */

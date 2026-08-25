@@ -62,7 +62,9 @@ title: 简介
    选择器统一带 .doc-hero 前缀并压过 .vp-doc 默认样式。
    ============================================================ */
 .doc-hero {
-  margin: 0.25rem 0 2rem;
+  /* nav→hero 间距：56px 导航栏 + VPDoc 自带 32/48px 顶部内边距，
+     顶部 margin 补足官网 hero 节奏的文档栏缩放，底部 2.5rem 收尾 */
+  margin: clamp(0.75rem, 2.5vh, 1.5rem) 0 2.5rem;
 }
 
 .doc-hero .doc-hero-eyebrow {
