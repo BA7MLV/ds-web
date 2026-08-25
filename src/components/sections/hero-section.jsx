@@ -5,6 +5,23 @@ import { useScrollY } from '../../hooks/useScroll'
 
 const SUBTEXT_FADE_DURATION_MS = 200
 
+// Same pattern as mobile-nav-menu: lets the hero honor the OS setting even
+// when a parent forgets to zero out motionScale.
+const usePrefersReducedMotion = () => {
+  const [prefersReduced, setPrefersReduced] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return undefined
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const handleChange = () => setPrefersReduced(query.matches)
+    handleChange()
+    query.addEventListener('change', handleChange)
+    return () => query.removeEventListener('change', handleChange)
+  }, [])
+
+  return prefersReduced
+}
+
 const getViewportBucket = () => {
   if (typeof window === 'undefined') return 'unknown'
   const width = window.innerWidth || 0
@@ -66,13 +83,15 @@ export const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem]
 
 export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   const { t, isChinese } = useLocale()
-  const shouldAnimate = motionScale > 0
+  const prefersReducedMotion = usePrefersReducedMotion()
+  const shouldAnimate = motionScale > 0 && !prefersReducedMotion
   const [activePreviewId, setActivePreviewId] = useState(heroPreviewItems[0].id)
   const activePreviewItem = heroPreviewItems.find(item => item.id === activePreviewId) || heroPreviewItems[0]
   const [isSubtextVisible, setIsSubtextVisible] = useState(true)
   const [isSubtextAnimating, setIsSubtextAnimating] = useState(false)
   const subtextSwapTimerRef = useRef(null)
   const subtextResetTimerRef = useRef(null)
+  const previewDotRefs = useRef([])
   const scrollY = useScrollY()
   const showScrollHint = scrollY < 100
 
@@ -130,6 +149,41 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
     }, SUBTEXT_FADE_DURATION_MS * 2)
   }
 
+  // Guarded to avoid racing the subtext swap timers mid-fade.
+  const selectPreview = (id) => {
+    if (id === activePreviewId || isSubtextAnimating) return
+    setActivePreviewId(id)
+  }
+
+  const handlePreviewKeyDown = (event) => {
+    const count = heroPreviewItems.length
+    const currentIndex = heroPreviewItems.findIndex(item => item.id === activePreviewId)
+    let nextIndex = null
+
+    switch (event.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        nextIndex = (currentIndex + 1) % count
+        break
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        nextIndex = (currentIndex - 1 + count) % count
+        break
+      case 'Home':
+        nextIndex = 0
+        break
+      case 'End':
+        nextIndex = count - 1
+        break
+      default:
+        return
+    }
+
+    event.preventDefault()
+    selectPreview(heroPreviewItems[nextIndex].id)
+    previewDotRefs.current[nextIndex]?.focus()
+  }
+
   return (
     <header
       className="relative min-h-screen pt-20 pb-16 flex items-center overflow-hidden lg:overflow-visible"
@@ -149,7 +203,8 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
             <p className="mb-3 text-[11px] sm:text-xs font-semibold tracking-[0.12em] uppercase text-[color:var(--apple-muted)]">
               DeepStudent
             </p>
-            <h1 className="text-[clamp(2.25rem,5vw,3.5rem)] font-semibold tracking-[-0.03em] mb-4 leading-[1.08] text-[color:var(--apple-ink)] text-balance">
+            {/* Apple headline tokens: ~40px uses 1.1/0em, ~56px uses 1.07/-0.007em */}
+            <h1 className="text-[clamp(2.25rem,5vw,3.5rem)] font-semibold mb-4 leading-[1.1] tracking-[-0.002em] sm:leading-[1.07] sm:tracking-[-0.007em] text-[color:var(--apple-ink)] text-balance">
               {t('hero.headline.top')}
               <br />
               <span className={isChinese ? 'inline-block whitespace-nowrap' : 'whitespace-normal break-words'}>
@@ -157,15 +212,21 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               </span>
             </h1>
 
+            {/* aria-disabled (not disabled) keeps keyboard focus while the fade runs;
+                handleSubtextClick already ignores re-entry. */}
             <button
               type="button"
               onClick={handleSubtextClick}
-              disabled={isSubtextAnimating}
-              aria-label={t(activePreviewItem.subtextKey)}
-              className="text-left mb-8 cursor-pointer transition-opacity duration-150 hover:opacity-85 disabled:cursor-default disabled:opacity-100"
+              aria-disabled={isSubtextAnimating}
+              aria-describedby="hero-preview-subtext-hint"
+              className="focus-ring rounded-lg text-left mb-8 cursor-pointer transition-opacity duration-150 ease-out motion-reduce:transition-none hover:opacity-85"
             >
+              <span id="hero-preview-subtext-hint" className="sr-only">
+                {t('hero.preview.hint', isChinese ? '轻点切换下一条功能简介' : 'Show the next feature highlight')}
+              </span>
               <span className="relative inline-flex min-h-[3.2em] sm:min-h-[2.4em] items-start overflow-visible align-top">
                 <span
+                  aria-live="polite"
                   className={`text-base sm:text-lg leading-relaxed text-[color:var(--apple-muted)] whitespace-normal break-words text-pretty transition-opacity duration-200 ease-out motion-reduce:transition-none ${
                     isSubtextVisible ? 'opacity-100' : 'opacity-0'
                   }`}
@@ -183,7 +244,7 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               >
                 <span className="whitespace-nowrap">{t('hero.cta.download')}</span>
                 <svg
-                  className="w-4 h-4 shrink-0 opacity-90 transition-[transform,opacity] duration-150 ease-out motion-reduce:transform-none group-hover:translate-x-0.5 group-hover:opacity-100"
+                  className="w-4 h-4 shrink-0 opacity-90 transition-[transform,opacity] duration-150 ease-out motion-reduce:transition-none motion-reduce:transform-none group-hover:translate-x-0.5 group-hover:opacity-100"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -215,20 +276,26 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               </svg>
               <span>在 GitHub 上查看源码</span>
             </a>
-            <div className="flex items-center gap-2 mb-2" role="tablist" aria-label="功能预览">
-              {heroPreviewItems.map((item) => {
+            {/* gap-3 leaves 6px per side for the invisible before: hit area (~38px tall)
+                without adjacent targets overlapping. */}
+            <div
+              className="flex items-center gap-3 mb-2"
+              role="tablist"
+              aria-label={t('hero.preview.label', isChinese ? '功能预览' : 'Feature preview')}
+            >
+              {heroPreviewItems.map((item, index) => {
                 const isActive = item.id === activePreviewId
                 return (
                   <button
                     key={item.id}
+                    ref={(node) => { previewDotRefs.current[index] = node }}
                     type="button"
                     role="tab"
                     aria-selected={isActive}
-                    onClick={() => {
-                      if (item.id === activePreviewId || isSubtextAnimating) return
-                      setActivePreviewId(item.id)
-                    }}
-                    className={`focus-ring h-1.5 rounded-full transition-all duration-300 ease-apple ${
+                    tabIndex={isActive ? 0 : -1}
+                    onClick={() => selectPreview(item.id)}
+                    onKeyDown={handlePreviewKeyDown}
+                    className={`focus-ring relative h-1.5 rounded-full touch-manipulation transition-all duration-300 ease-apple motion-reduce:transition-none before:absolute before:-inset-x-1.5 before:-inset-y-4 before:content-[''] ${
                       isActive ? 'w-6 bg-[color:var(--apple-ink)]' : 'w-1.5 bg-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-muted)]'
                     }`}
                     aria-label={t(item.labelKey)}
@@ -239,11 +306,15 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
 
             {showScrollHint && (
               <div
-                className="hidden lg:flex flex-col items-start gap-1.5 cursor-pointer hover:opacity-80 transition-all duration-500 mt-8"
+                className="focus-ring rounded-md hidden lg:flex flex-col items-start gap-1.5 cursor-pointer hover:opacity-80 transition-all duration-500 motion-reduce:transition-none mt-8"
                 onClick={handleExploreClick}
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && handleExploreClick()}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter' && e.key !== ' ') return
+                  e.preventDefault()
+                  handleExploreClick()
+                }}
                 aria-label={t('hero.scrollDown', '向下滚动')}
               >
                 <span className="text-[10px] text-[color:var(--apple-muted)] tracking-wider uppercase">{t('hero.scrollDown', '向下滚动')}</span>
