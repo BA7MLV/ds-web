@@ -42,9 +42,22 @@
 - [x] Stats 区块（`stats-section.jsx` + 三语 `*Unit` keys）
 - [x] Hero / TopNav 统一 `useScroll`（去重复 scroll listener）
 
-### Round 3（进行中）
+### Round 3（已完成）
 
-视觉与交互深化：Hero / Feature sticky / Download / FAQ / Footer / 深色模式 / 安全区 / 文案第二轮。
+- [x] Hero 排版与预览指示器 / a11y
+- [x] Feature sticky 桌面交叉淡入
+- [x] Feature 移动端节奏与截图框统一
+- [x] Download 页 segmented control 与推荐卡片
+- [x] FAQ 手风琴触控与过渡
+- [x] Footer 社交图标与安全区
+- [x] Stats + Architecture 视觉衔接
+- [x] 深色模式导航控件对比度
+- [x] 全站 safe-area 扫描
+- [x] FAQ / footer / arch 文案第二轮
+
+### Round 4（进行中）
+
+性能、微交互、文档站对齐、组件一致性复审。
 
 - [x] Feature 移动端交错图文节奏：`ScrollRevealItem` 子功能截图复用 `FeatureScreenshotFrame`（圆角/描边/阴影与主图一致），`ImagePlaceholder` 圆角对齐 `rounded-[6px]`，移动端项内 `gap-5` / 项间 `space-y-[3.5rem]` 收紧节奏
 
