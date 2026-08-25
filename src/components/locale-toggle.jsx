@@ -6,7 +6,11 @@ const LOCALE_KEY = 'ds-locale-preference'
 const VALID_LOCALES = ['zh', 'zh-Hant', 'en']
 
 const LOCALE_LOADERS = {
-  zh: () => import('../locales/zh.json'),
+  // zh is the default/fallback locale and ships in the main bundle via the
+  // static import above; resolving it from that module (instead of a dynamic
+  // import of the same file) avoids Vite's mixed static/dynamic import warning
+  // while keeping zh-Hant and en as lazily loaded, code-split chunks.
+  zh: () => Promise.resolve({ default: zhMessages }),
   'zh-Hant': () => import('../locales/zh-Hant.json'),
   en: () => import('../locales/en.json'),
 }
