@@ -259,8 +259,39 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
         target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
       }
+      closeMenu()
+      return
     }
-    closeMenu()
+    // Cross-document jump (Docs, same origin under /docs/). Modified clicks
+    // (⌘/Ctrl/Shift/Alt or non-primary button) keep the browser's native
+    // open-in-new-tab handling; the user stays on this page, so the normal
+    // animated dismissal is the right response.
+    const isModifiedClick =
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    if (isModifiedClick || !href) {
+      closeMenu()
+      return
+    }
+    // Plain activation: navigate ourselves after the scroll lock releases.
+    // Letting the default navigation run mid-lock persists scrollY=0 (the
+    // body is position:fixed) into this history entry and races the 260ms
+    // exit timer against unload, so Back could restore a page with the wrong
+    // scroll offset and a stranded mid-exit overlay. Closing without the exit
+    // animation runs the lock/focus cleanups first: scroll is restored, focus
+    // returns to the hamburger, then the deferred assign() leaves the page.
+    event.preventDefault()
+    pendingNavigationRef.current = () => window.location.assign(href)
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current)
+      closeTimerRef.current = null
+    }
+    setIsClosing(false)
+    setIsOpen(false)
   }, [closeMenu])
 
   const handleDownloadClick = useCallback((event) => {

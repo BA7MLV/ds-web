@@ -56,6 +56,9 @@ export const TopNav = ({ onDownload = () => {} }) => {
             <a href="#qa" className="focus-ring touch-manipulation transition-colors hover:text-[color:var(--apple-ink)]">
               {t('nav.qa')}
             </a>
+            {/* Docs is the same origin (VitePress build copied to dist/docs),
+                so it opens in-tab like the section links — no target/rel;
+                only truly external destinations (GitHub) get _blank. */}
             <a href="/docs/" className="focus-ring touch-manipulation transition-colors hover:text-[color:var(--apple-ink)]">
               {t('nav.docs')}
             </a>
