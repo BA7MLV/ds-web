@@ -1,8 +1,24 @@
+import { useState } from 'react'
+
 import { useLocale } from '../locale-toggle'
 
 export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
   const shouldAnimate = motionScale > 0
   const { t } = useLocale()
+  // Mirrors the native <details> open state so <summary> can expose an explicit
+  // aria-expanded value for assistive tech that doesn't announce it natively.
+  const [openIds, setOpenIds] = useState(() => new Set())
+
+  const handleToggle = (id) => (event) => {
+    const isOpen = event.currentTarget.open
+    setOpenIds((prev) => {
+      if (prev.has(id) === isOpen) return prev
+      const next = new Set(prev)
+      if (isOpen) next.add(id)
+      else next.delete(id)
+      return next
+    })
+  }
   const faqItems = [
     {
       id: 'open-source',
@@ -36,13 +52,17 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
   return (
     <section
       id="qa"
+      aria-labelledby="faq-title"
       className={`px-4 sm:px-6 max-w-4xl mx-auto pt-2 sm:pt-3 md:pt-4 pb-3 sm:pb-4 md:pb-6 ${
         shouldAnimate ? 'animate-fade-in' : ''
       }`}
       style={shouldAnimate ? { animationDelay: '0.12s' } : undefined}
     >
       <div className="text-center">
-        <h2 className="mb-3 font-display text-section-title text-[color:var(--apple-ink)] sm:mb-4">
+        <h2
+          id="faq-title"
+          className="mb-3 font-display text-section-title text-[color:var(--apple-ink)] sm:mb-4"
+        >
           {t('faq.title')}
         </h2>
         <p className="mx-auto max-w-2xl text-[15px] leading-relaxed text-[color:var(--apple-muted)] sm:text-[17px]">
@@ -54,10 +74,18 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
         {faqItems.map((item) => (
           <details
             key={item.id}
+            onToggle={handleToggle(item.id)}
             className="group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)] overflow-hidden transition-[background-color,border-color,box-shadow] duration-500 ease-apple hover:[box-shadow:var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:border-[color:var(--apple-line-strong)] open:[box-shadow:var(--apple-shadow-lg)]"
           >
-            <summary className="focus-ring flex min-h-[44px] items-center justify-between gap-4 p-[1.5rem] sm:p-[1.75rem] cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
-              <span className="min-w-0 text-[15px] sm:text-[17px] font-semibold text-[color:var(--apple-ink)] tracking-tight break-words">
+            <summary
+              aria-expanded={openIds.has(item.id)}
+              aria-controls={`faq-panel-${item.id}`}
+              className="focus-ring flex min-h-[44px] items-center justify-between gap-4 p-[1.5rem] sm:p-[1.75rem] cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden"
+            >
+              <span
+                id={`faq-question-${item.id}`}
+                className="min-w-0 text-[15px] sm:text-[17px] font-semibold text-[color:var(--apple-ink)] tracking-tight break-words"
+              >
                 {item.question}
               </span>
               <span
@@ -71,6 +99,9 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
             </summary>
 
             <div
+              id={`faq-panel-${item.id}`}
+              role="region"
+              aria-labelledby={`faq-question-${item.id}`}
               className={`px-[1.5rem] sm:px-[1.75rem] pb-[1.5rem] sm:pb-[1.75rem] text-[15px] text-[color:var(--apple-muted)] leading-relaxed ${
                 shouldAnimate ? 'animate-[fade-in_0.45s_var(--ease-apple)_both] motion-reduce:animate-none' : ''
               }`}
