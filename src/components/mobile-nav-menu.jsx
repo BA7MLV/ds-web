@@ -1,19 +1,86 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useId } from 'react'
 import { createPortal } from 'react-dom'
 import { useLocale } from './locale-toggle'
 
+// Keep in sync with the exit animation durations in the <style> block below.
+const EXIT_DURATION_MS = 260
+
+const usePrefersReducedMotion = () => {
+  const [prefersReduced, setPrefersReduced] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return undefined
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const handleChange = () => setPrefersReduced(query.matches)
+    handleChange()
+    query.addEventListener('change', handleChange)
+    return () => query.removeEventListener('change', handleChange)
+  }, [])
+
+  return prefersReduced
+}
+
 export const MobileNavMenu = ({ onDownload = () => {} }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
   const [mounted, setMounted] = useState(false)
   const { t } = useLocale()
+  const prefersReducedMotion = usePrefersReducedMotion()
+  const menuId = useId()
+
   const scrollYRef = useRef(0)
   const previousBodyStylesRef = useRef(null)
   const previousHtmlStylesRef = useRef(null)
+  const closeTimerRef = useRef(null)
+  const triggerRef = useRef(null)
+  const closeButtonRef = useRef(null)
+  const dialogRef = useRef(null)
+  const scrollRegionRef = useRef(null)
+  // Deferred action (hash scroll / download) executed once the scroll lock is released.
+  const pendingNavigationRef = useRef(null)
+
+  const menuVisuallyOpen = isOpen && !isClosing
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
+  useEffect(() => () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+  }, [])
+
+  const openMenu = useCallback(() => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current)
+      closeTimerRef.current = null
+    }
+    setIsClosing(false)
+    setIsOpen(true)
+  }, [])
+
+  const closeMenu = useCallback(() => {
+    if (!isOpen || isClosing) return
+    if (prefersReducedMotion) {
+      setIsOpen(false)
+      return
+    }
+    setIsClosing(true)
+    closeTimerRef.current = setTimeout(() => {
+      closeTimerRef.current = null
+      setIsClosing(false)
+      setIsOpen(false)
+    }, EXIT_DURATION_MS + 40)
+  }, [isOpen, isClosing, prefersReducedMotion])
+
+  const handleToggle = useCallback(() => {
+    if (isOpen && !isClosing) {
+      closeMenu()
+    } else {
+      openMenu()
+    }
+  }, [isOpen, isClosing, closeMenu, openMenu])
+
+  // Scroll lock while the menu is open (restores styles + position on close).
   useEffect(() => {
     if (!isOpen) return undefined
 
@@ -36,7 +103,10 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
       overscrollBehavior: html.style.overscrollBehavior,
     }
 
+    // Block background scrolling but let the menu's own list scroll if it overflows.
     const preventScroll = (event) => {
+      const scrollRegion = scrollRegionRef.current
+      if (scrollRegion && scrollRegion.contains(event.target)) return
       event.preventDefault()
     }
 
@@ -78,18 +148,83 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
       }
 
       window.scrollTo(0, scrollYRef.current)
+
+      const pendingNavigation = pendingNavigationRef.current
+      pendingNavigationRef.current = null
+      if (pendingNavigation) pendingNavigation()
     }
   }, [isOpen])
 
-  const handleLinkClick = useCallback(() => {
-    setIsOpen(false)
-  }, [])
+  // Move focus into the dialog on open, restore it to the trigger on close.
+  useEffect(() => {
+    if (!isOpen) return undefined
+    const trigger = triggerRef.current
+    const frame = window.requestAnimationFrame(() => {
+      if (closeButtonRef.current) closeButtonRef.current.focus({ preventScroll: true })
+    })
+    return () => {
+      window.cancelAnimationFrame(frame)
+      if (trigger) trigger.focus({ preventScroll: true })
+    }
+  }, [isOpen])
 
-  const handleDownloadClick = useCallback((e) => {
-    e.preventDefault()
-    setIsOpen(false)
-    onDownload()
-  }, [onDownload])
+  // Escape closes the menu; Tab is trapped inside the dialog.
+  useEffect(() => {
+    if (!isOpen) return undefined
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        closeMenu()
+        return
+      }
+      if (event.key !== 'Tab') return
+      const dialog = dialogRef.current
+      if (!dialog) return
+      const focusable = dialog.querySelectorAll('a[href], button:not([disabled])')
+      if (focusable.length === 0) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      const active = document.activeElement
+      if (event.shiftKey) {
+        if (active === first || !dialog.contains(active)) {
+          event.preventDefault()
+          last.focus()
+        }
+      } else if (active === last || !dialog.contains(active)) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown, true)
+    return () => document.removeEventListener('keydown', handleKeyDown, true)
+  }, [isOpen, closeMenu])
+
+  const handleLinkClick = useCallback((event) => {
+    const href = event.currentTarget.getAttribute('href')
+    if (href && href.startsWith('#')) {
+      // Defer the scroll until the lock releases, then honor each section's scroll-mt.
+      pendingNavigationRef.current = () => {
+        const target = document.getElementById(href.slice(1))
+        if (!target) return
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+      }
+    }
+    closeMenu()
+  }, [closeMenu])
+
+  const handleDownloadClick = useCallback((event) => {
+    event.preventDefault()
+    // Defer so onDownload reads the restored scroll position after the lock releases.
+    pendingNavigationRef.current = () => onDownload()
+    closeMenu()
+  }, [closeMenu, onDownload])
+
+  const openLabel = t('nav.menu.open', '打开菜单')
+  const closeLabel = t('nav.menu.close', '关闭菜单')
+  const menuLabel = t('nav.menu.title', '导航菜单')
 
   const navItems = [
     { text: t('nav.features'), href: '#features', onClick: handleLinkClick },
@@ -99,37 +234,35 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
   ]
 
   const menuOverlay = isOpen && mounted ? (
-    <div
-      className="fixed inset-0 z-[99999] md:hidden"
-      style={{
-        animation: 'fadeInMenu 0.2s ease-out',
-      }}
-    >
-      <button
-        type="button"
-        className="absolute inset-0 w-full h-full bg-white/95 backdrop-blur-xl dark:bg-[color:var(--apple-nav-bg)]"
-        onClick={() => setIsOpen(false)}
-        aria-label="关闭菜单"
+    <div className={`fixed inset-0 z-[99999] md:hidden ${isClosing ? 'pointer-events-none' : ''}`}>
+      <div
+        aria-hidden="true"
+        onClick={closeMenu}
+        className={`absolute inset-0 bg-[color:var(--apple-nav-bg)] backdrop-blur-2xl backdrop-saturate-150 ${
+          isClosing ? 'ds-menu-backdrop-exit' : 'ds-menu-backdrop-enter'
+        }`}
       />
       <div
-        className="relative flex flex-col h-full overflow-hidden"
+        ref={dialogRef}
+        id={menuId}
+        role="dialog"
+        aria-modal="true"
+        aria-label={menuLabel}
+        className={`relative flex h-full flex-col ${isClosing ? 'ds-menu-panel-exit' : 'ds-menu-panel-enter'}`}
         style={{
-          paddingTop: 'calc(var(--sat) + 4.25rem)',
+          paddingTop: 'calc(var(--sat) + 4.5rem)',
           paddingRight: 'max(1.5rem, var(--sar))',
           paddingBottom: 'max(1.5rem, var(--sab))',
           paddingLeft: 'max(1.5rem, var(--sal))',
-          touchAction: 'none',
-          overscrollBehavior: 'none',
         }}
-        onWheel={(event) => event.preventDefault()}
-        onTouchMove={(event) => event.preventDefault()}
       >
         <button
+          ref={closeButtonRef}
           type="button"
-          onClick={() => setIsOpen(false)}
-          className="absolute z-10 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--apple-card)] text-[color:var(--apple-ink)] shadow-sm border border-[color:var(--apple-line)] hover:bg-[color:var(--apple-card-hover)] transition-colors"
-          style={{ top: 'calc(var(--sat) + 1rem)', right: '1.5rem' }}
-          aria-label="关闭菜单"
+          onClick={closeMenu}
+          className="focus-ring group absolute z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] text-[color:var(--apple-ink)] shadow-[var(--apple-shadow-sm)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-card-hover)] active:scale-95 motion-reduce:transition-none"
+          style={{ top: 'calc(var(--sat) + 0.875rem)', right: 'max(1.375rem, var(--sar))' }}
+          aria-label={closeLabel}
         >
           <svg
             viewBox="0 0 24 24"
@@ -138,40 +271,91 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="w-5 h-5"
+            aria-hidden="true"
+            className="h-5 w-5 transition-transform duration-300 ease-apple group-hover:rotate-90 motion-reduce:transition-none"
           >
             <path d="M18 6 6 18" />
             <path d="m6 6 12 12" />
           </svg>
         </button>
-        <nav className="flex flex-col gap-2 mt-2">
-          {navItems.map((item) => (
-            <a
-              key={item.text}
-              href={item.href}
-              onClick={item.onClick}
-              className={`px-4 py-3 rounded-xl text-[15px] font-medium transition-colors ${
-                item.isPrimary
-                  ? 'text-[color:var(--apple-blue)] bg-[color:var(--apple-blue-soft)]'
-                  : 'text-slate-900 hover:bg-slate-100 dark:text-[color:var(--apple-ink)] dark:hover:bg-white/10'
-              }`}
-            >
-              {item.text}
-            </a>
-          ))}
-        </nav>
-        <div className="mt-auto pt-6">
-          <a
-            href="https://github.com/helixnow/deep-student"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-[color:var(--apple-muted)] dark:hover:bg-white/10 dark:hover:text-[color:var(--apple-ink)]"
+        <div
+          ref={scrollRegionRef}
+          className="flex flex-1 flex-col overflow-y-auto overscroll-contain"
+        >
+          <nav className="mt-2">
+            <ul className="flex flex-col">
+              {navItems.map((item, index) => (
+                <li
+                  key={item.text}
+                  className={`ds-menu-item-enter ${
+                    index === 0 ? '' : 'border-t border-[color:var(--apple-line)]'
+                  }`}
+                  style={{ animationDelay: `${80 + index * 45}ms` }}
+                >
+                  <a
+                    href={item.href}
+                    onClick={item.onClick}
+                    className={`focus-ring group flex min-h-14 items-center gap-4 rounded-2xl px-3 py-3.5 transition-colors duration-300 ease-apple motion-reduce:transition-none ${
+                      item.isPrimary
+                        ? 'text-[color:var(--apple-blue)] hover:bg-[color:var(--apple-blue-soft)]'
+                        : 'text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg)] active:bg-[color:var(--apple-btn-secondary-bg-hover)]'
+                    }`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="w-7 text-[12px] font-medium tabular-nums tracking-[0.12em] text-[color:var(--apple-muted)]"
+                    >
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <span className="text-[21px] font-semibold tracking-tight">{item.text}</span>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      className={`ml-auto h-4 w-4 transition-transform duration-300 ease-apple group-hover:translate-x-0.5 motion-reduce:transition-none ${
+                        item.isPrimary ? 'text-[color:var(--apple-blue)]' : 'text-[color:var(--apple-muted)]'
+                      }`}
+                    >
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div
+            className="ds-menu-item-enter mt-auto border-t border-[color:var(--apple-line)] pt-4"
+            style={{ animationDelay: `${80 + navItems.length * 45}ms` }}
           >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-            <span className="text-[14px] font-medium">GitHub</span>
-          </a>
+            <a
+              href="https://github.com/helixnow/deep-student"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring group flex min-h-12 items-center gap-3 rounded-xl px-3 py-3 text-[color:var(--apple-muted)] transition-colors duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg)] hover:text-[color:var(--apple-ink)] motion-reduce:transition-none"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-5 w-5">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
+              <span className="text-[15px] font-medium">GitHub</span>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                className="ml-auto h-4 w-4 opacity-60 transition-transform duration-300 ease-apple group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none"
+              >
+                <path d="M7 17 17 7" />
+                <path d="M7 7h10v10" />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -180,38 +364,75 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
   return (
     <div className="md:hidden">
       <button
+        ref={triggerRef}
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative z-[99999] flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg bg-transparent text-slate-900 transition-opacity hover:opacity-70 dark:text-[color:var(--apple-ink)]"
-        aria-label={isOpen ? '关闭菜单' : '打开菜单'}
-        aria-expanded={isOpen}
+        onClick={handleToggle}
+        className="focus-ring relative z-[99999] flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--apple-ink)] transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg)] active:scale-95 motion-reduce:transition-none"
+        aria-label={menuVisuallyOpen ? closeLabel : openLabel}
+        aria-expanded={menuVisuallyOpen}
+        aria-haspopup="dialog"
+        aria-controls={isOpen ? menuId : undefined}
       >
-        <span
-          className={`h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${
-            isOpen ? 'rotate-45 translate-y-2' : ''
-          }`}
-        />
-        <span
-          className={`h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${
-            isOpen ? 'opacity-0' : ''
-          }`}
-        />
-        <span
-          className={`h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${
-            isOpen ? '-rotate-45 -translate-y-2' : ''
-          }`}
-        />
+        <span aria-hidden="true" className="relative block h-[14px] w-5">
+          <span
+            className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition-transform duration-300 ease-apple motion-reduce:transition-none ${
+              menuVisuallyOpen ? 'translate-y-1.5 rotate-45' : ''
+            }`}
+          />
+          <span
+            className={`absolute left-0 top-1.5 h-0.5 w-5 rounded-full bg-current transition-[transform,opacity] duration-300 ease-apple motion-reduce:transition-none ${
+              menuVisuallyOpen ? 'scale-x-50 opacity-0' : ''
+            }`}
+          />
+          <span
+            className={`absolute left-0 top-3 h-0.5 w-5 rounded-full bg-current transition-transform duration-300 ease-apple motion-reduce:transition-none ${
+              menuVisuallyOpen ? '-translate-y-1.5 -rotate-45' : ''
+            }`}
+          />
+        </span>
       </button>
 
       {mounted && menuOverlay ? createPortal(menuOverlay, document.body) : null}
 
       <style>{`
-        @keyframes fadeInMenu {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
+        @keyframes dsMenuFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes dsMenuFadeOut {
+          from { opacity: 1; }
+          to { opacity: 0; }
+        }
+        @keyframes dsMenuPanelIn {
+          from { opacity: 0; transform: scale(0.96); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes dsMenuPanelOut {
+          from { opacity: 1; transform: scale(1); }
+          to { opacity: 0; transform: scale(0.97); }
+        }
+        @keyframes dsMenuItemIn {
+          from { opacity: 0; transform: translateY(14px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .ds-menu-backdrop-enter { animation: dsMenuFadeIn 0.45s var(--ease-apple) both; }
+        .ds-menu-backdrop-exit { animation: dsMenuFadeOut 0.26s var(--ease-apple) both; }
+        .ds-menu-panel-enter {
+          animation: dsMenuPanelIn 0.5s var(--ease-apple) both;
+          transform-origin: 85% 6%;
+        }
+        .ds-menu-panel-exit {
+          animation: dsMenuPanelOut 0.26s var(--ease-apple) both;
+          transform-origin: 85% 6%;
+        }
+        .ds-menu-item-enter { animation: dsMenuItemIn 0.55s var(--ease-apple) both; }
+        @media (prefers-reduced-motion: reduce) {
+          .ds-menu-backdrop-enter,
+          .ds-menu-backdrop-exit,
+          .ds-menu-panel-enter,
+          .ds-menu-panel-exit,
+          .ds-menu-item-enter {
+            animation: none !important;
           }
         }
       `}</style>
