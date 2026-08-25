@@ -100,20 +100,27 @@ const ArchMemoryIcon = ({ size = 32 }) => (
 // 开放式箭头头部：比实心三角更轻盈，贴近 Apple 图示语言
 const ArrowHeadMarker = ({ id }) => (
   <marker id={id} viewBox="0 0 8 8" refX="6.2" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-    <path d="M1.5 1L6.5 4L1.5 7" stroke="var(--apple-muted)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    <path d="M1.5 1L6.5 4L1.5 7" stroke="var(--apple-muted)" strokeWidth="1.4" strokeOpacity="0.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
   </marker>
 )
 
+// dasharray 取 0.1 配合 round 线帽渲染为正圆点，比短划线更接近 Apple 图示的点线
 const flowLineProps = {
   stroke: 'var(--apple-muted)',
-  strokeOpacity: '0.55',
-  strokeWidth: '1',
+  strokeOpacity: '0.5',
+  strokeWidth: '1.4',
   strokeLinecap: 'round',
-  strokeDasharray: '1 6',
+  strokeDasharray: '0.1 7.1',
 }
 
+// 偏移量为点距（7.2）的整数倍，动画循环处无跳变
 const FlowDashAnimation = () => (
-  <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2.8s" repeatCount="indefinite"/>
+  <animate attributeName="stroke-dashoffset" from="0" to="-14.4" dur="2.8s" repeatCount="indefinite"/>
+)
+
+// 连线起点的端口圆点：让线读作"从节点出发"，仅用于单向线
+const FlowOriginDot = ({ cx, cy }) => (
+  <circle cx={cx} cy={cy} r="2" fill="var(--apple-muted)" opacity="0.45"/>
 )
 
 // 水平连接线（细点线 + 流动动画）
@@ -125,8 +132,9 @@ const FlowArrow = ({ label, sublabel, direction = 'right', animate = true, class
         <defs>
           <ArrowHeadMarker id={headId} />
         </defs>
+        {direction !== 'both' && <FlowOriginDot cx="4.5" cy="10" />}
         <line
-          x1={direction === 'both' ? 9 : 4}
+          x1={direction === 'both' ? 9 : 10}
           y1="10"
           x2="111"
           y2="10"
@@ -143,18 +151,19 @@ const FlowArrow = ({ label, sublabel, direction = 'right', animate = true, class
   )
 }
 
-// 垂直连接线
-const FlowArrowVertical = ({ label, sublabel, direction = 'down', animate = true }) => {
+// 垂直连接线；className 用于按场景微调节奏（移动端堆叠需要更松的呼吸感）
+const FlowArrowVertical = ({ label, sublabel, direction = 'down', animate = true, className = 'py-2.5' }) => {
   const headId = `${useId()}-head`
   return (
-    <div className="flex items-center gap-2.5 py-2.5">
-      <svg width="24" height="56" viewBox="0 0 24 56" fill="none" aria-hidden="true">
+    <div className={`flex items-center gap-2.5 ${className}`}>
+      <svg width="24" height="56" viewBox="0 0 24 56" fill="none" className="overflow-visible" aria-hidden="true">
         <defs>
           <ArrowHeadMarker id={headId} />
         </defs>
+        {direction !== 'both' && <FlowOriginDot cx="12" cy="4.5" />}
         <line
           x1="12"
-          y1={direction === 'both' ? 9 : 5}
+          y1={direction === 'both' ? 9 : 10}
           x2="12"
           y2="51"
           {...flowLineProps}
@@ -172,9 +181,10 @@ const FlowArrowVertical = ({ label, sublabel, direction = 'down', animate = true
   )
 }
 
-// 玻璃态特性标签
+// 玻璃态特性标签：顶部内发光模拟玻璃受光边缘
+// 组合阴影必须用任意属性写法（[box-shadow:...]）：shadow-[...] 会把纯 var() 段误判为阴影颜色
 const FeatureChip = ({ children }) => (
-  <span className="whitespace-nowrap rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-2.5 py-[3px] text-[10px] leading-tight text-[color:var(--apple-muted)] backdrop-blur-[6px]">
+  <span className="whitespace-nowrap rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-2.5 py-[3px] text-[10px] leading-tight text-[color:var(--apple-muted)] backdrop-blur-[6px] [box-shadow:inset_0_1px_0_0_var(--apple-soft-line),var(--apple-shadow-sm)]">
     {children}
   </span>
 )
@@ -235,9 +245,13 @@ const HubNode = ({ resourceTypes, desc, folderClassName, iconSize = 20 }) => (
   </div>
 )
 
+// 玻璃态节点卡片公共样式：内高光 + 悬停时提升通透度与投影（不位移，保持与连线的视觉锚定）
+const glassNodeCardClassName =
+  'glass-card rounded-[1.25rem] px-5 py-5 [box-shadow:inset_0_1px_0_0_var(--apple-soft-line),var(--apple-shadow-md)] transition-[box-shadow,background-color,border-color] duration-500 ease-apple hover:bg-[color:var(--apple-card-hover)] hover:[box-shadow:inset_0_1px_0_0_var(--apple-soft-line),var(--apple-shadow-lg)] motion-reduce:transition-none'
+
 // Skills 玻璃态卡片
 const SkillsCard = ({ skillTools, subtitle, className = '' }) => (
-  <div className={`glass-card rounded-[1.25rem] px-5 py-5 ${className}`}>
+  <div className={`${glassNodeCardClassName} ${className}`}>
     <div className="text-center">
       <div className="text-[16px] font-semibold tracking-[-0.01em] text-[color:var(--apple-ink)]">Skills</div>
       <div className="mt-1 text-[11px] text-[color:var(--apple-muted)]">{subtitle}</div>
@@ -245,7 +259,7 @@ const SkillsCard = ({ skillTools, subtitle, className = '' }) => (
     <div className="mt-3.5 border-t border-[color:var(--apple-line)] pt-3.5">
       <div className="grid grid-cols-2 gap-1.5">
         {skillTools.map((tool) => (
-          <div key={tool} className="flex items-center gap-1.5 rounded-lg border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-2 py-1.5">
+          <div key={tool} className="flex items-center gap-1.5 rounded-lg border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-2 py-1.5 backdrop-blur-[6px] [box-shadow:inset_0_1px_0_0_var(--apple-soft-line)]">
             <svg width="8" height="8" viewBox="0 0 10 10" fill="none" className="shrink-0" aria-hidden="true">
               <circle cx="5" cy="5" r="2" fill="var(--apple-muted)" opacity="0.5"/>
             </svg>
@@ -259,7 +273,7 @@ const SkillsCard = ({ skillTools, subtitle, className = '' }) => (
 
 // VFS 玻璃态卡片
 const VFSCard = ({ t, className = '' }) => (
-  <div className={`glass-card rounded-[1.25rem] px-5 py-5 ${className}`}>
+  <div className={`${glassNodeCardClassName} ${className}`}>
     <div className="text-center">
       <div className="text-[16px] font-semibold tracking-[-0.01em] text-[color:var(--apple-ink)]">VFS</div>
       <div className="mt-1 text-[11px] text-[color:var(--apple-muted)]">{t('arch.vfs.desc', '虚拟文件系统 · 学习数据')}</div>
@@ -406,15 +420,15 @@ export const ArchitectureDiagram = ({ motionScale = 1 }) => {
             bubbleClassName="w-[280px] h-[190px]"
           />
 
-          <FlowArrowVertical label={t('arch.arrow.invoke', '调用')} direction="down" animate={shouldAnimate} />
+          <FlowArrowVertical label={t('arch.arrow.invoke', '调用')} direction="down" animate={shouldAnimate} className="py-4" />
 
           <SkillsCard skillTools={skillTools} subtitle={skillsSubtitle} className="w-full max-w-[300px]" />
 
-          <FlowArrowVertical label={t('arch.arrow.tools', '工具调用')} sublabel="RAG" direction="down" animate={shouldAnimate} />
+          <FlowArrowVertical label={t('arch.arrow.tools', '工具调用')} sublabel="RAG" direction="down" animate={shouldAnimate} className="py-4" />
 
           <VFSCard t={t} className="w-full max-w-[300px]" />
 
-          <FlowArrowVertical label={t('arch.arrow.rw', '读写')} sublabel="DSTU" direction="both" animate={shouldAnimate} />
+          <FlowArrowVertical label={t('arch.arrow.rw', '读写')} sublabel="DSTU" direction="both" animate={shouldAnimate} className="py-4" />
 
           <HubNode
             resourceTypes={resourceTypes}
