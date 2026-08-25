@@ -280,7 +280,10 @@ export const PolicyModal = ({ type, onClose }) => {
                 key={section.title}
                 className="border border-[color:var(--apple-line)] rounded-[1.5rem] p-[1.5rem] sm:p-[1.75rem] bg-[color:var(--apple-card-strong)]"
               >
-                <h4 className="text-sm font-semibold text-[color:var(--apple-ink)] mb-2 font-display">
+                {/* 与 FAQ 问题标题同尺度（15px → 17px / tracking-tight）：两处卡片
+                    同样式（内边距、表面色一致），原 text-sm 使标题弱于正文节奏；
+                    对齐后 h3/h4 比值在两档断点均 ≈ φ（24/15、28/17） */}
+                <h4 className="text-[15px] sm:text-[17px] font-semibold tracking-tight text-[color:var(--apple-ink)] mb-2 font-display">
                   {section.title}
                 </h4>
                 <p className="text-sm text-[color:var(--apple-ink-secondary)] leading-relaxed">{section.body}</p>
