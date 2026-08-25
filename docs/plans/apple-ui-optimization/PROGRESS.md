@@ -200,9 +200,26 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 验收：10/10 落地；三语 329 keys；详见 ROUND12.md。
 
-### Round 13（进行中）
+### Round 13（已完成）
 
 控件焦点再验、下载文案第十轮、文档站与截图框扫尾。详见 ROUND13.md。
+
+- [x] ThemeToggle 触控 / focus（`67e63f5`）
+- [x] LocaleToggle 键盘 / focus（`3938e80`）
+- [x] Hero 预览指示器（`5b4bddd`）
+- [x] Footer focus / safe-area（`1c2006a`）
+- [x] PolicyModal 焦点锁（`b9ca30a`）
+- [x] FeatureScreenshotFrame chrome（`cc39512`）
+- [x] VitePress 深色 active（`1c954b2`）
+- [x] zh download 文案第十轮（`9aff5e6`）
+- [x] en / zh-Hant 同步（`cbd4715`）
+- [x] ROUND12 验收 + PROGRESS（`4895dac` / 本轮文档）
+
+验收：10/10 落地；三语 329 keys；详见 ROUND13.md。
+
+### Round 14（进行中）
+
+首屏/区块节奏、下载推荐卡、FAQ 深色、工程卫生与文案第十一轮。详见 ROUND14.md。
 
 ## 待办（后续轮次）
 
@@ -213,7 +230,7 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 12 验收完成 · Round 13 进行中 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 13 验收完成 · Round 14 进行中 |
 
 ### Round 1 子代理完成项
 

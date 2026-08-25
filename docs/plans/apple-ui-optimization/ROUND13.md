@@ -22,3 +22,22 @@
 - build 通过
 - 三语 key 对齐
 - PROGRESS 更新
+
+## 验收结果（已完成）
+
+10/10 全部落地。
+
+| # | 事项 | 状态 | SHA |
+|---|------|------|-----|
+| 1 | ThemeToggle 触控 / 浅色 focus-ring token | ✅ | `67e63f5` |
+| 2 | LocaleToggle 键盘修饰键守卫 / focus z-index | ✅ | `3938e80` |
+| 3 | Hero 预览指示器 44×44 触控 | ✅ | `5b4bddd` |
+| 4 | Footer focus / safe-area | ✅ | `1c2006a` |
+| 5 | PolicyModal 焦点陷阱 / 滚动锁加固 | ✅ | `b9ca30a` |
+| 6 | FeatureScreenshotFrame 阴影与深色 chrome | ✅ | `cc39512` |
+| 7 | VitePress 深色 active / 间距 | ✅ | `1c954b2` |
+| 8 | zh download 文案第十轮 | ✅ | `9aff5e6` |
+| 9 | en / zh-Hant 同步 download copy | ✅ | `cbd4715` |
+| 10 | ROUND12 验收 + PROGRESS / 本轮关闭 | ✅ | 见本提交 |
+
+补充：三语 329 keys；`npm run build` 于本轮收尾复验通过。
