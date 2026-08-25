@@ -132,7 +132,9 @@ import LastAuthor from './components/LastAuthor.vue'
 
 /* ============================================================
    桌面导航链接对齐官网 TopNav（top-nav.jsx）：
-   12px / 常规字重 / muted 底色，悬停与激活回到 ink。
+   12px / 常规字重 / muted 底色，悬停与激活回到 ink；
+   激活项再加 500 字重（同侧栏 active 约定）——深色下悬停与
+   激活同为 ink，仅靠颜色无法区分“当前页”。
    ============================================================ */
 .VPNavBarMenu .VPNavBarMenuLink {
   font-size: 12px;
@@ -143,6 +145,10 @@ import LastAuthor from './components/LastAuthor.vue'
 .VPNavBarMenu .VPNavBarMenuLink:hover,
 .VPNavBarMenu .VPNavBarMenuLink.active {
   color: var(--vp-c-text-1);
+}
+
+.VPNavBarMenu .VPNavBarMenuLink.active {
+  font-weight: 500;
 }
 
 /* ============================================================
@@ -175,11 +181,21 @@ import LastAuthor from './components/LastAuthor.vue'
   font-weight: 500;
 }
 
+/* 字距对齐全站 eyebrow 节奏（hero / stats / doc-hero 均为 0.12em） */
 .VPSidebar .VPSidebarItem.level-0 > .item .text {
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   color: var(--vp-c-text-3);
+}
+
+/* 深色下 text-2 与 text-3 同为 #86868b，条目与分组标题层级塌掉、
+   active（ink）孤悬；条目经 color-mix 向 ink 提亮一档（≈#a2a2a6，
+   同 Round 10 doc-hero 副标题配方），active → 条目 → 分组标题
+   三级重新拉开。:where() 压平特异性，保证默认主题的 hover /
+   is-active ink 仍压得过本条。 */
+.dark .VPSidebar :where(.VPSidebarItem:not(.is-active)) > .item .link .text {
+  color: color-mix(in srgb, var(--apple-ink) 25%, var(--apple-muted));
 }
 
 @media (max-width: 959px) {
