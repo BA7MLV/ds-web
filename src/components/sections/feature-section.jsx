@@ -203,7 +203,8 @@ export const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, a
         <h3 className="text-[clamp(1.125rem,1.8vw,1.25rem)] font-semibold text-[color:var(--apple-ink)] mb-2.5 tracking-tight leading-tight text-balance">
           {title}
         </h3>
-        <p className="text-body-large text-[color:var(--apple-muted)] max-w-md mx-auto md:mx-0">
+        {/* 16-18px 正文需 4.5:1：浅色下 --apple-muted 仅 ~3.5:1，换用 ink-secondary */}
+        <p className="text-body-large text-[color:var(--apple-ink-secondary)] max-w-md mx-auto md:mx-0">
           {desc}
         </p>
       </div>
@@ -445,7 +446,7 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                     <h3 className="text-[clamp(1.25rem,1.6vw,1.375rem)] font-semibold text-[color:var(--apple-ink)] mb-2.5 tracking-tight leading-tight text-balance">
                       {t(sf.labelKey)}
                     </h3>
-                    <p className="text-body-large text-[color:var(--apple-muted)]">
+                    <p className="text-body-large text-[color:var(--apple-ink-secondary)]">
                       {t(sf.descKey)}
                     </p>
                   </div>
@@ -490,7 +491,7 @@ export const FeatureSection = ({ id, title, desc, align, children, motionScale =
           <h2 className="text-section-title font-display text-[color:var(--apple-ink)] mb-[1.5rem]">
             {title}
           </h2>
-          <p className="text-body-large font-medium text-[color:var(--apple-muted)] mx-auto md:mx-0">{desc}</p>
+          <p className="text-body-large font-medium text-[color:var(--apple-ink-secondary)] mx-auto md:mx-0">{desc}</p>
         </div>
 
         <div

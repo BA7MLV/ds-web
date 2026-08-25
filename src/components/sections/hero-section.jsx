@@ -235,9 +235,11 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
                 {t('hero.preview.hint')}
               </span>
               <span className="relative inline-flex min-h-[3.2em] sm:min-h-[2.4em] items-start overflow-visible align-top">
+                {/* Body copy at 16-18px needs 4.5:1; --apple-muted is ~3.5:1 on the
+                    light surface, so use ink-secondary (also lifts dark to ~7.4:1). */}
                 <span
                   aria-live="polite"
-                  className={`text-base sm:text-lg leading-[1.55] sm:leading-relaxed text-[color:var(--apple-muted)] whitespace-normal break-words text-pretty transition-opacity duration-200 ease-out motion-reduce:transition-none ${
+                  className={`text-base sm:text-lg leading-[1.55] sm:leading-relaxed text-[color:var(--apple-ink-secondary)] whitespace-normal break-words text-pretty transition-opacity duration-200 ease-out motion-reduce:transition-none ${
                     isSubtextVisible ? 'opacity-100' : 'opacity-0'
                   }`}
                 >

@@ -85,7 +85,9 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
         >
           {t('faq.title')}
         </h2>
-        <p className="mx-auto max-w-2xl text-[15px] leading-relaxed text-[color:var(--apple-muted)] sm:text-[17px]">
+        {/* 15-17px body copy needs 4.5:1; --apple-muted is ~3.5:1 on the light
+            surface, so use ink-secondary. */}
+        <p className="mx-auto max-w-2xl text-[15px] leading-relaxed text-[color:var(--apple-ink-secondary)] sm:text-[17px]">
           {t('faq.subtitle')}
         </p>
       </div>
@@ -128,7 +130,10 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
               id={`faq-panel-${item.id}`}
               role="region"
               aria-labelledby={`faq-question-${item.id}`}
-              className={`-mt-1.5 sm:-mt-2 px-[1.5rem] sm:px-[1.75rem] pb-[1.5rem] sm:pb-[1.75rem] text-[15px] text-[color:var(--apple-muted)] leading-relaxed ${
+              // Answer body sits on the open card (--apple-card-strong): dark
+              // --apple-muted lands ~4.4:1 there (<AA at 15px) and light ~3.5:1,
+              // so use ink-secondary in both themes.
+              className={`-mt-1.5 sm:-mt-2 px-[1.5rem] sm:px-[1.75rem] pb-[1.5rem] sm:pb-[1.75rem] text-[15px] text-[color:var(--apple-ink-secondary)] leading-relaxed ${
                 // Keyed to the open state so the reveal replays on every expand,
                 // not just on first mount. motion-reduce stays as a CSS backstop
                 // for the pre-hydration frame before the JS recheck kicks in.
