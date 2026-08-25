@@ -12,6 +12,10 @@ export const OptimizedImage = ({
   fetchPriority = 'auto',
   sizes = '(min-width: 1280px) 60vw, (min-width: 768px) 70vw, 92vw',
   draggable = 'false',
+  // Intrinsic dimensions: reserve the aspect-ratio box before the image
+  // arrives so first paint (LCP) doesn't shift layout.
+  width,
+  height,
 }) => {
   const isExamplePng = typeof src === 'string' && src.startsWith('/img/example/') && src.endsWith('.png')
 
@@ -25,6 +29,8 @@ export const OptimizedImage = ({
         decoding={decoding}
         fetchPriority={fetchPriority}
         draggable={draggable}
+        width={width}
+        height={height}
       />
     )
   }
@@ -43,6 +49,8 @@ export const OptimizedImage = ({
         fetchPriority={fetchPriority}
         sizes={sizes}
         draggable={draggable}
+        width={width}
+        height={height}
       />
     </picture>
   )

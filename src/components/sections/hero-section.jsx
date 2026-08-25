@@ -62,6 +62,7 @@ export const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem]
         style={{ transform: 'translateZ(0)' }}
       >
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/40 via-transparent to-black/[0.02] dark:from-white/[0.04] dark:to-transparent" aria-hidden />
+        {/* width/height 取 1600.webp 的真实尺寸（1600×923），仅用于预留宽高比，显示尺寸由 CSS 控制 */}
         <OptimizedImage
           src={heroImageSrc}
           alt="DeepStudent 主页面预览"
@@ -71,6 +72,8 @@ export const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem]
           fetchPriority="high"
           sizes="(min-width: 1536px) 66vw, (min-width: 1024px) 72vw, 96vw"
           draggable="false"
+          width={1600}
+          height={923}
         />
       </div>
       <div
@@ -185,7 +188,8 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   }
 
   return (
-    <header
+    <section
+      aria-labelledby="hero-heading"
       className="relative min-h-screen pt-20 pb-16 flex items-center overflow-hidden lg:overflow-visible"
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
@@ -204,7 +208,10 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
               DeepStudent
             </p>
             {/* Apple headline tokens: ~40px uses 1.1/0em, ~56px uses 1.07/-0.007em */}
-            <h1 className="text-[clamp(2.25rem,5vw,3.5rem)] font-semibold mb-4 leading-[1.1] tracking-[-0.002em] sm:leading-[1.07] sm:tracking-[-0.007em] text-[color:var(--apple-ink)] text-balance">
+            <h1
+              id="hero-heading"
+              className="text-[clamp(2.25rem,5vw,3.5rem)] font-semibold mb-4 leading-[1.1] tracking-[-0.002em] sm:leading-[1.07] sm:tracking-[-0.007em] text-[color:var(--apple-ink)] text-balance"
+            >
               {t('hero.headline.top')}
               <br />
               <span className={isChinese ? 'inline-block whitespace-nowrap' : 'whitespace-normal break-words'}>
@@ -341,6 +348,6 @@ export const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
           </div>
         </div>
       </div>
-    </header>
+    </section>
   )
 }

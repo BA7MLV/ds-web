@@ -4,6 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
+    <!-- 首屏 LCP：hero 主图预加载置于 head 最前，先于内联脚本与其余资源发起请求；
+         imagesrcset/imagesizes 与 hero-section 渲染的 srcset/sizes 保持一致，确保命中同一缓存条目 -->
+    <link
+      rel="preload"
+      as="image"
+      href="/img/example/软件主页图-960.webp"
+      imagesrcset="/img/example/软件主页图-640.webp 640w, /img/example/软件主页图-960.webp 960w, /img/example/软件主页图-1280.webp 1280w, /img/example/软件主页图-1600.webp 1600w"
+      imagesizes="(min-width: 1536px) 66vw, (min-width: 1024px) 72vw, 96vw"
+      type="image/webp"
+      fetchpriority="high"
+    />
+
     <!-- 字体：尽早建连；样式表异步加载，配合 display=swap 保证文字先以回退字体渲染 -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -116,16 +128,6 @@
     />
     <meta name="twitter:image" content="https://deepstudent.cn/img/index.png" />
     <meta name="twitter:image:alt" content="DeepStudent 应用主界面预览" />
-
-    <link
-      rel="preload"
-      as="image"
-      href="/img/example/软件主页图-960.webp"
-      imagesrcset="/img/example/软件主页图-640.webp 640w, /img/example/软件主页图-960.webp 960w, /img/example/软件主页图-1280.webp 1280w, /img/example/软件主页图-1600.webp 1600w"
-      imagesizes="(min-width: 1536px) 66vw, (min-width: 1024px) 72vw, 96vw"
-      type="image/webp"
-      fetchpriority="high"
-    />
   </head>
   <body>
     <div id="root">
