@@ -302,20 +302,37 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 验收：10/10 落地；主包 gzip ~111 kB；详见 ROUND18.md。
 
-### Round 19（进行中）
+### Round 19（已完成）
 
 深色细节、FAQ/Footer/Policy 触控、FAQ 文案第十六轮。详见 ROUND19.md。
 
+- [x] TopNav 深色滚动 chrome（`66fd502`）
+- [x] Hero 主 CTA 深色 pressed（`f04e397`）
+- [x] FAQ 答案间距/触控（`d693e85`）
+- [x] Footer 换行节奏（`518baeb`）
+- [x] PolicyModal 关闭触控（`39c37b3`）
+- [x] Docs 品牌句（`c2f22cf`）
+- [x] favicon 脚本路径（`2d4ffd1`）
+- [x] zh FAQ 文案第十六轮（`dc53f9a`）
+- [x] en / zh-Hant 同步（`2e3dc1f`）
+- [x] ROUND18 验收 + PROGRESS（`021fa0f` / 本轮文档）
+
+验收：10/10 落地；详见 ROUND19.md。
+
+### Round 20（进行中）· ≥20 里程碑轮
+
+全站一致性收口、文案第十七轮，并标记持续优化。详见 ROUND20.md。
+
 ## 待办（后续轮次）
 
-- [ ] 持续多轮至 ≥20（用户未叫停前不停止）
+- [ ] 持续多轮至用户叫停（已达 ≥20 轮里程碑，仍继续）
 - [ ] 可选：软件主页图 PNG 切片相对 webp 仍陈旧（已记录；勿强行提交大图除非有导出流程）
 
 ## PR 列表
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 18 验收完成 · Round 19 进行中 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 19 验收完成 · Round 20 进行中（≥20 里程碑） |
 
 ### Round 1 子代理完成项
 
