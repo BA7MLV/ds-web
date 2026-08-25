@@ -44,16 +44,18 @@
 
 ### Round 3（已完成）
 
-- [x] Hero 排版与预览指示器 / a11y
-- [x] Feature sticky 桌面交叉淡入
-- [x] Feature 移动端节奏与截图框统一
-- [x] Download 页 segmented control 与推荐卡片
-- [x] FAQ 手风琴触控与过渡
-- [x] Footer 社交图标与安全区
-- [x] Stats + Architecture 视觉衔接
-- [x] 深色模式导航控件对比度
-- [x] 全站 safe-area 扫描
-- [x] FAQ / footer / arch 文案第二轮
+- [x] Hero 排版与预览指示器 / a11y — `a8b1282`
+- [x] Feature sticky 桌面交叉淡入 — `144f9da`
+- [x] Feature 移动端节奏与截图框统一 — `facb581`
+- [x] Download 页 segmented control 与推荐卡片 — `9ca86f3`
+- [x] FAQ 手风琴触控与过渡 — `2a38c4e`
+- [x] Footer 社交图标与安全区 — `a96cf22`
+- [x] Stats + Architecture 视觉衔接 — `2ed9344`
+- [x] 深色模式导航控件对比度 — `a06449c`
+- [x] 全站 safe-area 扫描 — `58cd363`
+- [x] FAQ / footer / arch 文案第二轮 — `9b71e7c`
+
+验收：`npm run build` 通过（Round 4 开始时复验），无重复组件定义，详细清单见 ROUND3.md。
 
 ### Round 4（进行中）
 
