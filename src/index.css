@@ -166,9 +166,13 @@
     /* Nav tokens */
     --apple-nav-bg: rgba(0, 0, 0, 0.75);
     /* Dark scrolled state: at 0.75 black, bright content blurred behind the
-       bar dropped the 12px --apple-muted links to ~2.9:1 worst-case. 0.94
-       over #121214 (parity with --apple-menu-bg) keeps them ≥~4.5:1. */
-    --apple-nav-bg-scrolled: rgba(18, 18, 20, 0.94);
+       bar dropped the 12px --apple-muted links to ~2.9:1 worst-case. Round 19
+       recheck: 0.94 over #121214 composites to ~rgb(32,32,34) against a white
+       blur, putting #86868b at ~4.48:1 — a hair under AA. 0.95 lands the
+       worst case at ~4.6:1 with headroom while the bar still reads as glass;
+       this sits one step above the 0.94 --apple-menu-bg, whose smallest text
+       is 14px+ and doesn't need the extra opacity. */
+    --apple-nav-bg-scrolled: rgba(18, 18, 20, 0.95);
     /* Matches --apple-line-strong: 0.08 hairlines vanish against the
        near-black scrolled bar, and dark mode has no drop shadow to help */
     --apple-nav-border: rgba(255, 255, 255, 0.12);

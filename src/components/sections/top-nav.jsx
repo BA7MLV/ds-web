@@ -8,6 +8,10 @@ const logo = '/logo_mono_svg.svg'
 // Nav chrome (hairline border, soft shadow, more opaque backdrop) appears
 // once the page is scrolled past this offset, so the bar blends into the
 // hero at rest but keeps link contrast over whatever blurs behind it.
+// Dark scrolled chrome recheck (Round 19): --apple-nav-bg-scrolled carries
+// the AA math for the 12px muted links (see index.css), and the 0.12 white
+// --apple-nav-border matches --apple-line-strong since the black drop
+// shadows below are invisible against the near-black page surface.
 const SCROLL_CHROME_THRESHOLD = 8
 
 // Single source of truth for the brand lockup: rendered in the nav bar and
