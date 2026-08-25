@@ -236,7 +236,7 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
   ]
 
   const menuOverlay = isOpen && mounted ? (
-    <div className={`fixed inset-0 z-[99999] md:hidden ${isClosing ? 'pointer-events-none' : ''}`}>
+    <div className={`fixed inset-0 z-[99999] lg:hidden ${isClosing ? 'pointer-events-none' : ''}`}>
       <div
         aria-hidden="true"
         onClick={closeMenu}
@@ -377,7 +377,7 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
   ) : null
 
   return (
-    <div className="md:hidden">
+    <div className="lg:hidden">
       <button
         ref={triggerRef}
         type="button"
