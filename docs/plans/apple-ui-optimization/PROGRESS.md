@@ -129,16 +129,24 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 - [ ] VitePress 搜索框 / nav token 再对齐 — 进行中
 - [x] ROUND7 验收核对 + 视觉 QA 记录（随本轮验收文档落地；截图留作本地 artifacts 不入仓）
 
+### Round 9（进行中）
+
+死代码清理、locale 加载警告、文档站与 a11y/文案再打磨。详见 ROUND9.md。Round 8 #9 VitePress 搜索若未落地则作为本轮 #1 收尾。
+
 ## 待办（后续轮次）
 
-- [ ] Round 8 #9 VitePress 搜索框 token 对齐（收尾）
+- [ ] Round 8 #9 / Round 9 #1 VitePress 搜索 token
+- [ ] 删除无用 `switch.jsx`
+- [ ] locale 动静态 import 警告
+- [ ] CustomHome / landmarks / Download 深色 / Footer a11y
+- [ ] download/policy 文案第六轮 + 三语同步
 - [ ] 持续多轮至 ≥20（用户未叫停前不停止）
 
 ## PR 列表
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 8 进行中 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 9 进行中 |
 
 ### Round 1 子代理完成项
 
