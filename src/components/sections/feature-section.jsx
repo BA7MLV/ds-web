@@ -86,7 +86,10 @@ const useParallaxProgress = ({
 }
 
 // 占位图组件 - 精致 shimmer，后续替换为真实截图
-export const ImagePlaceholder = ({ label }) => (
+export const ImagePlaceholder = ({ label }) => {
+  const { t } = useLocale()
+
+  return (
   <div
     className="w-full aspect-[16/10] rounded-[6px] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden [box-shadow:var(--apple-shadow-md)]"
     role="img"
@@ -112,10 +115,13 @@ export const ImagePlaceholder = ({ label }) => (
       <span className="text-[12px] sm:text-[13px] text-[color:var(--apple-muted)] font-medium leading-snug max-w-[16rem]">
         {label}
       </span>
-      <span className="text-[10px] uppercase tracking-widest text-[color:var(--apple-muted)] opacity-50">Preview</span>
+      <span className="text-[10px] uppercase tracking-widest text-[color:var(--apple-muted)] opacity-50">
+        {t('placeholder.status.preview')}
+      </span>
     </div>
   </div>
-)
+  )
+}
 
 // 动画变体定义
 // 移动端（< md）统一收敛为轻量上浮淡入：横向位移在触控滚动时会造成
@@ -181,7 +187,8 @@ export const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, a
             alt={title}
             loading="lazy"
             // 触控设备上 tap 会残留 :hover 态：md 以下取消悬停放大与阴影加深，避免“粘住”的缩放
-            className="hover:scale-100 motion-safe:hover:scale-100 hover:[box-shadow:var(--apple-shadow-xl)] md:motion-safe:hover:scale-[1.02] md:hover:[box-shadow:var(--apple-shadow-2xl)]"
+            // --apple-shadow-2xl 尚未定义，回退到 xl 以免悬停时阴影解析为 none 而消失
+            className="hover:scale-100 motion-safe:hover:scale-100 hover:[box-shadow:var(--apple-shadow-xl)] md:motion-safe:hover:scale-[1.02] md:hover:[box-shadow:var(--apple-shadow-2xl,var(--apple-shadow-xl))]"
           />
         ) : (
           <ImagePlaceholder label={title} />
@@ -345,7 +352,7 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                       <OptimizedImage
                         src={sf.imgSrc}
                         alt={t(sf.labelKey)}
-                        className="w-auto h-auto max-w-full max-h-full rounded-[6px] shadow-2xl"
+                        className="w-auto h-auto max-w-full max-h-full rounded-[6px] [box-shadow:var(--apple-shadow-xl)]"
                         loading={i === 0 ? 'eager' : 'lazy'}
                         fetchPriority={i === 0 ? 'high' : 'auto'}
                       />
