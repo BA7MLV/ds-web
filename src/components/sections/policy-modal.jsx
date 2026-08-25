@@ -222,7 +222,7 @@ export const PolicyModal = ({ type, onClose }) => {
             >
               {data.title}
             </h3>
-            <p id={descriptionId} className="text-sm text-[color:var(--apple-muted)] leading-relaxed">
+            <p id={descriptionId} className="text-sm text-[color:var(--apple-ink-secondary)] leading-relaxed">
               {data.description}
             </p>
           </div>
@@ -237,7 +237,13 @@ export const PolicyModal = ({ type, onClose }) => {
           </button>
         </div>
 
-        <div className="policy-modal-scroll flex-1 min-h-0 overflow-y-auto px-6 sm:px-8 py-6">
+        <div
+          className="policy-modal-scroll flex-1 min-h-0 overflow-y-auto px-6 sm:px-8 py-6"
+          // 可聚焦滚动区：焦点陷阱只覆盖按钮，长文本需要键盘（方向键）滚动入口
+          tabIndex={0}
+          role="region"
+          aria-labelledby={titleId}
+        >
           <div className="space-y-6">
             {data.sections.map((section) => (
               <div
@@ -247,9 +253,9 @@ export const PolicyModal = ({ type, onClose }) => {
                 <h4 className="text-sm font-semibold text-[color:var(--apple-ink)] mb-2 font-display">
                   {section.title}
                 </h4>
-                <p className="text-sm text-[color:var(--apple-muted)] leading-relaxed">{section.body}</p>
+                <p className="text-sm text-[color:var(--apple-ink-secondary)] leading-relaxed">{section.body}</p>
                 {section.points?.length ? (
-                  <ul className="mt-3 space-y-1.5 text-sm text-[color:var(--apple-muted)] list-disc list-inside">
+                  <ul className="mt-3 space-y-1.5 text-sm text-[color:var(--apple-ink-secondary)] list-disc list-inside">
                     {section.points.map((point) => (
                       <li key={point}>{point}</li>
                     ))}
@@ -260,7 +266,7 @@ export const PolicyModal = ({ type, onClose }) => {
           </div>
 
           {data.footer ? (
-            <p className="mt-8 text-xs text-[color:var(--apple-muted)] leading-relaxed">{data.footer}</p>
+            <p className="mt-8 text-xs text-[color:var(--apple-ink-secondary)] leading-relaxed">{data.footer}</p>
           ) : null}
         </div>
 

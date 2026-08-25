@@ -105,7 +105,11 @@
 
     /* Dark theme tokens - Apple-inspired deep space */
     --apple-ink: #f5f5f7;
-    --apple-ink-secondary: #86868b;
+    /* Was #86868b, identical to --apple-muted: that collapsed the
+       secondary/muted hierarchy light mode has, and sat at ~4.2:1 (<AA) for
+       text-sm on dark cards. #a1a1a6 (Apple systemGray dark) keeps the tier
+       and lands ~5.9:1. */
+    --apple-ink-secondary: #a1a1a6;
     --apple-muted: #86868b;
     --apple-line: rgba(255, 255, 255, 0.08);
     --apple-line-strong: rgba(255, 255, 255, 0.12);
@@ -841,6 +845,13 @@
 
 .policy-modal-scroll::-webkit-scrollbar-thumb:hover {
   background-color: var(--apple-muted);
+}
+
+/* Keyboard-scrollable region: inset outline so it isn't clipped by the
+   panel's overflow-hidden; --apple-ink is >=AA in both themes. */
+.policy-modal-scroll:focus-visible {
+  outline: 2px solid var(--apple-ink);
+  outline-offset: -2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
