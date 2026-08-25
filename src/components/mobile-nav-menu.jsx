@@ -235,6 +235,10 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
   const menuLabel = t('nav.menu.title', '导航菜单')
   const appearanceLabel = t('nav.menu.appearance', '外观')
   const languageLabel = t('nav.menu.language', '语言')
+  // Ties each settings row's visible label to its control group so screen
+  // readers announce "外观/Appearance" when focus lands on the toggle inside.
+  const appearanceLabelId = `${menuId}-appearance`
+  const languageLabelId = `${menuId}-language`
 
   const navItems = [
     { text: t('nav.features'), href: '#features', onClick: handleLinkClick },
@@ -248,7 +252,7 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
       <div
         aria-hidden="true"
         onClick={closeMenu}
-        className={`absolute inset-0 bg-[color:var(--apple-nav-bg)] backdrop-blur-2xl backdrop-saturate-150 ${
+        className={`absolute inset-0 bg-[color:var(--apple-menu-bg)] backdrop-blur-2xl backdrop-saturate-150 ${
           isClosing ? 'ds-menu-backdrop-exit' : 'ds-menu-backdrop-enter'
         }`}
       />
@@ -271,20 +275,22 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
         role="dialog"
         aria-modal="true"
         aria-label={menuLabel}
-        className={`relative flex h-full flex-col ${isClosing ? 'ds-menu-panel-exit' : 'ds-menu-panel-enter'}`}
-        style={{
-          paddingTop: 'calc(var(--sat) + 4.5rem)',
-          paddingRight: 'max(1.5rem, var(--sar))',
-          paddingBottom: 'max(1.5rem, var(--sab))',
-          paddingLeft: 'max(1.5rem, var(--sal))',
-        }}
+        className={`relative flex h-full flex-col pt-[calc(var(--sat)+4.5rem)] pr-[max(1.5rem,var(--sar))] pb-[max(1.5rem,var(--sab))] pl-[max(1.5rem,var(--sal))] md:pt-[calc(var(--sat)+5.25rem)] ${
+          isClosing ? 'ds-menu-panel-exit' : 'ds-menu-panel-enter'
+        }`}
       >
         <button
           ref={closeButtonRef}
           type="button"
           onClick={closeMenu}
           className="focus-ring group absolute z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card-strong)] text-[color:var(--apple-ink)] [box-shadow:var(--apple-shadow-sm)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-card-hover)] active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100"
-          style={{ top: 'calc(var(--sat) + 0.875rem)', right: 'max(1.375rem, var(--sar))' }}
+          // right = nav padding max(1.5rem, --sar) minus half the 0.25rem size
+          // difference (11 vs 10) so the ✕ stays centered over the hamburger
+          // even when a landscape notch pushes --sar past 1.5rem.
+          style={{
+            top: 'calc(var(--sat) + 0.875rem)',
+            right: 'calc(max(1.5rem, var(--sar)) - 0.125rem)',
+          }}
           aria-label={closeLabel}
         >
           <svg
@@ -301,9 +307,12 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
             <path d="m6 6 12 12" />
           </svg>
         </button>
+        {/* md:max-w keeps rows (and their trailing chevrons/controls) from
+            stretching across a 768–1024 viewport; left-aligned so the list
+            stays flush with the brand lockup above. */}
         <div
           ref={scrollRegionRef}
-          className="flex flex-1 flex-col overflow-y-auto overscroll-contain"
+          className="flex w-full flex-1 flex-col overflow-y-auto overscroll-contain md:max-w-xl"
         >
           <nav className="mt-2">
             <ul className="flex flex-col">
@@ -318,7 +327,7 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
                   <a
                     href={item.href}
                     onClick={item.onClick}
-                    className={`focus-ring group flex min-h-14 items-center gap-4 rounded-2xl px-3 py-3.5 transition-colors duration-300 ease-apple motion-reduce:transition-none ${
+                    className={`focus-ring group flex min-h-14 items-center gap-4 rounded-2xl px-3 py-3.5 transition-colors duration-300 ease-apple motion-reduce:transition-none md:min-h-16 md:gap-5 ${
                       item.isPrimary
                         ? 'text-[color:var(--apple-blue)] hover:bg-[color:var(--apple-blue-soft)]'
                         : 'text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg)] active:bg-[color:var(--apple-btn-secondary-bg-hover)]'
@@ -330,7 +339,7 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
                     >
                       {String(index + 1).padStart(2, '0')}
                     </span>
-                    <span className="text-[21px] font-semibold tracking-tight">{item.text}</span>
+                    <span className="text-[21px] font-semibold tracking-tight md:text-[24px]">{item.text}</span>
                     <svg
                       viewBox="0 0 24 24"
                       fill="none"
@@ -358,17 +367,31 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
               className="ds-menu-item-enter flex flex-col border-t border-[color:var(--apple-line)] py-2"
               style={{ animationDelay: `${80 + navItems.length * 45}ms` }}
             >
-              <div className="flex min-h-12 items-center justify-between gap-4 px-3">
-                <span className="text-[15px] font-medium text-[color:var(--apple-muted)]">
+              <div
+                role="group"
+                aria-labelledby={appearanceLabelId}
+                className="flex min-h-12 items-center justify-between gap-4 px-3 md:min-h-14"
+              >
+                <span
+                  id={appearanceLabelId}
+                  className="text-[15px] font-medium text-[color:var(--apple-muted)] md:text-[16px]"
+                >
                   {appearanceLabel}
                 </span>
                 <ThemeToggle />
               </div>
-              <div className="flex min-h-12 items-center justify-between gap-4 px-3">
-                <span className="text-[15px] font-medium text-[color:var(--apple-muted)]">
+              <div
+                role="group"
+                aria-labelledby={languageLabelId}
+                className="flex min-h-12 items-center justify-between gap-4 px-3 md:min-h-14"
+              >
+                <span
+                  id={languageLabelId}
+                  className="text-[15px] font-medium text-[color:var(--apple-muted)] md:text-[16px]"
+                >
                   {languageLabel}
                 </span>
-                <LocaleToggle compact className="w-[10.5rem]" />
+                <LocaleToggle compact className="w-[10.5rem] md:w-[12rem]" />
               </div>
             </div>
             <div
@@ -379,7 +402,7 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
                 href="https://github.com/helixnow/deep-student"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="focus-ring group flex min-h-12 items-center gap-3 rounded-xl px-3 py-3 text-[color:var(--apple-muted)] transition-colors duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg)] hover:text-[color:var(--apple-ink)] motion-reduce:transition-none"
+                className="focus-ring group flex min-h-12 items-center gap-3 rounded-xl px-3 py-3 text-[color:var(--apple-muted)] transition-colors duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg)] hover:text-[color:var(--apple-ink)] motion-reduce:transition-none md:min-h-14"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-5 w-5">
                   <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />

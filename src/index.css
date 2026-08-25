@@ -86,6 +86,9 @@
     /* Nav tokens */
     --apple-nav-bg: rgba(251, 251, 253, 0.75);
     --apple-nav-border: rgba(0, 0, 0, 0.05);
+    /* Full-screen menu backdrop: more opaque than the nav bar so menu text
+       keeps AA contrast no matter what scrolls behind the blur */
+    --apple-menu-bg: rgba(251, 251, 253, 0.92);
 
     /* Selection */
     --apple-selection-bg: rgba(0, 113, 227, 0.15);
@@ -150,6 +153,9 @@
     /* Nav tokens */
     --apple-nav-bg: rgba(0, 0, 0, 0.75);
     --apple-nav-border: rgba(255, 255, 255, 0.08);
+    /* Lifted slightly above pure black so hairlines and the settings rows
+       still read as a surface while staying ≥AA against --apple-ink */
+    --apple-menu-bg: rgba(18, 18, 20, 0.94);
 
     /* Selection */
     --apple-selection-bg: rgba(10, 132, 255, 0.25);
