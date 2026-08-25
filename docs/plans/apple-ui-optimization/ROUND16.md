@@ -22,3 +22,22 @@
 - build 通过
 - 三语 key 对齐
 - PROGRESS 更新
+
+## 验收结果（已完成）
+
+10/10 全部落地。
+
+| # | 事项 | 状态 | SHA |
+|---|------|------|-----|
+| 1 | VitePress 搜索深色 focus / 结果对比 | ✅ | `8292445` |
+| 2 | Docs 链接 focus-ring | ✅ | `fe9aef7` |
+| 3 | Hero GitHub 次级 CTA 触控 / 对比 | ✅ | `c5a8ad3` |
+| 4 | Stats reduced-motion 最终加固 | ✅ | `6321035` |
+| 5 | Screenshot frame sticky/mobile 边框一致 | ✅ | `7a6c715` |
+| 6 | touch-manipulation 扫尾 | ✅ | `5a965b5` |
+| 7 | touch-icon 缓存戳 / 生成脚本注释 | ✅ | `dc4bbdc` |
+| 8 | zh feature 文案第十三轮 | ✅ | `d9b1eef` |
+| 9 | en / zh-Hant 同步 feature copy | ✅ | `f7de4d7` |
+| 10 | ROUND15 验收 + PROGRESS / 本轮关闭 | ✅ | 见本提交 |
+
+补充：三语 329 keys；`npm run build` 复验通过。

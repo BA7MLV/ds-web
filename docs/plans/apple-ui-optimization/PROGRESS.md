@@ -251,9 +251,26 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 验收：10/10 落地；详见 ROUND15.md。
 
-### Round 16（进行中）
+### Round 16（已完成）
 
 文档站细节、动效/触控一致性、feature 文案第十三轮。详见 ROUND16.md。
+
+- [x] VitePress 搜索深色 focus（`8292445`）
+- [x] Docs 链接 focus-ring（`fe9aef7`）
+- [x] Hero GitHub CTA（`c5a8ad3`）
+- [x] Stats reduced-motion（`6321035`）
+- [x] Screenshot frame 边框一致（`7a6c715`）
+- [x] touch-manipulation 扫尾（`5a965b5`）
+- [x] touch-icon 版本戳（`dc4bbdc`）
+- [x] zh feature 文案第十三轮（`d9b1eef`）
+- [x] en / zh-Hant 同步（`f7de4d7`）
+- [x] ROUND15 验收 + PROGRESS（`7e0603b` / 本轮文档）
+
+验收：10/10 落地；详见 ROUND16.md。
+
+### Round 17（进行中）
+
+下载流控件、Policy/Architecture/LazyImage 微打磨、短标签文案第十四轮。详见 ROUND17.md。
 
 ## 待办（后续轮次）
 
@@ -264,7 +281,7 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 15 验收完成 · Round 16 进行中 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 16 验收完成 · Round 17 进行中 |
 
 ### Round 1 子代理完成项
 
