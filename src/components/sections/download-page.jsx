@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ThemeToggle } from '../theme-toggle'
 import { LocaleToggle, useLocale } from '../locale-toggle'
 import sharedDownloads from '../../data/downloads.json'
@@ -65,6 +65,7 @@ export const DownloadPage = ({ onBack = () => {} }) => {
 
   const [activeTab, setActiveTab] = useState('macOS')
   const [recommendedId, setRecommendedId] = useState(null)
+  const tabRefs = useRef([])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -76,18 +77,33 @@ export const DownloadPage = ({ onBack = () => {} }) => {
     setRecommendedId(preferredCardId)
   }, [])
 
-  const filteredDownloads = platformDownloads.filter((item) => item.platform === activeTab)
+  const activeIndex = Math.max(0, tabs.findIndex((tab) => tab.id === activeTab))
+
+  const handleTabKeyDown = (event) => {
+    const isNext = event.key === 'ArrowRight' || event.key === 'ArrowDown'
+    const isPrev = event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+    if (!isNext && !isPrev) return
+    event.preventDefault()
+    const nextIndex = (activeIndex + (isNext ? 1 : -1) + tabs.length) % tabs.length
+    setActiveTab(tabs[nextIndex].id)
+    tabRefs.current[nextIndex]?.focus()
+  }
+
+  const filteredDownloads = platformDownloads
+    .filter((item) => item.platform === activeTab)
+    .sort((a, b) => Number(b.id === recommendedId) - Number(a.id === recommendedId))
+  const hasRecommendedInTab = filteredDownloads.some((item) => item.id === recommendedId)
   const releaseVersion = normalizeReleaseVersion(sharedDownloads?.version)
   const updatedAtRaw = sharedDownloads?.generatedAt || sharedDownloads?.publishedAt
   const releaseUpdatedAt = formatReleaseDate(updatedAtRaw, locale)
   return (
-    <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[6.854rem] sm:pb-[11.09rem]">
+    <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[calc(6.854rem+var(--sab))] sm:pb-[calc(11.09rem+var(--sab))]">
       <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl pt-safe">
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
+        <div className="max-w-5xl mx-auto flex items-center justify-between py-1.5 pl-[max(1rem,var(--sal))] pr-[max(1rem,var(--sar))] sm:pl-[max(1.5rem,var(--sal))] sm:pr-[max(1.5rem,var(--sar))]">
           <button
             type="button"
             onClick={onBack}
-            className="focus-ring inline-flex items-center gap-2 text-sm font-medium text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
+            className="focus-ring touch-manipulation inline-flex min-h-[2.75rem] items-center gap-2 rounded-full -ml-2 px-2 text-sm font-medium text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
           >
 ← {t('download.backHome')}
           </button>
@@ -98,7 +114,7 @@ export const DownloadPage = ({ onBack = () => {} }) => {
         </div>
       </div>
 
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-[3.236rem] sm:pt-[4.236rem] md:pt-[5.854rem] text-center">
+      <section className="max-w-4xl mx-auto pl-[max(1rem,var(--sal))] pr-[max(1rem,var(--sar))] sm:pl-[max(1.5rem,var(--sal))] sm:pr-[max(1.5rem,var(--sar))] pt-[3.236rem] sm:pt-[4.236rem] md:pt-[5.854rem] text-center">
         <h1 className="text-[2.2rem] sm:text-[3.2rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] font-display">
           {t('download.title', 'DeepStudent {version}', { version: releaseVersion })}
         </h1>
@@ -107,23 +123,36 @@ export const DownloadPage = ({ onBack = () => {} }) => {
         </p>
       </section>
 
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-[3.236rem] sm:pt-[4.236rem]">
+      <section className="max-w-5xl mx-auto pl-[max(1rem,var(--sal))] pr-[max(1rem,var(--sar))] sm:pl-[max(1.5rem,var(--sal))] sm:pr-[max(1.5rem,var(--sar))] pt-[3.236rem] sm:pt-[4.236rem]">
         <h2 className="text-[1.3rem] sm:text-[1.9rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] font-display">
           {t('download.selectPlatform')}
         </h2>
 
-        <div className="mt-4 inline-flex items-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] p-1">
-          {tabs.map((tab) => {
+        <div
+          role="tablist"
+          aria-label={t('download.selectPlatform')}
+          className="relative mt-5 grid w-full max-w-[22.5rem] grid-cols-3 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] p-1"
+        >
+          <span
+            aria-hidden="true"
+            className="absolute top-1 bottom-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-full bg-[color:var(--apple-surface-elevated)] dark:bg-[#48484a] shadow-[0_1px_3px_rgba(0,0,0,0.12),0_3px_8px_rgba(0,0,0,0.08)] ring-1 ring-black/[0.04] dark:ring-white/[0.08] transition-transform duration-300 ease-apple motion-reduce:transition-none"
+            style={{ transform: `translateX(${activeIndex * 100}%)` }}
+          />
+          {tabs.map((tab, index) => {
             const active = tab.id === activeTab
             return (
               <button
                 key={tab.id}
+                ref={(node) => { tabRefs.current[index] = node }}
                 type="button"
+                role="tab"
+                aria-selected={active}
                 onClick={() => setActiveTab(tab.id)}
-                className={`focus-ring rounded-full px-4 py-2 text-xs font-medium transition-colors ${
+                onKeyDown={handleTabKeyDown}
+                className={`focus-ring touch-manipulation relative z-[1] flex h-11 select-none items-center justify-center rounded-full px-2 text-[13px] transition-colors duration-200 ${
                   active
-                    ? 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)]'
-                    : 'text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)]'
+                    ? 'font-semibold text-[color:var(--apple-ink)]'
+                    : 'font-medium text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)]'
                 }`}
               >
                 {tab.label}
@@ -132,45 +161,63 @@ export const DownloadPage = ({ onBack = () => {} }) => {
           })}
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
-          {filteredDownloads.map((platform) => (
+        <div className="mt-6 grid gap-4 sm:gap-5 md:grid-cols-2">
+          {filteredDownloads.map((platform) => {
+            const isRecommended = platform.id === recommendedId
+            const isPrimaryCta = isRecommended || !hasRecommendedInTab
+            return (
               <article
                 key={platform.id}
-                className={`rounded-[1.5rem] bg-[color:var(--apple-card)] border p-[1.5rem] sm:p-[1.75rem] shadow-[var(--apple-shadow-sm)] transition-all duration-300 ease-apple hover-lift ${
-                  platform.id === recommendedId
-                    ? 'border-[color:var(--apple-blue)]/30 ring-1 ring-[color:var(--apple-blue)]/15'
-                    : 'border-[color:var(--apple-line)]'
+                className={`relative flex flex-col overflow-hidden rounded-[1.5rem] border p-[1.5rem] sm:p-[1.75rem] transition-all duration-300 ease-apple hover-lift ${
+                  isRecommended
+                    ? 'bg-[color:var(--apple-card-strong)] border-[color:var(--apple-blue)]/35 ring-1 ring-[color:var(--apple-blue)]/20 shadow-[var(--apple-shadow-md)]'
+                    : 'bg-[color:var(--apple-card)] border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)]'
                 }`}
               >
-                <div>
+                {isRecommended ? (
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[color:var(--apple-blue-soft)] to-transparent opacity-60"
+                  />
+                ) : null}
+
+                <div className="relative">
                   <div className="flex items-center gap-2">
-                    <p className="text-base font-semibold text-[color:var(--apple-ink)]">{platform.platform}</p>
-                    {platform.id === recommendedId ? (
-                      <span className="rounded-full bg-[color:var(--apple-blue-soft)] px-2.5 py-0.5 text-[10px] font-semibold text-[color:var(--apple-blue)]">
+                    <p className="text-base sm:text-lg font-semibold text-[color:var(--apple-ink)]">{platform.platform}</p>
+                    {isRecommended ? (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[color:var(--apple-blue-soft)] px-2.5 py-1 text-[11px] font-semibold leading-none text-[color:var(--apple-blue)]">
+                        <svg viewBox="0 0 12 12" className="h-3 w-3" fill="none" aria-hidden="true">
+                          <path d="M2.5 6.5 5 9l4.5-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
                         {t('download.recommended', '推荐')}
                       </span>
                     ) : null}
                   </div>
-                  <p className="text-xs text-[color:var(--apple-muted)] break-words">{platform.channel}</p>
+                  <p className="mt-0.5 text-xs text-[color:var(--apple-muted)] break-words">{platform.channel}</p>
                 </div>
 
-                <p className="mt-3 text-sm text-[color:var(--apple-muted)] leading-relaxed break-words text-pretty">{platform.description}</p>
+                <p className="relative mt-3 text-sm text-[color:var(--apple-muted)] leading-relaxed break-words text-pretty">{platform.description}</p>
 
-                <div className="mt-4 text-xs text-[color:var(--apple-muted)] flex flex-wrap gap-x-3 gap-y-1">
+                <div className="relative mt-4 text-xs text-[color:var(--apple-muted)] tabular-nums flex flex-wrap gap-x-3 gap-y-1">
                   <span>{t('download.version')} {platform.version}</span>
                   <span>{t('download.size')} {platform.size}</span>
                 </div>
 
-                <div className="mt-4">
+                <div className="relative mt-auto pt-5">
                   <a
                     href={platform.ctaHref}
-                    className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-primary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-btn-primary-text)] leading-snug text-center whitespace-normal hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-95 transition-all shadow-[var(--apple-shadow-sm)]"
+                    className={`focus-ring touch-manipulation inline-flex w-full sm:w-auto min-h-[2.75rem] items-center justify-center gap-2 rounded-full px-6 text-sm font-medium leading-snug text-center whitespace-normal transition-all active:scale-[0.97] ${
+                      isPrimaryCta
+                        ? 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] shadow-[var(--apple-shadow-sm)]'
+                        : 'bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-btn-secondary-text)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)]'
+                    }`}
                   >
 {platform.ctaLabel}
                   </a>
                 </div>
               </article>
-          ))}
+            )
+          })}
         </div>
 
       </section>
