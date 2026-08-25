@@ -81,12 +81,20 @@ export const DownloadPage = ({ onBack = () => {} }) => {
 
   const activeIndex = Math.max(0, tabs.findIndex((tab) => tab.id === activeTab))
 
+  // ARIA Tabs 键盘规范：方向键循环移动（选中跟随焦点），Home/End 跳到首尾
   const handleTabKeyDown = (event) => {
-    const isNext = event.key === 'ArrowRight' || event.key === 'ArrowDown'
-    const isPrev = event.key === 'ArrowLeft' || event.key === 'ArrowUp'
-    if (!isNext && !isPrev) return
+    let nextIndex = null
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      nextIndex = (activeIndex + 1) % tabs.length
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      nextIndex = (activeIndex - 1 + tabs.length) % tabs.length
+    } else if (event.key === 'Home') {
+      nextIndex = 0
+    } else if (event.key === 'End') {
+      nextIndex = tabs.length - 1
+    }
+    if (nextIndex === null) return
     event.preventDefault()
-    const nextIndex = (activeIndex + (isNext ? 1 : -1) + tabs.length) % tabs.length
     setActiveTab(tabs[nextIndex].id)
     tabRefs.current[nextIndex]?.focus()
   }
@@ -160,7 +168,11 @@ export const DownloadPage = ({ onBack = () => {} }) => {
                     ref={(node) => { tabRefs.current[index] = node }}
                     type="button"
                     role="tab"
+                    id={`platform-tab-${tab.id}`}
                     aria-selected={active}
+                    aria-controls="platform-tabpanel"
+                    /* roving tabindex：Tab 键只停留在选中项，组内移动交给方向键 */
+                    tabIndex={active ? 0 : -1}
                     onClick={() => setActiveTab(tab.id)}
                     onKeyDown={handleTabKeyDown}
                     className={`focus-ring touch-manipulation relative z-[1] flex h-11 select-none items-center justify-center rounded-full px-2 text-[13px] transition-colors duration-200 ${
@@ -188,7 +200,12 @@ export const DownloadPage = ({ onBack = () => {} }) => {
              的 --apple-line 描边，边界过弱；升级为 --apple-line-strong（12%）。图标
              底盘同理：8% 白的 secondary-bg 几乎隐形，深色改用 iOS tertiaryFill
              （rgba(118,118,128,0.24)，与上方分段控件轨道一致）并加 --apple-line 内描边 */
-          <div className="mt-6 flex flex-col items-center rounded-[1.5rem] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card)] px-6 py-12 sm:py-16 text-center [box-shadow:var(--apple-shadow-sm)]">
+          <div
+            role="tabpanel"
+            id="platform-tabpanel"
+            aria-labelledby={`platform-tab-${activeTab}`}
+            className="mt-6 flex flex-col items-center rounded-[1.5rem] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card)] px-6 py-12 sm:py-16 text-center [box-shadow:var(--apple-shadow-sm)]"
+          >
             <div
               aria-hidden="true"
               className="flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] dark:bg-[rgba(118,118,128,0.24)] ring-1 ring-inset ring-[color:var(--apple-line)] text-[color:var(--apple-muted)]"
@@ -220,7 +237,13 @@ export const DownloadPage = ({ onBack = () => {} }) => {
             </a>
           </div>
         ) : (
-          <div className={`mt-6 grid gap-4 sm:gap-5 ${isFallbackOnly ? 'max-w-xl' : 'md:grid-cols-2'}`}>
+          <div
+            /* fallback 模式下没有 tablist，不能挂 tabpanel 语义 */
+            role={isFallbackOnly ? undefined : 'tabpanel'}
+            id={isFallbackOnly ? undefined : 'platform-tabpanel'}
+            aria-labelledby={isFallbackOnly ? undefined : `platform-tab-${activeTab}`}
+            className={`mt-6 grid gap-4 sm:gap-5 ${isFallbackOnly ? 'max-w-xl' : 'md:grid-cols-2'}`}
+          >
             {filteredDownloads.map((platform) => {
               const isRecommended = platform.id === recommendedId
               const isPrimaryCta = isRecommended || !hasRecommendedInTab
