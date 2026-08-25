@@ -61,7 +61,12 @@ export const Footer = ({ onOpenPolicy = () => {} }) => {
 
           <div className="h-px bg-[color:var(--apple-line)]" aria-hidden="true" />
 
-          <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          {/* Small-screen wrap rhythm: the stacked gap (7) sits clearly above the
+              copyright block's internal gap (3) so the social row and legal block
+              read as two groups. At sm the row may wrap when the locale toggle
+              meets the social pills, so distinct x/y gaps keep the fallback rows
+              on the same vertical beat instead of collapsing to the row gap. */}
+          <div className="flex flex-col items-center gap-7 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-6 sm:gap-y-5">
             <nav className="flex items-center gap-3" aria-label={t('footer.socialLabel', 'Social links')}>
               <a
                 href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f"
