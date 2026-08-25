@@ -136,7 +136,9 @@ export const FreeModelsCallout = () => {
   return (
     <div
       ref={ref}
-      className="relative overflow-hidden rounded-[2rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] p-6 [box-shadow:var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--apple-shadow-xl)] ring-1 ring-black/[0.04] backdrop-blur-2xl dark:ring-white/[0.06] sm:p-8"
+      // 深色下卡片外沿只剩 8% 白描边（黑底上投影不可见），与卡内分隔线
+      // 同规格升级为 line-strong（12%）
+      className="relative overflow-hidden rounded-[2rem] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card)] p-6 [box-shadow:var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--apple-shadow-xl)] ring-1 ring-black/[0.04] backdrop-blur-2xl dark:ring-white/[0.06] sm:p-8"
     >
       {/* Glass reflections: hairline highlight along the top edge plus a soft sheen */}
       <div

@@ -97,10 +97,12 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
           // Dark open state lifts the edge above --apple-line-strong (0.12):
           // against the brighter open card (--apple-card-strong) the 0.12
           // hairline nearly vanishes, so the expanded card lost its boundary.
+          // Dark closed state upgrades the 0.08 hairline to line-strong (0.12)
+          // like the other cards on near-black; open still steps up to 0.16.
           <details
             key={item.id}
             onToggle={handleToggle(item.id)}
-            className="faq-accordion group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)] overflow-hidden transition-[background-color,border-color,box-shadow] duration-500 ease-apple hover:[box-shadow:var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:border-[color:var(--apple-line-strong)] dark:open:border-[rgba(255,255,255,0.16)] open:[box-shadow:var(--apple-shadow-lg)]"
+            className="faq-accordion group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] [box-shadow:var(--apple-shadow-sm)] overflow-hidden transition-[background-color,border-color,box-shadow] duration-500 ease-apple hover:[box-shadow:var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:border-[color:var(--apple-line-strong)] dark:open:border-[rgba(255,255,255,0.16)] open:[box-shadow:var(--apple-shadow-lg)]"
           >
             <summary
               aria-expanded={openIds.has(item.id)}

@@ -238,7 +238,9 @@ export const PolicyModal = ({ type, onClose }) => {
       />
       <div
         ref={dialogRef}
-        className="policy-modal-panel relative flex w-full max-w-2xl max-h-[80vh] max-h-[80svh] flex-col overflow-hidden bg-[color:var(--apple-card)] backdrop-blur-xl border border-[color:var(--apple-line)] rounded-[2rem] [box-shadow:var(--apple-shadow-xl)]"
+        // 深色下弹窗投影融进 70% 黑遮罩，面板只剩 8% 白描边立边界，
+        // 升级为 line-strong（12%）
+        className="policy-modal-panel relative flex w-full max-w-2xl max-h-[80vh] max-h-[80svh] flex-col overflow-hidden bg-[color:var(--apple-card)] backdrop-blur-xl border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] rounded-[2rem] [box-shadow:var(--apple-shadow-xl)]"
         onClick={(event) => event.stopPropagation()}
         tabIndex={-1}
       >
@@ -278,7 +280,9 @@ export const PolicyModal = ({ type, onClose }) => {
             {data.sections.map((section) => (
               <div
                 key={section.title}
-                className="border border-[color:var(--apple-line)] rounded-[1.5rem] p-[1.5rem] sm:p-[1.75rem] bg-[color:var(--apple-card-strong)]"
+                // 深色下 8% 白描边叠在 card-strong 面上与底色几乎同色，
+                // 升级为 line-strong（12%）维持分区卡边界
+                className="border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] rounded-[1.5rem] p-[1.5rem] sm:p-[1.75rem] bg-[color:var(--apple-card-strong)]"
               >
                 {/* 与 FAQ 问题标题同尺度（15px → 17px / tracking-tight）：两处卡片
                     同样式（内边距、表面色一致），原 text-sm 使标题弱于正文节奏；

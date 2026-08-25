@@ -106,7 +106,9 @@ export const ImagePlaceholder = ({ label }) => {
       />
       <div className="absolute inset-0 skeleton opacity-30" aria-hidden />
       <div className="z-10 flex flex-col items-center gap-3 px-6 text-center">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--apple-surface-elevated)] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)]">
+        {/* 深色下 8% 白描边叠在提亮底盘边缘与盘面几乎同色，同 download 空态
+            图标底盘升级为 line-strong（12%） */}
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--apple-surface-elevated)] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] [box-shadow:var(--apple-shadow-sm)]">
           <svg className="w-5 h-5 text-[color:var(--apple-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
             <rect x="3" y="3" width="18" height="18" rx="4" />
             <circle cx="8.5" cy="8.5" r="1.5" />

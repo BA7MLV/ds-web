@@ -174,7 +174,9 @@ const StatCard = ({ stat, t, shouldAnimate, revealed, entranceDelayMs }) => {
     <div
       // 触控设备上 tap 会残留 :hover 态，上浮与阴影加深只在 md+ 生效（同 feature 卡片的处理）
       // 悬停时卡面提亮到 card-hover：暗色下阴影几乎不可见，仅靠描边反馈太弱
-      className={`group relative overflow-hidden rounded-[1.5rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-4 py-6 text-center [box-shadow:var(--apple-shadow-sm)] backdrop-blur-xl transition-all duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] md:hover:bg-[color:var(--apple-card-hover)] md:hover:[box-shadow:var(--apple-shadow-md)] md:motion-safe:hover:-translate-y-1 sm:rounded-[1.75rem] sm:px-6 sm:py-8 ${entranceClass}`}
+      // 深色静息态 8% 白描边贴近黑底几乎不可见，升级为 line-strong（12%）；
+      // 深色 hover 反馈由 card-hover 提亮与阴影承担
+      className={`group relative overflow-hidden rounded-[1.5rem] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card)] px-4 py-6 text-center [box-shadow:var(--apple-shadow-sm)] backdrop-blur-xl transition-all duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] md:hover:bg-[color:var(--apple-card-hover)] md:hover:[box-shadow:var(--apple-shadow-md)] md:motion-safe:hover:-translate-y-1 sm:rounded-[1.75rem] sm:px-6 sm:py-8 ${entranceClass}`}
       style={shouldAnimate && revealed ? { animationDelay: `${entranceDelayMs}ms` } : undefined}
     >
       {/* 悬停辉光：顶部淡入一层品牌蓝径向光晕（负 z 保证压不住文字） */}

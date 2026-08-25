@@ -273,11 +273,10 @@ export const DownloadPage = ({ onBack = () => {} }) => {
                   className={`relative flex flex-col overflow-hidden rounded-[1.5rem] border p-[1.5rem] sm:p-[1.75rem] transition-all duration-300 ease-apple hover-lift focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[color:var(--apple-focus-ring)] ${
                     isRecommended
                       ? 'bg-[color:var(--apple-card-strong)] border-[color:var(--apple-blue)]/35 ring-1 ring-[color:var(--apple-blue)]/20 [box-shadow:var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--apple-shadow-md)]'
-                      : 'bg-[color:var(--apple-card)] border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)]'
-                  } ${
-                    /* fallback（allReleases）卡片是页面唯一内容：深色下 shadow-sm 在
-                       黑底不可见，仅剩 8% 白描边，同空态卡片一样升级为 line-strong */
-                    isFallbackOnly ? 'dark:border-[color:var(--apple-line-strong)]' : ''
+                      : /* 深色下 shadow-sm 在黑底不可见，仅剩 8% 白描边——此前只给
+                           fallback（allReleases）卡片升级，标准 tab 卡片同底同影，
+                           一并升级为 line-strong（推荐卡走蓝描边，不参与此升级） */
+                        'bg-[color:var(--apple-card)] border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] [box-shadow:var(--apple-shadow-sm)]'
                   }`}
                 >
                   {isRecommended ? (
