@@ -256,6 +256,31 @@ import LastAuthor from './components/LastAuthor.vue'
   box-shadow: var(--apple-shadow-lg);
 }
 
+/* ============================================================
+   docs 首页 .doc-hero 深色模式补丁（Round 10）：
+   基础配方在 docs/index.md（明暗共用），此处仅叠加深色下的
+   间距与对比修正，全部经 --apple-* token 流转：
+   - 纯黑 --apple-surface 上 hero 与后续截图之间缺少分区感，
+     补 --apple-line 发丝收尾线 + padding 兜住节奏
+   - 副标题深色值与 muted 同为 #86868b，层级塌掉；经 color-mix
+     向 ink 提亮一档（≈#a2a2a6，同官网深色次级文本尺度）
+   - 次要 CTA 透明底在纯黑上只剩 12% 发丝边，垫 --apple-card
+     半透明底抬出胶囊轮廓（悬停仍走 index.md 的
+     --apple-btn-secondary-bg-hover，特异性更高无需重复）
+   ============================================================ */
+.dark .doc-hero {
+  padding-bottom: 2.25rem;
+  border-bottom: 1px solid var(--apple-line);
+}
+
+.dark .doc-hero .doc-hero-subtitle {
+  color: color-mix(in srgb, var(--apple-ink) 25%, var(--apple-muted));
+}
+
+.dark .doc-hero .doc-hero-btn.secondary {
+  background: var(--apple-card);
+}
+
 /* 全站选区颜色与官网一致 */
 ::selection {
   background: var(--apple-selection-bg);
