@@ -74,7 +74,13 @@ const useRevealOnce = (enabled) => {
   const [revealed, setRevealed] = useState(!enabled)
 
   useEffect(() => {
-    if (!enabled || revealed) return
+    if (revealed) return
+    if (!enabled) {
+      // 减弱动态开启时内容已静态可见：锁定 revealed，
+      // 避免之后关闭该设置让已看到的卡片重新隐藏并回放入场。
+      setRevealed(true)
+      return
+    }
     const node = ref.current
     if (!node) return
     if (typeof IntersectionObserver === 'undefined') {
@@ -114,7 +120,14 @@ const useCountUp = (value, { enabled, revealed, delayMs }) => {
   const [finished, setFinished] = useState(false)
 
   useEffect(() => {
-    if (!enabled || !revealed || !parsed || finished) return undefined
+    if (!parsed || finished) return undefined
+    if (!enabled) {
+      // 减弱动态下最终值已直接显示：锁定 finished，
+      // 避免之后关闭该设置让数字从中间值重新计数。
+      if (revealed) setFinished(true)
+      return undefined
+    }
+    if (!revealed) return undefined
 
     let raf = 0
     let start
@@ -187,8 +200,11 @@ const StatCard = ({ stat, t, shouldAnimate, revealed, entranceDelayMs }) => {
 
       {/* 数字降一档（36/44/48px）：给单位和说明留出呼吸感，避免窄卡片里数字压满 */}
       {/* tabular-nums：计数过程中数字宽度稳定，避免行内抖动 */}
+      {/* 计数中的中间值仅作视觉呈现（aria-hidden），读屏器始终读到最终值， */}
+      {/* 避免在计数途中聚焦时播报“6”而非“7”这类错误数字。 */}
       <div className="mt-3 font-display text-[2.25rem] font-semibold leading-none tracking-[-0.02em] tabular-nums text-[color:var(--apple-ink)] transition-colors duration-300 group-hover:text-[color:var(--apple-blue)] sm:mt-3.5 sm:text-[2.75rem] lg:text-[3rem]">
-        {displayValue}
+        <span aria-hidden="true">{displayValue}</span>
+        <span className="sr-only">{stat.value}</span>
       </div>
 
       <div className="mt-1.5 text-[13px] font-medium text-[color:var(--apple-ink)] sm:mt-2 sm:text-[14px]">
