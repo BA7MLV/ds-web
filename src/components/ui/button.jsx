@@ -7,7 +7,7 @@ const buttonVariants = (variant = 'default', size = 'default', className = '', r
 
   const variants = {
     default:
-      'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] shadow-[var(--apple-shadow-sm)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] hover:-translate-y-px hover:shadow-[var(--apple-shadow-md)] active:translate-y-0 active:shadow-[var(--apple-shadow-sm)]',
+      'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] [box-shadow:var(--apple-shadow-sm)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] hover:-translate-y-px hover:[box-shadow:var(--apple-shadow-md)] active:translate-y-0 active:[box-shadow:var(--apple-shadow-sm)]',
     secondary:
       'border border-[color:var(--apple-btn-secondary-border)] bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-btn-secondary-text)] backdrop-blur-md hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:-translate-y-px active:translate-y-0',
     outline:

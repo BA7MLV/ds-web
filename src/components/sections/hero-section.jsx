@@ -58,7 +58,7 @@ export const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem]
   return (
     <div className={`relative w-full ${className}`} style={style}>
       <div
-        className="relative overflow-hidden rounded-[1.25rem] sm:rounded-[1.5rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-surface-elevated)] shadow-[var(--apple-shadow-xl)] ring-1 ring-black/[0.04] dark:ring-white/[0.06]"
+        className="relative overflow-hidden rounded-[1.25rem] sm:rounded-[1.5rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-surface-elevated)] [box-shadow:var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--apple-shadow-xl)] ring-1 ring-black/[0.04] dark:ring-white/[0.06]"
         style={{ transform: 'translateZ(0)' }}
       >
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/40 via-transparent to-black/[0.02] dark:from-white/[0.04] dark:to-transparent" aria-hidden />

@@ -166,7 +166,7 @@ const LazyImageWithFallback = forwardRef(({
     // card-strong 玻璃底（backdrop blur）与 shadow-md
     return (
       <div
-        className={`relative w-full h-full min-h-[120px] rounded-[6px] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] backdrop-blur-2xl flex items-center justify-center overflow-hidden shadow-[var(--apple-shadow-md)] ${className}`}
+        className={`relative w-full h-full min-h-[120px] rounded-[6px] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] backdrop-blur-2xl flex items-center justify-center overflow-hidden [box-shadow:var(--apple-shadow-md)] ${className}`}
         style={aspectRatio ? { aspectRatio } : undefined}
         role="img"
         aria-label={message}
@@ -180,7 +180,7 @@ const LazyImageWithFallback = forwardRef(({
           aria-hidden
         />
         <div className="z-10 flex flex-col items-center gap-3 px-6 text-center">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--apple-surface-elevated)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--apple-surface-elevated)] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)]">
             {isOffline ? (
               <svg className="w-5 h-5 text-[color:var(--apple-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.138m2.167 9.138l-2.829-2.829" />

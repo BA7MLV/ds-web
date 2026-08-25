@@ -15,7 +15,7 @@ const footerNavLinkClass =
 // hover, settling back on press. Transforms are disabled entirely under
 // reduced motion while color changes still apply instantly.
 const socialLinkClass =
-  'focus-ring group inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] backdrop-blur-xl transition-[background-color,border-color,color,box-shadow,transform] duration-300 ease-apple hover:-translate-y-0.5 hover:border-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:shadow-[var(--apple-shadow-sm)] active:translate-y-0 active:scale-95 motion-reduce:transition-none motion-reduce:transform-none'
+  'focus-ring group inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] backdrop-blur-xl transition-[background-color,border-color,color,box-shadow,transform] duration-300 ease-apple hover:-translate-y-0.5 hover:border-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:[box-shadow:var(--apple-shadow-sm)] active:translate-y-0 active:scale-95 motion-reduce:transition-none motion-reduce:transform-none'
 
 const socialIconClass =
   'transition-transform duration-300 ease-apple group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none'

@@ -260,7 +260,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
           ref={closeButtonRef}
           type="button"
           onClick={closeMenu}
-          className="focus-ring group absolute z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card-strong)] text-[color:var(--apple-ink)] shadow-[var(--apple-shadow-sm)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-card-hover)] active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100"
+          className="focus-ring group absolute z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card-strong)] text-[color:var(--apple-ink)] [box-shadow:var(--apple-shadow-sm)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-card-hover)] active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100"
           style={{ top: 'calc(var(--sat) + 0.875rem)', right: 'max(1.375rem, var(--sar))' }}
           aria-label={closeLabel}
         >

@@ -84,7 +84,7 @@ const StatCard = ({ stat, index, t, shouldAnimate, revealed }) => {
 
   return (
     <div
-      className={`group relative overflow-hidden rounded-[1.5rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-4 py-6 text-center shadow-[var(--apple-shadow-sm)] backdrop-blur-xl transition-all duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:shadow-[var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 sm:rounded-[1.75rem] sm:px-6 sm:py-8 ${entranceClass}`}
+      className={`group relative overflow-hidden rounded-[1.5rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-4 py-6 text-center [box-shadow:var(--apple-shadow-sm)] backdrop-blur-xl transition-all duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:[box-shadow:var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 sm:rounded-[1.75rem] sm:px-6 sm:py-8 ${entranceClass}`}
       style={shouldAnimate && revealed ? { animationDelay: `${120 + index * 90}ms` } : undefined}
     >
       {/* 顶部发丝高光，与玻璃卡片风格保持一致 */}

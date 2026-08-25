@@ -304,7 +304,7 @@ export const ThemeSelector = ({ className = '' }) => {
             min-w-[120px] rounded-xl
             bg-[color:var(--apple-card-strong)]
             border border-[color:var(--apple-line)]
-            shadow-[var(--apple-shadow-md)]
+            [box-shadow:var(--apple-shadow-md)]
             backdrop-blur-xl
             z-50
           "

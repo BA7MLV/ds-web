@@ -6,7 +6,7 @@ import { OptimizedImage } from '../optimized-image'
 const FeatureScreenshotFrame = ({ src, alt, className, imgClassName, ...imgProps }) => (
   <div
     className={cn(
-      'bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 motion-safe:md:hover:scale-[1.02] hover:shadow-[var(--apple-shadow-2xl)] motion-reduce:transition-none',
+      'bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 motion-safe:md:hover:scale-[1.02] hover:[box-shadow:var(--apple-shadow-2xl)] motion-reduce:transition-none',
       className
     )}
   >

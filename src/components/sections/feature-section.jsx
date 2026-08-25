@@ -88,7 +88,7 @@ const useParallaxProgress = ({
 // 占位图组件 - 精致 shimmer，后续替换为真实截图
 export const ImagePlaceholder = ({ label }) => (
   <div
-    className="w-full aspect-[16/10] rounded-[6px] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden shadow-[var(--apple-shadow-md)]"
+    className="w-full aspect-[16/10] rounded-[6px] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden [box-shadow:var(--apple-shadow-md)]"
     role="img"
     aria-label={label}
   >
@@ -102,7 +102,7 @@ export const ImagePlaceholder = ({ label }) => (
     />
     <div className="absolute inset-0 skeleton opacity-30" aria-hidden />
     <div className="z-10 flex flex-col items-center gap-3 px-6 text-center">
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--apple-surface-elevated)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)]">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--apple-surface-elevated)] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)]">
         <svg className="w-5 h-5 text-[color:var(--apple-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
           <rect x="3" y="3" width="18" height="18" rx="4" />
           <circle cx="8.5" cy="8.5" r="1.5" />
@@ -181,7 +181,7 @@ export const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, a
             alt={title}
             loading="lazy"
             // 触控设备上 tap 会残留 :hover 态：md 以下取消悬停放大与阴影加深，避免“粘住”的缩放
-            className="hover:scale-100 motion-safe:hover:scale-100 hover:shadow-[var(--apple-shadow-xl)] md:motion-safe:hover:scale-[1.02] md:hover:shadow-[var(--apple-shadow-2xl)]"
+            className="hover:scale-100 motion-safe:hover:scale-100 hover:[box-shadow:var(--apple-shadow-xl)] md:motion-safe:hover:scale-[1.02] md:hover:[box-shadow:var(--apple-shadow-2xl)]"
           />
         ) : (
           <ImagePlaceholder label={title} />
@@ -375,7 +375,7 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                   key={sf.labelKey}
                   className={`h-1.5 rounded-full transition-all duration-300 ease-apple ${
                     i === activeIndex
-                      ? 'w-6 bg-[color:var(--apple-ink)] shadow-[var(--apple-shadow-sm)]'
+                      ? 'w-6 bg-[color:var(--apple-ink)] [box-shadow:var(--apple-shadow-sm)]'
                       : 'w-1.5 bg-[color:var(--apple-line-strong)]'
                   }`}
                 />
@@ -408,7 +408,7 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                         ref={(el) => { markerRefs.current[index] = el }}
                         className={`inline-flex items-center justify-center w-7 h-7 rounded-full border text-[11px] font-semibold tabular-nums transition-[background-color,border-color,color,box-shadow,transform] duration-500 ease-apple ${
                         isActive
-                          ? 'border-transparent bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] shadow-[var(--apple-shadow-sm)] motion-safe:scale-105'
+                          ? 'border-transparent bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] [box-shadow:var(--apple-shadow-sm)] motion-safe:scale-105'
                           : 'border-[color:var(--apple-line-strong)] bg-transparent text-[color:var(--apple-muted)] motion-safe:scale-100'
                         }`}
                       >

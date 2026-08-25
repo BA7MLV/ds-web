@@ -181,7 +181,7 @@ export const DownloadPage = ({ onBack = () => {} }) => {
         )}
 
         {filteredDownloads.length === 0 ? (
-          <div className="mt-6 flex flex-col items-center rounded-[1.5rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-6 py-12 sm:py-16 text-center shadow-[var(--apple-shadow-sm)]">
+          <div className="mt-6 flex flex-col items-center rounded-[1.5rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-6 py-12 sm:py-16 text-center [box-shadow:var(--apple-shadow-sm)]">
             <div
               aria-hidden="true"
               className="flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-muted)]"
@@ -219,8 +219,8 @@ export const DownloadPage = ({ onBack = () => {} }) => {
                   key={platform.id}
                   className={`relative flex flex-col overflow-hidden rounded-[1.5rem] border p-[1.5rem] sm:p-[1.75rem] transition-all duration-300 ease-apple hover-lift ${
                     isRecommended
-                      ? 'bg-[color:var(--apple-card-strong)] border-[color:var(--apple-blue)]/35 ring-1 ring-[color:var(--apple-blue)]/20 shadow-[var(--apple-shadow-md)]'
-                      : 'bg-[color:var(--apple-card)] border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)]'
+                      ? 'bg-[color:var(--apple-card-strong)] border-[color:var(--apple-blue)]/35 ring-1 ring-[color:var(--apple-blue)]/20 [box-shadow:var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--apple-shadow-md)]'
+                      : 'bg-[color:var(--apple-card)] border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)]'
                   }`}
                 >
                   {isRecommended ? (
@@ -257,7 +257,7 @@ export const DownloadPage = ({ onBack = () => {} }) => {
                       href={platform.ctaHref}
                       className={`focus-ring touch-manipulation inline-flex w-full sm:w-auto min-h-[2.75rem] items-center justify-center gap-2 rounded-full px-6 text-sm font-medium leading-snug text-center whitespace-normal transition-all active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 ${
                         isPrimaryCta
-                          ? 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] shadow-[var(--apple-shadow-sm)]'
+                          ? 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] [box-shadow:var(--apple-shadow-sm)]'
                           : 'bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-btn-secondary-text)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)]'
                       }`}
                     >

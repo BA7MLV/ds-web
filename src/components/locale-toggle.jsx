@@ -230,7 +230,7 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
         compact ? 'h-8' : 'h-9',
         'bg-[color:var(--apple-btn-secondary-bg)] border border-[color:var(--apple-line)]',
         'backdrop-blur-xl backdrop-saturate-[180%]',
-        'shadow-[var(--apple-shadow-sm)]',
+        '[box-shadow:var(--apple-shadow-sm)]',
         className
       )}
     >
@@ -239,7 +239,7 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
         className={cn(
           'absolute inset-y-0.5 left-0.5 w-[calc((100%-0.25rem)/3)] rounded-full',
           'bg-[color:var(--apple-seg-thumb)] border border-[color:var(--apple-line)]',
-          'shadow-[var(--apple-shadow-sm)]',
+          '[box-shadow:var(--apple-shadow-sm)]',
           'transition-transform duration-200 ease-out motion-reduce:transition-none',
           selectedIndex === 1 && 'translate-x-full',
           selectedIndex === 2 && 'translate-x-[200%]'

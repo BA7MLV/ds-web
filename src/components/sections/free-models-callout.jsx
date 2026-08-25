@@ -108,7 +108,7 @@ const useRevealOnce = () => {
 
 const ModelPill = ({ model, revealed, delayMs }) => (
   <span
-    className={`group inline-flex select-none items-center gap-2 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-3.5 py-1.5 text-[12px] font-medium text-[color:var(--apple-ink)] shadow-[var(--apple-shadow-sm)] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-card-hover)] hover:shadow-[var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98] motion-reduce:transition-none ${
+    className={`group inline-flex select-none items-center gap-2 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-3.5 py-1.5 text-[12px] font-medium text-[color:var(--apple-ink)] [box-shadow:var(--apple-shadow-sm)] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-card-hover)] hover:[box-shadow:var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98] motion-reduce:transition-none ${
       revealed ? 'motion-safe:animate-fade-in-up' : 'motion-safe:opacity-0'
     }`}
     style={revealed ? { animationDelay: `${delayMs}ms` } : undefined}
@@ -128,7 +128,7 @@ export const FreeModelsCallout = () => {
   return (
     <div
       ref={ref}
-      className="relative overflow-hidden rounded-[2rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] p-6 shadow-[var(--apple-shadow-xl)] ring-1 ring-black/[0.04] backdrop-blur-2xl dark:ring-white/[0.06] sm:p-8"
+      className="relative overflow-hidden rounded-[2rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] p-6 [box-shadow:var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--apple-shadow-xl)] ring-1 ring-black/[0.04] backdrop-blur-2xl dark:ring-white/[0.06] sm:p-8"
     >
       {/* Glass reflections: hairline highlight along the top edge plus a soft sheen */}
       <div
@@ -151,7 +151,7 @@ export const FreeModelsCallout = () => {
           <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--apple-muted)]">
             {t('freeModels.poweredBy', 'Powered by SiliconFlow')}
           </span>
-          <span className="group relative inline-flex items-center overflow-hidden rounded-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-5 py-2.5 shadow-[var(--apple-shadow-sm)] transition-[border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:shadow-[var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.99] motion-reduce:transition-none">
+          <span className="group relative inline-flex items-center overflow-hidden rounded-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-5 py-2.5 [box-shadow:var(--apple-shadow-sm)] transition-[border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:[box-shadow:var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.99] motion-reduce:transition-none">
             {/* Shimmer sweeps in on hover only; on hover-out it snaps back
                 off-screen instead of visibly sliding backwards over the logo. */}
             <span
