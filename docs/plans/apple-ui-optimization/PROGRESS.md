@@ -11,27 +11,28 @@
 
 ## 轮次记录
 
-### Round 1（进行中）
+### Round 1（已完成）
 
-**子代理分工（10 路并行）**
+**子代理分工（10 路并行）— 全部落地**
 
-| # | 范围 | 任务 |
+| # | 范围 | 状态 |
 |---|------|------|
-| 1 | `src/locales/zh.json` | Hero/功能标题与副文案人性化重写 |
-| 2 | `src/locales/en.json` | 英文文案 Apple 风格、自然口语 |
-| 3 | `src/locales/zh-Hant.json` | 与简体策略对齐的繁体文案 |
-| 4 | `src/components/mobile-nav-menu.jsx` | 全屏菜单动效与层级 |
-| 5 | `src/components/theme-toggle.jsx` | 切换动效与 a11y |
-| 6 | `src/components/locale-toggle.jsx` | 语言切换 UX |
-| 7 | `src/components/ui/button.jsx` + `card.jsx` | 设计令牌统一 |
-| 8 | `index.html` | 字体、meta、预加载优化 |
-| 9 | `src/index.css` | 设计系统 token 与 utility 扩展 |
-| 10 | `tailwind.config.js` | 动效 keyframes 扩展 |
+| 1 | `zh.json` 文案 | ✅ |
+| 2 | `en.json` 文案 | ✅ |
+| 3 | `zh-Hant.json` 文案 | ✅ |
+| 4 | `mobile-nav-menu.jsx` | ✅ |
+| 5 | `theme-toggle.jsx` | ✅ |
+| 6 | `locale-toggle.jsx` | ✅ |
+| 7 | `button.jsx` + `card.jsx` | ✅ |
+| 8 | `index.html` | ✅ |
+| 9 | `index.css` | ✅ |
+| 10 | `tailwind.config.js` | ✅ |
 
-**父代理**
+**父代理**：Hero / TopNav / Download / 占位图 / 进度文档 — ✅
 
-- Hero CTA、下载页、FAQ、Footer、`App.jsx` 关键区块打磨
-- 进度文档与 PR 维护
+### Round 2（进行中）
+
+组件拆分与区块深化（10 路子代理并行）。
 
 ## 待办（后续轮次）
 
