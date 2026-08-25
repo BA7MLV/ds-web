@@ -199,7 +199,8 @@ export const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, a
         )}
       </div>
       <div className="flex-1 min-w-0 text-center md:text-left">
-        <h3 className="text-[clamp(1.125rem,1.8vw,1.25rem)] font-semibold text-[color:var(--apple-ink)] mb-2 tracking-tight leading-tight">
+        {/* mb-2.5 与 sticky 桌面标题的行距节奏对齐；text-balance 让折行标题两行等宽更稳 */}
+        <h3 className="text-[clamp(1.125rem,1.8vw,1.25rem)] font-semibold text-[color:var(--apple-ink)] mb-2.5 tracking-tight leading-tight text-balance">
           {title}
         </h3>
         <p className="text-body-large text-[color:var(--apple-muted)] max-w-md mx-auto md:mx-0">
@@ -439,7 +440,7 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                         isActive ? 'opacity-100 motion-safe:scale-x-100' : 'opacity-0 motion-safe:scale-x-0'
                       }`} />
                     </div>
-                    <h3 className="text-[clamp(1.25rem,1.6vw,1.375rem)] font-semibold text-[color:var(--apple-ink)] mb-2.5 tracking-tight leading-tight">
+                    <h3 className="text-[clamp(1.25rem,1.6vw,1.375rem)] font-semibold text-[color:var(--apple-ink)] mb-2.5 tracking-tight leading-tight text-balance">
                       {t(sf.labelKey)}
                     </h3>
                     <p className="text-body-large text-[color:var(--apple-muted)]">
