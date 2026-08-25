@@ -18,7 +18,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@radix-ui/react-switch": "^1.2.6",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.9.1",
     "class-variance-authority": "^0.7.1",
