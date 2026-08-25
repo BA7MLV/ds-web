@@ -17,6 +17,24 @@
 9. zh 文案第七轮：nav.* / a11y.* / placeholder.* 压缩去 AI 腔
 10. en / zh-Hant 同步本轮 copy + ROUND9 最终 SHA 核对写入 PROGRESS
 
+## 性能扫描
+
+Round 10 营销页性能预算扫描（`vite build`，vite 7.2.4，构建产物 gzip 后尺寸）：
+
+- 主包 `index-*.js`：363.56 kB（gzip 109.78 kB）。构成以 react / react-dom 为主，另含应用代码、
+  内联的 zh 兜底文案（约 21 kB 源码）与 LQIP map。在 gzip ≤ 150 kB 预算内，暂无拆分必要。
+- CSS `index-*.css`：82.17 kB（gzip 13.32 kB），预算内。
+- Locale chunk：`en-*.js` 21.22 kB（gzip 7.59 kB）、`zh-Hant-*.js` 20.40 kB（gzip 8.53 kB），
+  均为按需懒加载的独立 chunk；zh 作为兜底随主包内联，切换语言不阻塞首屏。
+- LCP 图片：`index.html` 已在 head 最前 preload `软件主页图-960.webp`（24.75 kB），
+  `imagesrcset`/`imagesizes` 与 `OptimizedImage`（640/960/1280/1600 webp srcset + 相同 sizes）
+  一致，命中同一缓存条目；hero `<img>` 带 `loading="eager"` + `fetchPriority="high"` +
+  宽高声明。已是当前最优，无需新增 hint。
+- 发现（不影响 bundle，仅安装体积）：`@tsparticles/react`、`@tsparticles/slim`、`motion`、
+  `lucide-react`、`react-lazy-load-image-component`、`class-variance-authority` 在 `src/` 中
+  零引用，构建时被完全剔除；建议后续轮次仿照本轮第 1 路（radix switch）逐个确认后从
+  `package.json` 移除。
+
 ## 验收
 
 - build 通过
