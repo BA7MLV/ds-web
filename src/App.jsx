@@ -141,7 +141,12 @@ const App = () => {
         ) : (
           <>
             <TopNav onDownload={handleDownloadOpen} />
-            <main id="main-content" tabIndex={-1} className="outline-none">
+            {/* scroll-mt clears the sticky nav (h-14 + safe area) when the skip link lands here. */}
+            <main
+              id="main-content"
+              tabIndex={-1}
+              className="outline-none scroll-mt-[calc(3.5rem+var(--sat,0px))]"
+            >
               <HeroSection onDownload={handleDownloadOpen} motionScale={motionScale} />
 
               <StatsSection motionScale={motionScale} />
