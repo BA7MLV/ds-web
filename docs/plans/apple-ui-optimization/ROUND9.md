@@ -26,7 +26,7 @@
 
 ## 验收结果（已完成）
 
-9/10 落地；#9（en / zh-Hant 同步）截至本次验收提交尚未推送，标记为进行中，不虚构 SHA。
+10/10 全部落地。
 
 | # | 项目 | 状态 | Commit |
 |---|------|------|--------|
@@ -38,5 +38,5 @@
 | 6 | Download 空态 / fallback 深色再验 | ✅ | `61ac76d` |
 | 7 | Footer 社交链接 a11y | ✅ | `e7548af` |
 | 8 | zh download.* / policy.* 文案第六轮 | ✅ | `7aa6487` |
-| 9 | en / zh-Hant 同步本轮 copy | 🔄 进行中 | 待补 |
+| 9 | en / zh-Hant 同步本轮 copy | ✅ | `5f34994` |
 | 10 | ROUND8 验收回填 + PROGRESS 关闭 Round 8 | ✅ | `7ef31d7` |

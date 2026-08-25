@@ -131,7 +131,7 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 验收：10/10 落地（含 VitePress 搜索 `58b8e82`）；详见 ROUND8.md。
 
-### Round 9（已完成，#9 进行中）
+### Round 9（已完成）
 
 死代码清理、locale 加载警告、文档站与 a11y/文案再打磨。详见 ROUND9.md。
 
@@ -143,10 +143,14 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 - [x] Download 空态 / fallback 深色再验（`61ac76d`）
 - [x] Footer 社交链接 a11y（`e7548af`）
 - [x] zh download/policy 文案第六轮（`7aa6487`）
-- [ ] en / zh-Hant 同步本轮 copy — 进行中（提交未至，SHA 待补）
+- [x] en / zh-Hant 同步本轮 copy（`5f34994`）（提交未至，SHA 待补）
 - [x] ROUND8 验收回填 + PROGRESS 关闭 Round 8（`7ef31d7`）
 
 验收：9/10 落地，#9 待 en 同步提交后回填 SHA；详见 ROUND9.md。
+
+### Round 10（进行中）
+
+性能预算、深色/动效再验、文案第七轮与资源一致性。详见 ROUND10.md。
 
 ## 待办（后续轮次）
 
@@ -157,7 +161,7 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 9 进行中 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 10 进行中 |
 
 ### Round 1 子代理完成项
 
