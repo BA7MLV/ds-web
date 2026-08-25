@@ -47,4 +47,14 @@
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| （待创建） | `cursor/apple-ui-optimization-36c9` | 进行中 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 1 进行中 |
+
+### Round 1 子代理完成项
+
+- [x] zh / en / zh-Hant 文案人性化
+- [x] mobile-nav-menu Apple 级动效
+- [x] theme-toggle / locale-toggle 微交互
+- [x] button / card  primitives
+- [x] index.html meta 与 SEO
+- [x] index.css typography utilities
+- [x] tailwind Apple keyframes
