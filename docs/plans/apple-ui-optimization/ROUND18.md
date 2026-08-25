@@ -43,3 +43,22 @@ Round 18 复核（`npm run build`，vite 7.2.4，gzip 后尺寸；对比 Round 1
   `zh-Hant-*.js` 20.66 kB（gzip 8.75 kB，Round 10 为 8.53 kB），仍为按需懒加载独立 chunk。
 - 结论：各产物较 Round 10 仅有 kB 级自然增长，预算充裕，本轮不做架构调整；
   build 期间同步的 `downloads.json` 已按惯例回滚，不随本项提交。
+
+## 验收结果（已完成）
+
+10/10 全部落地（含一项审计无代码变更）。
+
+| # | 事项 | 状态 | SHA |
+|---|------|------|-----|
+| 1 | 营销→文档导航 focus / 同域跳转 | ✅ | `b379816` |
+| 2 | FreeModels 外链 rel/focus | ✅ 已合规无需改动 | — |
+| 3 | 外链 rel 扫尾（含 Download Releases） | ✅ | `1c470ea` |
+| 4 | 构建体积快扫 | ✅ | `bf93b41` |
+| 5 | ink-secondary 对比抽查 | ✅ | `b6275e6` |
+| 6 | Tab 顺序烟雾 | ✅ 文档记录 | `01990bb` |
+| 7 | SiliconFlow logo 去空格路径 | ✅ | `d581643` |
+| 8 | zh stats 文案第十五轮 | ✅ | `927b0c4` |
+| 9 | en / zh-Hant 同步 stats | ✅ | `4b14fd4` |
+| 10 | ROUND17 验收 + PROGRESS / 本轮关闭 | ✅ | 见本提交 |
+
+补充：三语 329 keys；主包 gzip ~111 kB；`npm run build` 复验通过。

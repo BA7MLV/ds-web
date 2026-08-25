@@ -285,9 +285,26 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 验收：10/10 落地；详见 ROUND17.md。
 
-### Round 18（进行中）
+### Round 18（已完成）
 
 外链安全属性、构建体积快扫、键盘烟雾与 stats 文案第十五轮。详见 ROUND18.md。
+
+- [x] 营销→文档导航 focus（`b379816`）
+- [x] FreeModels 外链核对（已合规）
+- [x] 外链 rel 扫尾（`1c470ea`）
+- [x] 构建体积快扫（`bf93b41`）
+- [x] ink-secondary 对比（`b6275e6`）
+- [x] Tab 顺序烟雾（`01990bb`）
+- [x] SiliconFlow logo 路径（`d581643`）
+- [x] zh stats 文案第十五轮（`927b0c4`）
+- [x] en / zh-Hant 同步（`4b14fd4`）
+- [x] ROUND17 验收 + PROGRESS（`8409088` / 本轮文档）
+
+验收：10/10 落地；主包 gzip ~111 kB；详见 ROUND18.md。
+
+### Round 19（进行中）
+
+深色细节、FAQ/Footer/Policy 触控、FAQ 文案第十六轮。详见 ROUND19.md。
 
 ## 待办（后续轮次）
 
@@ -298,7 +315,7 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 17 验收完成 · Round 18 进行中 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 18 验收完成 · Round 19 进行中 |
 
 ### Round 1 子代理完成项
 
