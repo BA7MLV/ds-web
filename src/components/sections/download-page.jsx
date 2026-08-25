@@ -250,7 +250,11 @@ export const DownloadPage = ({ onBack = () => {} }) => {
               return (
                 <article
                   key={platform.id}
-                  className={`relative flex flex-col overflow-hidden rounded-[1.5rem] border p-[1.5rem] sm:p-[1.75rem] transition-all duration-300 ease-apple hover-lift ${
+                  /* 卡片本身不可聚焦（键盘焦点落在内部 CTA），用 focus-within 沿卡片
+                     外沿补一圈焦点环，使键盘用户获得与 hover-lift 对等的“当前卡片”
+                     反馈；选 outline 而非 ring 是因为它不参与 box-shadow 合成（不会
+                     覆盖卡片投影），也不受 overflow-hidden 裁剪 */
+                  className={`relative flex flex-col overflow-hidden rounded-[1.5rem] border p-[1.5rem] sm:p-[1.75rem] transition-all duration-300 ease-apple hover-lift focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[color:var(--apple-focus-ring)] ${
                     isRecommended
                       ? 'bg-[color:var(--apple-card-strong)] border-[color:var(--apple-blue)]/35 ring-1 ring-[color:var(--apple-blue)]/20 [box-shadow:var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--apple-shadow-md)]'
                       : 'bg-[color:var(--apple-card)] border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)]'
@@ -271,7 +275,11 @@ export const DownloadPage = ({ onBack = () => {} }) => {
                     <div className="flex items-center gap-2">
                       <p className="text-base sm:text-lg font-semibold text-[color:var(--apple-ink)]">{platform.platform}</p>
                       {isRecommended ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-[color:var(--apple-blue-soft)] px-2.5 py-1 text-[11px] font-semibold leading-none text-[color:var(--apple-blue)]">
+                        /* 11px 徽标属小字号文本，需 ≥4.5:1（WCAG 1.4.3）：token 蓝在
+                           浅色 12% 蓝底上仅 ~4.0:1，深色 15% 底上 ~3.6:1。浅色加深文字
+                           至 #0066cc（~4.7:1）；深色提亮至 #6cb2ff 并把底色升到 0.22
+                           （~5.5:1），仍与主 CTA 同属系统蓝一系不破坏“推荐”语义 */
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[color:var(--apple-blue-soft)] dark:bg-[rgba(10,132,255,0.22)] px-2.5 py-1 text-[11px] font-semibold leading-none text-[#0066cc] dark:text-[#6cb2ff]">
                           <svg viewBox="0 0 12 12" className="h-3 w-3" fill="none" aria-hidden="true">
                             <path d="M2.5 6.5 5 9l4.5-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
