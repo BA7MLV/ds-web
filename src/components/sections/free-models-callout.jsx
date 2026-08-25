@@ -78,7 +78,13 @@ const useRevealOnce = () => {
   useEffect(() => {
     const node = ref.current
     if (!node) return
-    if (typeof IntersectionObserver === 'undefined') {
+
+    // With reduced motion there is no entrance animation to stage, so reveal
+    // immediately instead of waiting on (and paying for) an observer.
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (prefersReducedMotion || typeof IntersectionObserver === 'undefined') {
       setRevealed(true)
       return
     }
@@ -102,14 +108,14 @@ const useRevealOnce = () => {
 
 const ModelPill = ({ model, revealed, delayMs }) => (
   <span
-    className={`group inline-flex select-none items-center gap-2 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-3.5 py-1.5 text-[12px] font-medium text-[color:var(--apple-ink)] shadow-[var(--apple-shadow-sm)] transition-all duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-card-hover)] hover:shadow-[var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 ${
+    className={`group inline-flex select-none items-center gap-2 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-3.5 py-1.5 text-[12px] font-medium text-[color:var(--apple-ink)] shadow-[var(--apple-shadow-sm)] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-card-hover)] hover:shadow-[var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98] motion-reduce:transition-none ${
       revealed ? 'motion-safe:animate-fade-in-up' : 'motion-safe:opacity-0'
     }`}
     style={revealed ? { animationDelay: `${delayMs}ms` } : undefined}
   >
     <FreeModelLogo
       id={model.id}
-      className="h-4 w-4 transition-transform duration-300 ease-apple motion-safe:group-hover:-rotate-6 motion-safe:group-hover:scale-110"
+      className="h-4 w-4 transition-transform duration-300 ease-apple motion-safe:group-hover:-rotate-6 motion-safe:group-hover:scale-110 motion-reduce:transition-none"
     />
     <span>{model.label}</span>
   </span>
@@ -145,11 +151,12 @@ export const FreeModelsCallout = () => {
           <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--apple-muted)]">
             {t('freeModels.poweredBy', 'Powered by SiliconFlow')}
           </span>
-          <span className="group relative inline-flex items-center overflow-hidden rounded-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-5 py-2.5 shadow-[var(--apple-shadow-sm)] transition-all duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:shadow-[var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5">
-            {/* Shimmer sweep across the badge on hover */}
+          <span className="group relative inline-flex items-center overflow-hidden rounded-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] px-5 py-2.5 shadow-[var(--apple-shadow-sm)] transition-[border-color,box-shadow,transform] duration-300 ease-apple hover:border-[color:var(--apple-line-strong)] hover:shadow-[var(--apple-shadow-md)] motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.99] motion-reduce:transition-none">
+            {/* Shimmer sweeps in on hover only; on hover-out it snaps back
+                off-screen instead of visibly sliding backwards over the logo. */}
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/50 to-transparent transition-transform duration-700 ease-out dark:via-white/10 motion-safe:group-hover:translate-x-full"
+              className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/50 to-transparent dark:via-white/10 motion-safe:group-hover:translate-x-full motion-safe:group-hover:transition-transform motion-safe:group-hover:duration-700 motion-safe:group-hover:ease-out"
             />
             <img
               src={siliconflowLogo}
