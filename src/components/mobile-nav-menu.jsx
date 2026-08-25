@@ -107,10 +107,41 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
     }
 
     // Block background scrolling but let the menu's own list scroll if it overflows.
+    // Touches inside the list still need edge guarding: iOS Safari rubber-bands
+    // and chains overscroll to the page behind when the list is already at its
+    // top/bottom (or doesn't overflow at all), and CSS overscroll-behavior isn't
+    // honored for touch scrolling on older iOS versions.
+    let touchStartY = 0
+
+    const handleTouchStart = (event) => {
+      if (event.touches.length === 1) touchStartY = event.touches[0].clientY
+    }
+
     const preventScroll = (event) => {
+      if (!event.cancelable) return
       const scrollRegion = scrollRegionRef.current
-      if (scrollRegion && scrollRegion.contains(event.target)) return
-      event.preventDefault()
+      if (!scrollRegion || !scrollRegion.contains(event.target)) {
+        event.preventDefault()
+        return
+      }
+      if (event.type !== 'touchmove') return
+      if (event.touches.length > 1) {
+        event.preventDefault()
+        return
+      }
+      const { scrollTop, scrollHeight, clientHeight } = scrollRegion
+      if (scrollHeight <= clientHeight) {
+        event.preventDefault()
+        return
+      }
+      const fingerMovingDown = event.touches[0].clientY > touchStartY
+      // scrollTop can dip below 0 mid rubber-band on iOS; the -1 slack covers
+      // fractional scroll positions on zoomed/high-DPI viewports.
+      const atTop = scrollTop <= 0
+      const atBottom = scrollTop + clientHeight >= scrollHeight - 1
+      if ((fingerMovingDown && atTop) || (!fingerMovingDown && atBottom)) {
+        event.preventDefault()
+      }
     }
 
     body.style.position = 'fixed'
@@ -126,10 +157,12 @@ export const MobileNavMenu = ({ onDownload = () => {}, brand = null }) => {
     html.style.touchAction = 'none'
     html.style.overscrollBehavior = 'none'
 
+    window.addEventListener('touchstart', handleTouchStart, { passive: true })
     window.addEventListener('wheel', preventScroll, { passive: false })
     window.addEventListener('touchmove', preventScroll, { passive: false })
 
     return () => {
+      window.removeEventListener('touchstart', handleTouchStart)
       window.removeEventListener('wheel', preventScroll)
       window.removeEventListener('touchmove', preventScroll)
 
