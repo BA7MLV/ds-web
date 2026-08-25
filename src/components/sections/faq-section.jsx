@@ -42,26 +42,26 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
       style={shouldAnimate ? { animationDelay: '0.12s' } : undefined}
     >
       <div className="text-center">
-        <h2 className="text-[1.618rem] sm:text-[2.618rem] font-semibold text-[color:var(--apple-ink)] mb-[0.618rem] tracking-[-0.02em] font-display">
+        <h2 className="mb-3 font-display text-[1.75rem] font-semibold leading-[1.1] tracking-[-0.02em] text-[color:var(--apple-ink)] sm:mb-4 sm:text-[2.5rem]">
           {t('faq.title')}
         </h2>
-        <p className="text-sm sm:text-base text-[color:var(--apple-muted)] leading-relaxed">
+        <p className="mx-auto max-w-2xl text-[15px] leading-relaxed text-[color:var(--apple-muted)] sm:text-[17px]">
           {t('faq.subtitle')}
         </p>
       </div>
 
-      <div className="mt-[1.5rem] sm:mt-[2rem] space-y-4">
+      <div className="mt-6 sm:mt-8 space-y-4">
         {faqItems.map((item) => (
           <details
             key={item.id}
-            className="group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)] overflow-hidden transition-all duration-300 hover:shadow-[var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:shadow-[var(--apple-shadow-lg)]"
+            className="group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)] overflow-hidden transition-[background-color,border-color,box-shadow] duration-500 ease-apple hover:shadow-[var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:border-[color:var(--apple-line-strong)] open:shadow-[var(--apple-shadow-lg)]"
           >
-            <summary className="focus-ring flex items-center justify-between gap-4 p-[1.5rem] sm:p-[1.75rem] cursor-pointer select-none [&::-webkit-details-marker]:hidden">
+            <summary className="focus-ring flex min-h-[44px] items-center justify-between gap-4 p-[1.5rem] sm:p-[1.75rem] cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
               <span className="min-w-0 text-[15px] sm:text-[17px] font-semibold text-[color:var(--apple-ink)] tracking-tight break-words">
                 {item.question}
               </span>
               <span
-                className="text-[color:var(--apple-muted)] transition-transform duration-300 ease-apple group-open:rotate-180 inline-flex items-center justify-center w-8 h-8 rounded-full bg-[color:var(--apple-btn-secondary-bg)] group-hover:bg-[color:var(--apple-btn-secondary-bg-hover)]"
+                className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-muted)] transition-[transform,background-color,color] duration-300 ease-apple group-hover:bg-[color:var(--apple-btn-secondary-bg-hover)] group-open:rotate-180 group-open:text-[color:var(--apple-ink)]"
                 aria-hidden="true"
               >
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,7 +70,11 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
               </span>
             </summary>
 
-            <div className="px-[1.5rem] sm:px-[1.75rem] pb-[1.5rem] sm:pb-[1.75rem] text-[15px] text-[color:var(--apple-muted)] leading-relaxed animate-fade-in">
+            <div
+              className={`px-[1.5rem] sm:px-[1.75rem] pb-[1.5rem] sm:pb-[1.75rem] text-[15px] text-[color:var(--apple-muted)] leading-relaxed ${
+                shouldAnimate ? 'animate-[fade-in_0.45s_var(--ease-apple)_both] motion-reduce:animate-none' : ''
+              }`}
+            >
               <p>{item.answer}</p>
 
               {item.code ? (
