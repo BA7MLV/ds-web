@@ -351,6 +351,31 @@ import LastAuthor from './components/LastAuthor.vue'
     0 0 0 4px var(--apple-focus-ring);
 }
 
+/* ============================================================
+   正文阅读节奏轻量对齐营销页 body copy（Round 17）：
+   官网正文（faq / stats 副文案）为 15px、≥640px 17px，行高
+   leading-relaxed（1.625，.text-body-large 为 1.65）；VitePress
+   默认 16px + 28px（1.75）行距偏松。字号收敛为同样的 15 → 17
+   两档，行高统一 1.65（17px 时恰为默认的 28px，桌面节奏不变，
+   移动端更紧凑）。仅作用段落与列表，标题 / 代码块 / 表格保持
+   默认尺度。
+   ============================================================ */
+.vp-doc {
+  font-size: 15px;
+}
+
+.vp-doc p,
+.vp-doc li {
+  line-height: 1.65;
+}
+
+/* 断点跟随官网 sm:（640px），与 text-[15px] sm:text-[17px] 同步 */
+@media (min-width: 640px) {
+  .vp-doc {
+    font-size: 17px;
+  }
+}
+
 /* 正文内容图：限制最大宽度、保持比例、统一居中间距 */
 .vp-doc p > img,
 .vp-doc li > img,
