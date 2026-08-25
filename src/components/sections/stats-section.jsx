@@ -50,6 +50,23 @@ const CARD_BASE_DELAY_MS = 120
 const CARD_STAGGER_MS = 90
 const COUNT_UP_DURATION_MS = 900
 
+// Same pattern as hero/faq/mobile-nav: honor the OS setting even when a parent
+// forgets to zero out motionScale, and react to live setting changes.
+const usePrefersReducedMotion = () => {
+  const [prefersReduced, setPrefersReduced] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return undefined
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const handleChange = () => setPrefersReduced(query.matches)
+    handleChange()
+    query.addEventListener('change', handleChange)
+    return () => query.removeEventListener('change', handleChange)
+  }, [])
+
+  return prefersReduced
+}
+
 // Reveals once when the section scrolls into view, so the entrance
 // animation plays where the user can actually see it.
 const useRevealOnce = (enabled) => {
@@ -89,7 +106,8 @@ const parseStatValue = (value) => {
 }
 
 // 卡片显现后数字从 0 计数到目标值，延迟与该卡片的入场对齐，
-// 让数字在卡片落定的同时跳完。动画关闭或系统减弱动态时直接显示最终值。
+// 让数字在卡片落定的同时跳完。动画关闭或系统减弱动态时直接显示最终值
+// （enabled 已折算 prefers-reduced-motion，且随系统设置实时变化）。
 const useCountUp = (value, { enabled, revealed, delayMs }) => {
   const parsed = useMemo(() => parseStatValue(value), [value])
   const [count, setCount] = useState(0)
@@ -97,14 +115,6 @@ const useCountUp = (value, { enabled, revealed, delayMs }) => {
 
   useEffect(() => {
     if (!enabled || !revealed || !parsed || finished) return undefined
-    // motionScale 已覆盖减弱动态，这里再兜底一次，防止父级漏传（同 hero 的做法）
-    if (
-      typeof window === 'undefined' ||
-      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    ) {
-      setFinished(true)
-      return undefined
-    }
 
     let raf = 0
     let start
@@ -194,8 +204,9 @@ const StatCard = ({ stat, t, shouldAnimate, revealed, entranceDelayMs }) => {
 
 export const StatsSection = ({ motionScale = 1 }) => {
   const { t } = useLocale()
+  const prefersReducedMotion = usePrefersReducedMotion()
   const motionAmount = Math.max(0, motionScale)
-  const shouldAnimate = motionAmount > 0
+  const shouldAnimate = motionAmount > 0 && !prefersReducedMotion
   const { ref, revealed } = useRevealOnce(shouldAnimate)
 
   const headerEntranceClass = shouldAnimate
