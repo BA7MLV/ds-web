@@ -90,10 +90,13 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
 
       <div className="mt-6 sm:mt-8 space-y-4">
         {faqItems.map((item) => (
+          // Dark open state lifts the edge above --apple-line-strong (0.12):
+          // against the brighter open card (--apple-card-strong) the 0.12
+          // hairline nearly vanishes, so the expanded card lost its boundary.
           <details
             key={item.id}
             onToggle={handleToggle(item.id)}
-            className="faq-accordion group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)] overflow-hidden transition-[background-color,border-color,box-shadow] duration-500 ease-apple hover:[box-shadow:var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:border-[color:var(--apple-line-strong)] open:[box-shadow:var(--apple-shadow-lg)]"
+            className="faq-accordion group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)] overflow-hidden transition-[background-color,border-color,box-shadow] duration-500 ease-apple hover:[box-shadow:var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:border-[color:var(--apple-line-strong)] dark:open:border-[rgba(255,255,255,0.16)] open:[box-shadow:var(--apple-shadow-lg)]"
           >
             <summary
               aria-expanded={openIds.has(item.id)}
@@ -116,11 +119,14 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
               </span>
             </summary>
 
+            {/* -mt pulls the answer toward its question: the summary's bottom
+                padding alone left a 24-28px gap, so the answer read as a
+                separate block rather than a continuation of the question. */}
             <div
               id={`faq-panel-${item.id}`}
               role="region"
               aria-labelledby={`faq-question-${item.id}`}
-              className={`px-[1.5rem] sm:px-[1.75rem] pb-[1.5rem] sm:pb-[1.75rem] text-[15px] text-[color:var(--apple-muted)] leading-relaxed ${
+              className={`-mt-1.5 sm:-mt-2 px-[1.5rem] sm:px-[1.75rem] pb-[1.5rem] sm:pb-[1.75rem] text-[15px] text-[color:var(--apple-muted)] leading-relaxed ${
                 // Keyed to the open state so the reveal replays on every expand,
                 // not just on first mount. motion-reduce stays as a CSS backstop
                 // for the pre-hydration frame before the JS recheck kicks in.
@@ -132,7 +138,10 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
               <p>{item.answer}</p>
 
               {item.code ? (
-                <pre className="mt-4 rounded-[1rem] bg-[color:var(--apple-surface)] border border-[color:var(--apple-line)] p-4 overflow-x-auto text-[13px] shadow-inner">
+                // dark: upgrade to --apple-line-strong — the 0.08 hairline
+                // disappears where the pure-black code surface meets the
+                // open card (same fix as the screenshot/download frames).
+                <pre className="mt-4 rounded-[1rem] bg-[color:var(--apple-surface)] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] p-4 overflow-x-auto text-[13px] shadow-inner">
                   <code className="font-mono text-[color:var(--apple-ink)]">{item.code}</code>
                 </pre>
               ) : null}
