@@ -148,7 +148,7 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 验收：10/10 落地；详见 ROUND9.md。
 
-### Round 10（已完成，10/10）
+### Round 10（已完成）
 
 性能预算、深色/动效再验、文案第七轮与资源一致性。详见 ROUND10.md。
 
@@ -161,7 +161,14 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 - [x] VitePress `.doc-hero` 深色间距与对比（`9df1d7d`）
 - [x] 全站 `prefers-reduced-motion` 二次扫描（`601bdc8`）
 - [x] zh 文案第七轮 nav/a11y/placeholder（`cca8d00`）
-- [x] en / zh-Hant 同步本轮 copy + PROGRESS 核对（`6e95af2`）
+- [x] en / zh-Hant 同步本轮 copy + PROGRESS 核对（`6e95af2` / `6a617cc`）
+
+验收：10/10 落地；详见 ROUND10.md。
+
+
+### Round 11（进行中）
+
+未使用依赖清理、导航/Stats/Feature a11y 与文案第八轮。详见 ROUND11.md。
 
 ## 待办（后续轮次）
 
