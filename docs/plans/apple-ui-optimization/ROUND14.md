@@ -23,3 +23,22 @@
 - 三语 key 对齐
 - 无错误 Apple shadow 任意类残留
 - PROGRESS 更新
+
+## 验收结果（已完成）
+
+10/10 全部落地（含两项审计无代码变更）。
+
+| # | 事项 | 状态 | SHA |
+|---|------|------|-----|
+| 1 | Hero 首屏节奏 | ✅ | `b93760e` |
+| 2 | FreeModels + Stats 衔接留白 | ✅ | `9afde4a` |
+| 3 | Feature sticky / 移动标题节奏 | ✅ | `847b01b` |
+| 4 | Download 推荐卡对比度 / focus | ✅ | `da70fb0` |
+| 5 | FAQ 打开态深色边框 / 间距 | ✅ | `30ae6df` |
+| 6 | index.html meta / OG 品牌核对 | ✅ 无需改动 | — |
+| 7 | Apple shadow 任意类残留扫描 | ✅ 代码零残留 | — |
+| 8 | zh hero preview 文案第十一轮 | ✅ | `5d9bea3` |
+| 9 | en / zh-Hant 同步 | ✅ | `31adbd3` |
+| 10 | ROUND13 验收 + PROGRESS / 本轮关闭 | ✅ | 见本提交 |
+
+补充：未跟踪 webp / verification 仍不入仓；`apple-touch-icon.png` 缺失记入后续轮次；`npm run build` 复验通过。

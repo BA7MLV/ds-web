@@ -217,20 +217,38 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 验收：10/10 落地；三语 329 keys；详见 ROUND13.md。
 
-### Round 14（进行中）
+### Round 14（已完成）
 
 首屏/区块节奏、下载推荐卡、FAQ 深色、工程卫生与文案第十一轮。详见 ROUND14.md。
+
+- [x] Hero 首屏节奏（`b93760e`）
+- [x] FreeModels + Stats 留白（`9afde4a`）
+- [x] Feature sticky 节奏（`847b01b`）
+- [x] Download 推荐卡 focus（`da70fb0`）
+- [x] FAQ 深色打开态（`30ae6df`）
+- [x] meta/OG 核对（无需改动）
+- [x] shadow token 卫生扫描（代码零残留）
+- [x] zh hero preview 文案（`5d9bea3`）
+- [x] en / zh-Hant 同步（`31adbd3`）
+- [x] ROUND13 验收 + PROGRESS（`87c683c` / 本轮文档）
+
+验收：10/10 落地；详见 ROUND14.md。
+
+### Round 15（进行中）
+
+品牌触控图标、区块衔接、skip link、policy/footer 文案第十二轮。详见 ROUND15.md。
 
 ## 待办（后续轮次）
 
 - [ ] 持续多轮至 ≥20（用户未叫停前不停止）
 - [ ] 可选：软件主页图 PNG 切片相对 webp 仍陈旧（已记录；勿强行提交大图除非有导出流程）
+- [ ] 可选：`apple-touch-icon.png` 缺失（Round 14 审计；Round 15 #1 尝试补齐）
 
 ## PR 列表
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 13 验收完成 · Round 14 进行中 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 14 验收完成 · Round 15 进行中 |
 
 ### Round 1 子代理完成项
 
