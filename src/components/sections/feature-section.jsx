@@ -363,7 +363,9 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                       <OptimizedImage
                         src={sf.imgSrc}
                         alt={t(sf.labelKey)}
-                        className="w-auto h-auto max-w-full max-h-full rounded-[6px] [box-shadow:var(--apple-shadow-xl)]"
+                        // 与 FeatureScreenshotFrame（移动端路径）一致的圆角 + 描边：
+                        // 深色页面上纯黑阴影不可辨，靠 line-strong 描边维持帧边缘可读
+                        className="w-auto h-auto max-w-full max-h-full rounded-[6px] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] [box-shadow:var(--apple-shadow-xl)]"
                         loading={i === 0 ? 'eager' : 'lazy'}
                         fetchPriority={i === 0 ? 'high' : 'auto'}
                         // aspect-video 容器已挡住页面级 CLS；声明固有尺寸让图片在解码前
