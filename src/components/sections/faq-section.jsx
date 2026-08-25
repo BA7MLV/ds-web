@@ -153,27 +153,34 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
                 </pre>
               ) : null}
 
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                {item.actionLabel ? (
-                  <button
-                    type="button"
-                    onClick={item.onAction}
-                    className="focus-ring touch-manipulation inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
-                  >
-                    {item.actionLabel}
-                  </button>
-                ) : null}
-                {item.linkHref ? (
-                  <a
-                    href={item.linkHref}
-                    className="focus-ring touch-manipulation inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
-                    target={item.linkHref.startsWith('http') ? '_blank' : undefined}
-                    rel={item.linkHref.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  >
-                    {item.linkLabel}
-                  </a>
-                ) : null}
-              </div>
+              {/* Only render the actions row when there is a link/button: the
+                  unconditional div left a stray empty mt-4 block on items
+                  without either (e.g. windows-preview). min-h-[44px] lifts the
+                  py-2.5 pills (~39px at 13px text) to the 44px touch minimum;
+                  gap-y-2 keeps wrapped rows tighter than the 12px column gap. */}
+              {item.actionLabel || item.linkHref ? (
+                <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
+                  {item.actionLabel ? (
+                    <button
+                      type="button"
+                      onClick={item.onAction}
+                      className="focus-ring touch-manipulation inline-flex min-h-[44px] items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
+                    >
+                      {item.actionLabel}
+                    </button>
+                  ) : null}
+                  {item.linkHref ? (
+                    <a
+                      href={item.linkHref}
+                      className="focus-ring touch-manipulation inline-flex min-h-[44px] items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
+                      target={item.linkHref.startsWith('http') ? '_blank' : undefined}
+                      rel={item.linkHref.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    >
+                      {item.linkLabel}
+                    </a>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           </details>
         ))}
