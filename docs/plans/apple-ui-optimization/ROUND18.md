@@ -31,3 +31,15 @@ Skip → Nav → Hero CTA → 主内容 全链路复核，无缺口，无需修�
 - build 通过
 - 三语 key 对齐
 - PROGRESS 更新（含体积快扫数字）
+
+## 构建体积快扫
+
+Round 18 复核（`npm run build`，vite 7.2.4，gzip 后尺寸；对比 Round 10 预算笔记）：
+
+- 主包 `index-*.js`：368.79 kB（gzip 110.98 kB）。Round 10 为 363.56 kB（gzip 109.78 kB），
+  gzip +1.20 kB，来自 Round 11–17 的文案与组件小改，仍远在 gzip ≤ 150 kB 预算内，无需拆分。
+- CSS `index-*.css`：82.46 kB（gzip 13.60 kB），对比 Round 10 的 13.32 kB 微增 0.28 kB，预算内。
+- Locale chunk：`en-*.js` 21.68 kB（gzip 7.78 kB，Round 10 为 7.59 kB）、
+  `zh-Hant-*.js` 20.66 kB（gzip 8.75 kB，Round 10 为 8.53 kB），仍为按需懒加载独立 chunk。
+- 结论：各产物较 Round 10 仅有 kB 级自然增长，预算充裕，本轮不做架构调整；
+  build 期间同步的 `downloads.json` 已按惯例回滚，不随本项提交。
