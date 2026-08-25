@@ -24,7 +24,7 @@ export const Footer = ({ onOpenPolicy = () => {} }) => {
   const { isDark } = useTheme()
   const { t } = useLocale()
   return (
-    <footer className="border-t border-[color:var(--apple-line)] mt-4 sm:mt-6 bg-[color:var(--apple-card)] backdrop-blur-2xl">
+    <footer className="border-t border-[color:var(--apple-line)] mt-4 sm:mt-6 bg-[color:var(--apple-card)] backdrop-blur-2xl px-safe">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12 pb-[calc(2.5rem+env(safe-area-inset-bottom))] sm:pb-[calc(3rem+env(safe-area-inset-bottom))]">
         <div className="flex flex-col gap-8 sm:gap-10">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_auto] md:gap-12 items-start">

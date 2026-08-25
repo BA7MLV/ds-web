@@ -196,7 +196,7 @@ export const PolicyModal = ({ type, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center px-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center pt-safe pb-safe pl-[max(1rem,var(--sal))] pr-[max(1rem,var(--sar))]"
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}

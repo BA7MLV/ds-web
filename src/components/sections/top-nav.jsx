@@ -11,7 +11,7 @@ export const TopNav = ({ onDownload = () => {} }) => {
       className="top-nav-safe-area sticky top-0 z-[10010] border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%]"
       aria-label="主导航"
     >
-      <div className="top-nav-content max-w-6xl mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="top-nav-content max-w-6xl mx-auto flex h-14 items-center justify-between pl-[max(1rem,var(--sal))] pr-[max(1rem,var(--sar))] sm:pl-[max(1.5rem,var(--sal))] sm:pr-[max(1.5rem,var(--sar))] lg:pl-[max(2rem,var(--sal))] lg:pr-[max(2rem,var(--sar))]">
         <a
           href="/"
           className="focus-ring flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] transition-opacity hover:opacity-80"
