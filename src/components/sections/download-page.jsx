@@ -241,6 +241,8 @@ export const DownloadPage = ({ onBack = () => {} }) => {
                 再进一级到 16% 白（iOS fill 阶梯），避免按压只剩 scale 一个信号 */}
             <a
               href={releaseUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="focus-ring touch-manipulation mt-6 inline-flex min-h-[2.75rem] select-none items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-6 text-sm font-medium leading-snug text-center text-[color:var(--apple-btn-secondary-text)] transition-[background-color,transform] duration-200 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:bg-[color:var(--apple-btn-secondary-bg-hover)] dark:active:bg-[rgba(255,255,255,0.16)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 dark:ring-1 dark:ring-inset dark:ring-[color:var(--apple-line-strong)]"
             >
               {t('download.openReleases', '打开 GitHub Releases')}
