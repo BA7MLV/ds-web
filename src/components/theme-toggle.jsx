@@ -322,7 +322,7 @@ export const ThemeSelector = ({ className = '' }) => {
                   setIsOpen(false)
                 }}
                 className={`
-                  w-full flex items-center gap-2.5 px-3 py-2
+                  focus-ring w-full flex items-center gap-2.5 px-3 py-2
                   text-xs font-medium text-left
                   transition-colors duration-150
                   motion-reduce:transition-none
