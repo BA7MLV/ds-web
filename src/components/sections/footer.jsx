@@ -61,14 +61,14 @@ export const Footer = ({ onOpenPolicy = () => {} }) => {
           <div className="h-px bg-[color:var(--apple-line)]" aria-hidden="true" />
 
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-            <div className="flex items-center gap-3">
+            <nav className="flex items-center gap-3" aria-label={t('footer.socialLabel', 'Social links')}>
               <a
                 href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={socialLinkClass}
-                aria-label={t('footer.xiaohongshu', 'Xiaohongshu')}
-                title={t('footer.xiaohongshu', 'Xiaohongshu')}
+                aria-label={t('footer.xiaohongshu', 'rednote (Xiaohongshu)')}
+                title={t('footer.xiaohongshu', 'rednote (Xiaohongshu)')}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 16 16" aria-hidden="true" className={socialIconClass}>
                   <path
@@ -96,7 +96,7 @@ export const Footer = ({ onOpenPolicy = () => {} }) => {
                   />
                 </svg>
               </a>
-            </div>
+            </nav>
             <div className="flex flex-col items-center gap-3 sm:items-end">
               <LocaleToggle compact className="w-[9.5rem] sm:w-[10.5rem]" />
               <div className="flex flex-col items-center gap-1.5 text-center text-[color:var(--apple-muted)] sm:items-end sm:text-right">

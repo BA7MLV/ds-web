@@ -238,6 +238,7 @@
   "footer.xiaohongshu": "小紅書",
   "footer.qq": "QQ 群",
   "footer.navLabel": "頁尾連結",
+  "footer.socialLabel": "社群媒體連結",
   "footer.copyright": "© {year} DeepStudent 團隊",
   "policy.about.title": "關於 DeepStudent",
   "policy.about.description": "AI 原生的本地優先開源學習系統，將智慧對話、知識管理、Anki 製卡與全能閱讀器無縫融合。",

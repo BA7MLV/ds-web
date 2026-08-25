@@ -238,6 +238,7 @@
   "footer.xiaohongshu": "rednote (Xiaohongshu)",
   "footer.qq": "QQ group",
   "footer.navLabel": "Footer links",
+  "footer.socialLabel": "Social links",
   "footer.copyright": "© {year} DeepStudent Team.",
   "policy.about.title": "About DeepStudent",
   "policy.about.description": "An AI-native, local-first open-source learning system that seamlessly integrates intelligent chat, knowledge management, Anki card generation, and a versatile document reader.",
