@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocale } from '../locale-toggle'
 import { OptimizedImage } from '../optimized-image'
+import { FeatureScreenshotFrame } from '../ui/feature-screenshot-frame'
 import { useScrollY, useViewportHeight } from '../../hooks/useScroll'
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
@@ -87,7 +88,7 @@ const useParallaxProgress = ({
 // 占位图组件 - 精致 shimmer，后续替换为真实截图
 export const ImagePlaceholder = ({ label }) => (
   <div
-    className="w-full aspect-[16/10] rounded-[1rem] sm:rounded-[1.25rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden shadow-[var(--apple-shadow-sm)]"
+    className="w-full aspect-[16/10] rounded-[6px] border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden shadow-[var(--apple-shadow-md)]"
     role="img"
     aria-label={label}
   >
@@ -164,17 +165,12 @@ export const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, a
   return (
     <div
       ref={itemRef}
-      className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-6 sm:gap-8 md:gap-12 transition-all duration-700 ease-out ${isVisible ? anim.visible : anim.hidden}`}
+      className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-5 sm:gap-7 md:gap-12 transition-all duration-700 ease-out ${isVisible ? anim.visible : anim.hidden}`}
       style={{ transitionDelay: `${Math.min(index * 100, 400)}ms` }}
     >
       <div className="w-full md:w-[66%] md:flex-shrink-0">
         {imgSrc ? (
-          <OptimizedImage
-            src={imgSrc}
-            alt={title}
-            className="w-full rounded-[6px] shadow-[var(--apple-shadow-md)] border border-[color:var(--apple-line)]"
-            loading="lazy"
-          />
+          <FeatureScreenshotFrame src={imgSrc} alt={title} loading="lazy" />
         ) : (
           <ImagePlaceholder label={title} />
         )}
@@ -194,7 +190,7 @@ export const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, a
 // ===== 交错图文展示组件 =====
 export const AlternatingFeatureGroup = ({ items, t }) => {
   return (
-    <div className="space-y-[3rem] sm:space-y-[4rem] md:space-y-[6rem]">
+    <div className="space-y-[3.5rem] sm:space-y-[4.5rem] md:space-y-[6rem]">
       {items.map((sf, index) => (
         <ScrollRevealItem
           key={sf.labelKey}
@@ -301,8 +297,10 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                 return (
                   <div
                     key={sf.labelKey}
-                    className={`absolute inset-0 transition-all duration-500 ease-out flex items-center justify-center ${
-                      isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.02]'
+                    className={`absolute inset-0 flex items-center justify-center transition-[opacity,transform] duration-700 ease-apple ${
+                      isActive
+                        ? 'opacity-100 motion-safe:scale-100'
+                        : 'opacity-0 pointer-events-none motion-safe:scale-[1.015]'
                     }`}
                     aria-hidden={!isActive}
                   >
@@ -334,13 +332,13 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
               })}
             </div>
             {/* 图片下方的指示器 */}
-            <div className="flex justify-center gap-1.5 mt-4">
+            <div className="flex justify-center gap-2 mt-5" aria-hidden="true">
               {items.map((sf, i) => (
                 <div
                   key={sf.labelKey}
-                  className={`h-1 rounded-full transition-all duration-400 ${
+                  className={`h-1.5 rounded-full transition-all duration-300 ease-apple ${
                     i === activeIndex
-                      ? 'w-6 bg-[color:var(--apple-ink)]'
+                      ? 'w-6 bg-[color:var(--apple-ink)] shadow-[var(--apple-shadow-sm)]'
                       : 'w-1.5 bg-[color:var(--apple-line-strong)]'
                   }`}
                 />
@@ -361,25 +359,25 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                   className="min-h-[50vh] flex items-center"
                 >
                   <div
-                    className={`py-6 transition-all duration-500 ease-out ${
+                    className={`py-6 transition-[opacity,transform] duration-500 ease-apple ${
                       isActive
-                        ? 'opacity-100 translate-x-0'
-                        : 'opacity-30 translate-x-2'
+                        ? 'opacity-100 motion-safe:translate-x-0'
+                        : 'opacity-30 motion-safe:translate-x-2'
                     }`}
                   >
                     <div className="flex items-center gap-3 mb-3">
                       <span
                         ref={(el) => { markerRefs.current[index] = el }}
-                        className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-[12px] font-bold transition-colors duration-400 ${
+                        className={`inline-flex items-center justify-center w-7 h-7 rounded-full border text-[11px] font-semibold tabular-nums transition-[background-color,border-color,color,box-shadow,transform] duration-500 ease-apple ${
                         isActive
-                          ? 'bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)]'
-                          : 'bg-[color:var(--apple-line-strong)] text-[color:var(--apple-muted)]'
+                          ? 'border-transparent bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] shadow-[var(--apple-shadow-sm)] motion-safe:scale-105'
+                          : 'border-[color:var(--apple-line-strong)] bg-transparent text-[color:var(--apple-muted)] motion-safe:scale-100'
                         }`}
                       >
                         {index + 1}
                       </span>
-                      <div className={`h-px flex-1 transition-all duration-500 ${
-                        isActive ? 'bg-[color:var(--apple-line-strong)]' : 'bg-transparent'
+                      <div className={`h-px flex-1 origin-left bg-[color:var(--apple-line-strong)] transition-[opacity,transform] duration-500 ease-apple ${
+                        isActive ? 'opacity-100 motion-safe:scale-x-100' : 'opacity-0 motion-safe:scale-x-0'
                       }`} />
                     </div>
                     <h3 className="text-[1.25rem] sm:text-[1.375rem] font-semibold text-[color:var(--apple-ink)] mb-2.5 tracking-tight leading-tight">
