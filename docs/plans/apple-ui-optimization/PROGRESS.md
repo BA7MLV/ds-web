@@ -46,6 +46,8 @@
 
 视觉与交互深化：Hero / Feature sticky / Download / FAQ / Footer / 深色模式 / 安全区 / 文案第二轮。
 
+- [x] Feature 移动端交错图文节奏：`ScrollRevealItem` 子功能截图复用 `FeatureScreenshotFrame`（圆角/描边/阴影与主图一致），`ImagePlaceholder` 圆角对齐 `rounded-[6px]`，移动端项内 `gap-5` / 项间 `space-y-[3.5rem]` 收紧节奏
+
 ## 待办（后续轮次）
 
 - [ ] 将 `App.jsx` 拆分为独立 section 组件
