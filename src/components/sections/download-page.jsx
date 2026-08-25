@@ -184,10 +184,14 @@ export const DownloadPage = ({ onBack = () => {} }) => {
         )}
 
         {filteredDownloads.length === 0 ? (
-          <div className="mt-6 flex flex-col items-center rounded-[1.5rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-6 py-12 sm:py-16 text-center [box-shadow:var(--apple-shadow-sm)]">
+          /* 深色下 --apple-shadow-sm（纯黑投影）在黑底上不可见，空态卡片只剩 8% 白
+             的 --apple-line 描边，边界过弱；升级为 --apple-line-strong（12%）。图标
+             底盘同理：8% 白的 secondary-bg 几乎隐形，深色改用 iOS tertiaryFill
+             （rgba(118,118,128,0.24)，与上方分段控件轨道一致）并加 --apple-line 内描边 */
+          <div className="mt-6 flex flex-col items-center rounded-[1.5rem] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card)] px-6 py-12 sm:py-16 text-center [box-shadow:var(--apple-shadow-sm)]">
             <div
               aria-hidden="true"
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-muted)]"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] dark:bg-[rgba(118,118,128,0.24)] ring-1 ring-inset ring-[color:var(--apple-line)] text-[color:var(--apple-muted)]"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none">
                 <path
@@ -205,9 +209,12 @@ export const DownloadPage = ({ onBack = () => {} }) => {
             <p className="mt-2 max-w-sm text-sm leading-relaxed text-[color:var(--apple-muted)] text-pretty">
               {t('download.emptyTab.description', '当前版本尚未提供该平台的安装包，可前往 GitHub Releases 查看全部版本。')}
             </p>
+            {/* 共享 CTA 规格不变（胶囊、14px/500、44px 触控、active 0.97、200ms ease-apple）；
+                深色下 8% 白填充对卡片仅 ~1.9:1，按 .btn-apple-secondary 的描边惯例补
+                --apple-line-strong 内描边，使按钮边界达到非文本对比要求（WCAG 1.4.11） */}
             <a
               href={releaseUrl}
-              className="focus-ring touch-manipulation mt-6 inline-flex min-h-[2.75rem] select-none items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-6 text-sm font-medium leading-snug text-center text-[color:var(--apple-btn-secondary-text)] transition-[background-color,transform] duration-200 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+              className="focus-ring touch-manipulation mt-6 inline-flex min-h-[2.75rem] select-none items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-6 text-sm font-medium leading-snug text-center text-[color:var(--apple-btn-secondary-text)] transition-[background-color,transform] duration-200 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 dark:ring-1 dark:ring-inset dark:ring-[color:var(--apple-line-strong)]"
             >
               {t('download.openReleases', '打开 GitHub Releases')}
             </a>
@@ -224,6 +231,10 @@ export const DownloadPage = ({ onBack = () => {} }) => {
                     isRecommended
                       ? 'bg-[color:var(--apple-card-strong)] border-[color:var(--apple-blue)]/35 ring-1 ring-[color:var(--apple-blue)]/20 [box-shadow:var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--apple-shadow-md)]'
                       : 'bg-[color:var(--apple-card)] border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)]'
+                  } ${
+                    /* fallback（allReleases）卡片是页面唯一内容：深色下 shadow-sm 在
+                       黑底不可见，仅剩 8% 白描边，同空态卡片一样升级为 line-strong */
+                    isFallbackOnly ? 'dark:border-[color:var(--apple-line-strong)]' : ''
                   }`}
                 >
                   {isRecommended ? (
