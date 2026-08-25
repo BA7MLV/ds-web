@@ -259,7 +259,7 @@ export const PolicyModal = ({ type, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="focus-ring touch-manipulation flex-shrink-0 w-11 h-11 rounded-full border border-[color:var(--apple-line)] text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:border-[color:var(--apple-line-strong)] flex items-center justify-center transition-colors bg-[color:var(--apple-card-strong)]"
+            className="focus-ring touch-manipulation flex-shrink-0 w-11 h-11 min-w-11 min-h-11 rounded-full border border-[color:var(--apple-line)] text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:border-[color:var(--apple-line-strong)] flex items-center justify-center transition-colors bg-[color:var(--apple-card-strong)]"
             aria-label={t('policy.close', 'Close dialog')}
             ref={closeButtonRef}
           >
