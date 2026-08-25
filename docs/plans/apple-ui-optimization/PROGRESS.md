@@ -103,6 +103,7 @@
 
 - [x] ROUND6 验收清单回填：ROUND6.md 补记 10 路提交号与补充修复（`33df97d` / `24470f8`），验收复验通过（`npm run build` 于 `c9b7050` 干净 worktree 无错误、无 `shadow-[var(--apple-shadow` 残留、Round 6 清单与 git 提交逐条核对一致）
 - [x] Download CTA 与 btn-apple 最终对齐复查：两处 CTA（平台卡片 + 空态 Releases）把 `transition-all`（默认 150ms/ease，且会连带动画 focus ring）收敛为 `transition-[background-color,transform] duration-200 ease-apple`，与 `.btn-apple-*` 的 0.2s 规格一致；空态 CTA 补齐共享规格缺的 `gap-2` / `leading-snug`（对齐卡片 CTA 与 Policy CTA）；两处补 `select-none` 对齐 `ui/button.jsx` base 与页内 Tab；卡片 CTA 上方补注释固定共享规格、standing 例外仅 `whitespace-normal`（i18n 文案换行）
+- [x] VitePress 侧栏/导航与 `--apple-*` token 再对齐（Layout.vue）：补定义官网 `--apple-nav-bg` / `--apple-nav-border` 两个 nav token；`--vp-nav-bg-color`、`--vp-local-nav-bg-color` 走半透明 nav 底并给 VPNavBar / VPLocalNav 加 blur(20px) saturate(180%) 玻璃态（同 top-nav.jsx）；`--vp-c-gutter` 全局收敛为 `--apple-line`（修掉深色模式纯黑分隔线）、导航范围内再换乘 `--apple-nav-border`；侧栏桌面轨道贴合 `--apple-surface` + `--apple-line` 发丝右缘、移动抽屉用 `--apple-surface-elevated` + `--apple-shadow-lg`；分组标题复用 doc-hero eyebrow 尺度（12px/600/muted），条目对齐 TopNav 链接节奏（13px/400，激活 500，悬停/激活颜色经 brand→ink 流转）
 
 ## 待办（后续轮次）
 

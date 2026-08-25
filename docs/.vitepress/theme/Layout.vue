@@ -45,6 +45,8 @@ import LastAuthor from './components/LastAuthor.vue'
   --apple-btn-primary-bg-hover: #3a3a3c;
   --apple-btn-primary-text: #ffffff;
   --apple-btn-secondary-bg-hover: rgba(0, 0, 0, 0.08);
+  --apple-nav-bg: rgba(251, 251, 253, 0.75);
+  --apple-nav-border: rgba(0, 0, 0, 0.05);
   --apple-selection-bg: rgba(0, 113, 227, 0.15);
   --apple-selection-text: inherit;
   --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
@@ -68,13 +70,16 @@ import LastAuthor from './components/LastAuthor.vue'
   --apple-btn-primary-bg-hover: #f2f2f7;
   --apple-btn-primary-text: #000000;
   --apple-btn-secondary-bg-hover: rgba(255, 255, 255, 0.12);
+  --apple-nav-bg: rgba(0, 0, 0, 0.75);
+  --apple-nav-border: rgba(255, 255, 255, 0.08);
   --apple-selection-bg: rgba(10, 132, 255, 0.25);
   --apple-selection-text: #ffffff;
 }
 
 /* ============================================================
    VitePress 主题变量 → --apple-* token 映射：
-   品牌色收敛为 ink 单色，文本/线条/表面/按钮跟随官网明暗两套值。
+   品牌色收敛为 ink 单色，文本/线条/表面/按钮与导航/侧栏 chrome
+   跟随官网明暗两套值。
    ============================================================ */
 :root {
   /* 官网 TopNav 为 h-14（56px）；logo 高按原 38/64 比例同步收至 32px */
@@ -93,12 +98,21 @@ import LastAuthor from './components/LastAuthor.vue'
 
   --vp-c-divider: var(--apple-line);
   --vp-c-border: var(--apple-line-strong);
+  /* gutter 默认深色为纯黑（#000），统一收敛为官网发丝线 */
+  --vp-c-gutter: var(--apple-line);
 
   --vp-c-bg: var(--apple-surface);
   --vp-c-bg-elv: var(--apple-surface-elevated);
   /* 官网 :root 基底色（同 meta theme-color 亮色值） */
   --vp-c-bg-alt: #f5f5f7;
   --vp-c-bg-soft: #f5f5f7;
+
+  /* 导航与侧栏 chrome 全部走 --apple-* token：
+     顶栏/移动局部导航用官网半透明 nav 底（配合下方玻璃态），
+     侧栏移动抽屉用 elevated 表面（弹层语义），桌面轨道见 ≥960px 覆盖 */
+  --vp-nav-bg-color: var(--apple-nav-bg);
+  --vp-local-nav-bg-color: var(--apple-nav-bg);
+  --vp-sidebar-bg-color: var(--apple-surface-elevated);
 
   --vp-button-brand-bg: var(--apple-btn-primary-bg);
   --vp-button-brand-text: var(--apple-btn-primary-text);
@@ -129,6 +143,61 @@ import LastAuthor from './components/LastAuthor.vue'
 .VPNavBarMenu .VPNavBarMenuLink:hover,
 .VPNavBarMenu .VPNavBarMenuLink.active {
   color: var(--vp-c-text-1);
+}
+
+/* ============================================================
+   导航栏对齐官网 TopNav 玻璃态（top-nav.jsx）：
+   半透明 --apple-nav-bg + blur(20px) saturate(180%)；
+   顶栏与移动局部导航的发丝线在此换乘 --apple-nav-border。
+   ============================================================ */
+.VPNavBar,
+.VPLocalNav {
+  --vp-c-gutter: var(--apple-nav-border);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* ============================================================
+   侧边栏对齐官网 token：
+   - 分组标题复用 doc-hero eyebrow 尺度（12px / 600 / muted）
+   - 条目对齐官网 TopNav 链接节奏（13px / 常规字重，
+     悬停/激活颜色经 --vp-c-brand-1 → --apple-ink 流转）
+   - 桌面轨道贴合 --apple-surface 基底 + --apple-line 发丝右缘
+   - 移动端抽屉保持 elevated 表面并带 --apple-shadow-lg
+   ============================================================ */
+.VPSidebar .VPSidebarItem .link .text {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--vp-c-text-2);
+}
+
+.VPSidebar .VPSidebarItem.is-active > .item .link .text {
+  font-weight: 500;
+}
+
+.VPSidebar .VPSidebarItem.level-0 > .item .text {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--vp-c-text-3);
+}
+
+@media (max-width: 959px) {
+  /* 类型选择器仅为压过默认主题的 .dark .VPSidebar 阴影，勿删 */
+  aside.VPSidebar,
+  html.dark aside.VPSidebar {
+    box-shadow: var(--apple-shadow-lg);
+  }
+}
+
+@media (min-width: 960px) {
+  :root {
+    --vp-sidebar-bg-color: var(--apple-surface);
+  }
+
+  .VPSidebar {
+    border-right: 1px solid var(--vp-c-divider);
+  }
 }
 
 /* 全站选区颜色与官网一致 */
