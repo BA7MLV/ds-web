@@ -1,13 +1,24 @@
-# 简介
+---
+title: 简介
+---
+
+<section class="doc-hero">
+  <p class="doc-hero-eyebrow">DeepStudent</p>
+  <h1 class="doc-hero-title">AI 原生、本地优先的<br><span class="highlight">开源学习系统</span></h1>
+  <p class="doc-hero-subtitle">基于 Tauri 2 构建，AGPL-3.0 开源。以 Chat V2 作为统一入口，将 Learning Hub、Skills、MCP 工具生态与 CardForge 制卡任务连接为一个可持续学习闭环。</p>
+  <div class="doc-hero-actions">
+    <a class="doc-hero-btn primary" href="./download.html">
+      <span>客户端下载</span>
+      <svg class="doc-hero-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12" />
+        <polyline points="12 5 19 12 12 19" />
+      </svg>
+    </a>
+    <a class="doc-hero-btn secondary" href="./start.html">快速入门</a>
+  </div>
+</section>
 
 ![主图](/img/example/软件主页图-1280.webp)
-
-
-::: tip 简介
-**DeepStudent** 是一款基于 Tauri 2 构建的 **AI 原生、本地优先**开源学习系统（AGPL-3.0）。
-
-实际代码实现以 **Chat V2 作为统一入口**，将 Learning Hub（学习资源中心）、Skills、MCP 工具生态与 CardForge 制卡任务连接为一个可持续学习闭环。
-:::
 
 <div>
   <p>关注我们的小红书账号：<a href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f">小红书</a></p>
@@ -43,3 +54,142 @@
 - 🧭 [功能介绍](function.md)
 - 🏗️ [功能架构](feature-architecture.md)
 - ❓ [常见问题](A-Q.md)
+
+<style>
+/* ============================================================
+   doc-hero：逐项复用 Layout.vue 定义的官网 --apple-* token，
+   视觉配方与 CustomHome.vue 的 hero 一致（尺寸按文档栏宽收窄）。
+   选择器统一带 .doc-hero 前缀并压过 .vp-doc 默认样式。
+   ============================================================ */
+.doc-hero {
+  margin: 0.25rem 0 2rem;
+}
+
+.doc-hero .doc-hero-eyebrow {
+  margin: 0 0 0.75rem;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--apple-muted);
+}
+
+.doc-hero .doc-hero-title {
+  margin: 0 0 1rem;
+  border: none;
+  padding: 0;
+  font-size: clamp(2rem, 4.5vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  color: var(--apple-ink);
+  text-wrap: balance;
+}
+
+.doc-hero .doc-hero-title .highlight {
+  background: var(--apple-title-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.doc-hero .doc-hero-subtitle {
+  margin: 0 0 1.75rem;
+  font-size: clamp(1rem, 1.5vw, 1.0625rem);
+  line-height: 1.65;
+  color: var(--apple-ink-secondary);
+}
+
+.doc-hero .doc-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.doc-hero .doc-hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.75rem;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s var(--ease-apple);
+}
+
+.doc-hero .doc-hero-btn:active {
+  transform: scale(0.98);
+}
+
+.doc-hero .doc-hero-btn:focus-visible {
+  outline: 2px solid var(--apple-ink);
+  outline-offset: 2px;
+}
+
+.doc-hero .doc-hero-btn.primary {
+  color: var(--apple-btn-primary-text);
+  background-color: var(--apple-btn-primary-bg);
+}
+
+.doc-hero .doc-hero-btn.primary:hover {
+  color: var(--apple-btn-primary-text);
+  background-color: var(--apple-btn-primary-bg-hover);
+}
+
+.doc-hero .doc-hero-btn.secondary {
+  color: var(--apple-ink);
+  background: transparent;
+  border: 1px solid var(--apple-line-strong);
+}
+
+.doc-hero .doc-hero-btn.secondary:hover {
+  color: var(--apple-ink);
+  background: var(--apple-btn-secondary-bg-hover);
+}
+
+.doc-hero .doc-hero-arrow {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  opacity: 0.9;
+  transition: transform 0.15s ease-out, opacity 0.15s ease-out;
+}
+
+.doc-hero .doc-hero-btn.primary:hover .doc-hero-arrow {
+  transform: translateX(2px);
+  opacity: 1;
+}
+
+@media (max-width: 639px) {
+  .doc-hero .doc-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .doc-hero .doc-hero-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doc-hero .doc-hero-btn,
+  .doc-hero .doc-hero-arrow {
+    transition: none;
+  }
+
+  .doc-hero .doc-hero-btn:active {
+    transform: none;
+  }
+
+  .doc-hero .doc-hero-btn.primary:hover .doc-hero-arrow {
+    transform: none;
+  }
+}
+</style>

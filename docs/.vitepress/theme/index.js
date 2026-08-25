@@ -18,7 +18,10 @@ export default {
   extends: DefaultTheme,
   Layout,
   enhanceApp({ app, router, siteData }) {
-    // 注册自定义首页组件
+    // 全局注册 CustomHome（可在任意 md 中以 <CustomHome /> 挂载）。
+    // Round 5 评估结论：暂不整页挂载——营销首页由官网 / 承担（导航「官网」
+    // 即指向它），且组件内链接/文案与 docs 结构尚未校准；docs 首页改由
+    // index.md 的 .doc-hero 复用同一套 --apple-* token 对齐视觉。
     app.component('CustomHome', CustomHome)
   },
   setup() {
