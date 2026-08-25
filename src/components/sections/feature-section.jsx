@@ -180,6 +180,9 @@ export const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, a
       ref={itemRef}
       className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 sm:gap-6 md:gap-12 transition-[opacity,transform,filter] duration-500 md:duration-700 ease-apple motion-reduce:transition-none md:delay-[var(--reveal-delay,0ms)] ${isVisible ? anim.visible : anim.hidden}`}
       style={{ '--reveal-delay': `${Math.min(index * 100, 400)}ms` }}
+      // 未浮现的条目仍在顺序焦点流中（opacity-0 不出焦点流）：
+      // 键盘焦点先于 IntersectionObserver 进入时立即揭示，避免焦点落在不可见内容上
+      onFocus={() => setIsVisible(true)}
     >
       <div className="w-full md:w-[66%] md:flex-shrink-0">
         {imgSrc ? (
@@ -351,6 +354,9 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                     }`}
                     style={{ willChange: isInView && isNearActive ? 'transform, opacity' : 'auto' }}
                     aria-hidden={!isActive}
+                    // aria-hidden 只从无障碍树移除，opacity-0 的层仍留在顺序焦点流里；
+                    // inert 同步把隐藏层踢出 Tab 序列与 find-in-page，焦点不会落在不可见内容上
+                    inert={!isActive}
                   >
                     {sf.imgSrc ? (
                       <OptimizedImage
