@@ -84,9 +84,22 @@
 - [x] ROUND4 验收回填（`022983f`）
 - [x] Apple shadow token 修复（`5493829` / `b35a8a9`）
 
-### Round 6（进行中）
+### Round 6（已完成）
 
-视觉回归、按钮体系统一、深色模式二次审计、截图占位与性能收尾。
+- [x] 按钮体系统一（`4e1e831`）
+- [x] focus-ring 扫描（`1387a5b`）
+- [x] 截图框阴影对齐（`365fa3c`）+ `--apple-shadow-2xl`（`33df97d`）
+- [x] Architecture 深色对比度（`d82f97b`）
+- [x] Download 分段深色（`eb7e719`）
+- [x] Nav 品牌节奏（`146a6d7`）+ lg 断点修复（`24470f8`）
+- [x] FAQ / Policy 标题尺度（`5c2dc7a`）
+- [x] 占位图状态 i18n（`cafa084`）
+- [x] Docs doc-hero 间距（`adc7150`）
+- [x] ROUND5 验收回填（`b07ba3a`）
+
+### Round 7（进行中）
+
+平板断点体验、主题切换进移动菜单、性能与文案第四轮。
 
 - [x] ROUND5 验收清单回填：ROUND5.md 补记 10 路提交号与补充修复（`5493829` / `b35a8a9`），验收复验通过（`npm run build` 无错误、三语各 305 键同步）
 - [x] doc-hero 与 Layout 导航间距/字号一致性：`--vp-nav-height` 收至 56px 对齐官网 TopNav（h-14），`--vp-nav-logo-height` 按原 38/64 比例同步收至 32px；桌面导航链接对齐官网 12px / 常规字重 / muted→ink（悬停与激活）；`docs/index.md` doc-hero 顶部 margin 改 `clamp(0.75rem, 2.5vh, 1.5rem)` 补齐 nav→hero 节奏、底部 2.5rem 收尾，eyebrow 12px 与导航链接同级
