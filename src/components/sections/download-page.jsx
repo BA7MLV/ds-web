@@ -236,10 +236,12 @@ export const DownloadPage = ({ onBack = () => {} }) => {
             </p>
             {/* 共享 CTA 规格不变（胶囊、14px/500、44px 触控、active 0.97、200ms ease-apple）；
                 深色下 8% 白填充对卡片仅 ~1.9:1，按 .btn-apple-secondary 的描边惯例补
-                --apple-line-strong 内描边，使按钮边界达到非文本对比要求（WCAG 1.4.11） */}
+                --apple-line-strong 内描边，使按钮边界达到非文本对比要求（WCAG 1.4.11）。
+                按压反馈同下方卡片 CTA：触控端无 hover，active 先落到 hover 色，深色
+                再进一级到 16% 白（iOS fill 阶梯），避免按压只剩 scale 一个信号 */}
             <a
               href={releaseUrl}
-              className="focus-ring touch-manipulation mt-6 inline-flex min-h-[2.75rem] select-none items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-6 text-sm font-medium leading-snug text-center text-[color:var(--apple-btn-secondary-text)] transition-[background-color,transform] duration-200 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 dark:ring-1 dark:ring-inset dark:ring-[color:var(--apple-line-strong)]"
+              className="focus-ring touch-manipulation mt-6 inline-flex min-h-[2.75rem] select-none items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-6 text-sm font-medium leading-snug text-center text-[color:var(--apple-btn-secondary-text)] transition-[background-color,transform] duration-200 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:bg-[color:var(--apple-btn-secondary-bg-hover)] dark:active:bg-[rgba(255,255,255,0.16)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 dark:ring-1 dark:ring-inset dark:ring-[color:var(--apple-line-strong)]"
             >
               {t('download.openReleases', '打开 GitHub Releases')}
             </a>
@@ -307,13 +309,19 @@ export const DownloadPage = ({ onBack = () => {} }) => {
 
                   <div className="relative mt-auto pt-5">
                     {/* 共享 CTA 规格（同 .btn-apple-* / ui/button.jsx）：胶囊、14px/500、44px 触控、
-                        active 0.97、200ms ease-apple；仅 whitespace-normal 例外以容纳换行的 i18n 文案 */}
+                        active 0.97、200ms ease-apple；仅 whitespace-normal 例外以容纳换行的 i18n 文案。
+                        按压反馈复检：触控端不触发 hover，此前 active 只有 scale 0.97 一个
+                        信号；比照 mobile-nav 的 active:bg 惯例补背景反馈。深色主 CTA 为纯白，
+                        hover #f2f2f7 仅 ~2% 变暗、按压时难以察觉，故 active 再进一级到
+                        #e8e8ed（iOS systemGray5 亮阶）；深色次 CTA 同理由 12% hover 进到
+                        16% 白（iOS quaternary→tertiary→secondary fill 阶梯）。浅色 hover
+                        色差本身足够（主 #1d1d1f→#3a3a3c、次 5%→8% 黑），复用 hover 值 */}
                     <a
                       href={platform.ctaHref}
                       className={`focus-ring touch-manipulation inline-flex w-full sm:w-auto min-h-[2.75rem] select-none items-center justify-center gap-2 rounded-full px-6 text-sm font-medium leading-snug text-center whitespace-normal transition-[background-color,transform] duration-200 ease-apple active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 ${
                         isPrimaryCta
-                          ? 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] [box-shadow:var(--apple-shadow-sm)]'
-                          : 'bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-btn-secondary-text)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)]'
+                          ? 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:bg-[color:var(--apple-btn-primary-bg-hover)] dark:active:bg-[#e8e8ed] [box-shadow:var(--apple-shadow-sm)]'
+                          : 'bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-btn-secondary-text)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:bg-[color:var(--apple-btn-secondary-bg-hover)] dark:active:bg-[rgba(255,255,255,0.16)]'
                       }`}
                     >
                       {platform.ctaLabel}
