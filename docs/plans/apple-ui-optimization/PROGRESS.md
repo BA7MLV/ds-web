@@ -114,20 +114,24 @@
 
 验收：`npm run build` 于 `b5f8ee3` 通过；三语 317 keys；详见 ROUND7.md。
 
-### Round 8（进行中）
+### Round 8（进行中，9/10 已落地）
 
 i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。详见 ROUND8.md。
 
+- [x] `useImageLoader` 错误/重试文案三语 i18n（`3dcce44`）
+- [x] TopNav / Footer / 移动菜单 GitHub 标签 i18n（`1827ae3`）
+- [x] ModeSwitchPanel 使用审计（`548faca`）
+- [x] 截图资源 aspect-ratio 核对（`77d4660`）
+- [x] 平板菜单打开态二次打磨（`6fa27c0`）
+- [x] FreeModels + Stats 深色微对比（`2ccce33`）
+- [x] FAQ / Architecture zh 文案第五轮（`cab1907`）
+- [x] en / zh-Hant 同步（`c01196e`）
+- [ ] VitePress 搜索框 / nav token 再对齐 — 进行中
+- [x] ROUND7 验收核对 + 视觉 QA 记录（随本轮验收文档落地；截图留作本地 artifacts 不入仓）
+
 ## 待办（后续轮次）
 
-- [ ] `useImageLoader` 硬编码中文错误串 i18n
-- [ ] 导航/页脚硬编码 GitHub 标签 i18n
-- [ ] ModeSwitchPanel 使用审计
-- [ ] 截图资源 aspect-ratio 核对
-- [ ] 平板菜单打开态二次打磨
-- [ ] FreeModels / Stats 深色微对比
-- [ ] FAQ / Architecture 文案第五轮
-- [ ] VitePress 搜索框 token 对齐
+- [ ] Round 8 #9 VitePress 搜索框 token 对齐（收尾）
 - [ ] 持续多轮至 ≥20（用户未叫停前不停止）
 
 ## PR 列表
