@@ -264,6 +264,26 @@ import LastAuthor from './components/LastAuthor.vue'
   box-shadow: var(--apple-shadow-sm);
 }
 
+/* 深色微调（Round 16）：
+   - 输入框聚焦描边默认走 brand（→ ink），深色下 1px 近白描边过于生硬；
+     收敛为 --apple-line-strong 发丝线 + --apple-selection-bg 柔和聚焦环
+     （复用全站选区 token，与命中高亮同族）
+   - 选中结果项底色与壳体同为 elevated，仅靠 2px ink 边框区分；
+     垫 --apple-card-strong 半透明底，选中态以“表面抬升 + 边框”双重成立
+     （selected-bg 变量同步换乘，保证 excerpt 上下渐变收边跟随底色） */
+.dark .VPLocalSearchBox .search-bar:focus-within {
+  border-color: var(--apple-line-strong);
+  box-shadow: 0 0 0 3px var(--apple-selection-bg);
+}
+
+.dark {
+  --vp-local-search-result-selected-bg: var(--apple-card-strong);
+}
+
+.dark .VPLocalSearchBox .result.selected {
+  background: var(--apple-card-strong);
+}
+
 /* ============================================================
    移动局部导航的大纲下拉弹层：
    默认 gutter 底色经 Round 7 的 .VPLocalNav 覆盖后近乎全透明，
