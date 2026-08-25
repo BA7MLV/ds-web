@@ -139,14 +139,17 @@ export const DownloadPage = ({ onBack = () => {} }) => {
 
         {isFallbackOnly ? null : (
           <>
+            {/* 深色轨道取 iOS tertiaryFill（rgba(118,118,128,0.24)，实色≈surface-elevated），
+                thumb 复用 --apple-seg-thumb（与 LocaleToggle 一致，对轨道保持 ~3:1 对比，
+                WCAG 1.4.11）；浅色阴影在深色下几乎不可见，故单独加深 */}
             <div
               role="tablist"
               aria-label={t('download.selectPlatform')}
-              className="relative mt-5 grid w-full max-w-[22.5rem] grid-cols-3 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] p-1"
+              className="relative mt-5 grid w-full max-w-[22.5rem] grid-cols-3 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] dark:bg-[rgba(118,118,128,0.24)] p-1"
             >
               <span
                 aria-hidden="true"
-                className="absolute top-1 bottom-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-full bg-[color:var(--apple-surface-elevated)] dark:bg-[#48484a] shadow-[0_1px_3px_rgba(0,0,0,0.12),0_3px_8px_rgba(0,0,0,0.08)] ring-1 ring-black/[0.04] dark:ring-white/[0.08] transition-transform duration-300 ease-apple motion-reduce:transition-none"
+                className="absolute top-1 bottom-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-full bg-[color:var(--apple-surface-elevated)] dark:bg-[color:var(--apple-seg-thumb)] shadow-[0_1px_3px_rgba(0,0,0,0.12),0_3px_8px_rgba(0,0,0,0.08)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.5),0_3px_8px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.04] dark:ring-white/[0.12] transition-transform duration-300 ease-apple motion-reduce:transition-none"
                 style={{ transform: `translateX(${activeIndex * 100}%)` }}
               />
               {tabs.map((tab, index) => {
