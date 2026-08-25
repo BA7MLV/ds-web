@@ -2,6 +2,8 @@ import { useId } from 'react'
 import { useLocale } from '../locale-toggle'
 
 // 架构图内联 SVG 图标（复制自主项目 ResourceIcons.tsx 的 Notion 风格调色盘）
+// 图标均为装饰性（相邻均有可见文字标签），统一 aria-hidden 以免读屏播报
+// SVG 内部的 <text> 字形（Aa/文 等）
 const archPalette = {
   green:  { bg: '#EDF3EC', fg: '#4F9779', border: '#C6E3C6' },
   orange: { bg: '#FBECDD', fg: '#CC782F', border: '#F5CCAA' },
@@ -12,7 +14,7 @@ const archPalette = {
 }
 
 const ArchNoteIcon = ({ size = 32 }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden="true">
     <path d="M10 4C8.895 4 8 4.895 8 6V42C8 43.105 8.895 44 10 44H38C39.105 44 40 43.105 40 42V14L30 4H10Z" fill={archPalette.green.bg} stroke={archPalette.green.border} strokeWidth="1"/>
     <path d="M30 4L40 14H31C30.448 14 30 13.552 30 13V4Z" fill="black" fillOpacity="0.05"/>
     <rect x="14" y="20" width="16" height="2" rx="1" fill={archPalette.green.fg}/>
@@ -23,7 +25,7 @@ const ArchNoteIcon = ({ size = 32 }) => (
 )
 
 const ArchTextbookIcon = ({ size = 32 }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden="true">
     <rect x="8" y="6" width="28" height="36" rx="2" fill={archPalette.orange.bg} stroke={archPalette.orange.fg} strokeWidth="1.5"/>
     <rect x="8" y="6" width="5" height="36" rx="2" fill={archPalette.orange.fg} fillOpacity="0.15"/>
     <line x1="11" y1="6" x2="11" y2="42" stroke={archPalette.orange.fg} strokeWidth="1" strokeOpacity="0.25"/>
@@ -34,7 +36,7 @@ const ArchTextbookIcon = ({ size = 32 }) => (
 )
 
 const ArchExamIcon = ({ size = 32 }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden="true">
     <g style={{ transformOrigin: '8px 44px', transform: 'rotate(8deg)' }}>
       <path d="M8 6C6.895 6 6 6.895 6 8V40C6 41.105 6.895 42 7 42H31C32.105 42 33 41.105 33 40V12L25 6H8Z" fill={archPalette.purple.bg} stroke={archPalette.purple.fg} strokeWidth="1" opacity="0.5"/>
     </g>
@@ -52,7 +54,7 @@ const ArchExamIcon = ({ size = 32 }) => (
 )
 
 const ArchEssayIcon = ({ size = 32 }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden="true">
     <path d="M10 4C8.895 4 8 4.895 8 6V42C8 43.105 8.895 44 10 44H38C39.105 44 40 43.105 40 42V14L30 4H10Z" fill={archPalette.pink.bg} stroke={archPalette.pink.border} strokeWidth="1"/>
     <path d="M30 4L40 14H31C30.448 14 30 13.552 30 13V4Z" fill="black" fillOpacity="0.05"/>
     <text x="24" y="32" fontSize="22" fontWeight="bold" fontFamily="serif" fontStyle="italic" fill={archPalette.pink.fg} textAnchor="middle">Aa</text>
@@ -60,7 +62,7 @@ const ArchEssayIcon = ({ size = 32 }) => (
 )
 
 const ArchTranslationIcon = ({ size = 32 }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden="true">
     <rect x="20" y="6" width="20" height="24" rx="3" fill={archPalette.blue.bg} stroke={archPalette.blue.fg} strokeWidth="1.5" strokeOpacity="0.6"/>
     <text x="30" y="22" fontSize="14" fontWeight="600" fill={archPalette.blue.fg} textAnchor="middle">A</text>
     <rect x="8" y="18" width="20" height="24" rx="3" fill="#FFFFFF" stroke={archPalette.blue.fg} strokeWidth="1.5"/>
@@ -69,7 +71,7 @@ const ArchTranslationIcon = ({ size = 32 }) => (
 )
 
 const ArchMindmapIcon = ({ size = 32 }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden="true">
     <path d="M10 4C8.895 4 8 4.895 8 6V42C8 43.105 8.895 44 10 44H38C39.105 44 40 43.105 40 42V14L30 4H10Z" fill={archPalette.green.bg} stroke={archPalette.green.border} strokeWidth="1"/>
     <path d="M30 4L40 14H31C30.448 14 30 13.552 30 13V4Z" fill="black" fillOpacity="0.05"/>
     <circle cx="18" cy="26" r="3" fill={archPalette.green.fg}/>
@@ -83,7 +85,7 @@ const ArchMindmapIcon = ({ size = 32 }) => (
 )
 
 const ArchMemoryIcon = ({ size = 32 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <circle cx="12" cy="12" r="10" fill={archPalette.purple.bg} stroke={archPalette.purple.border} strokeWidth="1.2"/>
     <path d="M7 7L17 9" stroke={archPalette.purple.fg} strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.3"/>
     <path d="M7 7L17 17" stroke={archPalette.purple.fg} strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.3"/>
@@ -261,7 +263,8 @@ const SkillsCard = ({ skillTools, subtitle, className = '' }) => (
       <div className="text-[16px] font-semibold tracking-[-0.01em] text-[color:var(--apple-ink)]">Skills</div>
       <div className="mt-1 text-[11px] text-[color:var(--apple-muted)]">{subtitle}</div>
     </div>
-    <div className="mt-3.5 border-t border-[color:var(--apple-line)] pt-3.5">
+    {/* 卡内分隔线深色下同步升到 line-strong：8% 白 hairline 在玻璃卡面上几乎不可见 */}
+    <div className="mt-3.5 border-t border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] pt-3.5">
       <div className="grid grid-cols-2 gap-1.5">
         {skillTools.map((tool) => (
           <div key={tool} className="flex items-center gap-1.5 rounded-lg border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card)] px-2 py-1.5 backdrop-blur-[6px] [box-shadow:inset_0_1px_0_0_var(--apple-soft-line)]">
@@ -283,7 +286,7 @@ const VFSCard = ({ t, className = '' }) => (
       <div className="text-[16px] font-semibold tracking-[-0.01em] text-[color:var(--apple-ink)]">VFS</div>
       <div className="mt-1 text-[11px] text-[color:var(--apple-muted)]">{t('arch.vfs.desc', '虚拟文件系统 · 学习数据')}</div>
     </div>
-    <div className="mt-3.5 border-t border-[color:var(--apple-line)] pt-3.5">
+    <div className="mt-3.5 border-t border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] pt-3.5">
       <div className="flex items-center justify-center gap-2">
         <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70 dark:opacity-95">SQLite</span>
         <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
@@ -295,7 +298,7 @@ const VFSCard = ({ t, className = '' }) => (
         <span className="text-[10px] text-[color:var(--apple-muted)] opacity-50 dark:opacity-95">{t('arch.storage', '全部数据本地存储')}</span>
       </div>
     </div>
-    <div className="mt-3.5 border-t border-[color:var(--apple-line)] pt-3.5">
+    <div className="mt-3.5 border-t border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] pt-3.5">
       <div className="flex flex-col gap-1.5 text-center">
         <span className="text-[10px] font-medium text-[color:var(--apple-muted)]">{t('arch.vfs.ocr', '多引擎级联 OCR')}</span>
         <span className="text-[10px] font-medium text-[color:var(--apple-muted)]">{t('arch.vfs.vector', '多维度向量引擎')}</span>
