@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocale } from '../locale-toggle'
 import { OptimizedImage } from '../optimized-image'
 import { FeatureScreenshotFrame } from '../ui/feature-screenshot-frame'
+import { getScreenshotDimensions } from '../../data/screenshot-dimensions'
 import { useScrollY, useViewportHeight } from '../../hooks/useScroll'
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
@@ -358,6 +359,9 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                         className="w-auto h-auto max-w-full max-h-full rounded-[6px] [box-shadow:var(--apple-shadow-xl)]"
                         loading={i === 0 ? 'eager' : 'lazy'}
                         fetchPriority={i === 0 ? 'high' : 'auto'}
+                        // aspect-video 容器已挡住页面级 CLS；声明固有尺寸让图片在解码前
+                        // 就能按真实宽高比参与 max-w/max-h 约束，crossfade 层间不再跳动
+                        {...getScreenshotDimensions(sf.imgSrc)}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center relative">

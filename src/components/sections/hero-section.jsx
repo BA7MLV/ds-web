@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocale } from '../locale-toggle'
 import { OptimizedImage } from '../optimized-image'
+import { getScreenshotDimensions } from '../../data/screenshot-dimensions'
 import { useScrollY } from '../../hooks/useScroll'
 
 const SUBTEXT_FADE_DURATION_MS = 200
@@ -73,8 +74,7 @@ export const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem]
           fetchPriority="high"
           sizes="(min-width: 1536px) 66vw, (min-width: 1024px) 72vw, 96vw"
           draggable="false"
-          width={1600}
-          height={923}
+          {...getScreenshotDimensions(heroImageSrc)}
         />
       </div>
       <div
