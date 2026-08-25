@@ -49,6 +49,8 @@ import LastAuthor from './components/LastAuthor.vue'
   --apple-nav-border: rgba(0, 0, 0, 0.05);
   --apple-selection-bg: rgba(0, 113, 227, 0.15);
   --apple-selection-text: inherit;
+  --apple-focus-ring: rgba(29, 29, 31, 0.55);
+  --apple-focus-ring-offset: rgba(255, 255, 255, 0.9);
   --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
@@ -74,6 +76,8 @@ import LastAuthor from './components/LastAuthor.vue'
   --apple-nav-border: rgba(255, 255, 255, 0.08);
   --apple-selection-bg: rgba(10, 132, 255, 0.25);
   --apple-selection-text: #ffffff;
+  --apple-focus-ring: rgba(255, 255, 255, 0.5);
+  --apple-focus-ring-offset: rgba(0, 0, 0, 0.9);
 }
 
 /* ============================================================
@@ -310,6 +314,21 @@ import LastAuthor from './components/LastAuthor.vue'
 
 .vp-doc a:hover {
   color: var(--apple-ink);
+}
+
+/* ============================================================
+   正文内链 / 外链键盘 focus 对齐营销页 .focus-ring（Round 16）：
+   官网是 Tailwind ring-2 + ring-offset-2，等价于两层 box-shadow
+   （内层 offset 垫底、外层 ring 描边），颜色经 --apple-focus-ring-*
+   token 流转（亮色 ink@0.55 / 深色 white@0.5，均 ≥3:1）。
+   替换浏览器默认 outline，补小圆角让 ring 贴合行内链接轮廓。
+   ============================================================ */
+.vp-doc a:focus-visible {
+  outline: none;
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 2px var(--apple-focus-ring-offset),
+    0 0 0 4px var(--apple-focus-ring);
 }
 
 /* 正文内容图：限制最大宽度、保持比例、统一居中间距 */
