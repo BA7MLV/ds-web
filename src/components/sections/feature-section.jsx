@@ -389,6 +389,7 @@ export const StickyImageFeatureGroup = ({ items, t }) => {
                         ? 'opacity-100 motion-safe:translate-x-0'
                         : 'opacity-30 motion-safe:translate-x-2'
                     }`}
+                    style={{ willChange: isInView ? 'transform, opacity' : 'auto' }}
                   >
                     <div className="flex items-center gap-3 mb-3">
                       <span
