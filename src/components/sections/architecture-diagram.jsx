@@ -104,13 +104,15 @@ const ArrowHeadMarker = ({ id }) => (
   </marker>
 )
 
-// dasharray 取 0.1 配合 round 线帽渲染为正圆点，比短划线更接近 Apple 图示的点线
+// dasharray 取 0.1 配合 round 线帽渲染为正圆点，比短划线更接近 Apple 图示的点线；
+// 深色下 muted@0.5 对黑底仅约 2.1:1，提到 0.7（约 3.2:1）满足 WCAG 1.4.11 的非文本 3:1
 const flowLineProps = {
   stroke: 'var(--apple-muted)',
   strokeOpacity: '0.5',
   strokeWidth: '1.4',
   strokeLinecap: 'round',
   strokeDasharray: '0.1 7.1',
+  className: 'dark:[stroke-opacity:0.7]',
 }
 
 // 偏移量为点距（7.2）的整数倍，动画循环处无跳变
@@ -118,9 +120,9 @@ const FlowDashAnimation = () => (
   <animate attributeName="stroke-dashoffset" from="0" to="-14.4" dur="2.8s" repeatCount="indefinite"/>
 )
 
-// 连线起点的端口圆点：让线读作"从节点出发"，仅用于单向线
+// 连线起点的端口圆点：让线读作"从节点出发"，仅用于单向线（深色下与点线同步提亮到 ≥3:1）
 const FlowOriginDot = ({ cx, cy }) => (
-  <circle cx={cx} cy={cy} r="2" fill="var(--apple-muted)" opacity="0.45"/>
+  <circle cx={cx} cy={cy} r="2" fill="var(--apple-muted)" opacity="0.45" className="dark:opacity-70"/>
 )
 
 // 水平连接线（细点线 + 流动动画）
@@ -146,7 +148,7 @@ const FlowArrow = ({ label, sublabel, direction = 'right', animate = true, class
         </line>
       </svg>
       <span className="text-[11px] sm:text-[12px] font-medium tracking-[0.01em] text-[color:var(--apple-muted)] whitespace-nowrap leading-tight">{label}</span>
-      {sublabel && <span className="text-[9px] sm:text-[10px] tracking-[0.08em] text-[color:var(--apple-muted)] opacity-60 whitespace-nowrap leading-tight">{sublabel}</span>}
+      {sublabel && <span className="text-[9px] sm:text-[10px] tracking-[0.08em] text-[color:var(--apple-muted)] opacity-60 dark:opacity-90 whitespace-nowrap leading-tight">{sublabel}</span>}
     </div>
   )
 }
@@ -175,7 +177,7 @@ const FlowArrowVertical = ({ label, sublabel, direction = 'down', animate = true
       </svg>
       <div className="flex flex-col gap-0.5">
         <span className="text-[11px] sm:text-[12px] font-medium tracking-[0.01em] text-[color:var(--apple-muted)] whitespace-nowrap leading-tight">{label}</span>
-        {sublabel && <span className="text-[9px] sm:text-[10px] tracking-[0.08em] text-[color:var(--apple-muted)] opacity-60 whitespace-nowrap leading-tight">{sublabel}</span>}
+        {sublabel && <span className="text-[9px] sm:text-[10px] tracking-[0.08em] text-[color:var(--apple-muted)] opacity-60 dark:opacity-90 whitespace-nowrap leading-tight">{sublabel}</span>}
       </div>
     </div>
   )
@@ -183,8 +185,10 @@ const FlowArrowVertical = ({ label, sublabel, direction = 'down', animate = true
 
 // 玻璃态特性标签：顶部内发光模拟玻璃受光边缘
 // 组合阴影必须用任意属性写法（[box-shadow:...]）：shadow-[...] 会把纯 var() 段误判为阴影颜色
+// 深色下 8% 白描边贴着近黑底几乎不可见，升到 line-strong（12%）；
+// 底色刻意保持 --apple-card：换 card-strong 会把 10px muted 文字压到 4.5:1 以下
 const FeatureChip = ({ children }) => (
-  <span className="whitespace-nowrap rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-2.5 py-[3px] text-[10px] leading-tight text-[color:var(--apple-muted)] backdrop-blur-[6px] [box-shadow:inset_0_1px_0_0_var(--apple-soft-line),var(--apple-shadow-sm)]">
+  <span className="whitespace-nowrap rounded-full border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card)] px-2.5 py-[3px] text-[10px] leading-tight text-[color:var(--apple-muted)] backdrop-blur-[6px] [box-shadow:inset_0_1px_0_0_var(--apple-soft-line),var(--apple-shadow-sm)]">
     {children}
   </span>
 )
@@ -201,7 +205,7 @@ const NodeCaption = ({ title, desc }) => (
 const ChatNode = ({ chatFeatures, chatFeaturesRow4, desc, bubbleClassName }) => (
   <div className="flex flex-col items-center">
     <div className={`relative ${bubbleClassName}`}>
-      <svg className="absolute inset-0 h-full w-full opacity-[0.08]" viewBox="0 0 56 56" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <svg className="absolute inset-0 h-full w-full opacity-[0.08] dark:opacity-[0.12]" viewBox="0 0 56 56" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
         <rect x="2" y="4" width="52" height="40" rx="8" fill="var(--apple-muted)"/>
         <path d="M16 44L22 51L28 44" fill="var(--apple-muted)"/>
       </svg>
@@ -226,7 +230,7 @@ const ChatNode = ({ chatFeatures, chatFeaturesRow4, desc, bubbleClassName }) => 
 const HubNode = ({ resourceTypes, desc, folderClassName, iconSize = 20 }) => (
   <div className="flex flex-col items-center">
     <div className={`relative ${folderClassName}`}>
-      <svg className="absolute inset-0 h-full w-full opacity-[0.10]" viewBox="0 0 48 48" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <svg className="absolute inset-0 h-full w-full opacity-[0.10] dark:opacity-[0.15]" viewBox="0 0 48 48" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
         <path d="M6 10C6 8.895 6.895 8 8 8H18L21 11H40C41.105 11 42 11.895 42 13V39C42 40.105 41.105 41 40 41H8C6.895 41 6 40.105 6 39V10Z" fill="#E8B849"/>
         <path d="M6 10C6 8.895 6.895 8 8 8H17C17.552 8 18 8.448 18 9V11H6V10Z" fill="#D4A53A"/>
       </svg>
@@ -245,9 +249,10 @@ const HubNode = ({ resourceTypes, desc, folderClassName, iconSize = 20 }) => (
   </div>
 )
 
-// 玻璃态节点卡片公共样式：内高光 + 悬停时提升通透度与投影（不位移，保持与连线的视觉锚定）
+// 玻璃态节点卡片公共样式：内高光 + 悬停时提升通透度与投影（不位移，保持与连线的视觉锚定）；
+// 深色下卡面与纯黑页面仅约 1.2:1，靠 line-strong 描边而非提亮底色来立边界（提底色会牺牲卡内文字对比）
 const glassNodeCardClassName =
-  'glass-card rounded-[1.25rem] px-5 py-5 [box-shadow:inset_0_1px_0_0_var(--apple-soft-line),var(--apple-shadow-md)] transition-[box-shadow,background-color,border-color] duration-500 ease-apple hover:bg-[color:var(--apple-card-hover)] hover:[box-shadow:inset_0_1px_0_0_var(--apple-soft-line),var(--apple-shadow-lg)] motion-reduce:transition-none'
+  'glass-card rounded-[1.25rem] px-5 py-5 dark:border-[color:var(--apple-line-strong)] [box-shadow:inset_0_1px_0_0_var(--apple-soft-line),var(--apple-shadow-md)] transition-[box-shadow,background-color,border-color] duration-500 ease-apple hover:bg-[color:var(--apple-card-hover)] hover:[box-shadow:inset_0_1px_0_0_var(--apple-soft-line),var(--apple-shadow-lg)] motion-reduce:transition-none'
 
 // Skills 玻璃态卡片
 const SkillsCard = ({ skillTools, subtitle, className = '' }) => (
@@ -259,7 +264,7 @@ const SkillsCard = ({ skillTools, subtitle, className = '' }) => (
     <div className="mt-3.5 border-t border-[color:var(--apple-line)] pt-3.5">
       <div className="grid grid-cols-2 gap-1.5">
         {skillTools.map((tool) => (
-          <div key={tool} className="flex items-center gap-1.5 rounded-lg border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-2 py-1.5 backdrop-blur-[6px] [box-shadow:inset_0_1px_0_0_var(--apple-soft-line)]">
+          <div key={tool} className="flex items-center gap-1.5 rounded-lg border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card)] px-2 py-1.5 backdrop-blur-[6px] [box-shadow:inset_0_1px_0_0_var(--apple-soft-line)]">
             <svg width="8" height="8" viewBox="0 0 10 10" fill="none" className="shrink-0" aria-hidden="true">
               <circle cx="5" cy="5" r="2" fill="var(--apple-muted)" opacity="0.5"/>
             </svg>
@@ -271,7 +276,7 @@ const SkillsCard = ({ skillTools, subtitle, className = '' }) => (
   </div>
 )
 
-// VFS 玻璃态卡片
+// VFS 玻璃态卡片；次级小字深色下统一提到 0.95：muted@0.5/0.7 在深色卡面上只有约 2.2–3.1:1
 const VFSCard = ({ t, className = '' }) => (
   <div className={`${glassNodeCardClassName} ${className}`}>
     <div className="text-center">
@@ -280,14 +285,14 @@ const VFSCard = ({ t, className = '' }) => (
     </div>
     <div className="mt-3.5 border-t border-[color:var(--apple-line)] pt-3.5">
       <div className="flex items-center justify-center gap-2">
-        <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">SQLite</span>
+        <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70 dark:opacity-95">SQLite</span>
         <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
-        <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">LanceDB</span>
+        <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70 dark:opacity-95">LanceDB</span>
         <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
-        <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70">Blob</span>
+        <span className="text-[10px] text-[color:var(--apple-muted)] opacity-70 dark:opacity-95">Blob</span>
       </div>
       <div className="mt-1.5 text-center">
-        <span className="text-[10px] text-[color:var(--apple-muted)] opacity-50">{t('arch.storage', '全部数据本地存储')}</span>
+        <span className="text-[10px] text-[color:var(--apple-muted)] opacity-50 dark:opacity-95">{t('arch.storage', '全部数据本地存储')}</span>
       </div>
     </div>
     <div className="mt-3.5 border-t border-[color:var(--apple-line)] pt-3.5">
@@ -295,9 +300,9 @@ const VFSCard = ({ t, className = '' }) => (
         <span className="text-[10px] font-medium text-[color:var(--apple-muted)]">{t('arch.vfs.ocr', '多引擎级联 OCR')}</span>
         <span className="text-[10px] font-medium text-[color:var(--apple-muted)]">{t('arch.vfs.vector', '多维度向量引擎')}</span>
         <div className="mt-0.5 flex items-center justify-center gap-2">
-          <span className="text-[9px] text-[color:var(--apple-muted)] opacity-50">{t('arch.vfs.vector.text', '文本嵌入')}</span>
+          <span className="text-[9px] text-[color:var(--apple-muted)] opacity-50 dark:opacity-95">{t('arch.vfs.vector.text', '文本嵌入')}</span>
           <span className="text-[9px] text-[color:var(--apple-muted)] opacity-30">|</span>
-          <span className="text-[9px] text-[color:var(--apple-muted)] opacity-50">{t('arch.vfs.vector.cross', '跨维度检索')}</span>
+          <span className="text-[9px] text-[color:var(--apple-muted)] opacity-50 dark:opacity-95">{t('arch.vfs.vector.cross', '跨维度检索')}</span>
         </div>
       </div>
     </div>
