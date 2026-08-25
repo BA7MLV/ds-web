@@ -200,10 +200,12 @@ const LazyImageWithFallback = forwardRef(({
             {message}
           </span>
           {!isOffline && maxRetries > 0 && (
+            // 视觉上保持紧凑胶囊，::before 扩展命中区至 HIG 44px 最小触控目标
+            // （与 theme-toggle 同一模式），touch-manipulation 消除双击缩放延迟
             <button
               type="button"
               onClick={handleRetry}
-              className="focus-ring rounded-full bg-[color:var(--apple-blue-soft)] px-3.5 py-1.5 text-xs font-medium text-[color:var(--apple-blue)] hover:bg-[color:var(--apple-blue)] hover:text-white active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
+              className="focus-ring relative touch-manipulation rounded-full bg-[color:var(--apple-blue-soft)] px-3.5 py-1.5 text-xs font-medium text-[color:var(--apple-blue)] before:absolute before:-inset-2 before:rounded-full before:content-[''] hover:bg-[color:var(--apple-blue)] hover:text-white active:scale-95 transition-all motion-reduce:transition-none motion-reduce:active:scale-100"
             >
               {t('placeholder.retry')}
             </button>
