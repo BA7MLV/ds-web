@@ -200,6 +200,10 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
   }
 
   const handleKeyDown = (event) => {
+    // Leave modified keys to the browser (e.g. Alt+Left = history back,
+    // Ctrl/Cmd+Home = scroll to top) instead of hijacking them for roving focus
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return
+
     switch (event.key) {
       case 'ArrowRight':
       case 'ArrowDown':
@@ -269,6 +273,9 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
               onClick={() => setLocale(option.value)}
               className={cn(
                 'focus-ring relative flex items-center justify-center rounded-full leading-none',
+                // 聚焦时提升层级，避免 ring-offset 外扩的焦点环被相邻分段的
+                // 命中区域伪元素/文字盖住（浅色与深色主题下同样生效）
+                'focus-visible:z-10',
                 // 触控目标：视觉高度不变，伪元素向上下各扩展 8px，
                 // 使命中区域达到 ≥44px（Apple HIG 最小触控目标），与 ThemeToggle 一致；
                 // 仅纵向扩展，避免相邻分段的命中区域互相重叠
