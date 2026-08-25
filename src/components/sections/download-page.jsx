@@ -207,7 +207,7 @@ export const DownloadPage = ({ onBack = () => {} }) => {
             </p>
             <a
               href={releaseUrl}
-              className="focus-ring touch-manipulation mt-6 inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-6 text-sm font-medium text-[color:var(--apple-btn-secondary-text)] transition-all hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+              className="focus-ring touch-manipulation mt-6 inline-flex min-h-[2.75rem] select-none items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-6 text-sm font-medium leading-snug text-center text-[color:var(--apple-btn-secondary-text)] transition-[background-color,transform] duration-200 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
             >
               {t('download.openReleases', '打开 GitHub Releases')}
             </a>
@@ -256,9 +256,11 @@ export const DownloadPage = ({ onBack = () => {} }) => {
                   </div>
 
                   <div className="relative mt-auto pt-5">
+                    {/* 共享 CTA 规格（同 .btn-apple-* / ui/button.jsx）：胶囊、14px/500、44px 触控、
+                        active 0.97、200ms ease-apple；仅 whitespace-normal 例外以容纳换行的 i18n 文案 */}
                     <a
                       href={platform.ctaHref}
-                      className={`focus-ring touch-manipulation inline-flex w-full sm:w-auto min-h-[2.75rem] items-center justify-center gap-2 rounded-full px-6 text-sm font-medium leading-snug text-center whitespace-normal transition-all active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 ${
+                      className={`focus-ring touch-manipulation inline-flex w-full sm:w-auto min-h-[2.75rem] select-none items-center justify-center gap-2 rounded-full px-6 text-sm font-medium leading-snug text-center whitespace-normal transition-[background-color,transform] duration-200 ease-apple active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 ${
                         isPrimaryCta
                           ? 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] [box-shadow:var(--apple-shadow-sm)]'
                           : 'bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-btn-secondary-text)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)]'

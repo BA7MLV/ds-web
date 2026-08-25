@@ -102,6 +102,7 @@
 平板断点体验、主题切换进移动菜单、性能与文案第四轮。
 
 - [x] ROUND6 验收清单回填：ROUND6.md 补记 10 路提交号与补充修复（`33df97d` / `24470f8`），验收复验通过（`npm run build` 于 `c9b7050` 干净 worktree 无错误、无 `shadow-[var(--apple-shadow` 残留、Round 6 清单与 git 提交逐条核对一致）
+- [x] Download CTA 与 btn-apple 最终对齐复查：两处 CTA（平台卡片 + 空态 Releases）把 `transition-all`（默认 150ms/ease，且会连带动画 focus ring）收敛为 `transition-[background-color,transform] duration-200 ease-apple`，与 `.btn-apple-*` 的 0.2s 规格一致；空态 CTA 补齐共享规格缺的 `gap-2` / `leading-snug`（对齐卡片 CTA 与 Policy CTA）；两处补 `select-none` 对齐 `ui/button.jsx` base 与页内 Tab；卡片 CTA 上方补注释固定共享规格、standing 例外仅 `whitespace-normal`（i18n 文案换行）
 
 ## 待办（后续轮次）
 
