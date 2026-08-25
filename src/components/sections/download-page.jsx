@@ -117,12 +117,17 @@ export const DownloadPage = ({ onBack = () => {} }) => {
     <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[calc(6.854rem+var(--sab))] sm:pb-[calc(11.09rem+var(--sab))]">
       <div className="sticky top-0 z-40 border-b border-[color:var(--apple-nav-border)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%] pt-safe">
         <div className="max-w-5xl mx-auto flex items-center justify-between py-1.5 pl-[max(1rem,var(--sal))] pr-[max(1rem,var(--sar))] sm:pl-[max(1.5rem,var(--sal))] sm:pr-[max(1.5rem,var(--sar))]">
+          {/* 返回控件按 44×44 触控最小值兜底：min-h 之外补 min-w，防止短标签
+              （文案压缩轮后可能只剩 2 字）把可点区收窄到 44px 以下（HIG /
+              WCAG 2.5.8）；select-none 阻止长按选中文字干扰点按，箭头为纯装饰
+              字形，aria-hidden 避免读屏播报“向左箭头” */}
           <button
             type="button"
             onClick={onBack}
-            className="focus-ring touch-manipulation inline-flex min-h-[2.75rem] items-center gap-2 rounded-full -ml-2 px-2 text-sm font-medium text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
+            className="focus-ring touch-manipulation inline-flex min-h-[2.75rem] min-w-[2.75rem] select-none items-center justify-center gap-2 rounded-full -ml-2 px-2 text-sm font-medium text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] active:text-[color:var(--apple-ink)] transition-colors"
           >
-← {t('download.backHome')}
+            <span aria-hidden="true">←</span>
+            {t('download.backHome')}
           </button>
           <div className="flex items-center gap-2 sm:gap-3">
             <ThemeToggle />
