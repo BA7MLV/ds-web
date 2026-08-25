@@ -860,3 +860,26 @@
     animation: none;
   }
 }
+
+/* FAQ accordion — animate native <details> expand/collapse height.
+   Progressive enhancement: engines without ::details-content / interpolate-size
+   (which invalidate or ignore these rules) keep the instant toggle, and the
+   panel fade in faq-section.jsx still provides motion there. Height motion is
+   gated to no-preference so reduced-motion users get an instant toggle. */
+@media (prefers-reduced-motion: no-preference) {
+  .faq-accordion {
+    interpolate-size: allow-keywords;
+  }
+
+  .faq-accordion::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size 0.4s var(--ease-apple),
+      content-visibility 0.4s allow-discrete;
+  }
+
+  .faq-accordion[open]::details-content {
+    block-size: auto;
+  }
+}

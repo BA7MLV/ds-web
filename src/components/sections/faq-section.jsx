@@ -1,9 +1,27 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useLocale } from '../locale-toggle'
 
+// Same pattern as hero/mobile-nav: honor the OS setting even when a parent
+// forgets to zero out motionScale, and react to live setting changes.
+const usePrefersReducedMotion = () => {
+  const [prefersReduced, setPrefersReduced] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return undefined
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const handleChange = () => setPrefersReduced(query.matches)
+    handleChange()
+    query.addEventListener('change', handleChange)
+    return () => query.removeEventListener('change', handleChange)
+  }, [])
+
+  return prefersReduced
+}
+
 export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
-  const shouldAnimate = motionScale > 0
+  const prefersReducedMotion = usePrefersReducedMotion()
+  const shouldAnimate = motionScale > 0 && !prefersReducedMotion
   const { t } = useLocale()
   // Mirrors the native <details> open state so <summary> can expose an explicit
   // aria-expanded value for assistive tech that doesn't announce it natively.
@@ -75,7 +93,7 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
           <details
             key={item.id}
             onToggle={handleToggle(item.id)}
-            className="group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)] overflow-hidden transition-[background-color,border-color,box-shadow] duration-500 ease-apple hover:[box-shadow:var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:border-[color:var(--apple-line-strong)] open:[box-shadow:var(--apple-shadow-lg)]"
+            className="faq-accordion group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] [box-shadow:var(--apple-shadow-sm)] overflow-hidden transition-[background-color,border-color,box-shadow] duration-500 ease-apple hover:[box-shadow:var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:border-[color:var(--apple-line-strong)] open:[box-shadow:var(--apple-shadow-lg)]"
           >
             <summary
               aria-expanded={openIds.has(item.id)}
@@ -103,7 +121,12 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
               role="region"
               aria-labelledby={`faq-question-${item.id}`}
               className={`px-[1.5rem] sm:px-[1.75rem] pb-[1.5rem] sm:pb-[1.75rem] text-[15px] text-[color:var(--apple-muted)] leading-relaxed ${
-                shouldAnimate ? 'animate-[fade-in_0.45s_var(--ease-apple)_both] motion-reduce:animate-none' : ''
+                // Keyed to the open state so the reveal replays on every expand,
+                // not just on first mount. motion-reduce stays as a CSS backstop
+                // for the pre-hydration frame before the JS recheck kicks in.
+                shouldAnimate && openIds.has(item.id)
+                  ? 'animate-[fade-in_0.45s_var(--ease-apple)_both] motion-reduce:animate-none'
+                  : ''
               }`}
             >
               <p>{item.answer}</p>
