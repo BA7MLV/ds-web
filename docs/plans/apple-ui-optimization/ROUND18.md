@@ -17,6 +17,15 @@
 9. en / zh-Hant 同步本轮 copy
 10. ROUND17 验收最终核对 + PROGRESS 关闭 Round 17 / 开启本轮记录
 
+## Tab 顺序烟雾
+
+Skip → Nav → Hero CTA → 主内容 全链路复核，无缺口，无需修改：
+
+- `.skip-link` 是 DOM 首个可聚焦元素（`App.jsx`），聚焦时以 fixed 定位浮出（`index.css`），指向 `#main-content`（`tabIndex={-1}` + `scroll-mt` 避开 sticky nav）。
+- `TopNav` 紧随其后：品牌 → 功能 / 常见问答 / 文档 / GitHub / 下载 → 主题与语言切换 → 移动端菜单，与视觉顺序一致。
+- Hero 文案列的 `order-2 lg:order-1` 只重排无焦点元素的图片列，CTA（下载 / 了解功能）Tab 顺序与阅读顺序一致；预览 tablist 走 roving tabindex，仅占一个 Tab 位。
+- `src/` 全量扫描无正值 `tabIndex`；SEO fallback（`#ds-seo-fallback`）在 JS 环境下 `display: none`，不占焦点。
+
 ## 验收
 
 - build 通过
