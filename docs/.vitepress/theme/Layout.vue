@@ -200,6 +200,62 @@ import LastAuthor from './components/LastAuthor.vue'
   }
 }
 
+/* ============================================================
+   本地搜索对齐 --apple-* token（顶栏搜索按钮 / 搜索弹窗 / 移动大纲下拉）：
+   - 弹窗遮罩复用 --apple-card 半透明底，叠加官网玻璃态 blur 成磨砂效果
+   - 弹窗壳体走 elevated 表面（弹层语义）+ --apple-line 发丝线
+     + --apple-shadow-lg；命中高亮换乘全站选区 token（--apple-selection-*）
+   - 顶栏搜索按钮描边从品牌色收敛为发丝线（悬停加深一档）
+   ============================================================ */
+:root {
+  --vp-backdrop-bg-color: var(--apple-card);
+  --vp-local-search-bg: var(--apple-surface-elevated);
+  --vp-local-search-result-bg: var(--apple-surface-elevated);
+  --vp-local-search-result-selected-bg: var(--apple-surface-elevated);
+  --vp-local-search-highlight-bg: var(--apple-selection-bg);
+  --vp-local-search-highlight-text: var(--apple-ink);
+}
+
+.VPLocalSearchBox .backdrop {
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* 移动端壳体为全屏（border-radius: 0），边框与投影仅桌面生效 */
+@media (min-width: 768px) {
+  .VPLocalSearchBox .shell {
+    border: 1px solid var(--apple-line);
+    box-shadow: var(--apple-shadow-lg);
+  }
+
+  .VPNavBarSearch .DocSearch-Button {
+    border: 1px solid var(--apple-line);
+  }
+
+  .VPNavBarSearch .DocSearch-Button:hover {
+    border-color: var(--apple-line-strong);
+  }
+}
+
+/* 弹窗底部快捷键 kbd 默认为固定灰值，换乘发丝线与 --apple-shadow-sm */
+.VPLocalSearchBox .shell .search-keyboard-shortcuts kbd {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  box-shadow: var(--apple-shadow-sm);
+}
+
+/* ============================================================
+   移动局部导航的大纲下拉弹层：
+   默认 gutter 底色经 Round 7 的 .VPLocalNav 覆盖后近乎全透明，
+   会漏出页面内容；改回不透明 elevated 表面，边框收敛为发丝线，
+   阴影换乘 --apple-shadow-lg（弹层语义，与搜索弹窗一致）。
+   ============================================================ */
+.VPLocalNav .VPLocalNavOutlineDropdown .items {
+  border: 1px solid var(--vp-c-divider);
+  background-color: var(--vp-c-bg-elv);
+  box-shadow: var(--apple-shadow-lg);
+}
+
 /* 全站选区颜色与官网一致 */
 ::selection {
   background: var(--apple-selection-bg);
