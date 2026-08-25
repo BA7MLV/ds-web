@@ -5,8 +5,9 @@ import { useScrollY } from '../../hooks/useScroll'
 
 const logo = '/logo_mono_svg.svg'
 
-// Nav chrome (hairline border + soft shadow) appears once the page is
-// scrolled past this offset, so the bar blends into the hero at rest.
+// Nav chrome (hairline border, soft shadow, more opaque backdrop) appears
+// once the page is scrolled past this offset, so the bar blends into the
+// hero at rest but keeps link contrast over whatever blurs behind it.
 const SCROLL_CHROME_THRESHOLD = 8
 
 // Single source of truth for the brand lockup: rendered in the nav bar and
@@ -25,10 +26,10 @@ export const TopNav = ({ onDownload = () => {} }) => {
   const isScrolled = scrollY > SCROLL_CHROME_THRESHOLD
   return (
     <header
-      className={`top-nav-safe-area sticky top-0 z-[10010] border-b bg-[color:var(--apple-nav-bg)] backdrop-blur-[20px] backdrop-saturate-[180%] transition-[border-color,box-shadow] duration-300 ease-apple motion-reduce:transition-none ${
+      className={`top-nav-safe-area sticky top-0 z-[10010] border-b backdrop-blur-[20px] backdrop-saturate-[180%] transition-[background-color,border-color,box-shadow] duration-300 ease-apple motion-reduce:transition-none ${
         isScrolled
-          ? 'border-[color:var(--apple-nav-border)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_20px_-14px_rgba(0,0,0,0.12)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.35),0_8px_20px_-14px_rgba(0,0,0,0.6)]'
-          : 'border-transparent shadow-none'
+          ? 'bg-[color:var(--apple-nav-bg-scrolled)] border-[color:var(--apple-nav-border)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_20px_-14px_rgba(0,0,0,0.12)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.35),0_8px_20px_-14px_rgba(0,0,0,0.6)]'
+          : 'bg-[color:var(--apple-nav-bg)] border-transparent shadow-none'
       }`}
     >
       <nav

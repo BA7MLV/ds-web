@@ -85,10 +85,17 @@
 
     /* Nav tokens */
     --apple-nav-bg: rgba(251, 251, 253, 0.75);
+    /* Scrolled nav is more opaque so the 12px muted links keep contrast no
+       matter what scrolls behind the blur (mirrors --apple-menu-bg) */
+    --apple-nav-bg-scrolled: rgba(251, 251, 253, 0.88);
     --apple-nav-border: rgba(0, 0, 0, 0.05);
     /* Full-screen menu backdrop: more opaque than the nav bar so menu text
        keeps AA contrast no matter what scrolls behind the blur */
     --apple-menu-bg: rgba(251, 251, 253, 0.92);
+
+    /* Focus ring (consumed by .focus-ring); dark values live in .dark */
+    --apple-focus-ring: rgba(29, 29, 31, 0.2);
+    --apple-focus-ring-offset: rgba(255, 255, 255, 0.9);
 
     /* Selection */
     --apple-selection-bg: rgba(0, 113, 227, 0.15);
@@ -156,10 +163,20 @@
 
     /* Nav tokens */
     --apple-nav-bg: rgba(0, 0, 0, 0.75);
-    --apple-nav-border: rgba(255, 255, 255, 0.08);
+    /* Dark scrolled state: at 0.75 black, bright content blurred behind the
+       bar dropped the 12px --apple-muted links to ~2.9:1 worst-case. 0.94
+       over #121214 (parity with --apple-menu-bg) keeps them ≥~4.5:1. */
+    --apple-nav-bg-scrolled: rgba(18, 18, 20, 0.94);
+    /* Matches --apple-line-strong: 0.08 hairlines vanish against the
+       near-black scrolled bar, and dark mode has no drop shadow to help */
+    --apple-nav-border: rgba(255, 255, 255, 0.12);
     /* Lifted slightly above pure black so hairlines and the settings rows
        still read as a surface while staying ≥AA against --apple-ink */
     --apple-menu-bg: rgba(18, 18, 20, 0.94);
+
+    /* Focus ring: white @0.5 is ≥3:1 on near-black (was 0.3, ~2.3:1) */
+    --apple-focus-ring: rgba(255, 255, 255, 0.5);
+    --apple-focus-ring-offset: rgba(0, 0, 0, 0.9);
 
     /* Selection */
     --apple-selection-bg: rgba(10, 132, 255, 0.25);
@@ -250,19 +267,12 @@
 }
 
 @layer components {
+  /* Ring colors come from the --apple-focus-* theme tokens (:root / .dark),
+     so dark switching happens via inheritance like every other token */
   .focus-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
-  }
-
-  :root .focus-ring {
-    --tw-ring-color: rgba(29, 29, 31, 0.2);
-    --tw-ring-offset-color: rgba(255, 255, 255, 0.9);
-  }
-
-  .dark .focus-ring {
-    /* >=3:1 against near-black surfaces (was 0.3, ~2.3:1) */
-    --tw-ring-color: rgba(255, 255, 255, 0.5);
-    --tw-ring-offset-color: rgba(0, 0, 0, 0.9);
+    --tw-ring-color: var(--apple-focus-ring);
+    --tw-ring-offset-color: var(--apple-focus-ring-offset);
   }
 
   /* Skip link: visually hidden until keyboard focus, then pinned above the
@@ -697,12 +707,20 @@
   left: 0;
   right: 0;
   height: var(--sat);
+  /* Inherit the header's background so the notch strip follows the
+     resting -> scrolled bg swap instead of pinning to --apple-nav-bg */
   background: inherit;
-  background-color: var(--apple-nav-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   z-index: 39;
   pointer-events: none;
+  transition: background-color 0.3s var(--ease-apple);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .top-nav-safe-area::before {
+    transition: none;
+  }
 }
 
 /* 导航栏内容避开刘海 */
