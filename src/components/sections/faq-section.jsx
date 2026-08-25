@@ -104,10 +104,14 @@ export const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
             onToggle={handleToggle(item.id)}
             className="faq-accordion group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] dark:border-[color:var(--apple-line-strong)] [box-shadow:var(--apple-shadow-sm)] overflow-hidden transition-[background-color,border-color,box-shadow] duration-500 ease-apple hover:[box-shadow:var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:border-[color:var(--apple-line-strong)] dark:open:border-[rgba(255,255,255,0.16)] open:[box-shadow:var(--apple-shadow-lg)]"
           >
+            {/* focus-ring-inset (not focus-ring): the summary fills the card
+                edge-to-edge, so the ring's outward box-shadow fell entirely in
+                the details' overflow-hidden zone and keyboard focus was
+                invisible; the inset outline paints inside the clip. */}
             <summary
               aria-expanded={openIds.has(item.id)}
               aria-controls={`faq-panel-${item.id}`}
-              className="focus-ring touch-manipulation flex min-h-[44px] items-center justify-between gap-4 p-[1.5rem] sm:p-[1.75rem] cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden"
+              className="focus-ring-inset touch-manipulation flex min-h-[44px] items-center justify-between gap-4 p-[1.5rem] sm:p-[1.75rem] cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden rounded-[1.75rem]"
             >
               <span
                 id={`faq-question-${item.id}`}

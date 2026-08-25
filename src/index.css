@@ -288,6 +288,17 @@
     --tw-ring-offset-color: var(--apple-focus-ring-offset);
   }
 
+  /* Inset variant for controls that sit flush against an overflow-clipping
+     ancestor (FAQ <summary> inside the overflow-hidden accordion card, the
+     full-bleed mobile-menu rows inside their scroll region): .focus-ring
+     paints an outward box-shadow, which ancestor clipping swallows, so draw
+     the indicator inward instead — same convention as .policy-modal-scroll
+     and .skip-link. --apple-ink is ≥3:1 on every surface in both themes. */
+  .focus-ring-inset:focus-visible {
+    outline: 2px solid var(--apple-ink);
+    outline-offset: -2px;
+  }
+
   /* Skip link: visually hidden until keyboard focus, then pinned above the
      sticky nav (z 10010) inside the safe area. */
   .skip-link {
