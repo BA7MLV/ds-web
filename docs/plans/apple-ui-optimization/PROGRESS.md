@@ -234,21 +234,37 @@ i18n 扫尾、资源宽高比、平板/深色微打磨与文档站再对齐。�
 
 验收：10/10 落地；详见 ROUND14.md。
 
-### Round 15（进行中）
+### Round 15（已完成）
 
 品牌触控图标、区块衔接、skip link、policy/footer 文案第十二轮。详见 ROUND15.md。
+
+- [x] apple-touch-icon（`3012133`）
+- [x] TopNav 滚动态品牌（`b0f578e`）
+- [x] Architecture ↔ FAQ 留白（`d5f615f`）
+- [x] Download 空态深色（`c28a882`）
+- [x] Skip link 着陆偏移（`d413874`）
+- [x] llms.txt 品牌句（`325983f`）
+- [x] Analytics ↔ 隐私核对（无需改动）
+- [x] zh policy 文案第十二轮（`a06a862`）
+- [x] en / zh-Hant 同步（`cc972d0`）
+- [x] ROUND14 验收 + PROGRESS（`5e8c6bc` / 本轮文档）
+
+验收：10/10 落地；详见 ROUND15.md。
+
+### Round 16（进行中）
+
+文档站细节、动效/触控一致性、feature 文案第十三轮。详见 ROUND16.md。
 
 ## 待办（后续轮次）
 
 - [ ] 持续多轮至 ≥20（用户未叫停前不停止）
 - [ ] 可选：软件主页图 PNG 切片相对 webp 仍陈旧（已记录；勿强行提交大图除非有导出流程）
-- [ ] 可选：`apple-touch-icon.png` 缺失（Round 14 审计；Round 15 #1 尝试补齐）
 
 ## PR 列表
 
 | PR | 分支 | 状态 |
 |----|------|------|
-| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 14 验收完成 · Round 15 进行中 |
+| [#6](https://github.com/BA7MLV/ds-web/pull/6) | `cursor/apple-ui-optimization-36c9` | Round 15 验收完成 · Round 16 进行中 |
 
 ### Round 1 子代理完成项
 
