@@ -226,41 +226,17 @@ const advantages = [
 
 <style>
 /* ============================================================
-   与官网（src/index.css）对齐的设计 token：
-   ink / muted 文本层级、线条、玻璃卡片、阴影与缓动。
+   官网 --apple-* token 已在 Layout.vue 的 :root / .dark 全局统一
+   定义（与 src/index.css 逐项一致），此处仅保留首页特有的补充
+   token 与背景组合；选区颜色也由 Layout 的全局 ::selection 提供。
    全部选择器收敛在 .landing-page 命名空间内，避免污染主题。
    ============================================================ */
 .landing-page {
-  --apple-ink: #1d1d1f;
-  --apple-ink-secondary: #48484a;
-  --apple-muted: #86868b;
-  --apple-line: rgba(0, 0, 0, 0.08);
-  --apple-line-strong: rgba(0, 0, 0, 0.12);
-  --apple-surface: #fbfbfd;
-  --apple-surface-elevated: #ffffff;
-  --apple-card: rgba(255, 255, 255, 0.65);
-  --apple-card-strong: rgba(255, 255, 255, 0.85);
-  --apple-shadow-sm:
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    0 4px 8px rgba(0, 0, 0, 0.02);
-  --apple-shadow-md:
-    0 4px 12px rgba(0, 0, 0, 0.03),
-    0 12px 32px rgba(0, 0, 0, 0.04),
-    0 0 0 1px rgba(0, 0, 0, 0.02);
-  --apple-shadow-lg:
-    0 8px 24px rgba(0, 0, 0, 0.04),
-    0 24px 64px rgba(0, 0, 0, 0.06),
-    0 0 0 1px rgba(0, 0, 0, 0.02);
-  --apple-title-gradient: linear-gradient(135deg, #1d1d1f 0%, #434344 100%);
-  --apple-btn-primary-bg: #1d1d1f;
-  --apple-btn-primary-bg-hover: #3a3a3c;
-  --apple-btn-primary-text: #ffffff;
-  --apple-btn-secondary-bg-hover: rgba(0, 0, 0, 0.08);
+  /* 官网 body 顶部光晕（src/index.css body background-image） */
   --apple-glow-orb: rgba(120, 119, 126, 0.05);
-  --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
+  /* 官网 .hover-lift 的回弹缓动 */
   --ease-lift: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', ui-sans-serif, sans-serif;
   color: var(--apple-ink);
   background-color: var(--apple-surface);
   background-image:
@@ -272,37 +248,11 @@ const advantages = [
 }
 
 .dark .landing-page {
-  --apple-ink: #f5f5f7;
-  --apple-ink-secondary: #a1a1a6;
-  --apple-muted: #86868b;
-  --apple-line: rgba(255, 255, 255, 0.08);
-  --apple-line-strong: rgba(255, 255, 255, 0.12);
-  --apple-surface: #000000;
-  --apple-surface-elevated: #1c1c1e;
-  --apple-card: rgba(28, 28, 30, 0.65);
-  --apple-card-strong: rgba(44, 44, 46, 0.75);
-  --apple-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
-  --apple-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-  --apple-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-  --apple-title-gradient: linear-gradient(135deg, #ffffff 0%, #e5e5e5 50%, #a1a1a6 100%);
-  --apple-btn-primary-bg: #ffffff;
-  --apple-btn-primary-bg-hover: #f2f2f7;
-  --apple-btn-primary-text: #000000;
-  --apple-btn-secondary-bg-hover: rgba(255, 255, 255, 0.12);
   --apple-glow-orb: rgba(255, 255, 255, 0.08);
 
   background-image:
     radial-gradient(ellipse 100% 80% at 20% -30%, var(--apple-glow-orb), transparent 50%),
     linear-gradient(180deg, #000000 0%, #000000 100%);
-}
-
-.landing-page ::selection {
-  background: rgba(0, 113, 227, 0.15);
-}
-
-.dark .landing-page ::selection {
-  background: rgba(10, 132, 255, 0.25);
-  color: #ffffff;
 }
 
 /* ---------- 布局容器 ---------- */
