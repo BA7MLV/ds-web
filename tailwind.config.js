@@ -33,11 +33,10 @@ export default {
           'sans-serif',
         ],
         handwritten: [
+          'Caveat',
+          '"Zhi Mang Xing"',
           '"Noto Sans SC"',
-          '"PingFang SC"',
-          '"Microsoft YaHei"',
-          'ui-sans-serif',
-          'sans-serif',
+          'cursive',
         ],
       },
       keyframes: {

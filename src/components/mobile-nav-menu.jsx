@@ -11,7 +11,6 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
   const previousHtmlStylesRef = useRef(null)
   const triggerRef = useRef(null)
   const overlayRef = useRef(null)
-  const closeButtonRef = useRef(null)
 
   useEffect(() => {
     setMounted(true)
@@ -64,8 +63,8 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
     }
 
     const focusInitial = () => {
-      if (closeButtonRef.current) {
-        closeButtonRef.current.focus()
+      if (triggerRef.current) {
+        triggerRef.current.focus()
         return
       }
       const focusables = getFocusableElements()
@@ -138,22 +137,21 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
     { text: t('nav.download'), href: '#download', onClick: handleDownloadClick, isPrimary: true },
   ]
 
-  const menuOverlay = isOpen && mounted ? (
+  const menuOverlay = mounted ? (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-overlay md:hidden"
+      className="t-panel-slide fixed inset-0 z-overlay md:hidden"
+      data-open={isOpen ? 'true' : 'false'}
+      inert={!isOpen}
       role="dialog"
       aria-modal="true"
       aria-label={t('nav.mobileMenu', '导航菜单')}
-      style={{
-        animation: 'fadeInMenu 0.2s ease-out',
-      }}
     >
       <button
         type="button"
         className="absolute inset-0 w-full h-full bg-white/95 backdrop-blur-xl dark:bg-[color:var(--apple-nav-bg)]"
         onClick={() => setIsOpen(false)}
-        aria-label="关闭菜单"
+        aria-label={t('nav.closeMenu', '关闭菜单')}
       />
       <div
         className="relative flex flex-col h-full overflow-y-auto"
@@ -164,28 +162,6 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
           paddingLeft: 'max(1.5rem, var(--sal))',
         }}
       >
-        <button
-          type="button"
-          onClick={() => setIsOpen(false)}
-          className="focus-ring absolute z-10 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--apple-card)] text-[color:var(--apple-ink)] shadow-sm border border-[color:var(--apple-line)] hover:bg-[color:var(--apple-card-hover)] transition-colors"
-          style={{ top: 'calc(var(--sat) + 1rem)', right: '1.5rem' }}
-          aria-label="关闭菜单"
-          ref={closeButtonRef}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="w-5 h-5"
-          >
-            <path d="M18 6 6 18" />
-            <path d="m6 6 12 12" />
-          </svg>
-        </button>
-
         <nav className="flex flex-col gap-2 mt-2">
           {navItems.map((item) => (
             <a
@@ -224,45 +200,44 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
     </div>
   ) : null
 
-  return (
-    <div className="md:hidden">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        ref={triggerRef}
-        className="focus-ring relative flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg bg-transparent text-slate-900 transition-opacity hover:opacity-70 dark:text-[color:var(--apple-ink)]"
-        aria-label={isOpen ? '关闭菜单' : '打开菜单'}
-        aria-expanded={isOpen}
+  const menuTrigger = (
+    <button
+      type="button"
+      onClick={() => setIsOpen(!isOpen)}
+      ref={triggerRef}
+      className="focus-ring fixed top-[calc(var(--sat)+0.5rem)] right-4 sm:right-6 z-[calc(var(--z-overlay)+1)] flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg bg-transparent text-slate-900 transition-opacity hover:opacity-70 md:hidden dark:text-[color:var(--apple-ink)]"
+      aria-label={isOpen ? t('nav.closeMenu', '关闭菜单') : t('nav.openMenu', '打开菜单')}
+      aria-expanded={isOpen}
+    >
+      <span
+        className="t-icon-swap"
+        data-state={isOpen ? 'b' : 'a'}
+        aria-hidden="true"
       >
         <span
-          className={`h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${
-            isOpen ? 'rotate-45 translate-y-2' : ''
-          }`}
-        />
+          className="t-icon flex flex-col items-center justify-center gap-1.5"
+          data-icon="a"
+        >
+          <span className="h-0.5 w-5 rounded-full bg-current" />
+          <span className="h-0.5 w-5 rounded-full bg-current" />
+          <span className="h-0.5 w-5 rounded-full bg-current" />
+        </span>
         <span
-          className={`h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${
-            isOpen ? 'opacity-0' : ''
-          }`}
-        />
-        <span
-          className={`h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${
-            isOpen ? '-rotate-45 -translate-y-2' : ''
-          }`}
-        />
-      </button>
+          className="t-icon flex flex-col items-center justify-center gap-1.5"
+          data-icon="b"
+        >
+          <span className="h-0.5 w-5 rounded-full bg-current rotate-45 translate-y-2" />
+          <span className="h-0.5 w-5 rounded-full bg-current opacity-0" />
+          <span className="h-0.5 w-5 rounded-full bg-current -rotate-45 -translate-y-2" />
+        </span>
+      </span>
+    </button>
+  )
 
+  return (
+    <>
+      {mounted ? createPortal(menuTrigger, document.body) : null}
       {mounted && menuOverlay ? createPortal(menuOverlay, document.body) : null}
-
-      <style>{`
-        @keyframes fadeInMenu {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-      `}</style>
-    </div>
+    </>
   )
 }

@@ -1,9 +1,18 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { SunsetDetector } from '../lib/sunset-detection'
 import { subscribeToMediaQueryChange } from '../lib/media-query-subscribe'
+import { useLocale } from './locale-toggle'
 
 // Theme values: 'light' | 'dark' | 'system'
 const THEME_KEY = 'ds-theme-preference'
+
+// Keep the closing animation in sync with --dropdown-close-dur
+const DROPDOWN_CLOSE_MS =
+  typeof window !== 'undefined'
+    ? (parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--dropdown-close-dur')
+      ) || 150)
+    : 150
 
 // Create a theme store for external sync
 const themeStore = (() => {
@@ -156,6 +165,7 @@ export const useTheme = () => {
 // Theme toggle button with three states
 export const ThemeToggle = ({ className = '' }) => {
   const { theme, setTheme } = useTheme()
+  const { t } = useLocale()
 
   const cycleTheme = () => {
     const order = ['system', 'light', 'dark']
@@ -171,9 +181,9 @@ export const ThemeToggle = ({ className = '' }) => {
   }
 
   const getLabel = () => {
-    if (theme === 'system') return '跟随系统'
-    if (theme === 'dark') return '深色模式'
-    return '浅色模式'
+    if (theme === 'system') return t('theme.system', '跟随系统')
+    if (theme === 'dark') return t('theme.dark', '深色模式')
+    return t('theme.light', '浅色模式')
   }
 
   return (
@@ -186,14 +196,13 @@ export const ThemeToggle = ({ className = '' }) => {
         text-[color:var(--apple-muted)]
         hover:text-[color:var(--apple-ink)]
         hover:bg-[color:var(--apple-card)]
-        active:scale-90
-        transition-all duration-200
+        transition-colors duration-150
         ${className}
       `.trim()}
-      aria-label={`当前：${getLabel()}，点击切换`}
+      aria-label={t('theme.current', '当前：{label}，点击切换', { label: getLabel() })}
       title={getLabel()}
     >
-      <span className="transition-transform duration-300 ease-out text-xs font-medium">
+      <span className="text-xs font-medium">
         {getSymbol()}
       </span>
     </button>
@@ -203,22 +212,35 @@ export const ThemeToggle = ({ className = '' }) => {
 // Dropdown theme selector for more explicit selection
 export const ThemeSelector = ({ className = '' }) => {
   const { theme, setTheme } = useTheme()
+  const { t } = useLocale()
   const [isOpen, setIsOpen] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
+
+  const closeMenu = useCallback(() => {
+    setIsOpen(false)
+    setIsClosing(true)
+    window.setTimeout(() => setIsClosing(false), DROPDOWN_CLOSE_MS)
+  }, [])
+
+  const openMenu = useCallback(() => {
+    setIsClosing(false)
+    setIsOpen(true)
+  }, [])
 
   const themes = [
-    { value: 'light', label: '浅色', symbol: '○' },
-    { value: 'dark', label: '深色', symbol: '●' },
-    { value: 'system', label: '系统', symbol: 'A' },
+    { value: 'light', label: t('theme.lightShort', '浅色'), symbol: '○' },
+    { value: 'dark', label: t('theme.darkShort', '深色'), symbol: '●' },
+    { value: 'system', label: t('theme.systemShort', '系统'), symbol: 'A' },
   ]
 
   const currentTheme = themes.find((t) => t.value === theme) || themes[2]
 
   useEffect(() => {
     if (!isOpen) return
-    const handleClickOutside = () => setIsOpen(false)
+    const handleClickOutside = () => closeMenu()
     document.addEventListener('click', handleClickOutside)
     return () => document.removeEventListener('click', handleClickOutside)
-  }, [isOpen])
+  }, [isOpen, closeMenu])
 
   return (
     <div className={`relative ${className}`}>
@@ -226,18 +248,18 @@ export const ThemeSelector = ({ className = '' }) => {
         type="button"
         onClick={(e) => {
           e.stopPropagation()
-          setIsOpen(!isOpen)
+          isOpen ? closeMenu() : openMenu()
         }}
         className="
-          focus-ring flex items-center gap-2 
+          focus-ring flex items-center gap-2
           px-3 py-1.5 rounded-full
           text-xs font-medium
-          bg-[color:var(--apple-card)] 
+          bg-[color:var(--apple-card)]
           border border-[color:var(--apple-line)]
           text-[color:var(--apple-muted)]
           hover:text-[color:var(--apple-ink)]
           hover:bg-[color:var(--apple-card-hover)]
-          transition-all duration-200
+          transition-colors duration-150
         "
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -245,19 +267,22 @@ export const ThemeSelector = ({ className = '' }) => {
         <span>{currentTheme.label}</span>
       </button>
 
-      {isOpen && (
-        <div
-          className="
-            absolute right-0 mt-2 py-1.5
-            min-w-[120px] rounded-xl
-            bg-[color:var(--apple-card-strong)]
-            border border-[color:var(--apple-line)]
-            shadow-[var(--apple-shadow-md)]
-            backdrop-blur-xl
-            z-50
-          "
-          role="listbox"
-        >
+      <div
+        className={`
+          t-dropdown
+          absolute right-0 mt-2 py-1.5
+          min-w-[120px] rounded-xl
+          bg-[color:var(--apple-card-strong)]
+          border border-[color:var(--apple-line)]
+          shadow-[var(--apple-shadow-md)]
+          z-50
+          ${isOpen && !isClosing ? 'is-open' : ''}
+          ${isClosing ? 'is-closing' : ''}
+        `}
+        data-origin="top-right"
+        inert={!(isOpen || isClosing)}
+        role="listbox"
+      >
           {themes.map((t) => {
             const isSelected = theme === t.value
             return (
@@ -267,7 +292,7 @@ export const ThemeSelector = ({ className = '' }) => {
                 onClick={(e) => {
                   e.stopPropagation()
                   setTheme(t.value)
-                  setIsOpen(false)
+                  closeMenu()
                 }}
                 className={`
                   w-full flex items-center gap-2.5 px-3 py-2
@@ -287,7 +312,6 @@ export const ThemeSelector = ({ className = '' }) => {
             )
           })}
         </div>
-      )}
     </div>
   )
 }

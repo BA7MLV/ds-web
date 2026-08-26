@@ -3,9 +3,11 @@ import { useId, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
 import { Switch } from './ui/switch'
+import { useLocale } from './locale-toggle'
 
 const ModeRow = ({ title, description, checked, onCheckedChange, gradientClass }) => {
   const id = useId()
+  const { t } = useLocale()
 
   return (
     <Button
@@ -35,7 +37,7 @@ const ModeRow = ({ title, description, checked, onCheckedChange, gradientClass }
           <Switch id={id} checked={checked} onCheckedChange={onCheckedChange} aria-label={title} />
           <span className="text-[11px] font-medium text-[color:var(--apple-muted)]">
             {title}
-            {checked ? '已开启' : '已关闭'}
+            {checked ? t('mode.on', '已开启') : t('mode.off', '已关闭')}
           </span>
         </span>
       </span>
@@ -50,29 +52,31 @@ export const ModeSwitchPanel = ({
   onLearningModeChange,
   className = '',
 }) => {
+  const { t } = useLocale()
+
   return (
-    <Card className={`bg-[color:var(--apple-card)] backdrop-blur-xl ${className}`.trim()}>
+    <Card className={`bg-[color:var(--apple-card)] ${className}`.trim()}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <CardTitle className="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--apple-muted)]">
-              模式切换
+            <CardTitle className="text-[15px] font-semibold text-[color:var(--apple-ink)]">
+              {t('mode.title', '模式切换')}
             </CardTitle>
-            <CardDescription className="mt-1 text-[color:var(--apple-ink)]">快速切换常用模式</CardDescription>
+            <CardDescription className="mt-1 text-[color:var(--apple-muted)]">{t('mode.subtitle', '快速切换常用模式')}</CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="grid gap-2.5">
         <ModeRow
-          title="深度思考"
-          description="开启后模型会先进行推理思考，再给出更准确的回答。"
+          title={t('mode.deepThinking', '深度思考')}
+          description={t('mode.deepThinkingDesc', '开启后模型会先进行推理思考，再给出更准确的回答。')}
           checked={deepThinking}
           onCheckedChange={onDeepThinkingChange}
           gradientClass="bg-gradient-to-br from-[color:var(--apple-ink)]/5 via-[color:var(--apple-ink)]/2 to-[color:var(--apple-ink)]/5"
         />
         <ModeRow
-          title="学习模式"
-          description="开启后 AI 将以苏格拉底式提问引导你思考，而非直接给出答案。"
+          title={t('mode.learning', '学习模式')}
+          description={t('mode.learningDesc', '开启后 AI 将以苏格拉底式提问引导你思考，而非直接给出答案。')}
           checked={learningMode}
           onCheckedChange={onLearningModeChange}
           gradientClass="bg-gradient-to-br from-[color:var(--apple-ink)]/5 via-[color:var(--apple-ink)]/2 to-[color:var(--apple-ink)]/5"

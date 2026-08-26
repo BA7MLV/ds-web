@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useRef, useState } from 'react'
 import { useImageLoader } from '../hooks/useImageLoader'
+import { useLocale } from './locale-toggle'
 
 const usePrefersReducedMotion = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
@@ -40,6 +41,7 @@ const LazyImageWithFallback = forwardRef(({
   blurDuration = 400,
   ...imgProps
 }, forwardedRef) => {
+  const { t } = useLocale()
   const prefersReducedMotion = usePrefersReducedMotion()
   const [isReady, setIsReady] = useState(false)
   const imgElementRef = useRef(null)
@@ -97,11 +99,7 @@ const LazyImageWithFallback = forwardRef(({
     if (CustomPlaceholder) {
       return (
         <div 
-          className="absolute inset-0 z-10"
-          style={{
-            opacity: isReady ? 0 : 1,
-            transition: 'opacity 300ms ease-out',
-          }}
+          className="t-skel-skeleton absolute inset-0 z-10"
         >
           <CustomPlaceholder />
         </div>
@@ -110,12 +108,8 @@ const LazyImageWithFallback = forwardRef(({
 
     return (
       <div 
-        className={`absolute inset-0 z-10 skeleton w-full h-full rounded-[6px] ${className}`}
-        style={{
-          opacity: isReady ? 0 : 1,
-          transition: 'opacity 300ms ease-out',
-          ...containerStyle,
-        }}
+        className={`t-skel-skeleton absolute inset-0 z-10 skeleton w-full h-full rounded-[6px] ${className}`}
+        style={containerStyle}
       >
         {showProgress && isLoading && (
           <div className="absolute inset-x-0 bottom-0 h-1 bg-[color:var(--apple-line-strong)]">
@@ -134,12 +128,8 @@ const LazyImageWithFallback = forwardRef(({
     
     return (
       <div 
-        className={`absolute inset-0 z-10 w-full h-full rounded-[6px] overflow-hidden ${className}`}
-        style={{
-          opacity: isReady ? 0 : 1,
-          transition: `opacity ${blurDuration}ms ease-out`,
-          ...containerStyle,
-        }}
+        className={`t-skel-skeleton absolute inset-0 z-10 w-full h-full rounded-[6px] overflow-hidden ${className}`}
+        style={containerStyle}
       >
         <img
           src={placeholderSrc}
@@ -178,7 +168,7 @@ const LazyImageWithFallback = forwardRef(({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.138m2.167 9.138l-2.829-2.829" />
             </svg>
             <span className="text-sm text-[color:var(--apple-muted)] text-center">
-              {errorText || '网络已断开'}
+              {errorText || t('image.offline', '网络已断开')}
             </span>
           </>
         ) : (
@@ -189,14 +179,14 @@ const LazyImageWithFallback = forwardRef(({
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
             </svg>
             <span className="text-sm text-[color:var(--apple-muted)] text-center">
-              {errorText || '加载失败'}
+              {errorText || t('image.loadError', '加载失败')}
             </span>
             {maxRetries > 0 && (
               <button
                 onClick={handleRetry}
                 className="mt-2 px-3 py-1.5 text-xs font-medium text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] bg-[color:var(--apple-blue-soft)] hover:bg-[color:var(--apple-blue-soft)]/80 rounded-full transition-colors"
               >
-                重新加载
+                {t('image.retry', '重新加载')}
               </button>
             )}
           </>
@@ -210,7 +200,7 @@ const LazyImageWithFallback = forwardRef(({
 
     const transitionStyle = enableBlurUp 
       ? { 
-          transition: `filter ${blurDuration}ms ease-out`,
+          transition: `opacity var(--reveal-dur) var(--reveal-ease), filter ${blurDuration}ms ease-out`,
           filter: isReady ? 'blur(0px)' : 'blur(10px)',
         }
       : {}
@@ -227,7 +217,7 @@ const LazyImageWithFallback = forwardRef(({
         }}
         src={src}
         alt={alt}
-        className={`absolute inset-0 w-full h-full object-${objectFit} rounded-[6px] ${className}`}
+        className={`t-skel-content absolute inset-0 w-full h-full object-${objectFit} rounded-[6px] ${className}`}
         style={transitionStyle}
         onLoad={handleImageLoad}
         onError={() => {
@@ -242,7 +232,7 @@ const LazyImageWithFallback = forwardRef(({
   return (
     <div 
       ref={elementRef}
-      className={`relative overflow-hidden ${containerClassName}`}
+      className={`t-skel relative overflow-hidden ${containerClassName} ${isReady ? 'is-revealed' : ''}`}
       style={containerStyle}
     >
       {renderImage()}

@@ -18,7 +18,7 @@ export const getLocaleSliderThumbClassName = () =>
     'absolute left-0.5 top-0.5 bottom-0.5 rounded-full',
     'border border-[color:var(--apple-soft-line)] bg-[color:var(--apple-surface-elevated)]',
     'shadow-[var(--apple-shadow-sm)]',
-    'transform transition-transform duration-150 ease-out motion-reduce:transition-none'
+    'transform transition-transform duration-[var(--tabs-dur)] ease-[var(--tabs-ease)] motion-reduce:transition-none'
   )
 
 export const getLocaleSliderThumbStyle = (index, count = 3) => ({

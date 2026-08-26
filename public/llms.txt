@@ -1,34 +1,49 @@
 # DeepStudent
 
-DeepStudent is an AI-native, local-first, open-source learning system built with Tauri 2 (AGPL-3.0).
-It uses "chat as the entry point" to connect your learning resources, retrieval (RAG), practice, and spaced repetition into a sustainable learning loop.
+> DeepStudent is a free, open-source (AGPL-3.0), AI-native, local-first learning system built with Tauri 2. It uses "chat as the entry point" to connect study materials Q&A (RAG with page-level citations), notes, mind maps, question-bank practice, translation, essay grading, and Anki card generation into one sustainable learning loop. Data is stored locally by default. Available for macOS, Windows, Linux, and Android. Primary language: Simplified Chinese (简体中文).
+
+DeepStudent（深学助手）是一款免费开源的 AI 学习工作台：把资料问答、笔记、知识导图、刷题、翻译、作文批改和 Anki 制卡放进同一个应用，数据默认保存在用户自己的电脑上。
 
 ## What DeepStudent is
 
-- Type: Desktop app (Tauri), local-first learning system
-- License: AGPL-3.0
-- Core idea: Chat V2 as the unified entry point for learning workflows
-- Data: Stored locally by default; you can optionally configure external model/search providers
+- Type: Desktop app (Tauri 2), local-first learning system; also runs on Android
+- License: AGPL-3.0, free and open source
+- Core idea: Chat V2 as the unified entry point for all learning workflows
+- Data: Stored locally by default; users configure their own AI model providers (DeepSeek, SiliconFlow, OpenAI, etc. — 11 built-in templates + custom endpoints)
 
 ## Key capabilities
 
-- AI chat with multi-session workflows and tool call visualization
-- Learning Hub / VFS: unified resource management and indexing
-- RAG: full-text + vector retrieval for your materials
-- CardForge: generate Anki cards from documents/chats; export APKG or sync via AnkiConnect
-- Practice loop: question bank, wrong-answer archive, review
-- Utilities: mindmap, translation workbench, deep reading, deep research
+- AI chat with multi-session workflows, chain-of-thought folding, and tool-call visualization
+- Learning Hub: unified management of notes, PDF textbooks, question banks, translations, and mind maps
+- RAG: full-text + vector retrieval over imported materials, answers with page-level citations
+- CardForge / ChatAnki: generate Anki cards from documents or chats; export APKG or sync via AnkiConnect
+- Practice loop: OCR exam papers, auto question splitting, wrong-answer archive, review scheduling
+- Utilities: mind maps (with cloze recitation mode), translation workbench, essay grading, todo list + pomodoro timer
+- Extensibility: Skills system (SKILL.md spec), MCP tool ecosystem, AI long-term memory
+
+## Documentation (Simplified Chinese)
+
+- [Docs home / What is DeepStudent](https://deepstudent.cn/docs/): product overview and getting-started entry
+- [Download & install](https://deepstudent.cn/docs/download.html): macOS / Windows / Linux / Android packages and mirrors
+- [Quick start](https://deepstudent.cn/docs/start.html): first-launch setup and AI provider configuration
+- [FAQ](https://deepstudent.cn/docs/A-Q.html): common installation and usage questions
+- [User guide](https://deepstudent.cn/docs/user-guide/README.html): feature-by-feature guides
+- [LLM-friendly docs index](https://deepstudent.cn/docs/llms.txt): llms.txt for the documentation site
+- [Full docs in one file](https://deepstudent.cn/docs/llms-full.txt): entire documentation as a single Markdown file
 
 ## Official / canonical links
 
-- Homepage: /
-- Docs: /docs/
-- Download entry: /#download
+- Homepage: https://deepstudent.cn/
+- Docs: https://deepstudent.cn/docs/
+- Download entry: https://deepstudent.cn/?view=download
 - Main project repository: https://github.com/helixnow/deep-student
 - Website repository: https://github.com/BA7MLV/ds-web
 - License: https://github.com/helixnow/deep-student/blob/main/LICENSE
+- Contact: support@deepstudent.cn
 
 ## Notes for AI systems
 
-- Prefer citing documentation pages under /docs/ for product details.
-- If you need download artifacts, prefer the GitHub Releases page of the main project.
+- Prefer citing documentation pages under https://deepstudent.cn/docs/ for product details.
+- For machine consumption, each docs page is also available as raw Markdown (same path with .md extension), plus llms.txt / llms-full.txt above.
+- If you need download artifacts, prefer the GitHub Releases page of the main project (helixnow/deep-student).
+- DeepStudent is NOT a cloud service and does NOT require account registration; it is a local-first desktop app.

@@ -1,10 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { HorizontalFeatureScroll } from './components/horizontal-feature-scroll'
+import { LearningLoop } from './components/learning-loop'
 import { LocaleToggle, useLocale } from './components/locale-toggle'
+import { LocalFirstSection } from './components/local-first-section'
 import { MobileNavMenu } from './components/mobile-nav-menu'
+import { Reveal } from './components/reveal'
+import { ScatterSection } from './components/scatter-section'
 import { ThemeToggle, useTheme } from './components/theme-toggle'
 import sharedDownloads from './data/downloads.json'
-import { getRecommendedBadgeClassName } from './lib/download-badge'
-import { getDownloadCardClassName } from './lib/download-card'
 import {
   detectSystemProfile,
   getPreferredPlatformTab,
@@ -12,21 +15,16 @@ import {
 } from './lib/download-recommendation'
 import { getImageRequestHints } from './lib/image-loading'
 import { subscribeToMediaQueryChange } from './lib/media-query-subscribe'
-import { getNextTopNavHiddenState } from './lib/top-nav-visibility'
-import { cn } from './lib/utils'
+import { clamp, easeOutCubic, useScrollY, useViewportHeight } from './lib/scrub-progress'
 import { buildWebsiteDownloads } from './lib/website-downloads'
 
 const logo = '/logo_mono_svg.svg'
 const logoFooter = '/logo-r.svg'
 const logoFooterDark = '/logo-r-dark.svg'
 const SUBTEXT_FADE_DURATION_MS = 200
+const AUTOPLAY_INTERVAL_MS = 4000
 const RESPONSIVE_IMAGE_WIDTHS = [640, 960, 1280, 1600]
 
-const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
-const stretchProgress = (value, stretch = 1.3) => clamp((value - 0.5) / stretch + 0.5, 0, 1)
-const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3)
-const easeInOutCubic = (t) =>
-  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 const buildHash = import.meta.env.VITE_BUILD_HASH || 'dev'
 
 const getViewportBucket = () => {
@@ -106,223 +104,6 @@ const OptimizedImage = ({
   )
 }
 
-const scrollStore = (() => {
-  let value = 0
-  let rafId = null
-  const listeners = new Set()
-
-  const notify = () => {
-    listeners.forEach((listener) => listener())
-  }
-
-  const update = () => {
-    value = window.scrollY || window.pageYOffset || 0
-    notify()
-  }
-
-  const onScroll = () => {
-    if (rafId) return
-    rafId = window.requestAnimationFrame(() => {
-      rafId = null
-      update()
-    })
-  }
-
-  const subscribe = (listener) => {
-    listeners.add(listener)
-    if (listeners.size === 1 && typeof window !== 'undefined') {
-      update()
-      window.addEventListener('scroll', onScroll, { passive: true })
-      window.addEventListener('resize', onScroll)
-    }
-
-    return () => {
-      listeners.delete(listener)
-      if (listeners.size === 0 && typeof window !== 'undefined') {
-        window.removeEventListener('scroll', onScroll)
-        window.removeEventListener('resize', onScroll)
-        if (rafId) {
-          window.cancelAnimationFrame(rafId)
-          rafId = null
-        }
-      }
-    }
-  }
-
-  return { getSnapshot: () => value, subscribe }
-})()
-
-const viewportStore = (() => {
-  let height = 0
-  const listeners = new Set()
-
-  const update = () => {
-    height = window.innerHeight || 0
-    listeners.forEach((listener) => listener())
-  }
-
-  const subscribe = (listener) => {
-    listeners.add(listener)
-    if (listeners.size === 1 && typeof window !== 'undefined') {
-      update()
-      window.addEventListener('resize', update)
-      window.addEventListener('orientationchange', update)
-    }
-    return () => {
-      listeners.delete(listener)
-      if (listeners.size === 0 && typeof window !== 'undefined') {
-        window.removeEventListener('resize', update)
-        window.removeEventListener('orientationchange', update)
-      }
-    }
-  }
-
-  return { getSnapshot: () => height, subscribe }
-})()
-
-const useScrollY = (enabled = true) => {
-  const subscribe = useCallback(
-    (listener) => (enabled ? scrollStore.subscribe(listener) : () => {}),
-    [enabled]
-  )
-  return useSyncExternalStore(subscribe, scrollStore.getSnapshot, () => 0)
-}
-
-const useViewportHeight = (enabled = true) => {
-  const subscribe = useCallback(
-    (listener) => (enabled ? viewportStore.subscribe(listener) : () => {}),
-    [enabled]
-  )
-  return useSyncExternalStore(subscribe, viewportStore.getSnapshot, () => 0)
-}
-
-const useAutoHideTopNav = () => {
-  const [isHidden, setIsHidden] = useState(false)
-  const previousScrollYRef = useRef(0)
-  const hiddenRef = useRef(false)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    let rafId = null
-
-    const update = () => {
-      const currentY = Math.max(0, window.scrollY || window.pageYOffset || 0)
-      const nextHidden = getNextTopNavHiddenState({
-        previousY: previousScrollYRef.current,
-        currentY,
-        hidden: hiddenRef.current,
-      })
-
-      previousScrollYRef.current = currentY
-      if (nextHidden === hiddenRef.current) return
-
-      hiddenRef.current = nextHidden
-      setIsHidden(nextHidden)
-    }
-
-    const handleScroll = () => {
-      if (rafId) return
-      rafId = window.requestAnimationFrame(() => {
-        rafId = null
-        update()
-      })
-    }
-
-    previousScrollYRef.current = Math.max(0, window.scrollY || window.pageYOffset || 0)
-    hiddenRef.current = false
-    setIsHidden(false)
-    update()
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('resize', handleScroll)
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', handleScroll)
-      if (rafId) {
-        window.cancelAnimationFrame(rafId)
-      }
-    }
-  }, [])
-
-  return isHidden
-}
-
-const useParallaxProgress = ({
-  rootMargin = '200px 0px',
-  freezeWhenInactive = true,
-} = {}) => {
-  const ref = useRef(null)
-  const [metrics, setMetrics] = useState({ top: 0, height: 0 })
-  const [isActive, setIsActive] = useState(false)
-  const lastProgress = useRef(0.5)
-  const scrollY = useScrollY(isActive)
-  const viewportHeight = useViewportHeight(isActive)
-
-  const updateMetrics = useCallback(() => {
-    if (!ref.current || typeof window === 'undefined') return
-    const rect = ref.current.getBoundingClientRect()
-    const scrollTop = window.scrollY || window.pageYOffset || 0
-    setMetrics({ top: rect.top + scrollTop, height: rect.height })
-  }, [])
-
-  useEffect(() => {
-    if (!ref.current || typeof window === 'undefined') return undefined
-    const element = ref.current
-    updateMetrics()
-
-    let resizeObserver = null
-    if (typeof ResizeObserver !== 'undefined') {
-      resizeObserver = new ResizeObserver(() => updateMetrics())
-      resizeObserver.observe(element)
-    } else {
-      window.addEventListener('resize', updateMetrics)
-    }
-
-    return () => {
-      if (resizeObserver) {
-        resizeObserver.disconnect()
-      } else {
-        window.removeEventListener('resize', updateMetrics)
-      }
-    }
-  }, [updateMetrics])
-
-  useEffect(() => {
-    if (!ref.current || typeof window === 'undefined') return undefined
-    if (typeof IntersectionObserver === 'undefined') {
-      setIsActive(true)
-      return undefined
-    }
-
-    const element = ref.current
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0]
-        if (!entry) return
-        const nextActive = entry.isIntersecting || entry.intersectionRatio > 0
-        setIsActive(nextActive)
-        if (nextActive) updateMetrics()
-      },
-      { rootMargin, threshold: 0.01 }
-    )
-
-    observer.observe(element)
-    return () => observer.disconnect()
-  }, [rootMargin, updateMetrics])
-
-  const progress = metrics.height
-    ? (scrollY + viewportHeight - metrics.top) / (metrics.height + viewportHeight)
-    : 0.5
-  const clamped = clamp(progress, 0, 1)
-
-  if (!freezeWhenInactive || isActive) {
-    lastProgress.current = clamped
-  }
-
-  return { ref, progress: freezeWhenInactive ? lastProgress.current : clamped, isActive }
-}
 
 const useResponsiveMotion = () => {
   const [settings, setSettings] = useState({ motionScale: 1, isCompact: false })
@@ -582,6 +363,47 @@ const ArchMemoryIcon = ({ size = 32 }) => (
   </svg>
 )
 
+
+// 手绘椭圆圈：套住标题关键词，加载时自己画出来
+const HandCircle = ({ className = '', delay = 0 }) => (
+  <svg className={className} viewBox="0 0 240 100" fill="none" preserveAspectRatio="none" aria-hidden="true">
+    <path
+      d="M16 54 C 26 16, 196 4, 222 34 C 244 60, 176 92, 96 92 C 40 92, 4 78, 18 42"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      pathLength="1"
+      className="hand-draw"
+      style={{ animationDelay: `${delay}s` }}
+    />
+  </svg>
+)
+
+// 手绘弯箭头（向上指，用于注释指向 CTA）
+const HandArrowUp = ({ className = '', delay = 0 }) => (
+  <svg className={className} viewBox="0 0 48 56" fill="none" aria-hidden="true">
+    <path
+      d="M28 52 C 32 38, 30 22, 23 10"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      pathLength="1"
+      className="hand-draw"
+      style={{ animationDelay: `${delay}s` }}
+    />
+    <path
+      d="M13 18 L 22 7 L 33 19"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      pathLength="1"
+      className="hand-draw"
+      style={{ animationDelay: `${delay + 0.35}s` }}
+    />
+  </svg>
+)
+
 // 连接线箭头 SVG（水平方向，带流动动画）
 let _hArrowId = 0
 const FlowArrow = ({ label, sublabel, direction = 'right', className = '' }) => {
@@ -611,9 +433,9 @@ const FlowArrow = ({ label, sublabel, direction = 'right', className = '' }) => 
           </line>
         )}
       </svg>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-none transition-transform duration-300 group-hover:scale-105">
-        <span className="text-[11px] sm:text-[12px] font-medium text-[color:var(--apple-ink)] bg-[color:var(--apple-card)]/80 backdrop-blur-sm px-2.5 py-0.5 rounded-md border border-[color:var(--apple-line)] shadow-sm whitespace-nowrap leading-tight">{label}</span>
-        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--apple-card)]/80 backdrop-blur-sm px-1.5 py-0.5 mt-0.5 rounded-md border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight shadow-sm">{sublabel}</span>}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-none">
+        <span className="text-[11px] sm:text-[12px] font-medium text-[color:var(--apple-ink)] bg-[color:var(--apple-card)] px-2.5 py-0.5 rounded-md border border-[color:var(--apple-line)] shadow-sm whitespace-nowrap leading-tight">{label}</span>
+        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--apple-card)] px-1.5 py-0.5 mt-0.5 rounded-md border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight shadow-sm">{sublabel}</span>}
       </div>
     </div>
   )
@@ -648,33 +470,39 @@ const FlowArrowVertical = ({ label, sublabel, direction = 'down' }) => {
           </line>
         )}
       </svg>
-      <div className="relative z-10 flex flex-col items-center bg-[color:var(--apple-card)]/80 backdrop-blur-sm px-2 py-1 rounded-md border border-[color:var(--apple-line)] shadow-sm pointer-events-none transition-transform duration-300 group-hover:scale-105">
+      <div className="relative z-10 flex flex-col items-center bg-[color:var(--apple-card)] px-2 py-1 rounded-md border border-[color:var(--apple-line)] shadow-sm pointer-events-none">
         <span className="text-[11px] font-medium text-[color:var(--apple-ink)] whitespace-nowrap leading-tight">{label}</span>
-        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--apple-card)]/50 px-1 py-0.5 mt-0.5 rounded border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight shadow-sm">{sublabel}</span>}
+        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--apple-card)] px-1 py-0.5 mt-0.5 rounded border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight shadow-sm">{sublabel}</span>}
       </div>
     </div>
   )
 }
 
-// 架构图组件
+// 架构卡片容器
+const ArchCard = ({ title, desc, children, className = '' }) => (
+  <div
+    className={`rounded-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] p-5 sm:p-6 transition-[border-color,box-shadow] duration-200 hover:border-[color:var(--apple-line-strong)] hover:shadow-[var(--apple-shadow-md)] ${className}`}
+  >
+    <div className="flex items-baseline justify-between gap-3">
+      <h3 className="text-[15px] font-semibold text-[color:var(--apple-ink)] tracking-tight">{title}</h3>
+      <span className="text-[11px] text-[color:var(--apple-muted)] text-right">{desc}</span>
+    </div>
+    {children}
+  </div>
+)
+
+// 架构图：Chat V2 ↔ Learning Hub / Skills → VFS 的闭环拓扑
 const ArchitectureDiagram = ({ motionScale = 1 }) => {
   const { t } = useLocale()
-  const shouldAnimate = motionScale > 0
 
-  const chatRow1 = [
+  const chatFeatures = [
     t('arch.chat.feat.parallel', '并行对比'),
     t('arch.chat.feat.cot', '思维链'),
     t('arch.chat.feat.multimodal', '多模态'),
-  ]
-  const chatRow2 = [
     t('arch.chat.feat.attach', '附件自动 OCR'),
     t('arch.chat.feat.mcp', 'MCP 工具协议'),
-  ]
-  const chatRow3 = [
     t('arch.chat.feat.rag', 'RAG 检索增强'),
     t('arch.chat.feat.session', '会话分组'),
-  ]
-  const chatRow4 = [
     t('arch.chat.feat.latex', 'LaTeX 渲染'),
     t('arch.chat.feat.provider', '多供应商适配'),
   ]
@@ -700,258 +528,118 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
     t('arch.skill.interact', '多种交互技能'),
   ]
 
+  const chatCard = (
+    <ArchCard title="Chat V2" desc={t('arch.chat.desc', '智能对话')} className="h-full">
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        {chatFeatures.map((feat) => (
+          <span
+            key={feat}
+            className="text-[11px] leading-tight text-[color:var(--apple-muted)] px-2.5 py-1 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] whitespace-nowrap transition-colors duration-300 hover:text-[color:var(--apple-ink)] hover:border-[color:var(--apple-line-strong)]"
+          >
+            {feat}
+          </span>
+        ))}
+      </div>
+    </ArchCard>
+  )
+
+  const hubCard = (
+    <ArchCard title="Learning Hub" desc={t('arch.hub.desc', '学习资源管理器')} className="h-full">
+      <div className="mt-4 grid grid-cols-4 gap-x-2 gap-y-4 justify-items-center">
+        {resourceTypes.map((item) => (
+          <div key={item.label} className="flex flex-col items-center gap-1 group/item">
+            <div className="rounded-lg transition-transform duration-300 group-hover/item:-translate-y-0.5">
+              <item.Icon size={26} />
+            </div>
+            <span className="text-[10px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap transition-colors duration-300 group-hover/item:text-[color:var(--apple-ink)]">{item.label}</span>
+          </div>
+        ))}
+      </div>
+    </ArchCard>
+  )
+
+  const skillsCard = (
+    <ArchCard title="Skills" desc={t('arch.skills.subtitle', '技能编排 · 按需加载')} className="h-full">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-2">
+        {skillTools.map((tool) => (
+          <div key={tool} className="flex items-center gap-2">
+            <span className="w-1 h-1 rounded-full bg-[color:var(--apple-muted)] opacity-60 shrink-0" />
+            <span className="text-[12px] text-[color:var(--apple-muted)] leading-tight">{tool}</span>
+          </div>
+        ))}
+      </div>
+    </ArchCard>
+  )
+
+  const vfsCard = (
+    <ArchCard title="VFS" desc={t('arch.vfs.desc', '虚拟文件系统 · 学习数据')} className="h-full">
+      <div className="mt-4 flex items-center gap-2">
+        <span className="text-[11px] font-medium text-[color:var(--apple-ink)] opacity-80">SQLite</span>
+        <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
+        <span className="text-[11px] font-medium text-[color:var(--apple-ink)] opacity-80">LanceDB</span>
+        <span className="text-[10px] text-[color:var(--apple-muted)] opacity-40">+</span>
+        <span className="text-[11px] font-medium text-[color:var(--apple-ink)] opacity-80">Blob</span>
+        <span className="ml-auto text-[10px] text-[color:var(--apple-muted)] opacity-60">{t('arch.storage', '全部数据本地存储')}</span>
+      </div>
+      <div className="mt-3 pt-3 border-t border-[color:var(--apple-line)]/60 flex flex-col gap-1.5">
+        <span className="text-[12px] font-medium text-[color:var(--apple-ink)] opacity-80">{t('arch.vfs.ocr', '多引擎级联 OCR')}</span>
+        <div className="flex items-baseline gap-2">
+          <span className="text-[12px] font-medium text-[color:var(--apple-ink)] opacity-80">{t('arch.vfs.vector', '多维度向量引擎')}</span>
+          <span className="text-[10px] text-[color:var(--apple-muted)] opacity-60">
+            {t('arch.vfs.vector.text', '文本嵌入')} · {t('arch.vfs.vector.cross', '跨维度检索')}
+          </span>
+        </div>
+      </div>
+    </ArchCard>
+  )
+
   return (
-    <section
-      className={`py-[4rem] sm:py-[6rem] px-4 sm:px-6 ${shouldAnimate ? 'animate-fade-in' : ''}`}
-      style={shouldAnimate ? { animationDelay: '0.24s' } : undefined}
-    >
-      <div className="max-w-[80rem] mx-auto">
-        {/* 标题 */}
-        <div className="text-center mb-[2.5rem] sm:mb-[3.5rem]">
-          <h2 className="text-[1.5rem] sm:text-[2rem] font-semibold text-[color:var(--apple-ink)] tracking-tight font-display mb-3">
+    <section className="px-4 sm:px-6 py-20 sm:py-28 bg-[color:var(--apple-band)]">
+      <div className="max-w-6xl mx-auto">
+        <Reveal motionScale={motionScale} className="text-center max-w-2xl mx-auto">
+          <h2 className="text-[1.75rem] sm:text-[2.5rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] leading-[1.1]">
             {t('stats.title', 'AI 原生的学习闭环')}
           </h2>
-          <p className="text-[color:var(--apple-muted)] text-[15px] sm:text-[17px] max-w-2xl mx-auto">
+          <p className="mt-3 text-[15px] sm:text-[17px] text-[color:var(--apple-muted)] leading-relaxed">
             {t('stats.subtitle', '从对话入口到数据底座，前后端围绕学习闭环协同设计')}
           </p>
-        </div>
+        </Reveal>
 
-        {/* 桌面端：正方形 Grid 布局（md+） */}
-        <div className="hidden md:block max-w-[700px] mx-auto">
-          <div className="grid grid-cols-[1fr_auto_1fr] gap-y-0">
-            {/* 第一行：Chat V2 | 引用资源连接 | Learning Hub */}
-            <div className="flex flex-col items-center justify-center py-4 group cursor-default">
-              <div className="relative w-[260px] h-[206px] transition-transform duration-500 ease-out group-hover:-translate-y-1">
-                {/* 放大半透明对话气泡背景，增加发光效果 */}
-                <div className="absolute inset-0 bg-blue-500/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <svg className="absolute inset-0 w-full h-full opacity-[0.12] drop-shadow-sm transition-all duration-500 group-hover:opacity-[0.16] group-hover:drop-shadow-md" viewBox="0 0 60 60" fill="none" preserveAspectRatio="xMidYMid meet">
-                  <rect x="1" y="1" width="58" height="46" rx="10" fill="var(--apple-muted)"/>
-                  <path d="M18 47L24 56L30 47" fill="var(--apple-muted)"/>
-                </svg>
-                {/* 特性标签覆盖在内，将其高度限制在气泡方形主体（约76.6%）内以实现绝对居中 */}
-                <div className="absolute top-0 left-0 right-0 h-[76.6%] flex flex-col items-center justify-center px-4 gap-1.5">
-                  {[chatRow1, chatRow2, chatRow3, chatRow4].map((row, i) => (
-                    <div key={i} className="flex justify-center gap-1.5">
-                      {row.map((feat) => (
-                        <span key={feat} className="text-[8px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap bg-[color:var(--apple-card)]/50 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 group-hover:border-[color:var(--apple-muted)]/30 group-hover:shadow-sm group-hover:bg-[color:var(--apple-card)]/80">{feat}</span>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="text-center mt-2 transition-transform duration-500 group-hover:-translate-y-0.5">
-                <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">Chat V2</div>
-                <div className="text-[12px] text-[color:var(--apple-muted)] mt-0.5">{t('arch.chat.desc', '智能对话')}</div>
-              </div>
-            </div>
-
-            {/* Chat ↔ Hub 引用资源连接线 */}
-            <div className="flex items-center justify-center px-3">
+        {/* 桌面端：2×2 拓扑 + 连接线 */}
+        <Reveal motionScale={motionScale} y={36} className="hidden md:block mt-12 sm:mt-16">
+          <div className="max-w-[62rem] mx-auto grid grid-cols-[1fr_auto_1fr] items-center gap-y-2">
+            {chatCard}
+            <div className="flex items-center justify-center px-4">
               <FlowArrow label={t('arch.arrow.ref', '引用资源')} direction="both" />
             </div>
+            {hubCard}
 
-            {/* Learning Hub */}
-            <div className="flex flex-col items-center justify-center py-4 group cursor-default">
-              <div className="relative w-[270px] h-[202px] transition-transform duration-500 ease-out group-hover:-translate-y-1">
-                <div className="absolute inset-0 bg-amber-500/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <svg className="absolute inset-0 w-full h-full scale-[1.2] opacity-[0.10] drop-shadow-sm transition-all duration-500 group-hover:opacity-[0.14] group-hover:drop-shadow-md" viewBox="0 0 48 48" fill="none" preserveAspectRatio="xMidYMid meet">
-                  <path d="M6 10C6 8.895 6.895 8 8 8H18L21 11H40C41.105 11 42 11.895 42 13V39C42 40.105 41.105 41 40 41H8C6.895 41 6 40.105 6 39V10Z" fill="#E8B849"/>
-                  <path d="M6 10C6 8.895 6.895 8 8 8H17C17.552 8 18 8.448 18 9V11H6V10Z" fill="#D4A53A"/>
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center pt-6 px-7">
-                  <div className="grid grid-cols-4 gap-x-5 gap-y-4 justify-items-center">
-                    {resourceTypes.map((item) => (
-                      <div key={item.label} className="flex flex-col items-center gap-1 group/item transition-transform duration-300 hover:-translate-y-0.5">
-                        <div className="rounded-lg transition-colors duration-300 group-hover/item:bg-[color:var(--apple-line)]/50">
-                          <item.Icon size={22} />
-                        </div>
-                        <span className="text-[10px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap transition-colors duration-300 group-hover/item:text-[color:var(--apple-ink)]">{item.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="text-center mt-2 transition-transform duration-500 group-hover:-translate-y-0.5">
-                <div className="text-[15px] font-semibold text-[color:var(--apple-ink)]">Learning Hub</div>
-                <div className="text-[12px] text-[color:var(--apple-muted)] mt-0.5">{t('arch.hub.desc', '学习资源管理器')}</div>
-              </div>
-            </div>
-
-            {/* 箭头行：Chat → Skills */}
             <div className="flex justify-center">
               <FlowArrowVertical label={t('arch.arrow.invoke', '调用')} direction="down" />
             </div>
-
-            {/* 中列留空 */}
             <div />
-
-            {/* 箭头行：Hub ↔ VFS */}
             <div className="flex justify-center">
               <FlowArrowVertical label={t('arch.arrow.rw', '读写')} sublabel="DSTU" direction="both" />
             </div>
 
-            {/* 第二行：Skills | 工具调用连接 | VFS */}
-            <div className="flex flex-col items-center py-2 group cursor-default">
-              <div className="relative w-full border border-[color:var(--apple-line)] rounded-[20px] py-5 px-5 bg-[color:var(--apple-card)]/80 backdrop-blur-sm transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:shadow-md group-hover:border-[color:var(--apple-muted)]/30 group-hover:bg-[color:var(--apple-card)]">
-                <div className="absolute inset-0 bg-emerald-500/5 blur-2xl rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                <div className="relative z-10 text-center">
-                  <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">Skills</div>
-                  <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.skills.subtitle', '技能编排 · 按需加载')}</div>
-                </div>
-                <div className="relative z-10 mt-4 pt-4 border-t border-[color:var(--apple-line)]/60">
-                  <div className="grid grid-cols-2 gap-2">
-                    {skillTools.map((tool) => (
-                      <div key={tool} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]/60 transition-colors duration-300 hover:border-[color:var(--apple-muted)]/40 hover:bg-[color:var(--apple-line)]/30">
-                        <svg width="8" height="8" viewBox="0 0 10 10" fill="none" className="shrink-0">
-                          <circle cx="5" cy="5" r="2.5" fill="var(--apple-muted)" opacity="0.6" className="transition-opacity duration-300 group-hover:opacity-80"/>
-                        </svg>
-                        <span className="text-[11px] text-[color:var(--apple-muted)] leading-tight transition-colors duration-300 hover:text-[color:var(--apple-ink)]">{tool}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Skills → VFS 连接线 */}
-            <div className="flex items-center justify-center px-3">
+            {skillsCard}
+            <div className="flex items-center justify-center px-4">
               <FlowArrow label={t('arch.arrow.tools', '工具调用')} sublabel="RAG" direction="right" />
             </div>
-
-            {/* VFS */}
-            <div className="flex flex-col items-center py-2 group cursor-default">
-              <div className="relative w-full border border-[color:var(--apple-line)] rounded-[20px] py-5 px-5 bg-[color:var(--apple-card)]/80 backdrop-blur-sm transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:shadow-md group-hover:border-[color:var(--apple-muted)]/30 group-hover:bg-[color:var(--apple-card)]">
-                <div className="absolute inset-0 bg-purple-500/5 blur-2xl rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                <div className="relative z-10 text-center">
-                  <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">VFS</div>
-                  <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.vfs.desc', '虚拟文件系统 · 学习数据')}</div>
-                </div>
-                <div className="relative z-10 mt-4 pt-3 border-t border-[color:var(--apple-line)]/60">
-                  <div className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]/40 transition-colors duration-300 hover:border-[color:var(--apple-muted)]/30">
-                    <span className="text-[11px] font-medium text-[color:var(--apple-muted)] opacity-80">SQLite</span>
-                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-30">+</span>
-                    <span className="text-[11px] font-medium text-[color:var(--apple-muted)] opacity-80">LanceDB</span>
-                    <span className="text-[10px] text-[color:var(--apple-muted)] opacity-30">+</span>
-                    <span className="text-[11px] font-medium text-[color:var(--apple-muted)] opacity-80">Blob</span>
-                  </div>
-                  <div className="text-center mt-1.5">
-                    <span className="text-[9px] text-[color:var(--apple-muted)] opacity-60">{t('arch.storage', '全部数据本地存储')}</span>
-                  </div>
-                </div>
-                <div className="relative z-10 mt-3 pt-3 border-t border-[color:var(--apple-line)]/60">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-1.5 justify-center py-1.5 rounded-lg transition-colors duration-300 hover:bg-[color:var(--apple-line)]/30">
-                      <span className="text-[11px] font-medium text-[color:var(--apple-ink)] opacity-80">{t('arch.vfs.ocr', '多引擎级联 OCR')}</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center py-1.5 rounded-lg transition-colors duration-300 hover:bg-[color:var(--apple-line)]/30">
-                      <span className="text-[11px] font-medium text-[color:var(--apple-ink)] opacity-80">{t('arch.vfs.vector', '多维度向量引擎')}</span>
-                      <div className="flex items-center justify-center gap-2 mt-1">
-                        <span className="text-[9px] text-[color:var(--apple-muted)] opacity-60">{t('arch.vfs.vector.text', '文本嵌入')}</span>
-                        <span className="text-[9px] text-[color:var(--apple-muted)] opacity-30">|</span>
-                        <span className="text-[9px] text-[color:var(--apple-muted)] opacity-60">{t('arch.vfs.vector.cross', '跨维度检索')}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {vfsCard}
           </div>
-        </div>
+        </Reveal>
 
-        {/* 移动端：垂直堆叠布局 */}
-        <div className="flex md:hidden flex-col items-center gap-0">
-          {/* Chat V2 */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="relative w-[300px] h-[210px]">
-              <svg className="absolute inset-0 w-full h-full opacity-[0.12]" viewBox="0 0 60 60" fill="none" preserveAspectRatio="xMidYMid meet">
-                <rect x="1" y="1" width="58" height="46" rx="10" fill="var(--apple-muted)"/>
-                <path d="M18 47L24 56L30 47" fill="var(--apple-muted)"/>
-              </svg>
-              {/* 移动端同样限制在76.6%高度内 */}
-              <div className="absolute top-0 left-0 right-0 h-[76.6%] flex flex-col items-center justify-center px-6 gap-1.5">
-                {[chatRow1, chatRow2, chatRow3, chatRow4].map((row, i) => (
-                  <div key={i} className="flex justify-center gap-1.5">
-                    {row.map((feat) => (
-                      <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap bg-[color:var(--apple-card)]/50 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 group-hover:border-[color:var(--apple-muted)]/30 group-hover:shadow-sm group-hover:bg-[color:var(--apple-card)]/80">{feat}</span>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="text-[14px] font-semibold text-[color:var(--apple-ink)]">Chat V2</div>
-            <div className="text-[11px] text-[color:var(--apple-muted)]">{t('arch.chat.desc', '智能对话')}</div>
-          </div>
-
+        {/* 移动端：垂直堆叠 */}
+        <Reveal motionScale={motionScale} y={36} className="flex md:hidden flex-col items-stretch mt-10 max-w-[26rem] mx-auto">
+          {chatCard}
           <FlowArrowVertical label={t('arch.arrow.invoke', '调用')} direction="down" />
-
-          {/* Skills 技能层 */}
-          <div className="w-full max-w-[280px] border border-[color:var(--apple-line)] rounded-2xl py-4 px-4 bg-[color:var(--apple-surface)]">
-            <div className="text-center">
-              <div className="text-[15px] font-semibold text-[color:var(--apple-ink)]">Skills</div>
-              <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.skills.subtitle', '技能编排 · 按需加载')}</div>
-            </div>
-            <div className="mt-3 pt-3 border-t border-[color:var(--apple-line)]">
-              <div className="grid grid-cols-2 gap-1.5">
-                {skillTools.map((tool) => (
-                  <div key={tool} className="flex items-center gap-1 px-2 py-1 rounded-md bg-[color:var(--apple-card)] border border-[color:var(--apple-line)]">
-                    <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
-                      <circle cx="5" cy="5" r="2" fill="var(--apple-muted)" opacity="0.5"/>
-                    </svg>
-                    <span className="text-[10px] text-[color:var(--apple-muted)] leading-tight">{tool}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
+          {skillsCard}
           <FlowArrowVertical label={t('arch.arrow.tools', '工具调用')} sublabel="RAG" direction="down" />
-
-          {/* VFS 数据（抽象） */}
-          <div className="border border-[color:var(--apple-line)] rounded-2xl py-4 px-6 bg-[color:var(--apple-surface)]">
-            <div className="text-center">
-              <div className="text-[15px] font-semibold text-[color:var(--apple-ink)]">VFS</div>
-              <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.vfs.desc', '虚拟文件系统 · 学习数据')}</div>
-            </div>
-            <div className="mt-3 pt-2 border-t border-[color:var(--apple-line)] text-center">
-              <span className="text-[10px] text-[color:var(--apple-muted)] opacity-60">SQLite + LanceDB + Blob</span>
-            </div>
-            <div className="mt-2 pt-2 border-t border-[color:var(--apple-line)] text-center">
-              <div className="text-[10px] font-medium text-[color:var(--apple-muted)]">{t('arch.vfs.ocr', '多引擎级联 OCR')}</div>
-              <div className="text-[10px] font-medium text-[color:var(--apple-muted)] mt-1">{t('arch.vfs.vector', '多维度向量引擎')}</div>
-              <div className="flex items-center justify-center gap-1.5 mt-1">
-                <span className="text-[9px] text-[color:var(--apple-muted)] opacity-50">{t('arch.vfs.vector.text', '文本嵌入')}</span>
-                <span className="text-[9px] text-[color:var(--apple-muted)] opacity-30">|</span>
-                <span className="text-[9px] text-[color:var(--apple-muted)] opacity-50">{t('arch.vfs.vector.cross', '跨维度检索')}</span>
-              </div>
-            </div>
-          </div>
-
+          {vfsCard}
           <FlowArrowVertical label={t('arch.arrow.rw', '读写')} sublabel="DSTU" direction="both" />
-
-          {/* Learning Hub + 资源类型（放入文件夹图标内） */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="relative w-[290px] h-[210px]">
-              <svg className="absolute inset-0 w-full h-full scale-[1.2] opacity-[0.10]" viewBox="0 0 48 48" fill="none" preserveAspectRatio="xMidYMid meet">
-                <path d="M6 10C6 8.895 6.895 8 8 8H18L21 11H40C41.105 11 42 11.895 42 13V39C42 40.105 41.105 41 40 41H8C6.895 41 6 40.105 6 39V10Z" fill="#E8B849"/>
-                <path d="M6 10C6 8.895 6.895 8 8 8H17C17.552 8 18 8.448 18 9V11H6V10Z" fill="#D4A53A"/>
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center pt-8 px-8">
-                <div className="grid grid-cols-4 gap-x-5 gap-y-3 justify-items-center">
-                  {resourceTypes.map((item) => (
-                    <div key={item.label} className="flex flex-col items-center gap-0.5 group/item transition-transform duration-300 hover:-translate-y-0.5">
-                      <div className="rounded-lg transition-colors duration-300 group-hover/item:bg-[color:var(--apple-line)]/50">
-                        <item.Icon size={22} />
-                      </div>
-                      <span className="text-[9px] text-[color:var(--apple-muted)] leading-tight whitespace-nowrap transition-colors duration-300 group-hover/item:text-[color:var(--apple-ink)]">{item.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="text-[14px] font-semibold text-[color:var(--apple-ink)]">Learning Hub</div>
-            <div className="text-[11px] text-[color:var(--apple-muted)]">{t('arch.hub.desc', '学习资源管理器')}</div>
-          </div>
-        </div>
+          {hubCard}
+        </Reveal>
       </div>
     </section>
   )
@@ -960,10 +648,54 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
 const App = () => {
   const [activePolicy, setActivePolicy] = useState(null)
   const [isDownloadPage, setIsDownloadPage] = useState(() => getIsDownloadFromLocation())
-  const { t, ready } = useLocale()
+  const { t, ready, locale } = useLocale()
   const { motionScale } = useResponsiveMotion()
   const homeScrollRef = useRef(0)
   const downloadScrollRef = useRef(0)
+
+  // 随语言切换同步文档标题与 SEO 描述
+  useEffect(() => {
+    if (typeof document === 'undefined' || !ready) return
+    const title = t('head.title', 'DeepStudent')
+    const description = t('head.description', '')
+    document.title = title
+    const setMeta = (selector, attr, value) => {
+      const el = document.querySelector(selector)
+      if (el) el.setAttribute(attr, value)
+    }
+    setMeta('meta[name="description"]', 'content', description)
+    setMeta('meta[property="og:title"]', 'content', title)
+    setMeta('meta[property="og:description"]', 'content', description)
+    setMeta('meta[name="twitter:title"]', 'content', title)
+    setMeta('meta[name="twitter:description"]', 'content', description)
+  }, [t, ready, locale])
+
+  const featureScrollPanels = useMemo(
+    () => [
+      {
+        id: 'feature-agent',
+        title: t('feature.agent.title'),
+        description: t('feature.agent.desc'),
+        imageSrc: '/img/example/软件主页图.png',
+        imageAlt: t('feature.agent.title'),
+      },
+      {
+        id: 'feature-anki',
+        title: t('feature.anki_full.title'),
+        description: t('feature.anki_full.desc'),
+        imageSrc: '/img/example/anki-制卡2.png',
+        imageAlt: t('feature.anki_full.title'),
+      },
+      {
+        id: 'feature-notes-memory',
+        title: t('feature.notes_memory.title'),
+        description: t('feature.notes_memory.desc'),
+        imageSrc: '/img/example/学习资源管理器.png',
+        imageAlt: t('feature.notes_memory.title'),
+      },
+    ],
+    [t]
+  )
   const syncHistoryWithView = useCallback(
     (nextIsDownload, { replace = false } = {}) => {
       if (typeof window === 'undefined') return
@@ -1038,247 +770,23 @@ const App = () => {
           <TopNav onDownload={handleDownloadOpen} />
           <HeroSection onDownload={handleDownloadOpen} motionScale={motionScale} />
 
-          {/* 架构图 */}
+          <ScatterSection />
+
+          <LearningLoop />
+
+          <section id="features" className="scroll-mt-24">
+            <HorizontalFeatureScroll panels={featureScrollPanels} />
+          </section>
+
+          {/* 架构图（技术视角，后置） */}
           <ArchitectureDiagram motionScale={motionScale} />
 
-          <main
-            id="features"
-            className={`relative z-10 scroll-mt-24 pb-8 sm:pb-10 lg:pb-12 ${
-              motionScale > 0 ? 'animate-fade-in' : ''
-            }`}
-            style={motionScale > 0 ? { animationDelay: '0.18s' } : undefined}
-          >
-            <div className="space-y-[var(--space-section-stack)] pt-[var(--space-section-top)]">
-              <FeatureSection
-                id="feature-free-models"
-                title={t('freeModels.title', '免费模型，开箱即用')}
-                desc={t('freeModels.desc', '硅基流动免费提供的 AI 模型，无需 API Key，下载即用。')}
-                align="right"
-                motionScale={motionScale}
-              >
-                <div className="max-w-lg mx-auto">
-                  <FreeModelsCallout />
-                </div>
-              </FeatureSection>
+          <FreeModelsBand motionScale={motionScale} />
 
-              {/* Module 1: 智能体，多面手 */}
-              <FeatureSection
-                id="feature-agent"
-                layout="sticky"
-                title={t('feature.agent.title')}
-                desc={t('feature.agent.desc')}
-                align="left"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'agent.multiModel', descKey: 'agent.multiModelDesc', imgSrc: '/img/example/模型分配.png' },
-                  { labelKey: 'agent.parallel', descKey: 'agent.parallelDesc', imgSrc: '/img/example/并行-1.png' },
-                  { labelKey: 'agent.parallelResult', descKey: 'agent.parallelResultDesc', imgSrc: '/img/example/并行-2.png' },
-                  { labelKey: 'agent.skills', descKey: 'agent.skillsDesc', imgSrc: '/img/example/技能管理.png' },
-                  { labelKey: 'agent.group', descKey: 'agent.groupDesc', imgSrc: '/img/example/分组.png' },
-                  { labelKey: 'agent.session', descKey: 'agent.sessionDesc', imgSrc: '/img/example/会话管理.png' },
-                ]}
-              >
-                <OptimizedImage src="/img/example/软件主页图.png" alt="AI Agent Interface" className="w-full h-auto object-cover" />
-              </FeatureSection>
+          <LocalFirstSection motionScale={motionScale} />
 
-              {/* Module 2: Anki 智能制卡 */}
-              <FeatureSection
-                id="feature-anki"
-                layout="sticky"
-                title={t('feature.anki_full.title')}
-                desc={t('feature.anki_full.desc')}
-                align="right"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'anki.upload', descKey: 'anki.uploadDesc', imgSrc: '/img/example/anki-发送.png' },
-                  { labelKey: 'feature.anki_full.title', descKey: 'feature.anki_full.desc', imgSrc: '/img/example/anki-制卡1.png' },
-                  { labelKey: 'anki.import', descKey: 'anki.importDesc', imgSrc: '/img/example/anki-制卡3.png' },
-                  { labelKey: 'anki.tasks', descKey: 'anki.tasksDesc', imgSrc: '/img/example/制卡任务.png' },
-                  { labelKey: 'anki.templates', descKey: 'anki.templatesDesc', imgSrc: '/img/example/模板库-1.png' },
-                  { labelKey: 'anki.templateEditor', descKey: 'anki.templateEditorDesc', imgSrc: '/img/example/模板库-2.png' },
-                ]}
-              >
-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
-                  <OptimizedImage src="/img/example/anki-制卡2.png" alt={t('anki.preview')} className="w-full h-auto object-cover" />
-                </div>
-              </FeatureSection>
-
-              {/* Module 3: MCP 工具生态 */}
-              <FeatureSection
-                id="feature-mcp"
-                title={t('feature.mcp.title')}
-                desc={t('feature.mcp.desc')}
-                align="right"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'mcp.context7', descKey: 'mcp.context7Desc', imgSrc: '/img/example/mcp-1.png' },
-                  { labelKey: 'mcp.arxiv', descKey: 'mcp.arxivDesc', imgSrc: '/img/example/mcp-3.png' },
-                  { labelKey: 'mcp.output', descKey: 'mcp.outputDesc', imgSrc: '/img/example/mcp-4.png' },
-                ]}
-              >
-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
-                  <OptimizedImage src="/img/example/mcp-2.png" alt="MCP Tool Ecosystem" className="w-full h-auto object-cover" />
-                </div>
-              </FeatureSection>
-
-              {/* Module 4: 深度调研 */}
-              <FeatureSection
-                id="feature-research"
-                layout="sticky"
-                title={t('feature.research.title')}
-                desc={t('feature.research.desc')}
-                align="left"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'research.execute', descKey: 'research.executeDesc', imgSrc: '/img/example/调研-2.png' },
-                  { labelKey: 'research.progress', descKey: 'research.progressDesc', imgSrc: '/img/example/调研-3.png' },
-                  { labelKey: 'research.report', descKey: 'research.reportDesc', imgSrc: '/img/example/调研-4.png' },
-                  { labelKey: 'research.save', descKey: 'research.saveDesc', imgSrc: '/img/example/调研-5.png' },
-                ]}
-              >
-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
-                  <OptimizedImage src="/img/example/调研-1.png" alt="Deep Research" className="w-full h-auto object-cover" />
-                </div>
-              </FeatureSection>
-
-              {/* Module 5: 深度阅读 */}
-              <FeatureSection
-                id="feature-reading"
-                title={t('feature.reading.title')}
-                desc={t('feature.reading.desc')}
-                align="right"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'reading.pdfSelect', descKey: 'reading.pdfSelectDesc', imgSrc: '/img/example/pdf阅读-2.png' },
-                  { labelKey: 'reading.pdfDeep', descKey: 'reading.pdfDeepDesc', imgSrc: '/img/example/pdf阅读-3.png' },
-                  { labelKey: 'reading.docx', descKey: 'reading.docxDesc', imgSrc: '/img/example/docx阅读-1.png' },
-                ]}
-              >
-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
-                  <OptimizedImage src="/img/example/pdf阅读-1.png" alt="Deep Reading" className="w-full h-auto object-cover" />
-                </div>
-              </FeatureSection>
-
-              {/* Module 6: 知识导图 */}
-              <FeatureSection
-                id="feature-mindmap"
-                layout="sticky"
-                title={t('feature.mindmap.title')}
-                desc={t('feature.mindmap.desc')}
-                align="left"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'mindmap.iterate', descKey: 'mindmap.iterateDesc', imgSrc: '/img/example/知识导图-2.png' },
-                  { labelKey: 'mindmap.complete', descKey: 'mindmap.completeDesc', imgSrc: '/img/example/知识导图-3.png' },
-                  { labelKey: 'mindmap.editView', descKey: 'mindmap.editViewDesc', imgSrc: '/img/example/知识导图-4.png' },
-                  { labelKey: 'mindmap.outline', descKey: 'mindmap.outlineDesc', imgSrc: '/img/example/知识导图-5.png' },
-                  { labelKey: 'mindmap.recite', descKey: 'mindmap.reciteDesc', imgSrc: '/img/example/知识导图-6.png' },
-                ]}
-              >
-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
-                  <OptimizedImage src="/img/example/知识导图-1.png" alt="Knowledge Mindmap" className="w-full h-auto object-cover" />
-                </div>
-              </FeatureSection>
-
-              {/* Module 7: 笔记 & 记忆管理 */}
-              <FeatureSection
-                id="feature-notes-memory"
-                title={t('feature.notes_memory.title')}
-                desc={t('feature.notes_memory.desc')}
-                align="right"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'memory.resources', descKey: 'memory.resourcesDesc', imgSrc: '/img/example/学习资源管理器.png' },
-                  { labelKey: 'memory.generate', descKey: 'memory.generateDesc', imgSrc: '/img/example/记忆-1.png' },
-                  { labelKey: 'memory.list', descKey: 'memory.listDesc', imgSrc: '/img/example/记忆-2.png' },
-                  { labelKey: 'memory.detail', descKey: 'memory.detailDesc', imgSrc: '/img/example/记忆-3.png' },
-                  { labelKey: 'memory.files', descKey: 'memory.filesDesc', imgSrc: '/img/example/记忆-4.png' },
-                  { labelKey: 'memory.vector', descKey: 'memory.vectorDesc', imgSrc: '/img/example/向量化状态.png' },
-                ]}
-              >
-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
-                  <OptimizedImage src="/img/example/笔记-1.png" alt="Notes & Memory Management" className="w-full h-auto object-cover" />
-                </div>
-              </FeatureSection>
-
-              {/* Module 8: 智能题库 */}
-              <FeatureSection
-                id="feature-qbank"
-                layout="sticky"
-                title={t('feature.qbank_full.title')}
-                desc={t('feature.qbank_full.desc')}
-                align="left"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'qbank.browse', descKey: 'qbank.browseDesc', imgSrc: '/img/example/题目集-2.png' },
-                  { labelKey: 'qbank.practice', descKey: 'qbank.practiceDesc', imgSrc: '/img/example/题目集-3.png' },
-                  { labelKey: 'qbank.analysis', descKey: 'qbank.analysisDesc', imgSrc: '/img/example/题目集-4.png' },
-                  { labelKey: 'qbank.knowledge', descKey: 'qbank.knowledgeDesc', imgSrc: '/img/example/题目集-5.png' },
-                ]}
-              >
-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
-                  <OptimizedImage src="/img/example/题目集-1.png" alt="Smart Q-Bank" className="w-full h-auto object-cover" />
-                </div>
-              </FeatureSection>
-
-              {/* Module 9: 作文批改 */}
-              <FeatureSection
-                id="feature-essay"
-                title={t('feature.essay_full.title')}
-                desc={t('feature.essay_full.desc')}
-                align="right"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'essay.types', descKey: 'essay.typesDesc', imgSrc: '/img/example/作文-1.png' },
-                  { labelKey: 'essay.polish', descKey: 'essay.polishDesc', imgSrc: '/img/example/作文-3.png' },
-                  { labelKey: 'essay.settings', descKey: 'essay.settingsDesc', imgSrc: '/img/example/作文-4.png' },
-                ]}
-              >
-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
-                  <OptimizedImage src="/img/example/作文-2.png" alt="Essay Grading" className="w-full h-auto object-cover" />
-                </div>
-              </FeatureSection>
-
-              {/* Module 10: 论文搜索 */}
-              <FeatureSection
-                id="feature-paper-search"
-                layout="sticky"
-                title={t('feature.paperSearch.title')}
-                desc={t('feature.paperSearch.desc')}
-                align="left"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'paperSearch.download', descKey: 'paperSearch.downloadDesc', imgSrc: '/img/example/论文搜索-2.png' },
-                  { labelKey: 'paperSearch.read', descKey: 'paperSearch.readDesc', imgSrc: '/img/example/论文搜索-3.png' },
-                ]}
-              >
-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
-                  <OptimizedImage src="/img/example/论文搜索-1.png" alt="Paper Search" className="w-full h-auto object-cover" />
-                </div>
-              </FeatureSection>
-
-              {/* Module 11: 翻译工作台 */}
-              <FeatureSection
-                id="feature-translation"
-                layout="sticky"
-                title={t('feature.translation.title')}
-                desc={t('feature.translation.desc')}
-                align="right"
-                motionScale={motionScale}
-                subFeatures={[
-                  { labelKey: 'translation.bilingual', descKey: 'translation.bilingualDesc', imgSrc: '/img/example/翻译-2.png' },
-                  { labelKey: 'translation.domain', descKey: 'translation.domainDesc', imgSrc: '/img/example/翻译-3.png' },
-                ]}
-              >
-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
-                  <OptimizedImage src="/img/example/翻译-1.png" alt="Translation Workbench" className="w-full h-auto object-cover" />
-                </div>
-              </FeatureSection>
-
-            </div>
-
-            <FaqSection motionScale={motionScale} onOpenPolicy={handlePolicyOpen} />
-          </main>
+          <FaqSection motionScale={motionScale} onOpenPolicy={handlePolicyOpen} />
+          <CtaBanner onDownload={handleDownloadOpen} motionScale={motionScale} />
         </>
       )}
 
@@ -1291,14 +799,13 @@ const App = () => {
 
 const TopNav = ({ onDownload = () => {} }) => {
   const { t } = useLocale()
-  const isHidden = useAutoHideTopNav()
-
+  const scrollY = useScrollY()
+  const scrolled = scrollY > 8
   return (
     <nav
-      className={cn(
-        'sticky top-0 z-nav pt-safe bg-white/75 backdrop-blur-[20px] backdrop-saturate-[180%] dark:bg-[color:var(--apple-nav-bg)] transition-transform duration-200 ease-out',
-        isHidden ? '-translate-y-full' : 'translate-y-0'
-      )}
+      className={`sticky top-0 z-nav pt-safe bg-white/75 backdrop-blur-[20px] backdrop-saturate-[180%] dark:bg-[color:var(--apple-nav-bg)] border-b transition-[border-color] duration-300 ${
+        scrolled ? 'border-[color:var(--apple-line)]' : 'border-transparent'
+      }`}
     >
       <div className="max-w-6xl mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
         <a href="/" className="flex items-center gap-2.5 font-semibold text-slate-900 transition-opacity hover:opacity-80 dark:text-[color:var(--apple-ink)]">
@@ -1347,19 +854,34 @@ const TopNav = ({ onDownload = () => {} }) => {
   )
 }
 
+const heroPreviewItems = [
+  { id: 'chat', labelKey: 'hero.preview.chat', subtextKey: 'hero.preview.subtext.chat' },
+  { id: 'skills', labelKey: 'hero.preview.skills', subtextKey: 'hero.preview.subtext.skills' },
+  { id: 'knowledge', labelKey: 'hero.preview.knowledge', subtextKey: 'hero.preview.subtext.knowledge' },
+  { id: 'providers', labelKey: 'hero.preview.providers', subtextKey: 'hero.preview.subtext.providers' },
+]
+
 const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
   const { t, isChinese } = useLocale()
   const shouldAnimate = motionScale > 0
+  const [heroShown, setHeroShown] = useState(false)
   const [activePreviewId, setActivePreviewId] = useState(heroPreviewItems[0].id)
   const activePreviewItem = heroPreviewItems.find(item => item.id === activePreviewId) || heroPreviewItems[0]
   const activePreviewIndex = Math.max(0, heroPreviewItems.findIndex(item => item.id === activePreviewId))
-  const previewCount = heroPreviewItems.length
   const [isSubtextVisible, setIsSubtextVisible] = useState(true)
   const [isSubtextAnimating, setIsSubtextAnimating] = useState(false)
   const subtextSwapTimerRef = useRef(null)
   const subtextResetTimerRef = useRef(null)
-  const scrollY = useScrollY()
-  const showScrollHint = scrollY < 100
+  const scrollY = useScrollY(shouldAnimate)
+  const viewportHeight = useViewportHeight(shouldAnimate)
+
+  // texts reveal: render lines in their resting state first, then flip
+  // .is-shown on the next frame so the staggered entrance actually plays.
+  useEffect(() => {
+    if (!shouldAnimate) return
+    const raf = window.requestAnimationFrame(() => setHeroShown(true))
+    return () => window.cancelAnimationFrame(raf)
+  }, [shouldAnimate])
 
   useEffect(() => {
     return () => {
@@ -1368,215 +890,239 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
     }
   }, [])
 
-  const handleExplore = () => {
-    if (typeof document === 'undefined') return
-    const target = document.getElementById('features')
-    if (!target) return
-    target.scrollIntoView({ behavior: shouldAnimate ? 'smooth' : 'auto', block: 'start' })
-  }
+  // 截图随滚动从 0.94 放大到 1.0 —— 滚动回退时按同一曲线缩小
+  const zoomProgress = shouldAnimate
+    ? easeOutCubic(clamp(scrollY / Math.max(viewportHeight * 0.55, 1), 0, 1))
+    : 1
+  const frameScale = 0.94 + 0.06 * zoomProgress
+  const frameY = (1 - zoomProgress) * 28
 
   const handleDownloadClick = () => {
     trackUiEvent('hero_cta_primary_click', { location: 'hero' })
     onDownload()
   }
 
-  const handleExploreClick = () => {
-    trackUiEvent('hero_cta_secondary_click', { location: 'hero' })
-    handleExplore()
-  }
+  const swapSubtextTo = useCallback(
+    (nextId) => {
+      if (nextId === activePreviewId) return
+      if (!shouldAnimate) {
+        setActivePreviewId(nextId)
+        return
+      }
+
+      if (subtextSwapTimerRef.current) window.clearTimeout(subtextSwapTimerRef.current)
+      if (subtextResetTimerRef.current) window.clearTimeout(subtextResetTimerRef.current)
+
+      setIsSubtextAnimating(true)
+      setIsSubtextVisible(false)
+
+      subtextSwapTimerRef.current = window.setTimeout(() => {
+        setActivePreviewId(nextId)
+        setIsSubtextVisible(true)
+        subtextSwapTimerRef.current = null
+      }, SUBTEXT_FADE_DURATION_MS)
+
+      subtextResetTimerRef.current = window.setTimeout(() => {
+        setIsSubtextAnimating(false)
+        subtextResetTimerRef.current = null
+      }, SUBTEXT_FADE_DURATION_MS * 2)
+    },
+    [activePreviewId, shouldAnimate],
+  )
 
   const handleSubtextClick = () => {
     if (isSubtextAnimating) return
 
     const currentIndex = heroPreviewItems.findIndex(item => item.id === activePreviewId)
     const nextIndex = (currentIndex + 1) % heroPreviewItems.length
-    const nextId = heroPreviewItems[nextIndex].id
-
-    if (!shouldAnimate) {
-      setActivePreviewId(nextId)
-      return
-    }
-
-    if (subtextSwapTimerRef.current) window.clearTimeout(subtextSwapTimerRef.current)
-    if (subtextResetTimerRef.current) window.clearTimeout(subtextResetTimerRef.current)
-
-    setIsSubtextAnimating(true)
-    setIsSubtextVisible(false)
-
-    subtextSwapTimerRef.current = window.setTimeout(() => {
-      setActivePreviewId(nextId)
-      setIsSubtextVisible(true)
-      subtextSwapTimerRef.current = null
-    }, SUBTEXT_FADE_DURATION_MS)
-
-    subtextResetTimerRef.current = window.setTimeout(() => {
-      setIsSubtextAnimating(false)
-      subtextResetTimerRef.current = null
-    }, SUBTEXT_FADE_DURATION_MS * 2)
+    swapSubtextTo(heroPreviewItems[nextIndex].id)
   }
 
+  useEffect(() => {
+    if (!shouldAnimate) return
+    const timer = window.setTimeout(() => {
+      const currentIndex = heroPreviewItems.findIndex(item => item.id === activePreviewId)
+      const nextIndex = (currentIndex + 1) % heroPreviewItems.length
+      swapSubtextTo(heroPreviewItems[nextIndex].id)
+    }, AUTOPLAY_INTERVAL_MS)
+    return () => window.clearTimeout(timer)
+  }, [activePreviewId, shouldAnimate, swapSubtextTo])
+
   const subtextA11yStatus = isChinese
-    ? `当前第 ${activePreviewIndex + 1} 项 / 共 ${previewCount} 项，可切换`
-    : `Item ${activePreviewIndex + 1} of ${previewCount}. Press to switch.`
+    ? `当前选中：${t(activePreviewItem.labelKey)}`
+    : `Currently selected: ${t(activePreviewItem.labelKey)}`
 
   return (
-    <header
-      className="relative min-h-screen pt-20 pb-16 flex items-center overflow-hidden lg:overflow-visible"
-    >
-      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
-        <div className="absolute top-[-10%] left-[12%] w-[56vw] h-[56vw] max-w-[680px] max-h-[680px] bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.12),transparent_60%)] blur-[84px] mix-blend-plus-lighter" />
-        <div className="absolute top-[-22%] right-[-10%] w-[52vw] h-[52vw] max-w-[760px] max-h-[760px] bg-[radial-gradient(circle_at_center,rgba(120,119,126,0.08),transparent_62%)] blur-[96px] opacity-70" />
-
-        <div className="absolute inset-0 backdrop-blur-2xl backdrop-saturate-150" />
-
-        <div
-          className="absolute top-[-30%] left-[-20%] right-[-20%] h-[80%] rounded-[100%] border-t border-[rgba(255,255,255,0.4)] dark:border-[rgba(255,255,255,0.2)] opacity-80"
-          style={{
-            boxShadow: 'inset 0 10px 40px -10px rgba(255,255,255,0.2)',
-            maskImage: 'radial-gradient(ellipse at top, black 25%, transparent 60%)',
-            WebkitMaskImage: 'radial-gradient(ellipse at top, black 25%, transparent 60%)',
-          }}
-        />
-
-        <div
-          className="absolute top-[-30%] left-[-20%] right-[-20%] h-[80%] rounded-[100%] opacity-35 dark:opacity-45"
-          style={{
-            boxShadow: 'inset 0 18px 40px -14px rgba(255,255,255,0.22), inset 0 38px 86px -24px rgba(255,255,255,0.10)',
-            maskImage: 'radial-gradient(ellipse at top, black 32%, transparent 66%)',
-            WebkitMaskImage: 'radial-gradient(ellipse at top, black 32%, transparent 66%)',
-          }}
-        />
-
-        <div
-          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] mix-blend-overlay pointer-events-none"
-          style={{
-            backgroundImage:
-              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")',
-          }}
-        />
-      </div>
-
-      <div
-        className={`relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 ${
-          shouldAnimate ? 'animate-fade-in' : ''
-        }`}
-        style={shouldAnimate ? { animationDelay: '0.08s' } : undefined}
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.76fr)_minmax(0,1.9fr)] gap-8 sm:gap-10 lg:gap-8 xl:gap-12 items-center">
-          <div className="flex flex-col items-start text-left order-2 lg:order-1">
-            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold tracking-[-0.02em] mb-4 leading-[1.1] text-[color:var(--apple-ink)]">
-              {t('hero.headline.top')}
-              <br />
-              <span className={isChinese ? 'inline-block whitespace-nowrap' : 'whitespace-normal break-words text-balance'}>{t('hero.headline.bottom')}</span>
-            </h1>
-
-            <button
-              type="button"
-              onClick={handleSubtextClick}
-              disabled={isSubtextAnimating}
-              aria-label={`${t(activePreviewItem.subtextKey)}。${subtextA11yStatus}`}
-              className="focus-ring text-left mb-8 cursor-pointer rounded-lg transition-opacity duration-150 hover:opacity-85 disabled:cursor-default disabled:opacity-100"
-            >
-              <span className="relative inline-flex min-h-[3.2em] sm:min-h-[2.4em] items-start overflow-visible align-top">
-                <span
-                  className={`text-base sm:text-lg leading-relaxed text-[color:var(--apple-muted)] whitespace-pre-line break-words text-pretty transition-opacity duration-200 ease-out motion-reduce:transition-none ${
-                    isSubtextVisible ? 'opacity-100' : 'opacity-0'
-                  }`}
-                >
-                  {t(activePreviewItem.subtextKey)}
-                </span>
-              </span>
-
-              <span className="sr-only">{subtextA11yStatus}</span>
-            </button>
-            
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              <button
-                type="button"
-                onClick={handleDownloadClick}
-                className="group inline-flex w-full sm:w-auto items-center justify-center gap-1.5 px-8 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-lg font-medium text-[15px] whitespace-nowrap hover:opacity-90 active:scale-[0.98] transition-all duration-200"
-              >
-                <span className="whitespace-nowrap">{t('hero.cta.download')}</span>
-                <svg
-                  className="w-4 h-4 shrink-0 opacity-90 transition-[transform,opacity] duration-150 ease-out motion-reduce:transform-none group-hover:translate-x-1 group-hover:opacity-100"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </button>
-              <a
-                href="/docs/start.html"
-                className="group inline-flex w-full sm:w-auto items-center justify-center gap-1.5 px-8 py-3 bg-transparent text-[color:var(--apple-ink)] border border-[color:var(--apple-line-strong)] rounded-lg font-medium text-[15px] hover:bg-[color:var(--apple-card)] transition-all duration-200"
-              >
-                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                </svg>
-                <span className="whitespace-nowrap">{t('hero.cta.quickstart')}</span>
-              </a>
-            </div>
-            <a
-              href="https://github.com/helixnow/deep-student"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 mb-10 inline-flex items-center gap-2 text-[13px] sm:text-[14px] text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] transition-colors"
-            >
-              <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-              </svg>
-              <span className="whitespace-nowrap">免费开源，欢迎Star Fork 和 PR</span>
-            </a>
-
-            {showScrollHint && (
-              <div
-                className="hidden lg:flex flex-col items-start gap-1.5 cursor-pointer hover:opacity-80 transition-all duration-500 mt-8"
-                onClick={handleExploreClick}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && handleExploreClick()}
-                aria-label={t('hero.scrollDown', '向下滚动')}
-              >
-                <span className="text-[10px] text-[color:var(--apple-muted)] tracking-wider uppercase">{t('hero.scrollDown', '向下滚动')}</span>
-                <svg
-                  className="w-5 h-5 text-[color:var(--apple-muted)] animate-bounce-down"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-              </div>
+    <header className="relative pt-16 sm:pt-24">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div className={`grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-center lg:gap-14 t-stagger ${shouldAnimate && heroShown ? 'is-shown' : ''}`}>
+          <div className="w-full max-w-xl text-left lg:max-w-2xl">
+        <h1
+          className={`text-[2.6rem] leading-[1.06] sm:text-[3.5rem] lg:text-[4rem] xl:text-[4.5rem] 2xl:text-[5rem] font-semibold tracking-[-0.025em] text-[color:var(--apple-ink)] ${
+            shouldAnimate ? 't-stagger-line t-stagger-line--1' : ''
+          }`}
+        >
+          {t('hero.headline.top')}
+          <br />
+          <span className="relative inline-block">
+            <span className={isChinese ? 'inline-block whitespace-nowrap' : 'whitespace-normal break-words text-balance'}>
+              {t('hero.headline.bottom')}
+            </span>
+            {shouldAnimate && (
+              <HandCircle
+                className="absolute -inset-x-[0.32em] -inset-y-[0.12em] w-[calc(100%+0.64em)] h-[calc(100%+0.24em)] text-[color:var(--apple-ink)] opacity-55 pointer-events-none"
+                delay={0.85}
+              />
             )}
+          </span>
+        </h1>
 
+        <div
+          className={`mt-6 flex flex-col items-start ${
+            shouldAnimate ? 't-stagger-line t-stagger-line--2' : ''
+          }`}
+        >
+          <button
+            type="button"
+            onClick={handleSubtextClick}
+            disabled={isSubtextAnimating}
+            aria-label={`${t(activePreviewItem.subtextKey)}。${subtextA11yStatus}`}
+            className="focus-ring cursor-pointer rounded-lg px-2 py-1 text-left transition-opacity duration-150 hover:opacity-85 disabled:cursor-default disabled:opacity-100"
+          >
+            <span className="block text-[13px] font-semibold text-[color:var(--apple-ink)]">
+              {t(activePreviewItem.labelKey)}
+            </span>
+            <span
+              className={`mt-1 block min-h-[3.2em] sm:min-h-[2.6em] text-[15px] sm:text-[17px] leading-relaxed text-[color:var(--apple-muted)] whitespace-pre-line break-words text-pretty transition-opacity duration-200 ease-out motion-reduce:transition-none ${
+                isSubtextVisible ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              {t(activePreviewItem.subtextKey)}
+            </span>
+            <span className="sr-only">{subtextA11yStatus}</span>
+          </button>
+
+          <div className="mt-2 flex items-center gap-1">
+            {heroPreviewItems.map((item, index) => {
+              const active = index === activePreviewIndex
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => swapSubtextTo(item.id)}
+                  aria-label={t(item.labelKey)}
+                  aria-current={active}
+                  className={`h-0.5 rounded-full transition-all duration-300 ease-apple ${
+                    active
+                      ? 'w-6 bg-[color:var(--apple-ink)]'
+                      : 'w-2 bg-[color:var(--apple-line-strong)] hover:bg-[color:var(--apple-muted)]'
+                  }`}
+                />
+              )
+            })}
           </div>
-          
-          <div className="flex justify-center lg:justify-end order-1 lg:order-2 lg:translate-x-[6vw] xl:translate-x-[11vw]">
-            <HeroPreview
-              className="max-w-[58rem] sm:max-w-[104rem] lg:w-[185%] xl:w-[205%] 2xl:w-[220%] lg:max-w-none"
-            />
+        </div>
+
+        <div
+          className={`mt-8 flex flex-col items-start gap-y-4 sm:flex-row sm:items-center gap-x-8 ${
+            shouldAnimate ? 't-stagger-line t-stagger-line--3' : ''
+          }`}
+        >
+          <button
+            type="button"
+            onClick={handleDownloadClick}
+            className="t-learn inline-flex items-center justify-center gap-1.5 px-7 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-full font-medium text-[15px] whitespace-nowrap transition-opacity duration-150 hover:opacity-90"
+          >
+            <span className="whitespace-nowrap">{t('hero.cta.download')}</span>
+            <span className="t-learn-chevron">
+              <svg
+                className="w-4 h-4 shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path className="t-learn-arm t-learn-arm-top" d="M6 4L10 8" />
+                <path className="t-learn-arm t-learn-arm-bot" d="M10 8L6 12" />
+              </svg>
+            </span>
+          </button>
+          <a
+            href="/docs/start"
+            className="group inline-flex items-center gap-1 text-[15px] font-medium text-[color:var(--apple-blue)] hover:text-[color:var(--apple-blue-hover)] transition-colors"
+          >
+            <span className="whitespace-nowrap">{t('hero.cta.quickstart')}</span>
+            <svg
+              className="w-3.5 h-3.5 shrink-0 transition-transform duration-150 ease-out motion-reduce:transform-none group-hover:translate-x-0.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </a>
+        </div>
+
+        <div
+          className={`mt-4 flex items-center justify-start gap-1.5 ${
+            shouldAnimate ? 't-stagger-line t-stagger-line--6' : ''
+          }`}
+        >
+          <HandArrowUp className="w-5 h-6 text-[color:var(--apple-muted)] opacity-70 shrink-0" delay={1.15} />
+          <span className="font-handwritten text-[1.4rem] leading-none text-[color:var(--apple-muted)] -rotate-2 select-none">
+            {t('hero.note', '无需注册，下载即用')}
+          </span>
+        </div>
+
+        <a
+          href="https://github.com/helixnow/deep-student"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`mt-5 inline-flex items-center gap-2 text-[13px] text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] transition-colors ${
+            shouldAnimate ? 't-stagger-line t-stagger-line--4' : ''
+          }`}
+        >
+          <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+          </svg>
+          <span className="whitespace-nowrap">{t('hero.github', '免费开源，欢迎 Star / Fork / PR')}</span>
+        </a>
+          </div>
+
+          <div className={shouldAnimate ? 't-stagger-line t-stagger-line--5' : ''}>
+          <div
+            style={{
+              transform: `translate3d(0, ${frameY.toFixed(2)}px, 0) scale(${frameScale.toFixed(4)})`,
+              transformOrigin: 'center top',
+              willChange: shouldAnimate ? 'transform' : 'auto',
+            }}
+          >
+            <div>
+              <OptimizedImage
+                src="/img/example/软件主页图.png"
+                alt="DeepStudent 主页面预览"
+                className="block w-full h-auto object-cover"
+                loading={getImageRequestHints({ role: 'hero' }).loading}
+                decoding="async"
+                fetchPriority={getImageRequestHints({ role: 'hero' }).fetchPriority}
+                sizes="(min-width: 1280px) 45vw, 96vw"
+                draggable="false"
+              />
+            </div>
+          </div>
           </div>
         </div>
       </div>
     </header>
   )
 }
-
-const heroPreviewItems = [
-  { id: 'chat', labelKey: 'hero.preview.chat', subtextKey: 'hero.preview.subtext.chat' },
-  { id: 'skills', labelKey: 'hero.preview.skills', subtextKey: 'hero.preview.subtext.skills' },
-  { id: 'knowledge', labelKey: 'hero.preview.knowledge', subtextKey: 'hero.preview.subtext.knowledge' },
-  { id: 'providers', labelKey: 'hero.preview.providers', subtextKey: 'hero.preview.subtext.providers' },
-]
 
 
 const freeModels = [
@@ -1643,75 +1189,92 @@ const FreeModelLogo = ({ id, className = 'h-4 w-4' }) => {
   }
 }
 
-const FreeModelsCallout = () => {
+// 免费模型横幅：紧凑的单卡片，承接支柱条与功能模块
+const FreeModelsBand = ({ motionScale = 1 }) => {
   const { t } = useLocale()
 
   const siliconflowLogo = '/siliconflow_Chinese%20and%20English%20LOGO.svg'
   const siliconflowLogoDark = '/siliconflow_Chinese%20and%20English%20LOGO_dark.svg'
 
   return (
-    <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] rounded-[2rem] p-6 sm:p-8">
-      <div className="flex flex-wrap gap-2 justify-center">
-        {freeModels.map((model) => (
-          <span
-            key={model.id}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] text-[12px] font-medium text-[color:var(--apple-ink)]"
-          >
-            <FreeModelLogo id={model.id} />
-            <span>{model.label}</span>
-          </span>
-        ))}
-      </div>
+    <section className="px-4 sm:px-6 pb-20 sm:pb-28">
+      <Reveal
+        motionScale={motionScale}
+        className="max-w-5xl mx-auto rounded-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] px-6 py-10 sm:px-12 text-center shadow-[var(--apple-shadow-sm)]"
+      >
+        <h2 className="text-[1.375rem] sm:text-[1.75rem] font-semibold text-[color:var(--apple-ink)] tracking-tight">
+          {t('freeModels.title', '免费模型，开箱即用')}
+        </h2>
+        <p className="mt-2 text-[14px] sm:text-[15px] text-[color:var(--apple-muted)]">
+          {t('freeModels.desc', '硅基流动免费提供的 AI 模型，无需 API Key，下载即用。')}
+        </p>
 
-      <div className="mt-4 flex flex-col items-center gap-2 text-[11px] text-[color:var(--apple-muted)] text-center">
-        <div>{t('freeModels.poweredBy', 'Powered by SiliconFlow')}</div>
-        <div className="flex items-center justify-center">
-          <img
-            src={siliconflowLogo}
-            alt="SiliconFlow"
-            className="h-8 sm:h-9 w-auto dark:hidden"
-            loading="lazy"
-            draggable="false"
-          />
-          <img
-            src={siliconflowLogoDark}
-            alt="SiliconFlow"
-            className="h-8 sm:h-9 w-auto hidden dark:block"
-            loading="lazy"
-            draggable="false"
-          />
+        <div className="mt-6 flex flex-wrap gap-2 justify-center">
+          {freeModels.map((model) => (
+            <span
+              key={model.id}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] text-[12px] font-medium text-[color:var(--apple-ink)]"
+            >
+              <FreeModelLogo id={model.id} />
+              <span>{model.label}</span>
+            </span>
+          ))}
         </div>
-      </div>
-    </div>
+
+        <div className="mt-6 flex flex-col items-center gap-2 text-[11px] text-[color:var(--apple-muted)]">
+          <div>{t('freeModels.poweredBy', 'Powered by SiliconFlow')}</div>
+          <div className="flex items-center justify-center">
+            <img
+              src={siliconflowLogo}
+              alt="SiliconFlow"
+              className="h-7 sm:h-8 w-auto dark:hidden"
+              loading="lazy"
+              draggable="false"
+            />
+            <img
+              src={siliconflowLogoDark}
+              alt="SiliconFlow"
+              className="h-7 sm:h-8 w-auto hidden dark:block"
+              loading="lazy"
+              draggable="false"
+            />
+          </div>
+        </div>
+      </Reveal>
+    </section>
   )
 }
 
-const HeroPreview = ({ style, className = 'max-w-[28rem] sm:max-w-[56rem] lg:max-w-[68rem]' }) => {
-  const heroImageSrc = '/img/example/软件主页图.png'
-  const heroHints = getImageRequestHints({ role: 'hero' })
+// 结尾 CTA：Apple 式的大字收尾
+const CtaBanner = ({ onDownload = () => {}, motionScale = 1 }) => {
+  const { t } = useLocale()
+
+  const handleClick = () => {
+    trackUiEvent('hero_cta_primary_click', { location: 'cta_banner' })
+    onDownload()
+  }
 
   return (
-    <div
-      className={`relative w-full ${className}`}
-      style={style}
-    >
-      <div className="relative">
-        <div
-          className="relative z-10"
+    <section className="px-4 sm:px-6 py-24 sm:py-32 text-center">
+      <Reveal motionScale={motionScale} className="max-w-3xl mx-auto">
+        <span className="font-handwritten text-[1.5rem] leading-none text-[color:var(--apple-muted)] -rotate-2 inline-block select-none">
+          {t('cta.note', '现在就开始')}
+        </span>
+        <h2 className="mt-3 text-[2.25rem] sm:text-[3.5rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] leading-[1.08]">
+          {t('cta.title', '开始你的学习闭环')}
+        </h2>
+        <p className="mt-4 text-[15px] sm:text-[17px] text-[color:var(--apple-muted)]">
+          {t('cta.desc', '免费下载，数据留在本地。')}
+        </p>
+        <button
+          type="button"
+          onClick={handleClick}
+          className="mt-9 inline-flex items-center justify-center gap-1.5 px-8 py-3.5 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-full font-medium text-[15px] whitespace-nowrap transition-opacity duration-150 hover:opacity-90"
         >
-          <OptimizedImage
-            src={heroImageSrc}
-            alt="DeepStudent 主页面预览"
-            className="block w-full h-auto object-contain"
-            loading={heroHints.loading}
-            decoding="async"
-            fetchPriority={heroHints.fetchPriority}
-            sizes="(min-width: 1536px) 66vw, (min-width: 1024px) 72vw, 96vw"
-            draggable="false"
-          />
-        </div>
-      </div>
-    </div>
+          {t('hero.cta.download')}
+        </button>
+      </Reveal>
+    </section>
   )
 }
 
@@ -1739,7 +1302,6 @@ const formatReleaseDate = (rawDate, locale) => {
 
 const DownloadPage = ({ onBack = () => {} }) => {
   const { t, locale } = useLocale()
-  const isHidden = useAutoHideTopNav()
   const platformDownloads = buildWebsiteDownloads(sharedDownloads, {
     macArmChannel: t('download.channel.macArm', 'Apple 芯片 · aarch64'),
     macX64Channel: t('download.channel.macX64', 'Intel 芯片 · x64'),
@@ -1789,12 +1351,7 @@ const DownloadPage = ({ onBack = () => {} }) => {
   const releaseUpdatedAt = formatReleaseDate(updatedAtRaw, locale)
   return (
     <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[var(--space-page-bottom)]">
-      <div
-        className={cn(
-          'sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl pt-safe transition-transform duration-200 ease-out',
-          isHidden ? '-translate-y-full' : 'translate-y-0'
-        )}
-      >
+      <div className="sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl pt-safe">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
           <button
             type="button"
@@ -1845,22 +1402,19 @@ const DownloadPage = ({ onBack = () => {} }) => {
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
-          {filteredDownloads.map((platform) => {
-            const isRecommended = platform.id === recommendedId
-
-            return (
+          {filteredDownloads.map((platform) => (
               <article
                 key={platform.id}
-                className={getDownloadCardClassName(isRecommended)}
+                className="rounded-[1.5rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] p-[1.5rem] sm:p-[1.75rem] shadow-[var(--apple-shadow-sm)]"
               >
-                {isRecommended ? (
-                  <span className={getRecommendedBadgeClassName()}>
-                    {t('download.recommended', '推荐')}
-                  </span>
-                ) : null}
                 <div>
                   <div className="flex items-center gap-2">
                     <p className="text-base font-semibold text-[color:var(--apple-ink)]">{platform.platform}</p>
+                    {platform.id === recommendedId ? (
+                      <span className="rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-2 py-0.5 text-[10px] font-semibold text-[color:var(--apple-ink)]">
+                        {t('download.recommended', '推荐')}
+                      </span>
+                    ) : null}
                   </div>
                   <p className="text-xs text-[color:var(--apple-muted)] break-words">{platform.channel}</p>
                 </div>
@@ -1874,23 +1428,22 @@ const DownloadPage = ({ onBack = () => {} }) => {
 
                 <div className="mt-4 flex flex-wrap items-center gap-2">
                   <a
-                    href={platform.mirrorHref || platform.ctaHref}
-                    className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-primary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-btn-primary-text)] leading-snug text-center whitespace-normal hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-95 transition-all shadow-[var(--apple-shadow-sm)]"
+                    href={platform.ctaHref}
+                    className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-primary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-btn-primary-text)] leading-snug text-center whitespace-normal shadow-[var(--apple-shadow-sm)] transition-colors duration-150 hover:bg-[color:var(--apple-btn-primary-bg-hover)]"
                   >
-                    {platform.mirrorHref ? t('download.fastDownload', '高速下载') : platform.ctaLabel}
+{platform.ctaLabel}
                   </a>
                   {platform.mirrorHref ? (
                     <a
-                      href={platform.ctaHref}
-                      className="focus-ring inline-flex items-center justify-center gap-1.5 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-ink)] leading-snug text-center whitespace-normal hover:bg-[color:var(--apple-btn-secondary-bg-hover,var(--apple-card))] active:scale-95 transition-all"
+                      href={platform.mirrorHref}
+                      className="focus-ring inline-flex items-center justify-center gap-1.5 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-ink)] leading-snug text-center whitespace-normal transition-colors duration-150 hover:bg-[color:var(--apple-btn-secondary-bg-hover,var(--apple-card))]"
                     >
-                      {t('download.backupDownload', '备用下载')}
+                      {t('download.mirrorDownload', '镜像下载')}
                     </a>
                   ) : null}
                 </div>
               </article>
-            )
-          })}
+          ))}
         </div>
 
       </section>
@@ -1899,7 +1452,6 @@ const DownloadPage = ({ onBack = () => {} }) => {
 }
 
 const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
-  const shouldAnimate = motionScale > 0
   const { t } = useLocale()
 
   const faqItems = [
@@ -1922,7 +1474,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
       question: t('faq.macosQuarantine.q'),
       answer: t('faq.macosQuarantine.a'),
       code: t('faq.macosQuarantine.code', 'sudo xattr -r -d com.apple.quarantine <App Path>'),
-      linkHref: '/docs/A-Q',
+      linkHref: '/docs/guide/A-Q',
       linkLabel: t('faq.macosQuarantine.link'),
     },
     {
@@ -1935,27 +1487,24 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
   return (
     <section
       id="qa"
-      className={`px-4 sm:px-6 max-w-4xl mx-auto pt-2 sm:pt-3 md:pt-4 pb-3 sm:pb-4 md:pb-6 ${
-        shouldAnimate ? 'animate-fade-in' : ''
-      }`}
-      style={shouldAnimate ? { animationDelay: '0.12s' } : undefined}
+      className="px-4 sm:px-6 max-w-4xl mx-auto py-20 sm:py-28 scroll-mt-24"
     >
-      <div className="text-center">
-        <h2 className="text-[1.618rem] sm:text-[2.618rem] font-semibold text-[color:var(--apple-ink)] mb-[0.618rem] tracking-[-0.02em] font-display">
+      <Reveal motionScale={motionScale} className="text-center">
+        <h2 className="text-[1.75rem] sm:text-[2.5rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] leading-[1.1]">
           {t('faq.title')}
         </h2>
-        <p className="text-sm sm:text-base text-[color:var(--apple-muted)] leading-relaxed">
+        <p className="mt-3 text-[15px] sm:text-[17px] text-[color:var(--apple-muted)] leading-relaxed">
           {t('faq.subtitle')}
         </p>
-      </div>
+      </Reveal>
 
-      <div className="mt-[1.5rem] sm:mt-[2rem] space-y-4">
+      <Reveal motionScale={motionScale} y={32} className="mt-10 sm:mt-14 space-y-4">
         {faqItems.map((item) => (
           <details
             key={item.id}
-            className="group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)] overflow-hidden transition-all duration-300 hover:shadow-[var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:shadow-[var(--apple-shadow-lg)]"
+            className="group rounded-[1.25rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)] overflow-hidden transition-all duration-300 hover:shadow-[var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:shadow-[var(--apple-shadow-lg)]"
           >
-            <summary className="focus-ring flex items-center justify-between gap-4 p-[1.5rem] sm:p-[1.75rem] cursor-pointer select-none [&::-webkit-details-marker]:hidden">
+            <summary className="focus-ring flex items-center justify-between gap-4 p-[1.25rem] sm:p-[1.5rem] cursor-pointer select-none [&::-webkit-details-marker]:hidden">
               <span className="min-w-0">
                 <span className="min-w-0 text-[15px] sm:text-[17px] font-semibold text-[color:var(--apple-ink)] tracking-tight break-words">
                   {item.question}
@@ -1971,7 +1520,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
               </span>
             </summary>
 
-            <div className="px-[1.5rem] sm:px-[1.75rem] pb-[1.5rem] sm:pb-[1.75rem] text-[15px] text-[color:var(--apple-muted)] leading-relaxed animate-fade-in">
+            <div className="px-[1.25rem] sm:px-[1.5rem] pb-[1.25rem] sm:pb-[1.5rem] text-[15px] text-[color:var(--apple-muted)] leading-relaxed animate-fade-in">
               <p>{item.answer}</p>
 
               {item.code ? (
@@ -1985,7 +1534,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
                   <button
                     type="button"
                     onClick={item.onAction}
-                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all"
+                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] transition-colors duration-150 hover:bg-[color:var(--apple-btn-secondary-bg-hover)]"
                   >
                     {item.actionLabel}
                   </button>
@@ -1993,7 +1542,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
                 {item.linkHref ? (
                   <a
                     href={item.linkHref}
-                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all"
+                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] transition-colors duration-150 hover:bg-[color:var(--apple-btn-secondary-bg-hover)]"
                     target={item.linkHref.startsWith('http') ? '_blank' : undefined}
                     rel={item.linkHref.startsWith('http') ? 'noopener noreferrer' : undefined}
                   >
@@ -2004,366 +1553,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
             </div>
           </details>
         ))}
-      </div>
-    </section>
-  )
-}
-
-// 占位图组件 - shimmer 动画，后续替换为真实截图
-const ImagePlaceholder = ({ label }) => (
-  <div className="w-full aspect-video rounded-2xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] flex items-center justify-center relative overflow-hidden">
-    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
-    <div className="z-10 flex flex-col items-center gap-2">
-      <svg className="w-8 h-8 text-[color:var(--apple-muted)] opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <rect x="3" y="3" width="18" height="18" rx="3" />
-        <circle cx="8.5" cy="8.5" r="1.5" />
-        <path d="M21 15l-5-5L5 21" />
-      </svg>
-      <span className="text-[12px] sm:text-[13px] text-[color:var(--apple-muted)] font-medium opacity-60">{label}</span>
-    </div>
-  </div>
-)
-
-// 动画变体定义
-const revealAnimations = {
-  'fade-up':    { hidden: 'opacity-0 translate-y-10',  visible: 'opacity-100 translate-y-0' },
-  'fade-down':  { hidden: 'opacity-0 -translate-y-10', visible: 'opacity-100 translate-y-0' },
-  'fade-left':  { hidden: 'opacity-0 translate-x-12',  visible: 'opacity-100 translate-x-0' },
-  'fade-right': { hidden: 'opacity-0 -translate-x-12', visible: 'opacity-100 translate-x-0' },
-  'scale-up':   { hidden: 'opacity-0 scale-90',        visible: 'opacity-100 scale-100' },
-  'blur-in':    { hidden: 'opacity-0 blur-[6px] scale-[0.97]', visible: 'opacity-100 blur-0 scale-100' },
-}
-
-// 根据 index 自动选择动画变体，形成视觉节奏
-const getAnimationVariant = (index) => {
-  const variants = ['fade-up', 'fade-left', 'fade-right', 'scale-up', 'blur-in', 'fade-down']
-  return variants[index % variants.length]
-}
-
-// 滚动浮现的独立图文项（用于移动端回退）
-const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, animation }) => {
-  const itemRef = useRef(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const el = itemRef.current
-    if (!el) return
-    if (typeof IntersectionObserver === 'undefined') {
-      setIsVisible(true)
-      return
-    }
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.unobserve(el)
-        }
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
-  const variant = animation || getAnimationVariant(index)
-  const anim = revealAnimations[variant] || revealAnimations['fade-up']
-  const isLeft = align === 'left'
-
-  return (
-    <div
-      ref={itemRef}
-      className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-6 sm:gap-8 md:gap-12 transition-all duration-700 ease-out ${isVisible ? anim.visible : anim.hidden}`}
-      style={{ transitionDelay: `${Math.min(index * 100, 400)}ms` }}
-    >
-      <div className="w-full md:w-[66%] md:flex-shrink-0">
-        {imgSrc ? (
-          <OptimizedImage
-            src={imgSrc}
-            alt={title}
-            className="w-full rounded-[6px] shadow-[var(--apple-shadow-md)] border border-[color:var(--apple-line)]"
-            loading="lazy"
-          />
-        ) : (
-          <ImagePlaceholder label={title} />
-        )}
-      </div>
-      <div className="flex-1 min-w-0 text-center md:text-left">
-        <h3 className="text-[1.125rem] sm:text-[1.25rem] font-semibold text-[color:var(--apple-ink)] mb-2 tracking-tight">
-          {title}
-        </h3>
-        <p className="text-[0.875rem] sm:text-[0.9375rem] text-[color:var(--apple-muted)] leading-relaxed max-w-md mx-auto md:mx-0">
-          {desc}
-        </p>
-      </div>
-    </div>
-  )
-}
-
-// ===== 交错图文展示组件 =====
-const AlternatingFeatureGroup = ({ items, t }) => {
-  return (
-    <div className="space-y-[3rem] sm:space-y-[4rem] md:space-y-[6rem]">
-      {items.map((sf, index) => (
-        <ScrollRevealItem
-          key={sf.labelKey}
-          imgSrc={sf.imgSrc}
-          title={t(sf.labelKey)}
-          desc={t(sf.descKey)}
-          align={index % 2 === 0 ? 'left' : 'right'}
-          index={index}
-          animation={getAnimationVariant(index)}
-        />
-      ))}
-    </div>
-  )
-}
-
-// ===== Sticky 图片切换组件 =====
-// 左侧使用原生 CSS sticky，右侧文字滚动触发图片 crossfade 切换
-const StickyImageFeatureGroup = ({ items, t }) => {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const leadingMarkerRef = useRef(null)
-  const markerRefs = useRef([])
-  const mediaFrameRef = useRef(null)
-  const deferredImageHints = getImageRequestHints({ role: 'feature' })
-
-  // 使用统一滚动边界判定激活项：
-  // 当「图片中心」对齐到「span 标记上方 1/4 图片高度」时触发切换
-  // => spanTop <= imageTop + imageHeight * 3/4
-  useEffect(() => {
-    if (typeof window === 'undefined') return undefined
-
-    let rafId = null
-
-    const getTriggerBoundaryY = () => {
-      const mediaNode = mediaFrameRef.current
-      if (!mediaNode) return 0
-      const { top, height } = mediaNode.getBoundingClientRect()
-      return top + height * (3 / 4)
-    }
-
-    const updateActiveByAnchor = () => {
-      const boundaryY = getTriggerBoundaryY()
-      let nextIndex = 0
-      const triggerNodes = [leadingMarkerRef.current, ...markerRefs.current]
-
-      for (let i = 0; i < triggerNodes.length; i += 1) {
-        const node = triggerNodes[i]
-        if (!node) continue
-        const { top } = node.getBoundingClientRect()
-        if (top <= boundaryY) {
-          nextIndex = Math.min(Math.max(i - 1, 0), items.length - 1)
-        } else {
-          break
-        }
-      }
-
-      setActiveIndex((prev) => (prev === nextIndex ? prev : nextIndex))
-    }
-
-    const onScrollOrResize = () => {
-      if (rafId) return
-      rafId = window.requestAnimationFrame(() => {
-        rafId = null
-        updateActiveByAnchor()
-      })
-    }
-
-    updateActiveByAnchor()
-    window.addEventListener('scroll', onScrollOrResize, { passive: true })
-    window.addEventListener('resize', onScrollOrResize)
-
-    return () => {
-      window.removeEventListener('scroll', onScrollOrResize)
-      window.removeEventListener('resize', onScrollOrResize)
-      if (rafId) {
-        window.cancelAnimationFrame(rafId)
-      }
-    }
-  }, [items.length])
-
-  return (
-    <div className="relative">
-      {/* 移动端：普通流式布局，带多样化进入动画 */}
-      <div className="md:hidden space-y-[2.5rem]">
-        {items.map((sf, index) => (
-          <ScrollRevealItem
-            key={sf.labelKey}
-            imgSrc={sf.imgSrc}
-            title={t(sf.labelKey)}
-            desc={t(sf.descKey)}
-            align={index % 2 === 0 ? 'left' : 'right'}
-            index={index}
-            animation={getAnimationVariant(index)}
-          />
-        ))}
-      </div>
-
-      {/* 桌面端：左侧 CSS sticky 图片 + 右侧滚动文字 */}
-      <div className="hidden md:grid md:grid-cols-[2fr_1fr] gap-12 lg:gap-16">
-        {/* 左侧图片列：由原生 sticky 固定在视口顶部偏移处 */}
-        <div className="min-w-0">
-          <div className="sticky top-32 z-10 w-full">
-            <div ref={mediaFrameRef} className="relative aspect-video rounded-[6px] flex items-center justify-center">
-              {items.map((sf, i) => {
-                const isActive = i === activeIndex
-                return (
-                  <div
-                    key={sf.labelKey}
-                    className={`absolute inset-0 transition-all duration-500 ease-out flex items-center justify-center ${
-                      isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.02]'
-                    }`}
-                    aria-hidden={!isActive}
-                  >
-                    {sf.imgSrc ? (
-                      <OptimizedImage
-                        src={sf.imgSrc}
-                        alt={t(sf.labelKey)}
-                        className="w-auto h-auto max-w-full max-h-full rounded-[6px] shadow-2xl"
-                        loading={deferredImageHints.loading}
-                        fetchPriority={deferredImageHints.fetchPriority}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center relative">
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
-                        <div className="z-10 flex flex-col items-center gap-3">
-                          <svg className="w-10 h-10 text-[color:var(--apple-muted)] opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-                            <rect x="3" y="3" width="18" height="18" rx="3" />
-                            <circle cx="8.5" cy="8.5" r="1.5" />
-                            <path d="M21 15l-5-5L5 21" />
-                          </svg>
-                          <span className="text-sm text-[color:var(--apple-muted)] opacity-50 font-medium">
-                            {t(sf.labelKey)}
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-            {/* 图片下方的指示器 */}
-            <div className="flex justify-center gap-1.5 mt-4">
-              {items.map((sf, i) => (
-                <div
-                  key={sf.labelKey}
-                  className={`h-1 rounded-full transition-all duration-400 ${
-                    i === activeIndex
-                      ? 'w-6 bg-[color:var(--apple-ink)]'
-                      : 'w-1.5 bg-[color:var(--apple-line-strong)]'
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* 右侧滚动文字区 */}
-        <div className="min-w-0">
-          <div className="space-y-0">
-            <div ref={leadingMarkerRef} className="h-0 opacity-0 pointer-events-none" aria-hidden="true" />
-            {items.map((sf, index) => {
-              const isActive = index === activeIndex
-              return (
-                <div
-                  key={sf.labelKey}
-                  className="min-h-[50vh] flex items-center"
-                >
-                  <div
-                    className={`py-6 transition-all duration-500 ease-out ${
-                      isActive
-                        ? 'opacity-100 translate-x-0'
-                        : 'opacity-30 translate-x-2'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3 mb-3">
-                      <span
-                        ref={(el) => { markerRefs.current[index] = el }}
-                        className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-[12px] font-bold transition-colors duration-400 ${
-                        isActive
-                          ? 'bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)]'
-                          : 'bg-[color:var(--apple-line-strong)] text-[color:var(--apple-muted)]'
-                        }`}
-                      >
-                        {index + 1}
-                      </span>
-                      <div className={`h-px flex-1 transition-all duration-500 ${
-                        isActive ? 'bg-[color:var(--apple-line-strong)]' : 'bg-transparent'
-                      }`} />
-                    </div>
-                    <h3 className="text-[1.25rem] sm:text-[1.375rem] font-semibold text-[color:var(--apple-ink)] mb-2.5 tracking-tight leading-tight">
-                      {t(sf.labelKey)}
-                    </h3>
-                    <p className="text-[0.9375rem] text-[color:var(--apple-muted)] leading-relaxed">
-                      {t(sf.descKey)}
-                    </p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, subFeatures = [], layout = 'alternating' }) => {
-  const { ref, progress, isActive } = useParallaxProgress()
-  const { t } = useLocale()
-  const contentDirection = align === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'
-  const motionAmount = Math.max(0, motionScale)
-  const isStatic = motionAmount === 0
-  const shouldAnimate = !isStatic && isActive
-  const timelineProgress = stretchProgress(progress, 1.35)
-  const easedProgress = easeInOutCubic(timelineProgress)
-  const focus = Math.sin(easedProgress * Math.PI)
-  const juice = Math.pow(focus, 0.78)
-  const reveal = isStatic ? 1 : easeOutCubic(clamp((progress - 0.04) / 0.36, 0, 1))
-  const offset = (easedProgress - 0.5) * motionAmount
-  const textShift = offset * (190 + 16 * juice)
-  const mediaShift = offset * (260 + 45 * juice)
-  const opacity = isStatic ? 1 : 0.14 + reveal * 0.86
-
-  return (
-    <section ref={ref} id={id} className="px-4 sm:px-6 max-w-[90rem] mx-auto py-[3rem] sm:py-[5rem] md:py-[8rem] scroll-mt-28">
-      <div className={`flex flex-col ${contentDirection} items-center gap-[3rem] sm:gap-[5rem] md:gap-[4rem]`}>
-        <div
-          className="flex-1 md:max-w-[33%] text-center md:text-left"
-          style={{
-            transform: isStatic ? 'none' : `translateY(${Math.round(textShift)}px)`,
-            opacity,
-            willChange: shouldAnimate ? 'transform, opacity' : 'auto',
-          }}
-        >
-          <h2 className="text-[2rem] sm:text-[3rem] font-semibold text-[color:var(--apple-ink)] mb-[1.5rem] tracking-tight font-display leading-[1.1]">
-            {title}
-          </h2>
-          <p className="text-[color:var(--apple-muted)] leading-[1.6] text-[1.1rem] sm:text-[1.35rem] font-medium tracking-tight mx-auto md:mx-0">{desc}</p>
-        </div>
-
-        <div
-          className="flex-[2] w-full md:max-w-[66%]"
-          style={{
-            transform: isStatic ? 'none' : `translateY(${Math.round(mediaShift)}px)`,
-            opacity,
-            willChange: shouldAnimate ? 'transform, opacity' : 'auto',
-          }}
-        >
-          {children}
-        </div>
-      </div>
-
-      {/* 子功能图文展示区 - 支持 Sticky 或交错布局 */}
-      {subFeatures.length > 0 && (
-        <div className="mt-[3rem] sm:mt-[4rem] md:mt-[5rem]">
-          {layout === 'sticky' ? (
-            <StickyImageFeatureGroup items={subFeatures} t={t} />
-          ) : (
-            <AlternatingFeatureGroup items={subFeatures} t={t} />
-          )}
-        </div>
-      )}
+      </Reveal>
     </section>
   )
 }
@@ -2439,18 +1629,18 @@ const PolicyModal = ({ type, onClose }) => {
       aria-labelledby={titleId}
       aria-describedby={descriptionId}
     >
-      <div className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-md" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/50 dark:bg-black/70" onClick={onClose} />
       <div
         ref={dialogRef}
-        className="relative w-full max-w-2xl max-h-[80vh] max-h-[80svh] overflow-y-auto bg-[color:var(--apple-card)] backdrop-blur-xl border border-[color:var(--apple-line)] rounded-[2.618rem] shadow-[var(--apple-shadow-xl)] p-[1.618rem] sm:p-[2.618rem]"
+        className="relative w-full max-w-2xl max-h-[80vh] max-h-[80svh] overflow-y-auto bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] rounded-2xl shadow-[var(--apple-shadow-xl)] p-6 sm:p-8"
         onClick={(event) => event.stopPropagation()}
         tabIndex={-1}
       >
-        <div className="flex items-start justify-between gap-[2.618rem] mb-[2.618rem]">
+        <div className="mb-8 flex items-start justify-between gap-6">
           <div>
             <h3
               id={titleId}
-              className="text-2xl font-semibold text-[color:var(--apple-ink)] mb-3 font-display"
+              className="mb-3 text-2xl font-semibold text-[color:var(--apple-ink)] font-display"
             >
               {data.title}
             </h3>
@@ -2461,7 +1651,7 @@ const PolicyModal = ({ type, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="focus-ring flex-shrink-0 w-[2.618rem] h-[2.618rem] rounded-full border border-[color:var(--apple-line)] text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:border-[color:var(--apple-line-strong)] flex items-center justify-center transition-colors bg-[color:var(--apple-card-strong)]"
+            className="focus-ring flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] text-[color:var(--apple-muted)] transition-colors duration-150 hover:border-[color:var(--apple-line-strong)] hover:text-[color:var(--apple-ink)]"
             aria-label={t('policy.close', 'Close dialog')}
             ref={closeButtonRef}
           >
@@ -2469,15 +1659,15 @@ const PolicyModal = ({ type, onClose }) => {
           </button>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {data.sections.map((section) => (
-            <div key={section.title} className="border border-[color:var(--apple-line)] rounded-[1.618rem] p-[1.618rem] bg-[color:var(--apple-card-strong)]">
-              <h4 className="text-sm font-semibold text-[color:var(--apple-ink)] mb-2 font-display">
+            <div key={section.title} className="rounded-xl border border-[color:var(--apple-line)] bg-[color:var(--apple-card-strong)] p-5">
+              <h4 className="mb-2 text-sm font-semibold text-[color:var(--apple-ink)] font-display">
                 {section.title}
               </h4>
               <p className="text-sm text-[color:var(--apple-muted)] leading-relaxed">{section.body}</p>
               {section.points?.length ? (
-                <ul className="mt-3 space-y-1.5 text-sm text-[color:var(--apple-muted)] list-disc list-inside">
+                <ul className="mt-3 list-inside list-disc space-y-1.5 text-sm text-[color:var(--apple-muted)]">
                   {section.points.map((point) => (
                     <li key={point}>{point}</li>
                   ))}
@@ -2491,7 +1681,7 @@ const PolicyModal = ({ type, onClose }) => {
         <button
           type="button"
           onClick={onClose}
-          className="focus-ring mt-6 w-full py-[0.95rem] sm:py-[1.15rem] md:py-[1.35rem] rounded-[1.618rem] bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] text-sm md:text-base font-semibold hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-[0.98] transition-all shadow-[var(--apple-shadow-md)]"
+          className="focus-ring mt-6 w-full rounded-xl bg-[color:var(--apple-btn-primary-bg)] py-3.5 text-sm font-semibold text-[color:var(--apple-btn-primary-text)] shadow-[var(--apple-shadow-md)] transition-colors duration-150 hover:bg-[color:var(--apple-btn-primary-bg-hover)] md:text-base"
         >
           {t('policy.understood', 'I Understand')}
         </button>
@@ -2504,7 +1694,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
   const { isDark } = useTheme()
   const { t } = useLocale()
   return (
-    <footer className="border-t border-[color:var(--apple-line)] mt-4 sm:mt-6 bg-[color:var(--apple-card)] backdrop-blur-2xl">
+    <footer className="mt-4 border-t border-[color:var(--apple-line)] bg-[color:var(--apple-card)] sm:mt-6">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
         <div className="flex flex-col gap-8 sm:gap-10">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_auto] md:gap-12 items-start">
@@ -2558,7 +1748,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
                 href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="focus-ring inline-flex items-center justify-center w-10 h-10 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] border border-[color:var(--apple-line)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:scale-105 active:scale-95"
+                className="focus-ring inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] transition-colors duration-150 hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)]"
                 aria-label={t('footer.xiaohongshu', 'Xiaohongshu')}
                 title={t('footer.xiaohongshu', 'Xiaohongshu')}
               >
@@ -2577,7 +1767,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
                 href="https://qm.qq.com/q/UkEacMzuIW"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="focus-ring inline-flex items-center justify-center w-10 h-10 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] border border-[color:var(--apple-line)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:scale-105 active:scale-95"
+                className="focus-ring inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] transition-colors duration-150 hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)]"
                 aria-label={t('footer.qq', 'QQ')}
                 title={t('footer.qq', 'QQ')}
               >

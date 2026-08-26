@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useLocale } from '../components/locale-toggle'
 
 /**
  * 图片加载状态管理 Hook
@@ -13,6 +14,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
  * @returns {Object} 加载状态和控制器
  */
 export const useImageLoader = (src, options = {}) => {
+  const { t } = useLocale()
   const {
     maxRetries = 3,
     baseDelay = 2000,
@@ -72,7 +74,7 @@ export const useImageLoader = (src, options = {}) => {
     const networkStatus = getNetworkStatus()
     if (networkStatus === 'offline') {
       setStatus('offline')
-      setErrorMessage('当前处于离线状态')
+      setErrorMessage(t('image.offlineMsg', '当前处于离线状态'))
       return
     }
 
@@ -91,7 +93,7 @@ export const useImageLoader = (src, options = {}) => {
     timeoutRef.current = setTimeout(() => {
       if (status === 'loading') {
         setStatus('error')
-        setErrorMessage('加载超时，请检查网络连接')
+        setErrorMessage(t('image.timeoutMsg', '加载超时，请检查网络连接'))
         setProgress(100)
       }
     }, timeout)
@@ -122,14 +124,20 @@ export const useImageLoader = (src, options = {}) => {
       if (retryCount < maxRetries) {
         // 自动重试
         const delay = getRetryDelay()
-        setErrorMessage(`加载失败，${delay / 1000}秒后自动重试 (${retryCount + 1}/${maxRetries})`)
-        
+        setErrorMessage(
+          t('image.retryMsg', '加载失败，{delay}秒后自动重试 ({current}/{max})', {
+            delay: delay / 1000,
+            current: retryCount + 1,
+            max: maxRetries,
+          })
+        )
+
         timeoutRef.current = setTimeout(() => {
           setRetryCount(prev => prev + 1)
         }, delay)
       } else {
         setStatus('error')
-        setErrorMessage(`加载失败，已重试 ${maxRetries} 次`)
+        setErrorMessage(t('image.failedMsg', '加载失败，已重试 {max} 次', { max: maxRetries }))
         setProgress(100)
       }
     }
@@ -143,7 +151,7 @@ export const useImageLoader = (src, options = {}) => {
         abortControllerRef.current.abort()
       }
     }
-  }, [src, enabled, lazy, isInViewport, retryCount, maxRetries, timeout, getNetworkStatus, getRetryDelay, clearTimeoutRef, status])
+  }, [src, enabled, lazy, isInViewport, retryCount, maxRetries, timeout, t, getNetworkStatus, getRetryDelay, clearTimeoutRef, status])
 
   // 监听重试计数变化，触发重载
   useEffect(() => {
@@ -208,7 +216,7 @@ export const useImageLoader = (src, options = {}) => {
     const handleOffline = () => {
       if (status === 'loading' || status === 'success') {
         setStatus('offline')
-        setErrorMessage('网络连接已断开')
+        setErrorMessage(t('network.offline', '网络连接已断开'))
       }
     }
 
@@ -219,7 +227,7 @@ export const useImageLoader = (src, options = {}) => {
       window.removeEventListener('online', handleOnline)
       window.removeEventListener('offline', handleOffline)
     }
-  }, [status, enabled, loadImage])
+  }, [status, enabled, loadImage, t])
 
   // 手动重试
   const retry = useCallback(() => {
