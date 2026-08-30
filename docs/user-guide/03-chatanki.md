@@ -1,8 +1,13 @@
+---
+description: DeepStudent Anki 智能制卡（ChatAnki）指南：对话中一句话生成记忆卡片，支持 AnkiConnect 同步与 APKG 导出。
+---
+
 # Anki 智能制卡
 
 ## 概述
 
-Anki 智能制卡是 Deep Student 的核心功能，将学习材料高效转化为可复习的 Anki 记忆卡片。
+Anki 智能制卡（技能名 ChatAnki）是 DeepStudent 的核心功能，将学习材料高效转化为
+可复习的 Anki 记忆卡片。
 
 **核心理念：Chat-First（对话即制卡）**
 
@@ -177,6 +182,3 @@ A: 在对话中告诉 AI 你想修改的内容（如"把第 3 张卡片的正面
 ### Q: chatanki_wait 超时了怎么办？
 A: 不要直接判定失败。可以继续告诉 AI "再等等"，或者让 AI 调用 chatanki_status 查询分段统计，直到任务进入完成/失败/取消终态。
 
----
-
-*最后更新：2026-02-27*

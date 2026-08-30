@@ -1,3 +1,7 @@
+---
+description: DeepStudent 笔记模块指南：Markdown 编辑器与深度集成的 AI 辅助写作能力。
+---
+
 # 笔记 (Notes)
 
 ## 概述
@@ -86,6 +90,3 @@ Deep Student 将 AI 能力深度集成到了编辑器中。
 | `Cmd/Ctrl + I` | 斜体 |
 | `/` | 唤起插入菜单 |
 
----
-
-*最后更新：2026-02-21*

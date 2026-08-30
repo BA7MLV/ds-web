@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { withMermaid } from 'vitepress-plugin-mermaid'
+import llmstxt from 'vitepress-plugin-llms'
 import { loadEnv } from 'vite'
 import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'
@@ -8,39 +9,59 @@ import { fileURLToPath } from 'node:url'
 
 const guideSidebar = [
   {
-    text: '关于 DeepStudent',
+    text: '开始',
     collapsed: false,
     items: [
-      { text: '简介', link: '/', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 15C11.3137 15 14 12.3137 14 9C14 5.68629 11.3137 3 8 3C4.68629 3 2 5.68629 2 9C2 12.3137 4.68629 15 8 15Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 11C9.10457 11 10 10.1046 10 9C10 7.89543 9.10457 7 8 7C6.89543 7 6 7.89543 6 9C6 10.1046 6.89543 11 8 11Z" stroke="currentColor" stroke-width="1.5"/></svg>' }
+      { text: '什么是 DeepStudent', link: '/' },
+      { text: '下载与安装', link: '/download.md' },
+      { text: '快速上手', link: '/start.md' },
     ]
   },
   {
-    text: '入门',
+    text: '日常使用',
     collapsed: false,
     items: [
-      { text: '准备工作', link: '/start.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
-      { text: '客户端下载', link: '/download.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 8H2M14 8L11 5M14 8L11 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
+      { text: '智能对话', link: '/user-guide/01-chat-v2.md' },
+      {
+        text: '学习资源',
+        link: '/user-guide/02-learning-hub.md',
+        collapsed: true,
+        items: [
+          { text: '笔记', link: '/user-guide/02-learning-hub-assets/01-notes.md' },
+          { text: '教材与阅读', link: '/user-guide/02-learning-hub-assets/02-textbooks.md' },
+          { text: '题目集与练习', link: '/user-guide/02-learning-hub-assets/03-question-bank.md' },
+          { text: '翻译与作文', link: '/user-guide/02-learning-hub-assets/04-translation-essay.md' },
+          { text: '知识导图', link: '/user-guide/02-learning-hub-assets/05-mindmap.md' },
+        ]
+      },
+      { text: 'Anki智能制卡', link: '/user-guide/03-chatanki.md' },
+      { text: '待办与番茄钟', link: '/user-guide/08-todo-pomodoro.md' },
+      { text: '命令面板与快捷键', link: '/user-guide/06-command-palette.md' },
     ]
   },
   {
-    text: '功能模块',
+    text: '进阶能力',
     collapsed: false,
     items: [
-      { text: '智能对话', link: '/user-guide/01-chat-v2.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
-      { text: '学习资源', link: '/user-guide/02-learning-hub.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
-      { text: 'Anki智能制卡', link: '/user-guide/03-chatanki.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
-      { text: '系统设置', link: '/user-guide/04-settings.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
-      { text: '数据管理', link: '/user-guide/05-data-management.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
-      { text: '命令面板', link: '/user-guide/06-command-palette.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
-      { text: '技能系统', link: '/user-guide/07-skills.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
+      { text: '技能系统', link: '/user-guide/07-skills.md' },
+      { text: '智能记忆', link: '/user-guide/09-memory.md' },
     ]
   },
   {
-    text: '帮助中心',
+    text: '设置与数据',
     collapsed: false,
     items: [
-      { text: '常见问题', link: '/A-Q.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' },
-      { text: '关于我们', link: '/about.md', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3H4C3.44772 3 3 3.44772 3 4V12C3 12.5523 3.44772 13 4 13H12C12.5523 13 13 12.5523 13 12V4C13 3.44772 12.5523 3 12 3Z" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' }
+      { text: '系统设置', link: '/user-guide/04-settings.md' },
+      { text: '备份与同步', link: '/user-guide/05-data-management.md' },
+    ]
+  },
+  {
+    text: '帮助',
+    collapsed: false,
+    items: [
+      { text: '常见问题', link: '/A-Q.md' },
+      { text: '项目历程', link: '/timeline.md' },
+      { text: '关于我们', link: '/about.md' },
     ]
   }
 ]
@@ -57,6 +78,21 @@ const LA_CK =
   env.VITE_LA_51_CK ||
   env.LA_CK ||
   LA_ID
+
+// —— GEO / SEO 常量 ——
+const SITE_ORIGIN = 'https://deepstudent.cn'
+const DOCS_URL = `${SITE_ORIGIN}/docs/`
+const DEFAULT_DESCRIPTION =
+  'DeepStudent 官方文档：AI 原生、本地优先的开源学习系统。资料问答（RAG）、笔记、知识导图、刷题、翻译、作文批改与 Anki 制卡。'
+const OG_IMAGE = `${SITE_ORIGIN}/img/index.png`
+
+// 由页面相对路径推导线上 canonical URL（未启用 cleanUrls，产物为 .html）
+const getPageUrl = (relativePath) => {
+  const path = relativePath
+    .replace(/(^|\/)index\.md$/, '$1')
+    .replace(/\.md$/, '.html')
+  return `${DOCS_URL}${path}`
+}
 
 const gitEditorsCache = new Map()
 
@@ -96,6 +132,26 @@ export default withMermaid(defineConfig({
   titleTemplate: ':title｜DeepStudent｜Documentation',
   description: 'AI 原生、本地优先的开源学习系统',
   base: '/docs/',
+  // 内部工程计划与仓库规范不进入站点与搜索
+  srcExclude: ['plans/**', 'AGENTS.md'],
+  // 生成 /docs/sitemap.xml，供搜索引擎与 AI 爬虫发现全部页面
+  sitemap: {
+    hostname: DOCS_URL
+  },
+  vite: {
+    plugins: [
+      // 生成 /docs/llms.txt、/docs/llms-full.txt 及每页的 .md 版本（llmstxt.org 标准）
+      llmstxt({
+        domain: `${SITE_ORIGIN}/docs`,
+        ignoreFiles: ['plans/**', 'AGENTS.md', 'en/**'],
+        title: 'DeepStudent Documentation',
+        description:
+          'DeepStudent is an AI-native, local-first, open-source learning system (AGPL-3.0). Official documentation in Simplified Chinese.',
+        details:
+          'Chat with your study materials (RAG with citations), notes, mind maps, question banks, translation & essay grading, and one-click Anki card generation — all data stored locally by default.'
+      })
+    ]
+  },
   head: [
     ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover' }],
     // 与主站共用同一个 favicon（根目录 /public/favicon.ico）
@@ -179,7 +235,6 @@ export default withMermaid(defineConfig({
     returnToTop: true,
     // 添加侧边栏切换
     sidebarMenuLabel: '菜单',
-    mobileMenu: false,
     // 添加编辑链接
     editLink: {
       pattern: 'https://github.com/BA7MLV/ds-web/edit/main/docs/:path',
@@ -239,5 +294,64 @@ export default withMermaid(defineConfig({
     const editors = getGitEditors(absPath)
     pageData.editors = editors
     pageData.lastAuthor = editors[0] || ''
+
+    // —— GEO：为每个页面注入 canonical / Open Graph / JSON-LD ——
+    const pageUrl = getPageUrl(pageData.relativePath)
+    const isHome = pageData.relativePath === 'index.md'
+    const isEnglish = pageData.relativePath.startsWith('en/')
+    const pageTitle = pageData.title
+      ? `${pageData.title}｜DeepStudent Documentation`
+      : 'DeepStudent｜Documentation'
+    const pageDescription = pageData.frontmatter?.description || pageData.description || DEFAULT_DESCRIPTION
+    // VitePress 会用 pageData.description 渲染 <meta name="description">
+    pageData.description = pageDescription
+
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@type': isHome ? 'WebSite' : 'TechArticle',
+      name: pageData.title || 'DeepStudent Documentation',
+      headline: pageData.title || 'DeepStudent Documentation',
+      description: pageDescription,
+      url: pageUrl,
+      inLanguage: isEnglish ? 'en-US' : 'zh-CN',
+      isPartOf: {
+        '@type': 'WebSite',
+        name: 'DeepStudent Documentation',
+        url: DOCS_URL
+      },
+      about: {
+        '@type': 'SoftwareApplication',
+        name: 'DeepStudent',
+        applicationCategory: 'EducationalApplication',
+        operatingSystem: 'macOS, Windows, Linux, Android',
+        url: SITE_ORIGIN,
+        sameAs: ['https://github.com/helixnow/deep-student']
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'DeepStudent Team',
+        url: SITE_ORIGIN
+      }
+    }
+    if (pageData.lastUpdated) {
+      jsonLd.dateModified = new Date(pageData.lastUpdated).toISOString()
+    }
+
+    pageData.frontmatter.head ??= []
+    pageData.frontmatter.head.push(
+      ['link', { rel: 'canonical', href: pageUrl }],
+      ['meta', { property: 'og:site_name', content: 'DeepStudent' }],
+      ['meta', { property: 'og:type', content: isHome ? 'website' : 'article' }],
+      ['meta', { property: 'og:locale', content: isEnglish ? 'en_US' : 'zh_CN' }],
+      ['meta', { property: 'og:title', content: pageTitle }],
+      ['meta', { property: 'og:description', content: pageDescription }],
+      ['meta', { property: 'og:url', content: pageUrl }],
+      ['meta', { property: 'og:image', content: OG_IMAGE }],
+      ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+      ['meta', { name: 'twitter:title', content: pageTitle }],
+      ['meta', { name: 'twitter:description', content: pageDescription }],
+      ['meta', { name: 'twitter:image', content: OG_IMAGE }],
+      ['script', { type: 'application/ld+json' }, JSON.stringify(jsonLd)]
+    )
   },
 }))

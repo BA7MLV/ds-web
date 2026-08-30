@@ -2,6 +2,7 @@
 prev: false
 next: false
 editLink: false
+description: 下载 DeepStudent：支持 macOS（Apple Silicon / Intel）、Windows、Linux 与 Android，提供 GitHub Releases 与国内镜像下载。
 ---
 
 # 下载

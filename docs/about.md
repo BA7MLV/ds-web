@@ -1,3 +1,7 @@
+---
+description: 关于 DeepStudent：基于 Tauri 2 的 AI 原生、本地优先开源学习系统（AGPL-3.0），团队介绍、联系方式与社区入口。
+---
+
 # 关于 DeepStudent
 
 ## 项目定位

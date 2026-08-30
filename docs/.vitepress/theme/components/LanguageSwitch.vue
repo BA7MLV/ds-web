@@ -124,7 +124,7 @@ const toggle = async () => {
   background: var(--vp-c-bg);
   box-shadow: var(--vp-shadow-1);
   transform: translateX(0);
-  transition: transform 150ms ease-out;
+  transition: transform var(--toggle-dur) var(--toggle-ease);
 }
 
 .LangSwitch__thumb.is-right {
