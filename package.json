@@ -8,42 +8,15 @@
     "docs"
   ],
   "scripts": {
-    "dev": "vite",
-    "dev:docs": "npm run dev -w docs",
-    "dev:all": "node scripts/dev-all.mjs",
-    "gen:favicons": "node scripts/generate-favicons.mjs",
-    "optimize-images": "node scripts/optimize-images.mjs",
-    "build": "node scripts/sync-release-downloads.mjs && vite build && npm run build -w docs && rm -rf dist/docs && cp -R docs/.vitepress/dist dist/docs",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@radix-ui/react-switch": "^1.2.6",
-    "@tsparticles/react": "^3.0.0",
-    "@tsparticles/slim": "^3.9.1",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.462.0",
-    "motion": "^12.34.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-lazy-load-image-component": "^1.6.3",
-    "tailwind-merge": "^3.4.0"
+    "dev": "npm run dev -w docs",
+    "build": "npm run build -w docs",
+    "preview": "npm run preview -w docs",
+    "test": "node --test",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
-    "@resvg/resvg-wasm": "^2.6.2",
-    "@types/react": "^19.1.16",
-    "@types/react-dom": "^19.1.9",
-    "@vitejs/plugin-react": "^5.0.4",
-    "autoprefixer": "^10.4.20",
-    "baseline-browser-mapping": "^2.10.0",
     "eslint": "^9.36.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.22",
-    "globals": "^16.4.0",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.17",
-    "vite": "^7.1.7"
+    "globals": "^16.4.0"
   }
 }

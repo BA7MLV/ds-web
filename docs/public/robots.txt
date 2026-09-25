@@ -1,0 +1,61 @@
+# DeepStudent — https://deepstudent.cn
+# 欢迎搜索引擎与 AI 爬虫抓取本站公开内容。
+# LLM 友好版本文档见 /llms.txt 与 /llms-full.txt
+
+User-agent: *
+Allow: /
+
+# —— AI / LLM 爬虫（显式放行）——
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+# 首页 hero 的实时演示是同源镜像（docs/public/demo/），
+# 内容与文档无关，不要进搜索结果
+Disallow: /demo/
+
+Sitemap: https://deepstudent.cn/sitemap.xml

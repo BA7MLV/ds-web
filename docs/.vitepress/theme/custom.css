@@ -1,5 +1,56 @@
 @import 'tailwindcss';
 
+/* Tailwind v4：dark: 变体跟随 VitePress 的 .dark class（而非系统媒体查询） */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * 液态玻璃的镜面光斑位置。
+ * 用 @property 注册成 <percentage> 才能参与 transition —— 没注册的自定义属性是「不可插值」的，
+ * 光斑会硬跳；注册之后 SiteNav 里的 transition 就会把光斑「拖」过去，像玻璃在流动。
+ * 只影响支持 @property 的浏览器（Chrome / Safari 16.4+），不支持就退化成直接跳变。
+ */
+@property --sn-spec-x {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 14%;
+}
+
+@property --sn-spec-y {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: -46%;
+}
+
+/*
+ * 首页流程卡「长成整页浮层」时的圆角。
+ *
+ * 浮层是用 transform 从卡片的位置与尺寸放大过去的，圆角会被一起缩放 ——
+ * 想在半空中也是 28px，就得往元素上写 28 / scale 这个反向补偿值。
+ * 注册成 <length> 之后它自己可补间，于是「半径先撑大、随尺寸一起收回 28px」
+ * 与位移/缩放同步发生，而不是硬跳。
+ * 不支持 @property 的浏览器只是少了这层补间，最终值仍是 28px。
+ */
+@property --morph-r {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 28px;
+}
+
+/*
+ * 常驻预留滚动条槽位。
+ * 浮层展开时会给 <html> 加 overflow: hidden，滚动条一旦消失，整页会向右平移
+ * 十几像素（顶栏是 fixed，也跟着抖）。预留槽位之后，锁与不锁的可用宽度一致。
+ * macOS / iOS 用覆盖式滚动条，槽位本来就是 0，这条规则在那里不产生任何变化。
+ */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* 浮层打开期间锁住整页滚动（StepFlow.vue 负责加/去这个类） */
+html.flow-locked {
+  overflow: hidden;
+}
+
 :root {
   --vp-font-family-base: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', ui-sans-serif, sans-serif;
   --vp-font-family-mono: 'SFMono-Regular', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
@@ -10,8 +61,155 @@
   --vp-c-brand-3: #374151;
   --vp-c-brand-soft: rgba(31, 41, 55, 0.12);
   --vp-nav-logo-height: 38px;
-  --toggle-dur: 150ms;
-  --toggle-ease: ease-out;
+
+  /* transitions-dev — 变量块（tabs sliding / panel reveal / texts reveal / toggle） */
+  /* Tabs sliding */
+  --tabs-dur: 250ms;
+  --tabs-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --tabs-text-muted: #6e6e73;
+  --tabs-text-active: #1d1d1f;
+  --tabs-bar-bg: #e8e8ed;
+  --tabs-pill-bg: #ffffff;
+  /* Shape morph：首页流程卡点开成整页浮层（StepFlow.vue）
+   * 等比缩放 + 淡入，从卡片中心长出来。内容全程可见，所以只有一条时间线：
+   * 容器 420ms 走完，透明度只给前 200ms（前段就实起来，不留半透明的尾巴）。 */
+  --morph-open-dur: 420ms;
+  --morph-close-dur: 220ms;
+  /* 起步快、收尾长；比 (0.32,0.72,0,1) 温和，不会一眨眼就窜到位 */
+  --morph-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Panel reveal */
+  --panel-open-dur: 400ms;
+  --panel-close-dur: 350ms;
+  --panel-translate-y: 100px;
+  --panel-blur: 2px;
+  --panel-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Texts reveal */
+  --stagger-dur: 500ms;
+  --stagger-distance: 12px;
+  --stagger-stagger: 40ms;
+  --stagger-blur: 3px;
+  --stagger-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ── Apple 风格顶栏（SiteNav）──
+   * 液态玻璃（Liquid Glass）没有用 border：真实折射（背景在玻璃边缘被扭曲）
+   * CSS 做不到，这里用「半透明底 + 强 backdrop 模糊/饱和/提亮 + 多层高光 + 双色内描边 + 大外投影」来演。
+   * 镜面光斑的径向渐变写在组件里（用的 --sn-spec-x/y 由 SiteNav 跟着指针写），
+   * 这里只给高光色 —— 原因见下面的 --sn-glass-spec 注释。
+   */
+  --sn-surface: rgba(255, 255, 255, 0.54);
+  --sn-sheet-bg: rgba(250, 250, 252, 0.72);
+  --sn-border: rgba(0, 0, 0, 0.07);
+  --sn-hover: rgba(0, 0, 0, 0.045);
+  --sn-text: #1d1d1f;
+  --sn-text-muted: #6e6e73;
+  --sn-cta-bg: #1d1d1f;
+  --sn-cta-text: #ffffff;
+  /* 品牌标：黑白两态，浅色近黑 / 深色纯白 */
+  --sn-mark: #1a1a1a;
+  --sn-glass-blur: blur(26px) saturate(200%) brightness(1.05);
+  /* 顶缘高光：上亮下透，做出玻璃的厚度感 */
+  --sn-glass-sheen: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.72) 0%,
+    rgba(255, 255, 255, 0.16) 42%,
+    rgba(255, 255, 255, 0) 66%
+  );
+  /*
+   * 镜面光斑的「高光色」。
+   * 注意：整个 radial-gradient 写在用它的组件里（见 SiteNav.vue / LanguageSwitch.vue），
+   * 不在这里拼好 —— var() 是在「声明该变量的元素」上替换的，若在 :root 拼好渐变，
+   * SiteNav 往顶栏写的 --sn-spec-x 就传不进去（拿到的永远是 :root 的值）。
+   */
+  --sn-glass-spec: rgba(255, 255, 255, 0.92);
+  --sn-ring: rgba(38, 35, 31, 0.09);
+  --sn-highlight: rgba(255, 255, 255, 0.85);
+  --sn-glass-edge-bottom: rgba(255, 255, 255, 0.42);
+  --sn-glass-inner: rgba(38, 35, 31, 0.055);
+  --sn-shadow:
+    inset 0 0 0 1px var(--sn-ring),
+    inset 0 1px 0 var(--sn-highlight),
+    inset 0 -1px 0 var(--sn-glass-edge-bottom),
+    inset 0 -12px 16px -14px var(--sn-glass-inner),
+    0 1px 2px rgba(38, 35, 31, 0.06),
+    0 8px 26px -14px rgba(38, 35, 31, 0.28);
+  --sn-shadow-lg:
+    inset 0 0 0 1px var(--sn-ring),
+    inset 0 1px 0 var(--sn-highlight),
+    inset 0 -1px 0 var(--sn-glass-edge-bottom),
+    0 2px 6px rgba(38, 35, 31, 0.08),
+    0 30px 70px -26px rgba(38, 35, 31, 0.36);
+  --sn-cta-shadow: 0 1px 2px rgba(38, 35, 31, 0.16), 0 6px 18px -8px rgba(38, 35, 31, 0.34);
+
+  /* ── 首页可操作骨架 Demo ── */
+  --ds-text: #1d1d1f;
+  --ds-window-bg: #ffffff;
+  --ds-window-ring: rgba(0, 0, 0, 0.08);
+  --ds-window-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 24px 60px -28px rgba(0, 0, 0, 0.3);
+  --ds-sk-fill: #ececf0;
+  --ds-sk-fill-strong: #e0e0e5;
+  --ds-line: #dcdce2;
+
+  /* ── 落地页版式（只有两条栅格）── */
+  --lp-max: 1080px;
+  --lp-max-wide: 1200px;
+  --lp-block: clamp(3.5rem, 6vw, 5rem);
+  --lp-text: #1d1d1f;
+  --lp-text-2: #6e6e73;
+  --lp-text-3: #86868b;
+  --lp-hair: rgba(0, 0, 0, 0.08);
+  --lp-surface: #ffffff;
+  --lp-soft: #f5f5f7;
+  /* 页脚整条浅灰：亮色下和 --lp-soft 同色，白底上沉下去一层 */
+  --lp-footer: #f5f5f7;
+  /* 页脚卡片的浅面：亮色下和 --lp-soft 同色，白底上「浮」起来 */
+  --lp-tile: #f5f5f7;
+  --lp-accent: #1d1d1f;
+  --lp-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-chip-bg: #f5f5f7;
+  --ds-accent: #1d1d1f;
+
+  /* ── 功能区轮播卡（.lp-fcard）──
+   * 一张圆角卡：左半是卡面，右半是一整块深色品牌面。
+   * 卡不描边也不投影 —— 区分靠的是卡面与页面的**底色差**（+ 圆角）。
+   * 所以卡面取 --lp-tile：和使用流程那两张卡、页脚卡片是同一个面，
+   * 亮暗两套自动跟随，不必各写一份。
+   */
+  --fc-face: var(--lp-tile);
+  --fc-dark: #131316;
+  /*
+   * 整卡「推挤」切换（用在 .fcard-* 过渡类上）。
+   * 新卡从一侧滑进来、把旧卡顶出去 —— 两张卡是**贴着一起走**的，
+   * 所以位移量是整卡宽（100%），而不是几十像素的「各自飞一下」；
+   * 进出场也必须共用同一条曲线、同一个时长，否则两张卡会走散、中间裂开一道缝。
+   *
+   * 时长按「一整卡宽」来定，别按几十像素的位移估：1200ms 走完 1080px ≈ 900px/s。
+   *
+   * 曲线特意挑了**平缓**的一条，而不是 iOS 那条 `cubic-bezier(0.32, 0.72, 0, 1)`：
+   * 那条把 55% 的位移堆在 120–360ms 里，峰值速率到 3500px/s（一秒滑过两个多屏宽）——
+   * 光加时长只能拉长尾巴、削不掉这个尖峰，读起来照样是「嗖」。
+   * 现在这条起步不迟钝（起点斜率仍是 1，点了立刻动）、中段不冲、末端照样缓停，
+   * 速率摊平了，整体才真的慢。改之前先按 120ms 采样算一遍分段速率，别只看总时长。
+   */
+  --fc-dur: 1200ms;
+  --fc-ease: cubic-bezier(0.35, 0.35, 0.25, 1);
+  /*
+   * 窗口壳两套主题同色：屏里那四张截图都是深色界面（主色 rgb(31,32,33)），
+   * 壳跟着内容走、不做暗色版 —— 否则会出现「深色标题栏 + 浅色屏幕」的割裂。
+   */
+  --fc-win-bar: #f2f2f4;
+  --fc-win-line: rgba(0, 0, 0, 0.07);
+  /*
+   * 屏幕底色。屏里现在是透明底的抖动图案（docs/plans/2026-09-26-features-dither-design.md），
+   * 底色会真的露出来，所以必须显式给一个 —— 取四张截图里出现最多的那个值，
+   * 图案的浅墨（#e8e8ea）就是照它配的。两套主题共用，不进 .dark。
+   */
+  --fc-screen: #1f2021;
+  --fc-dot: rgba(0, 0, 0, 0.16);
+  --fc-dot-hover: rgba(0, 0, 0, 0.34);
+  --fc-dot-on: #1d1d1f;
+  --fc-arrow-bg: #efeff1;
+  --fc-arrow-bg-hover: #e3e3e6;
+  --fc-arrow-fg: #1d1d1f;
 }
 
 .dark {
@@ -19,6 +217,95 @@
   --vp-c-brand-2: #ffffff;
   --vp-c-brand-3: #d1d5db;
   --vp-c-brand-soft: rgba(243, 244, 246, 0.14);
+
+  /* Tabs sliding — dark 配色对齐首页分段控件 */
+  --tabs-text-muted: #a1a1a6;
+  --tabs-text-active: #ffffff;
+  --tabs-bar-bg: #2c2c2e;
+  --tabs-pill-bg: #636366;
+
+  /* ── Apple 风格顶栏（SiteNav）：液态玻璃的深色版 ── */
+  --sn-surface: rgba(30, 30, 32, 0.5);
+  --sn-sheet-bg: rgba(28, 28, 30, 0.74);
+  --sn-border: rgba(255, 255, 255, 0.12);
+  --sn-hover: rgba(255, 255, 255, 0.07);
+  --sn-text: #f5f5f7;
+  --sn-text-muted: #a1a1a6;
+  --sn-cta-bg: #f5f5f7;
+  --sn-cta-text: #1d1d1f;
+  /* 品牌标：黑白两态，浅色近黑 / 深色纯白 */
+  --sn-mark: #ffffff;
+  /* 深色下把背后的内容提亮，玻璃才像「被点亮」而不是一块黑 */
+  --sn-glass-blur: blur(26px) saturate(180%) brightness(1.16);
+  --sn-glass-sheen: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.04) 40%,
+    rgba(255, 255, 255, 0) 64%
+  );
+  --sn-glass-spec: rgba(255, 255, 255, 0.22);
+  --sn-ring: rgba(240, 238, 232, 0.13);
+  --sn-highlight: rgba(240, 238, 232, 0.2);
+  --sn-glass-edge-bottom: rgba(240, 238, 232, 0.06);
+  --sn-glass-inner: rgba(0, 0, 0, 0.34);
+  --sn-shadow:
+    inset 0 0 0 1px var(--sn-ring),
+    inset 0 1px 0 var(--sn-highlight),
+    inset 0 -1px 0 var(--sn-glass-edge-bottom),
+    inset 0 -12px 18px -14px var(--sn-glass-inner),
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 10px 30px -16px rgba(0, 0, 0, 0.7);
+  --sn-shadow-lg:
+    inset 0 0 0 1px var(--sn-ring),
+    inset 0 1px 0 var(--sn-highlight),
+    inset 0 -1px 0 var(--sn-glass-edge-bottom),
+    0 2px 8px rgba(0, 0, 0, 0.5),
+    0 34px 80px -28px rgba(0, 0, 0, 0.85);
+  --sn-cta-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 6px 18px -8px rgba(0, 0, 0, 0.7);
+
+  /* ── 首页可操作骨架 Demo ── */
+  --ds-text: #f5f5f7;
+  --ds-window-bg: #1d1d1f;
+  --ds-window-ring: rgba(255, 255, 255, 0.1);
+  --ds-window-shadow: none;
+  --ds-sk-fill: #2c2c2e;
+  --ds-sk-fill-strong: #3a3a3c;
+  --ds-line: #3a3a3c;
+
+  /* ── 落地页版式（只有两条栅格）── */
+  --lp-text: #f5f5f7;
+  --lp-text-2: #a1a1a6;
+  --lp-text-3: #8e8e93;
+  --lp-hair: rgba(255, 255, 255, 0.1);
+  --lp-surface: #1d1d1f;
+  --lp-soft: #161617;
+  /*
+   * 深色下页脚要比页面底色（--vp-c-bg ≈ #1b1b1f）亮一档。
+   * 直接用 --lp-soft 会掉到比底色还暗，整条读起来是一条凹槽。
+   */
+  --lp-footer: #242426;
+  /*
+   * 深色下卡片必须比页面底色（--vp-c-bg ≈ #1b1b1f）亮一档。
+   * 直接用 --lp-soft 会掉到比底色还暗，卡片读起来是个「凹坑」而不是一张卡。
+   */
+  --lp-tile: #26262a;
+  --lp-accent: #f5f5f7;
+  --ds-chip-bg: #2c2c2e;
+  --ds-accent: #f5f5f7;
+
+  /* ── 功能区轮播卡 ──
+   * 亮色下卡面跟着 --lp-tile（#f5f5f7），与白页面的落差已经够看。
+   * 暗色下要**再亮一档**：页面 #1b1b1f 与 --lp-tile #26262a 只差 11 级，
+   * 暗部人眼对这点差异不敏感，卡就糊回背景里去了（实测截图确认）。
+   */
+  --fc-face: #2e2e33;
+  --fc-dark: #0e0e10;
+  --fc-dot: rgba(255, 255, 255, 0.24);
+  --fc-dot-hover: rgba(255, 255, 255, 0.5);
+  --fc-dot-on: #f5f5f7;
+  --fc-arrow-bg: rgba(255, 255, 255, 0.1);
+  --fc-arrow-bg-hover: rgba(255, 255, 255, 0.18);
+  --fc-arrow-fg: #f5f5f7;
 }
 
 body {
@@ -101,4 +388,1539 @@ html.home-no-search .VPNavBar .VPNavBarSearch {
 
 .VPSidebarItem.collapsed.level-0 {
   padding-bottom: 24px;
+}
+
+/* 首页：Apple 风格字体栈（SF 拉丁 + PingFang 中文） */
+.home-apple {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro SC', 'PingFang SC',
+    'Helvetica Neue', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+}
+
+/*
+ * VitePress base.css 有无层全局规则 `p { margin: 0 }`，优先级高于
+ * Tailwind v4 的 @layer utilities，导致 p 标签上的 margin 工具类失效。
+ * 此处补回首页组件实际用到的 margin 工具类（仅列已使用的值）。
+ */
+.home-apple p.mx-auto {
+  margin-inline: auto;
+}
+.home-apple p.mt-2 {
+  margin-top: calc(var(--spacing) * 2);
+}
+.home-apple p.mt-3 {
+  margin-top: calc(var(--spacing) * 3);
+}
+.home-apple p.mt-6 {
+  margin-top: calc(var(--spacing) * 6);
+}
+
+/*
+ * 同理，VitePress 的无层全局 a 颜色规则会压掉 Tailwind 的 text 颜色工具类，
+ * 首页按钮与文字链接改用语义类，规避层叠冲突。
+ */
+.home-btn-primary {
+  background-color: #1d1d1f;
+  color: #ffffff;
+}
+.home-btn-primary:hover {
+  background-color: #3a3a3c;
+}
+.dark .home-btn-primary {
+  background-color: #f5f5f7;
+  color: #1d1d1f;
+}
+.dark .home-btn-primary:hover {
+  background-color: #ffffff;
+}
+.home-link {
+  color: #1d1d1f;
+}
+.home-link:hover {
+  text-decoration: underline;
+}
+.dark .home-link {
+  color: #f5f5f7;
+}
+
+/* 首页打字机光标 */
+@keyframes home-caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  95% {
+    opacity: 0;
+  }
+}
+
+.home-typing-caret {
+  display: inline-block;
+  width: 3px;
+  height: 0.9em;
+  margin-left: 4px;
+  vertical-align: -0.08em;
+  background: currentColor;
+  animation: home-caret-blink 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-typing-caret {
+    animation: none;
+  }
+}
+
+/* ── transitions-dev: tabs sliding ─────────────────────────────── */
+.t-tabs {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px;
+  border-radius: 48px;
+  background: var(--tabs-bar-bg);
+}
+.t-tab {
+  position: relative;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  height: 30px;
+  padding: 4px 12px;
+  color: var(--tabs-text-muted);
+  cursor: pointer;
+  border-radius: 48px;
+  z-index: 1;
+  transition: color var(--tabs-dur) var(--tabs-ease);
+}
+.t-tab:not([aria-selected="true"]):hover,
+.t-tab[aria-selected="true"] {
+  color: var(--tabs-text-active);
+}
+.t-tabs-pill {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  height: 30px;
+  width: 0;
+  background: var(--tabs-pill-bg);
+  border-radius: 48px;
+  transform: translateX(0);
+  transition:
+    transform var(--tabs-dur) var(--tabs-ease),
+    width     var(--tabs-dur) var(--tabs-ease);
+  will-change: transform, width;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 放大一档：用在「使用流程」的分步控件上，比功能区 tabs 更当家 */
+.t-tabs--lg {
+  gap: 4px;
+  padding: 4px;
+}
+.t-tabs--lg .t-tab {
+  height: 34px;
+  padding: 4px 18px;
+  font-size: 13px;
+}
+.t-tabs--lg .t-tabs-pill {
+  top: 4px;
+  height: 34px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-tabs-pill, .t-tab { transition: none !important; }
+}
+
+/* ── transitions-dev: panel reveal ─────────────────────────────── */
+.t-panel-slide {
+  transform: translateY(var(--panel-translate-y));
+  opacity: 0;
+  filter: blur(var(--panel-blur));
+  pointer-events: none;
+  transition:
+    transform var(--panel-close-dur) var(--panel-ease),
+    opacity   var(--panel-close-dur) var(--panel-ease),
+    filter    var(--panel-close-dur) var(--panel-ease);
+  will-change: transform, opacity, filter;
+}
+.t-panel-slide[data-open="true"] {
+  transform: translateY(0);
+  opacity: 1;
+  filter: blur(0);
+  pointer-events: auto;
+  transition:
+    transform var(--panel-open-dur) var(--panel-ease),
+    opacity   var(--panel-open-dur) var(--panel-ease),
+    filter    var(--panel-open-dur) var(--panel-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-panel-slide { transition: none !important; }
+}
+
+/* ── transitions-dev: texts reveal ─────────────────────────────── */
+.t-stagger-line {
+  display: block;
+  opacity: 0;
+  transform: translateY(var(--stagger-distance));
+  filter: blur(var(--stagger-blur));
+  transition:
+    opacity   var(--stagger-dur) var(--stagger-ease),
+    transform var(--stagger-dur) var(--stagger-ease),
+    filter    var(--stagger-dur) var(--stagger-ease);
+  will-change: transform, opacity, filter;
+}
+.t-stagger-line--2 { transition-delay: var(--stagger-stagger); }
+
+.t-stagger.is-shown .t-stagger-line {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+.t-stagger.is-hiding .t-stagger-line {
+  opacity: 0;
+  transform: translateY(0);
+  filter: blur(0);
+  transition:
+    opacity 200ms ease,
+    transform 0s linear,
+    filter 0s linear;
+  transition-delay: 0s;
+}
+
+/* 首页 Hero 有 5 行，按文档约定用 calc(var(--stagger-stagger) * (N - 1)) 扩展 */
+.t-stagger-line--3 { transition-delay: calc(var(--stagger-stagger) * 2); }
+.t-stagger-line--4 { transition-delay: calc(var(--stagger-stagger) * 3); }
+.t-stagger-line--5 { transition-delay: calc(var(--stagger-stagger) * 4); }
+
+@media (prefers-reduced-motion: reduce) {
+  .t-stagger-line { transition: none !important; }
+}
+
+/* ── transitions-dev: toggle ───────────────────────────────────── */
+/* 语言切换已改成原生下拉（LanguageSwitch.vue），滑动开关的动画就不再需要了；
+   若之后还有别的开关要复用，从 git 历史里取回这段即可。 */
+
+/* ══ 站点顶栏：自定义 Apple 风格胶囊导航（SiteNav.vue）══════════════
+ * 默认导航栏仅隐藏视觉（visibility 而非 display），
+ * 这样 VitePress 的搜索弹窗、Cmd/Ctrl+K 快捷键与主题状态仍保持挂载可用，
+ * 同时移动端 .VPNav 仍是 position: relative 参与文档流，页面顶部间距不变。
+ */
+.VPNav {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* 移动端本地导航（Menu / 大纲）吸附在浮动胶囊导航之下 */
+html .VPLocalNav {
+  top: var(--vp-nav-height) !important;
+}
+
+/* 移动端展开菜单时锁定滚动 */
+html.sn-menu-open,
+html.sn-menu-open body {
+  overflow: hidden;
+}
+
+/* ══ 首页可操作骨架 ══════════════════════════════════════════════ */
+.ds-sk {
+  display: block;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--ds-sk-fill);
+}
+
+.ds-sk--sm {
+  height: 8px;
+}
+
+.ds-sk--md {
+  height: 10px;
+}
+
+.ds-sk--lg {
+  height: 14px;
+}
+
+.ds-sk--avatar {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+}
+
+.ds-sk--block {
+  width: 100%;
+}
+
+/* ══ 落地页版式基元（参考 openchamber.dev 的构造）═══════════════════
+ * 整页只有两条栅格：A 整宽居中，B 5fr / 7fr 两栏。
+ * 区块之间用发丝线分隔，不用整块背景色切段。
+ */
+.lp-wrap {
+  width: min(100% - 3rem, var(--lp-max));
+  margin-inline: auto;
+}
+
+.lp-wrap--wide {
+  width: min(100% - 3rem, var(--lp-max-wide));
+}
+
+.lp-block {
+  padding-bottom: var(--lp-block);
+  /*
+   * 顶栏是固定胶囊，首页顶栏导航跳的是页内锚点，必须给它让位，
+   * 否则区块标题会被压在胶囊下面（胶囊底沿约 56px，这里留到 88px 的呼吸）。
+   */
+  scroll-margin-top: calc(var(--vp-nav-height) + 24px);
+}
+
+/* 区块之间的发丝线分隔，宽度对齐内容而不是整屏通栏 */
+.lp-rule {
+  border-top: 1px solid var(--lp-hair);
+  padding-top: 2.5rem;
+}
+
+.lp-split {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 2rem 5rem;
+  align-items: start;
+}
+
+.lp-eyebrow {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  color: var(--lp-text-3);
+}
+
+.lp-title {
+  margin: 14px 0 0;
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+  color: var(--lp-text);
+}
+
+.lp-lede {
+  margin: 14px 0 0;
+  max-width: 34em;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--lp-text-2);
+}
+
+.lp-head {
+  max-width: 44rem;
+}
+
+.lp-head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.lp-head--center .lp-lede {
+  margin-inline: auto;
+}
+
+/* ── 功能场景的图文两栏 ── */
+.lp-col__title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--lp-text);
+}
+
+.lp-col__desc {
+  margin: 8px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--lp-text-2);
+}
+
+/* ── 发丝线堆叠（隐私 / 数据）── */
+.lp-stack {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-stack__item {
+  border-top: 1px solid var(--lp-hair);
+  padding: 1.35rem 0;
+}
+
+.lp-stack__item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.lp-stack__item:last-child {
+  padding-bottom: 0;
+}
+
+/* ── 用户评价 2×2 ── */
+.lp-quotes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 2.75rem;
+}
+
+.lp-quote {
+  margin: 0;
+  border-top: 1px solid var(--lp-hair);
+  padding: 1.75rem 0;
+}
+
+.lp-quote:nth-child(odd) {
+  padding-right: 2.5rem;
+}
+
+.lp-quote:nth-child(even) {
+  border-left: 1px solid var(--lp-hair);
+  padding-left: 2.5rem;
+}
+
+.lp-quote__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lp-quote__avatar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--lp-soft);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--lp-text-2);
+}
+
+.lp-quote__handle {
+  font-family: var(--vp-font-family-mono);
+  font-size: 12.5px;
+  color: var(--lp-text-2);
+  text-decoration: none;
+}
+
+a.lp-quote__handle:hover {
+  color: var(--lp-text);
+}
+
+.lp-quote__text {
+  margin: 14px 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--lp-text);
+}
+
+/* ── FAQ 折叠 ── */
+.lp-faq {
+  margin-top: 2.75rem;
+  border-top: 1px solid var(--lp-hair);
+}
+
+.lp-faq__item {
+  border-bottom: 1px solid var(--lp-hair);
+}
+
+.lp-faq__item > h3 {
+  margin: 0;
+}
+
+.lp-faq__btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 1.15rem 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--lp-text);
+  cursor: pointer;
+}
+
+.lp-faq__chev {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  color: var(--lp-text-3);
+  transition: transform 0.34s var(--lp-ease);
+}
+
+.lp-faq__item[data-open='true'] .lp-faq__chev {
+  transform: rotate(180deg);
+}
+
+.lp-faq__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.34s var(--lp-ease);
+}
+
+.lp-faq__item[data-open='true'] .lp-faq__panel {
+  grid-template-rows: 1fr;
+}
+
+.lp-faq__inner {
+  overflow: hidden;
+}
+
+.lp-faq__answer {
+  margin: 0;
+  padding: 0 3rem 1.35rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  color: var(--lp-text-2);
+}
+
+.lp-faq__more {
+  margin: 1.75rem 0 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--lp-text-3);
+}
+
+/* ── 功能区轮播卡（.lp-fcard）──
+ * 一张圆角卡：左半是卡面，右半是一整块深色品牌面，面里浮着窗口。
+ * 切场景 = **整卡飞出飞入**：外包一层 .lp-fstage 做出场/入场的裁剪与位移，
+ * 卡片自己不动内部动效（文字、窗口都跟着整卡走）。
+ *
+ * 两列等宽（1fr 1fr），卡高由内容决定：右列窗口按百分比定宽、按 16:10 定高，
+ * 网格行高自动取左右两者的较大值，所以不会出现「文字短了窗口就顶出去」。
+ */
+/*
+ * 推挤切换的舞台。overflow: hidden 负责把被顶出去的旧卡裁掉。
+ * 容器宽度**恰好等于卡片宽度**：位移用的是 100%（相对卡宽），
+ * 两边但凡多留一点白，旧卡收尾时就会在边上留一条没走完的窄边。
+ * 圆角与卡片一致，裁出来的边缘才和卡边贴合。
+ */
+.lp-fstage {
+  position: relative;
+  margin-top: 3.5rem;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.lp-fcard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-radius: 20px;
+  overflow: hidden; /* 让右半的深色面跟着卡片圆角收边 */
+  background: var(--fc-face);
+}
+
+/*
+ * <Transition name="fcard"> 的四组类 —— 一套「推挤」。
+ *
+ * 两件事必须同时成立，缺一样就推不起来：
+ * 1. 位移是 100%（整卡宽）：入场 +100% → 0、出场 0 → −100%，接缝全程为 0 ——
+ *    t 时刻旧卡右缘与新卡左缘都落在 (1−t) 处，两张卡严丝合缝地贴着一起走。
+ * 2. 进出场共用**同一条曲线、同一个时长**。给它们不同的曲线（比如「出场快、进场慢」），
+ *    两张卡中途会走散：一边已经空出一截，另一边还没跟上，看着就变成各飞各的。
+ *
+ * 没有 opacity：推挤靠的是「顶出去」，卡是被推走的、不是溶解掉的，
+ * 加一点淡出都会立刻露馅成「淡出淡入」。
+ *
+ * 方向由 --fc-dir 取正负，所以「下一个 / 上一个」共用同一套类名。
+ *
+ * 两张卡会短暂并存，所以离开的那张必须 position: absolute —— 否则两张卡
+ * 在文档流里上下排开，容器高度瞬间翻倍、下面整段内容被顶下去。绝对定位后
+ * 它的宽度仍是容器宽（= 卡宽），百分比位移才对得上；容器高度则由入场那张撑着。
+ */
+.fcard-enter-active,
+.fcard-leave-active {
+  transition: transform var(--fc-dur) var(--fc-ease);
+}
+
+.fcard-leave-active {
+  position: absolute;
+  inset: 0;
+}
+
+.fcard-enter-from {
+  transform: translateX(calc(var(--fc-dir, 1) * 100%));
+}
+
+.fcard-leave-to {
+  transform: translateX(calc(var(--fc-dir, 1) * -100%));
+}
+
+.lp-fcard__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(2.25rem, 4.2vw, 3.5rem);
+}
+
+.lp-fcard__title {
+  margin: 0;
+  max-width: 14em;
+  font-size: clamp(1.625rem, 3.2vw, 2.375rem);
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+  color: var(--lp-text);
+}
+
+/*
+ * 正文只有一档：主张（lead）与细节（desc）同级。
+ * 给 desc 降到 15px / --lp-text-3 时，左半会同时出现「标题 / 17px / 15px」三种文字状态；
+ * 统一成 1rem / --lp-text-2 之后整块只剩标题和正文两种层级。
+ */
+.lp-fcard__lead,
+.lp-fcard__desc {
+  margin: 0.6rem 0 0;
+  max-width: 26em;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--lp-text-2);
+}
+
+.lp-fcard__lead {
+  margin-top: 1.3rem;
+}
+
+.lp-fcard__link {
+  margin-top: 1.85rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.dark .lp-fcard__link {
+  color: #2997ff;
+}
+
+.lp-fcard__link:hover {
+  text-decoration: underline;
+}
+
+/* 右半：深色品牌面，窗口在里面居中 */
+.lp-fcard__stage {
+  display: grid;
+  place-items: center;
+  padding: clamp(1.75rem, 3.4vw, 2.75rem);
+  background:
+    radial-gradient(120% 90% at 72% 8%, rgba(255, 255, 255, 0.07), transparent 62%),
+    var(--fc-dark);
+}
+
+/* 窗口壳：动画交给整卡，这里只是一扇静止的窗 */
+.lp-win {
+  width: min(100%, 460px);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--fc-win-bar);
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.3),
+    0 30px 60px -26px rgba(0, 0, 0, 0.75);
+}
+
+.lp-win__bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  background: var(--fc-win-bar);
+  border-bottom: 1px solid var(--fc-win-line);
+}
+
+/* 交通灯与 Hero 的应用窗壳（AppShell.vue）同色，只是小一号 */
+.lp-win__lights {
+  display: flex;
+  flex: none;
+  gap: 6px;
+}
+
+.lp-win__lights i {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+.lp-win__lights i:nth-child(1) {
+  background: #ff5f57;
+}
+
+.lp-win__lights i:nth-child(2) {
+  background: #febc2e;
+}
+
+.lp-win__lights i:nth-child(3) {
+  background: #28c840;
+}
+
+/*
+ * 标题要真居中：左侧三盏灯占掉 39px（3 × 9 + 2 × 6），
+ * 右边补上同样的宽度，文字才落在窗口正中而不是向右偏 20px。
+ */
+.lp-win__title {
+  flex: 1;
+  min-width: 0;
+  margin-right: 39px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #6e6e73;
+}
+
+.lp-win__screen {
+  position: relative;
+  aspect-ratio: 16 / 10; /* 抖动图案与旧截图同为 2400 × 1500 的比例 */
+  background: var(--fc-screen);
+}
+
+/*
+ * 铺满窗口：图案与屏幕同为 16:10，cover 裁不到任何东西。
+ * 图案是 SVG，`object-fit` 一样成立，不需要另开一套规则。
+ */
+.lp-shot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── 卡片下的圆点 + 左右箭头 ──
+ * 圆点即 tab（role="tab"），所以间距按参考图来：9px 的点 + 16px gap = 25px 中心距。
+ * ::after 把命中区撑到 25px 见方 —— 手指点得到，圆点本身又不变大。
+ */
+.lp-fnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 1.75rem;
+}
+
+.lp-fdots {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.lp-fdot {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--fc-dot);
+  cursor: pointer;
+  transition: background var(--tabs-dur) var(--tabs-ease);
+}
+
+.lp-fdot::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+}
+
+.lp-fdot:hover {
+  background: var(--fc-dot-hover);
+}
+
+.lp-fdot[aria-selected='true'] {
+  background: var(--fc-dot-on);
+}
+
+.lp-fdot:focus-visible {
+  outline: 2px solid var(--fc-dot-on);
+  outline-offset: 3px;
+}
+
+.lp-farrows {
+  display: flex;
+  gap: 10px;
+}
+
+.lp-farrow {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--fc-arrow-bg);
+  color: var(--fc-arrow-fg);
+  cursor: pointer;
+  transition:
+    background 0.2s var(--lp-ease),
+    transform 0.2s var(--lp-ease);
+}
+
+.lp-farrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.lp-farrow:hover {
+  background: var(--fc-arrow-bg-hover);
+}
+
+.lp-farrow:active {
+  transform: scale(0.94);
+}
+
+.lp-farrow:focus-visible {
+  outline: 2px solid var(--fc-arrow-fg);
+  outline-offset: 2px;
+}
+
+/* ── 页脚：整条浅灰、品牌字、一条发丝线、底下一行 ──
+ * 按 Apple 收：浅灰铺满整条，和上面的白底分开，不再用线去切内容。
+ * 线只切在品牌字和版权行之间。右边是四枚图标，不写群号和邮箱地址。
+ *
+ * 页脚挂在 layout-bottom，不在 .home-apple 里，所以字体栈要自己接上，
+ * 否则会落到文档站的 Noto Sans，和上面那一屏不是同一张脸。
+ * 字号对齐 Apple 页脚：品牌字 28 / 600 / -0.022em，版权 12 / 400。
+ */
+.lp-footer {
+  background: var(--lp-footer);
+  padding-bottom: 2.75rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro SC', 'SF Pro Text', 'PingFang SC',
+    'Helvetica Neue', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.lp-footer__inner {
+  padding-top: clamp(3rem, 6vw, 4.25rem);
+}
+
+.lp-footer__brand {
+  display: inline-block;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.022em;
+  color: var(--lp-text-2);
+  text-decoration: none;
+}
+
+.lp-footer__brand:hover {
+  color: var(--lp-text);
+}
+
+.lp-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 2rem;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--lp-hair);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.33337;
+  letter-spacing: -0.01em;
+  color: var(--lp-text-3);
+}
+
+.lp-footer__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/*
+ * 只认「li 直接抱着的那个 a」。
+ * 二维码浮层也挂在 .lp-footer__links 底下，用后代选择器会把里面的
+ * 「打开链接」按钮一并套上 28×28 的图标样式 —— 收窄到直接子级就分开了。
+ */
+.lp-footer__links > li > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--lp-text-3);
+  transition: color 0.2s ease;
+}
+
+.lp-footer__links svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.lp-footer__links > li > a:hover {
+  color: var(--lp-text);
+}
+
+.lp-footer__links > li > a:focus-visible {
+  outline: 2px solid var(--lp-text);
+  outline-offset: 2px;
+}
+
+/* ── 页脚二维码浮层（QQ / 小红书）──
+ * 移植自一张 hover 弹图的原型：从触发点缩放长出 + 轻微跟随鼠标。
+ * 有两处和原型不一样，都是页脚的位置逼出来的：
+ *
+ * 1. 不从图标正中向四周展开，而是右对齐图标中心、只往左上长。
+ *    图标钉在屏幕最右下角，184px 宽的卡片居中展开会顶出视口右边缘
+ *    （小红书那枚中心距右边只有约 68px）。右对齐之后卡片右边缘永远落在
+ *    图标右边缘附近，用不着为「离边多远」写魔法数字。
+ * 2. transform-origin 从卡片中心挪到右下角。原型居中展开时原点天然就是中心；
+ *    右对齐之后必须改到右下角，缩放才像「从图标那个点抽出来」——
+ *    否则卡片会先在左上方凭空长大、再平移过去，看着像两张卡。
+ *
+ * 卡片底色恒为白，不跟主题翻：二维码反色后多数扫码器认不出，
+ * 所以卡片里的文字颜色也一并写死，不接 --lp-text。
+ */
+.lp-footer__item {
+  position: relative;
+}
+
+/* anchor：0×0 的点，钉在图标中心，所有定位从这里算起 */
+.lp-qr {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  z-index: 30;
+  /* 桌面端卡片纯展示：穿过它点击等于点图标本身。卡片一旦能接鼠标，
+     hover 就会在鼠标移出 28px 图标时断掉，码当场收起，根本移不过去 */
+  pointer-events: none;
+}
+
+/* follow：只吃鼠标偏移（--dx / --dy 由脚本写），曲线比缩放更弹一点 */
+.lp-qr__follow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  transform: translate(var(--dx, 0px), var(--dy, 0px));
+  transition: transform 0.55s cubic-bezier(0.18, 1.7, 0.34, 1);
+}
+
+.lp-qr__card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 184px;
+  padding: 12px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.07);
+
+  transform: translate(calc(-100% + 14px), calc(-100% - 12px)) scale(0.05);
+  transform-origin: 100% 100%;
+  opacity: 0;
+  visibility: hidden;
+
+  /* 收起时多等一拍再隐藏，否则缩到一半就没了，看不到「收回图标里」那一下 */
+  transition:
+    transform 0.62s cubic-bezier(0.18, 1.7, 0.34, 1),
+    opacity 0.22s ease,
+    visibility 0s linear 0.62s;
+}
+
+.lp-qr__img {
+  display: block;
+  width: 160px;
+  height: 160px;
+  border-radius: 6px;
+}
+
+.lp-qr__hint {
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: #55555c;
+  white-space: nowrap;
+}
+
+/* 触屏专用出口。桌面端悬停时点图标就是跳转，不需要它 */
+.lp-qr__open {
+  display: none;
+}
+
+/* 触屏遮罩。桌面端 hover 一移开就收，不需要 */
+.lp-qr__scrim {
+  display: none;
+}
+
+/*
+ * 展开只在真有指针悬停的设备上做。
+ * 少了这条 @media (hover: hover)，触屏点一下会被浏览器模拟成 hover 并一直保持，
+ * 于是「再点一次收起」永远收不起来 —— 点击逻辑和 hover 打架。
+ * :focus-within 一并放进来：键盘 Tab 到图标时也该看到码，但同样不能落到触屏上。
+ */
+@media (hover: hover) {
+  .lp-footer__item--has-qr:hover .lp-qr__card,
+  .lp-footer__item--has-qr:focus-within .lp-qr__card {
+    transform: translate(calc(-100% + 14px), calc(-100% - 12px)) scale(1);
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+}
+
+/*
+ * 触屏：浮层脱离图标、改成视口居中。
+ * 页脚图标贴着屏幕边缘，沿用「右对齐图标」必然有一侧出界；
+ * 居中之后 220px 的卡片在 320px 宽的屏上也放得下。
+ */
+@media (hover: none) {
+  .lp-qr {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 60;
+  }
+
+  .lp-qr__card {
+    width: 220px;
+    transform: translate(-50%, -50%) scale(0.88);
+    transform-origin: 50% 50%;
+  }
+
+  .lp-footer__item.is-open .lp-qr__card {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  /* 卡片要能点（里面有「打开链接」），祖先那层 pointer-events: none 在这儿放开 */
+  .lp-footer__item.is-open .lp-qr {
+    pointer-events: auto;
+  }
+
+  .lp-qr__open {
+    display: block;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: #16161a;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+
+  /*
+   * z-index 必须是正数：li 只有 position: relative、没建层叠上下文，
+   * 给负值会让遮罩掉到页面背景后面去。59 < .lp-qr 的 60，卡片仍在最上层。
+   */
+  .lp-footer__item.is-open .lp-qr__scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 59;
+    background: rgba(0, 0, 0, 0.28);
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@media (max-width: 900px) {
+  .lp-split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+  }
+
+  .lp-cols {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .lp-quotes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lp-quote:nth-child(odd) {
+    padding-right: 0;
+  }
+
+  .lp-quote:nth-child(even) {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .lp-faq__answer {
+    padding-right: 1rem;
+  }
+
+  /*
+   * 轮播卡塌成单列：文案在上、深色面在下。
+   * 深色面里的窗口这时按卡片宽度走，比两列时更宽 —— 窄屏反而看得清屏里的内容。
+   */
+  .lp-fcard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lp-fcard__stage {
+    padding: 2rem 1.5rem 2.25rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .lp-footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+
+  /* 手机上卡片占满屏宽，圆角与内边距都收一档，别让留白吃掉正文 */
+  .lp-fstage,
+  .lp-fcard {
+    border-radius: 16px;
+  }
+
+  .lp-fcard__body {
+    padding: 1.75rem 1.5rem 1.5rem;
+  }
+
+  .lp-fcard__stage {
+    padding: 1.5rem 1.25rem 1.75rem;
+  }
+
+  .lp-farrow {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* ══ 下载页（平台行式列表，参考 openchamber.dev/download 的构造）═══════════
+ * 与落地页同一套路子：一条发丝线切一行，不用描边卡片、不用背景色块分组。
+ * 一行说三件事 —— 左「哪个平台」/ 中「哪个版本、多大」/ 右「下载与镜像」。
+ * 配色仍走 Apple 黑白灰（--lp-*），不引入第二种强调色。
+ *
+ * ⚠️ 这一块的选择器**全部带 `.vp-doc` 前缀**，不是随手写的。
+ * 下载页是文档页，正文裹在 `.vp-doc` 里，VitePress 对正文元素写了元素级规则
+ * （`.vp-doc ul` → 20px 左缩进 + 圆点，`.vp-doc p` → 16px 上下边距，
+ * `.vp-doc a` → 颜色 + 下划线，`.vp-doc :not(pre) > code` → 灰底 + 内边距），
+ * 这些是「类 + 元素」（0,1,1），单类选择器（0,1,0）一律压不过 ——
+ * 行列表尤其阴，`.dl-row` 是 grid 容器、本来就不生成标记，所以看起来是好的，
+ * 一换成普通列表（系统要求那一组）圆点和缩进就全回来了。
+ * 落到 `.vp-doc .dl-*`（0,2,0）才稳压一层。
+ */
+
+.vp-doc .dl-version {
+  margin: 1.25rem 0 0;
+  font-size: 0.875rem;
+  color: var(--lp-text-2);
+}
+
+/* 与 `.vp-doc strong` 同具体度，靠源码顺序取胜 —— 本文件在主题样式之后加载 */
+.vp-doc .dl-version strong {
+  font-weight: 600;
+  color: var(--lp-text);
+}
+
+/* ── 推荐位：眉标 + 按钮行 + 等宽小字元信息 ── */
+.vp-doc .dl-pick {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--lp-hair);
+  padding-top: 1.5rem;
+}
+
+/* 眉标是落地页的 `.lp-eyebrow`，那边在 `.vp-doc` 外面，这里得把它被正文拿走的
+ * 16px 上下边距再压回 0，否则按钮行会凭空多出一段空白。 */
+.vp-doc .lp-eyebrow {
+  margin: 0;
+}
+
+.vp-doc .dl-pick__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+.vp-doc .dl-pick__meta {
+  margin: 0.9rem 0 0;
+  font-family: var(--vp-font-family-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--lp-text-2);
+}
+
+/* ── 按钮 ──
+ * 不用 border：外沿走 inset 环，pill 的拐角才不会有硬边（与顶栏胶囊同款处理）。
+ */
+.dl-btn,
+.dl-tag--pick {
+  --dl-solid-bg: #1d1d1f;
+  --dl-solid-fg: #ffffff;
+}
+
+.dark .dl-btn,
+.dark .dl-tag--pick {
+  --dl-solid-bg: #f5f5f7;
+  --dl-solid-fg: #1d1d1f;
+}
+
+.vp-doc .dl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: var(--dl-solid-bg);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/*
+ * 颜色必须写成 `a.dl-btn`（0,2,1），不能只写 `.dl-btn`（0,2,0）：
+ * 本文件上面有 `.dark .vp-doc a { color: #ffffff }`，具体度是（0,2,1），
+ * 只写到类这一层压不过它 —— 深色下白色药丸会拿到白色文字，按钮变成一块空板。
+ */
+.vp-doc a.dl-btn,
+.vp-doc a.dl-btn:hover {
+  color: var(--dl-solid-fg);
+}
+
+.vp-doc .dl-btn:hover {
+  background: color-mix(in srgb, var(--dl-solid-bg) 84%, var(--dl-solid-fg));
+  transform: translateY(-1px);
+}
+
+/* 次按钮：镜像走描边款，跟主下载拉开层级 */
+.vp-doc .dl-btn--ghost {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--lp-hair);
+}
+
+/* 必须跟在 `.vp-doc .dl-btn:hover` 后面：两者同具体度，靠顺序决定谁写 hover 底色 */
+.vp-doc a.dl-btn--ghost,
+.vp-doc a.dl-btn--ghost:hover {
+  color: var(--lp-text);
+}
+
+.vp-doc .dl-btn--ghost:hover {
+  background: color-mix(in srgb, var(--lp-text) 6%, transparent);
+  transform: translateY(-1px);
+}
+
+.vp-doc .dl-btn:focus-visible {
+  outline: 2px solid var(--lp-text);
+  outline-offset: 2px;
+}
+
+/* ── 平台行 ── */
+.vp-doc .dl-rows {
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--lp-hair);
+}
+
+.vp-doc .dl-row {
+  /* 显式写 margin：`.vp-doc li + li` 会给每行补 8px，行高就会不平均 */
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  border-bottom: 1px solid var(--lp-hair);
+  padding: 1rem 0;
+}
+
+.vp-doc .dl-row__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--lp-text);
+}
+
+.vp-doc .dl-row__arch {
+  font-weight: 400;
+  color: var(--lp-text-2);
+}
+
+.vp-doc .dl-row__note {
+  margin: 4px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--lp-text-3);
+}
+
+.vp-doc .dl-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8125rem;
+  color: var(--lp-text-2);
+}
+
+.vp-doc .dl-row__size {
+  font-family: var(--vp-font-family-mono);
+  color: var(--lp-text-3);
+}
+
+.vp-doc .dl-row__act {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 版本号一类的小标 */
+.vp-doc .dl-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lp-text) 7%, transparent);
+  font-family: var(--vp-font-family-mono);
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--lp-text-2);
+  white-space: nowrap;
+}
+
+.vp-doc .dl-tag--pick {
+  background: var(--dl-solid-bg);
+  color: var(--dl-solid-fg);
+  font-family: inherit;
+  font-weight: 500;
+}
+
+/* ── 命令行 + 复制 ── */
+.vp-doc .dl-copy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1rem 0 0;
+  padding: 0.65rem 0.65rem 0.65rem 1rem;
+  border-radius: 12px;
+  /* 深色下 --lp-soft 比页面底色还暗，会读成一个凹坑，用卡片色 */
+  background: var(--lp-tile);
+}
+
+/* 取消 `.vp-doc :not(pre) > code` 给行内代码补的灰底与内边距 —— 这里已经有一块底了 */
+.vp-doc .dl-copy__code {
+  min-width: 0;
+  overflow-x: auto;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--lp-text);
+  white-space: nowrap;
+}
+
+.vp-doc .dl-copy__btn {
+  flex: 0 0 auto;
+  padding: 0.35rem 0.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--lp-hair);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--lp-text-2);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.vp-doc .dl-copy__btn:hover {
+  background: color-mix(in srgb, var(--lp-text) 6%, transparent);
+  color: var(--lp-text);
+}
+
+.vp-doc .dl-copy__btn:focus-visible {
+  outline: 2px solid var(--lp-text);
+  outline-offset: 2px;
+}
+
+/* ── FAQ ──
+ * 复用首页那套 `.lp-faq` 折叠，只把上边距收一收（首页是区块间距，这里是正文间距）。
+ * FAQ 的题干包在 h3 里（语义），但 `.vp-doc h3` 自带字号与 32px 上边距，
+ * 会把每个条目往下顶；答案段落也会被 `.vp-doc p` 拿回 16px 边距。一并归零。
+ */
+.vp-doc .dl-faq {
+  margin-top: 1.5rem;
+}
+
+.vp-doc .dl-faq h3 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+}
+
+.vp-doc .dl-faq .lp-faq__answer {
+  margin: 0;
+}
+
+/* ── 通道 / 系统要求的发丝线说明列表 ── */
+.vp-doc .dl-notes {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vp-doc .dl-notes__item {
+  margin: 0;
+  border-top: 1px solid var(--lp-hair);
+  padding: 1.1rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--lp-text-2);
+}
+
+.vp-doc .dl-notes__item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.vp-doc .dl-notes__item:last-child {
+  padding-bottom: 0;
+}
+
+.vp-doc .dl-notes__item strong {
+  font-weight: 600;
+  color: var(--lp-text);
+}
+
+/* ── 支持页：扫码联系（微信 / 技术交流群）──
+ * 两张码平铺，不做页脚那种 hover 浮层 —— 这一页就是「怎么找到我们」，
+ * 藏起来等于没有；页脚用浮层是因为那里只有图标的位置。
+ *
+ * 卡面取 --lp-tile（和下载页的复制块、页脚卡片同一个面），亮暗两套自动跟随。
+ * 码图自己恒为白底（见 scripts/gen-footer-qr.py 的参数说明：反色码扫不出来），
+ * 所以深色下它读起来是一块白「牌」，这是刻意的，别给它接 --lp-surface。
+ *
+ * 桌面端扫不了自己屏幕上的码，出口链接的样式交给正文默认的链接色，
+ * 这里不另做按钮：这一页的主角是码，链接是兜底。
+ */
+.vp-doc .sp-qr {
+  display: grid;
+  /* 两列等宽：minmax(0, 1fr) 而不是 1fr，否则长标题（「DeepStudent 技术交流群」）
+     会把格子撑破，两张卡宽度不一样 */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vp-doc .sp-qr__item {
+  /* 显式写 margin：`.vp-doc li + li` 会给每项补 8px，两张卡就错开一行 */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 16px;
+  background: var(--lp-tile);
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+
+.vp-doc .sp-qr__img {
+  display: block;
+  width: 176px;
+  height: 176px;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.vp-doc .sp-qr__title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--lp-text);
+}
+
+.vp-doc .sp-qr__desc {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--lp-text-2);
+}
+
+@media (max-width: 700px) {
+  /* 两列塌成一列：窄屏下 176px 的码并排放不下，挤成两列反而更难扫 */
+  .vp-doc .sp-qr {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* 三列塌成一列：平台 → 版本/大小 → 按钮，读下来正好是一条安装路径 */
+  .vp-doc .dl-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .vp-doc .dl-pick__actions .dl-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vp-doc .dl-btn,
+  .vp-doc .dl-copy__btn,
+  .lp-faq__panel,
+  .lp-faq__chev {
+    transition: none;
+  }
+
+  .fcard-enter-active,
+  .fcard-leave-active {
+    transition: none;
+  }
 }

@@ -33,3 +33,16 @@ dist-ssr
 
 # VitePress build cache
 docs/.vitepress/cache/
+
+# VitePress 构建临时产物（每次 build 重建，别提交）
+docs/.vitepress/.temp/
+
+# 演示镜像同步的临时目录（成功后 rename 成 docs/public/demo）
+docs/.vitepress/tmp-demo-mirror/
+
+# VitePress 配置热重载的临时产物（带时间戳，每次 dev 重建）
+docs/.vitepress/config.js.timestamp-*.mjs
+
+# 本地工具目录
+/.openchamber/
+/.workbuddy/

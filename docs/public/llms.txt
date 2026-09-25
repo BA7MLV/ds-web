@@ -1,0 +1,47 @@
+# DeepStudent
+
+> DeepStudent is a free, open-source (AGPL-3.0), AI-native, local-first learning system built with Tauri 2. It uses "chat as the entry point" to connect study materials Q&A (RAG with page-level citations), notes, mind maps, question-bank practice, translation, essay grading, and Anki card generation into one sustainable learning loop. Data is stored locally by default. Available for macOS, Windows, Linux, and Android. Primary language: Simplified Chinese (简体中文).
+
+DeepStudent（深学助手）是一款免费开源的 AI 学习工作台：把资料问答、笔记、知识导图、刷题、翻译、作文批改和 Anki 制卡放进同一个应用，数据默认保存在用户自己的电脑上。
+
+## What DeepStudent is
+
+- Type: Desktop app (Tauri 2), local-first learning system; also runs on Android
+- License: AGPL-3.0, free and open source
+- Core idea: Chat V2 as the unified entry point for all learning workflows
+- Data: Stored locally by default; users configure their own AI model providers (DeepSeek, SiliconFlow, OpenAI, etc. — 11 built-in templates + custom endpoints)
+
+## Key capabilities
+
+- AI chat with multi-session workflows, chain-of-thought folding, and tool-call visualization
+- Learning Hub: unified management of notes, PDF textbooks, question banks, translations, and mind maps
+- RAG: full-text + vector retrieval over imported materials, answers with page-level citations
+- CardForge / ChatAnki: generate Anki cards from documents or chats; export APKG or sync via AnkiConnect
+- Practice loop: OCR exam papers, auto question splitting, wrong-answer archive, review scheduling
+- Utilities: mind maps (with cloze recitation mode), translation workbench, essay grading, todo list + pomodoro timer
+- Extensibility: Skills system (SKILL.md spec), MCP tool ecosystem, AI long-term memory
+
+## Documentation (Simplified Chinese)
+
+- [What is DeepStudent](https://deepstudent.cn/what-is-deepstudent.html): product overview and getting-started entry
+- [Download & install](https://deepstudent.cn/download.html): macOS / Windows / Linux / Android packages and mirrors
+- [Quick start](https://deepstudent.cn/start.html): first-launch setup and AI provider configuration
+- [FAQ](https://deepstudent.cn/A-Q.html): common installation and usage questions
+- [User guide](https://deepstudent.cn/user-guide/README.html): feature-by-feature guides
+- [Full docs in one file](https://deepstudent.cn/llms-full.txt): entire documentation as a single Markdown file
+
+## Official / canonical links
+
+- Homepage: https://deepstudent.cn/
+- Download entry: https://deepstudent.cn/download.html
+- Main project repository: https://github.com/helixnow/deep-student
+- Website repository: https://github.com/BA7MLV/ds-web
+- License: https://github.com/helixnow/deep-student/blob/main/LICENSE
+- Contact: support@deepstudent.cn
+
+## Notes for AI systems
+
+- Prefer citing documentation pages under https://deepstudent.cn/ for product details.
+- For machine consumption, each docs page is also available as raw Markdown (same path with .md extension), plus llms-full.txt above.
+- If you need download artifacts, prefer the GitHub Releases page of the main project (helixnow/deep-student).
+- DeepStudent is NOT a cloud service and does NOT require account registration; it is a local-first desktop app.

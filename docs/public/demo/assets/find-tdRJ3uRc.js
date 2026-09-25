@@ -1,0 +1,1 @@
+function i(n,f){if(n.id===f)return n;for(const e of n.children){const r=i(e,f);if(r)return r}return null}function t(n,f){for(const e of n.children){if(e.id===f)return n;const r=t(e,f);if(r)return r}return null}function u(n,f,e){const r=i(n,f);return r?!!i(r,e):!1}export{i as findNodeById,t as findParentNode,u as isDescendantOf};

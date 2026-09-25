@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hero Dithering × DeepStudent Icon · 对照原型</title>
+<style>
+  :root{
+    --bg:#ffffff; --fg:#1d1d1f; --dim:#6e6e73; --line:rgba(0,0,0,.12);
+    --panel:rgba(255,255,255,.86); --accent:#0071e3;
+    --glow:radial-gradient(closest-side, rgba(255,255,255,.94), rgba(255,255,255,0) 72%);
+    --chip:rgba(0,0,0,.04);
+  }
+  html[data-theme="dark"]{
+    --bg:#1b1b1f; --fg:#f5f5f7; --dim:#a1a1a6; --line:rgba(255,255,255,.16);
+    --panel:rgba(28,28,32,.86); --accent:#0a84ff;
+    --glow:radial-gradient(closest-side, rgba(27,27,31,.94), rgba(27,27,31,0) 72%);
+    --chip:rgba(255,255,255,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--fg);
+    font:400 16px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  /* 与站点同构：fixed 图层铺满视口，按 Hero 底边裁切；pixelated 保住 1-bit 网点硬边 */
+  .layer{position:fixed;top:0;left:0;width:100%;height:118vh;overflow:hidden;
+    pointer-events:none;z-index:1;opacity:1;
+    transform:translate3d(0,var(--y,-18vh),0);
+    clip-path:inset(0 0 var(--cut,0px) 0);
+    transition:opacity .6s ease}
+  .layer canvas{display:block;width:100%;height:100%;image-rendering:pixelated;
+    opacity:calc(1 - var(--dim,0))}
+  #logoLayer{z-index:2}
+  .sf-fade{position:absolute;left:0;right:0;bottom:calc(var(--cut,0px) - 2px);
+    height:var(--fade,0px);background:linear-gradient(to bottom,transparent,var(--bg))}
+
+  .page{position:relative;z-index:3}
+  .hero{position:relative;padding:56px 24px 80px;text-align:center;overflow:hidden}
+  .glow{position:absolute;left:50%;top:34%;width:min(1100px,120vw);height:520px;
+    transform:translate(-50%,-50%);background:var(--glow);pointer-events:none}
+  .wrap{position:relative;max-width:980px;margin:0 auto}
+  .gh{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--dim);
+    text-decoration:none;padding:6px 14px;border:1px solid var(--line);border-radius:999px}
+  h1{font-size:clamp(38px,6vw,64px);line-height:1.08;letter-spacing:-.02em;margin:22px 0 0;font-weight:600}
+  .lede{color:var(--dim);font-size:18px;margin:18px 0 0;line-height:1.6}
+  .actions{display:flex;gap:18px;align-items:center;justify-content:center;margin-top:28px}
+  .btn{background:var(--accent);color:#fff;border-radius:999px;padding:12px 32px;
+    font-size:16px;font-weight:500;text-decoration:none}
+  .link{color:var(--accent);text-decoration:none;font-size:16px}
+  .shell{margin:56px auto 0;max-width:1000px;height:340px;border-radius:14px;
+    border:1px solid var(--line);background:var(--chip)}
+  .next{padding:96px 24px 160px;background:var(--bg);text-align:center}
+  .next h2{font-size:32px;margin:0 0 12px;font-weight:600}
+  .next p{color:var(--dim);margin:0}
+
+  /* 控制面板 */
+  .panel{position:fixed;right:16px;bottom:16px;z-index:9;width:308px;max-height:calc(100vh - 32px);
+    overflow:auto;padding:14px 16px;border-radius:14px;border:1px solid var(--line);
+    background:var(--panel);backdrop-filter:blur(14px);font-size:12.5px;
+    box-shadow:0 8px 30px rgba(0,0,0,.12)}
+  .panel h4{margin:0 0 10px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:600}
+  .panel .row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:9px 0}
+  .panel select,.panel input[type=range]{width:168px}
+  .panel select{font:inherit;padding:4px 6px;border-radius:8px;border:1px solid var(--line);
+    background:var(--bg);color:var(--fg)}
+  .panel input[type=range]{accent-color:var(--accent);margin:0}
+  .val{font-variant-numeric:tabular-nums;color:var(--dim);min-width:52px;text-align:right}
+  .panel hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+  .read{color:var(--dim);font-size:11.5px;line-height:1.7}
+  .read b{color:var(--fg);font-weight:600;font-variant-numeric:tabular-nums}
+  .warn{margin-top:10px;padding:8px 10px;border-radius:9px;background:var(--chip);
+    color:var(--dim);font-size:11.5px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="layer" id="starsLayer"><canvas id="starsCanvas"></canvas><span class="sf-fade" id="sfFade"></span></div>
+<div class="layer" id="logoLayer" hidden><canvas id="logoCanvas"></canvas></div>
+
+<div class="page">
+  <section class="hero" id="hero">
+    <div class="glow"></div>
+    <div class="wrap">
+      <a class="gh" href="#">★ GitHub · 1.2k</a>
+      <h1>开源的终身学习空间</h1>
+      <p class="lede">开源、本地优先的学习工作台，<br />资料和数据都在你自己手里</p>
+      <div class="actions">
+        <a class="btn" href="#">立即下载</a>
+        <a class="link" href="#">快速上手 →</a>
+      </div>
+      <div class="shell"></div>
+    </div>
+  </section>
+  <section class="next">
+    <h2>使用流程</h2>
+    <p>紧贴 Hero 之后、无背景色的区块 —— 星空必须在这里之前收干净。</p>
+  </section>
+</div>
+
+<aside class="panel">
+  <h4>Dithering × Icon 对照</h4>
+  <div class="row">
+    <label for="mode">组合方式</label>
+    <select id="mode">
+      <option value="off">关闭（现状）</option>
+      <option value="center">并入星空 · 标题正后</option>
+      <option value="side">并入星空 · 左下角</option>
+      <option value="layer">独立细网点层 · 左下角</option>
+      <option value="knockout">星点避让（负形）· 左下角</option>
+      <option value="cluster">星点聚成图标 · 左下角</option>
+    </select>
+  </div>
+  <div class="row">
+    <label for="size">图标尺寸</label>
+    <input id="size" type="range" min="200" max="680" step="10" value="420" />
+    <span class="val" id="sizeV">420</span>
+  </div>
+  <div class="row">
+    <label for="density">网点浓度</label>
+    <input id="density" type="range" min="2" max="60" step="1" value="14" />
+    <span class="val" id="densityV">.14</span>
+  </div>
+  <div class="row">
+    <label for="anchor">落点</label>
+    <select id="anchor">
+      <option value="bl">左下角</option>
+      <option value="br">右下角</option>
+      <option value="tl">左上角</option>
+      <option value="tr">右上角</option>
+      <option value="cc">正中</option>
+    </select>
+  </div>
+  <div class="row">
+    <label for="ramp">填充渐变</label>
+    <select id="ramp">
+      <option value="none">无（平铺）</option>
+      <option value="down">上浓下淡</option>
+      <option value="up">下浓上淡</option>
+      <option value="diag">对角淡出</option>
+    </select>
+  </div>
+  <hr />
+  <div class="row">
+    <label for="cell">星空网屏</label>
+    <input id="cell" type="range" min="6" max="24" step="2" value="16" />
+    <span class="val" id="cellV">16px</span>
+  </div>
+  <div class="row">
+    <label for="cellL">独立层网屏</label>
+    <input id="cellL" type="range" min="2" max="8" step="1" value="3" />
+    <span class="val" id="cellLV">3px</span>
+  </div>
+  <div class="row">
+    <label for="opacity">独立层不透明度</label>
+    <input id="opacity" type="range" min="10" max="100" step="5" value="55" />
+    <span class="val" id="opacityV">.55</span>
+  </div>
+  <hr />
+  <div class="row">
+    <label for="theme">主题</label>
+    <select id="theme">
+      <option value="light">亮色</option>
+      <option value="dark">深色</option>
+    </select>
+  </div>
+  <div class="read" id="read"></div>
+  <div class="warn" id="warn"></div>
+</aside>
+
+<script>
+/* ==========================================================================
+ * Hero dithering × DeepStudent icon —— 对照原型
+ *
+ * 直接复用 HeroStarfield.vue 的管线：离屏低分辨率亮度场 → Bayer 8×8 阈值化
+ * → image-rendering:pixelated 放大。差别只有一个：亮度场多了一路「图标覆盖率」。
+ * 图标路径由 build.mjs 从 docs/public/logo-black.svg 注入，与站点同源。
+ * ========================================================================== */
+
+/* 路径数据由 build.mjs 从 docs/public/logo-black.svg 注入，与站点同源 */
+const LOGO_D = /* __LOGO_PATHS__ */ []
+const LOGO_PATHS = LOGO_D.map((d) => new Path2D(d))
+const LOGO_VB = __LOGO_VIEWBOX__  // [x, y, w, h]
+
+/* ── 与站点一致的常量 ── */
+const SCALE = 0.5, MAX_OFF_W = 960, FPS = 30
+const STAR_PER_PX = 1 / 12000, MIN_STARS = 46, MAX_STARS = 460
+const VIGNETTE_LIGHT = 0.06
+const DITHER_DIM = 8                       // Bayer 8×8，一「格」= 8 个离屏像素
+const INK = { dark: [245, 245, 247], light: [29, 29, 31] }
+const INK_ALPHA = { dark: 0.45, light: 0.3 }
+const Y_START = -18, CENTER_AT = 0.5, PARALLAX_VH = 22, SF_HEIGHT_VH = 1.18, SF_EDGE_FADE = 110
+
+const BAYER8 = new Uint8Array([
+  0, 32, 8, 40, 2, 34, 10, 42,
+  48, 16, 56, 24, 50, 18, 58, 26,
+  12, 44, 4, 36, 14, 46, 6, 38,
+  60, 28, 52, 20, 62, 30, 54, 22,
+  3, 35, 11, 43, 1, 33, 9, 41,
+  51, 19, 59, 27, 49, 17, 57, 25,
+  15, 47, 7, 39, 13, 45, 5, 37,
+  63, 31, 55, 23, 61, 29, 53, 21
+])
+const BAYER_THR = new Float32Array(64)
+for (let i = 0; i < 64; i += 1) BAYER_THR[i] = (BAYER8[i] + 0.5) / 64
+
+/* ── 参数（与面板双向绑定） ── */
+const cfg = {
+  mode: 'off', size: 420, density: 0.14, cell: 16, cellL: 3,
+  opacity: 0.55, ramp: 'none', theme: 'light', anchor: 'bl'
+}
+
+const smoothstep = (a, b, x) => {
+  const t = Math.min(1, Math.max(0, (x - a) / (b - a)))
+  return t * t * (3 - 2 * t)
+}
+const easeInOutSine = (t) => -(Math.cos(Math.PI * t) - 1) / 2
+const mulberry = (seed) => () => {
+  seed |= 0; seed = (seed + 0x6d2b79f5) | 0
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+}
+
+/* ── 星图层状态 ── */
+const host = document.getElementById('starsLayer')
+const canvas = document.getElementById('starsCanvas')
+const logoHost = document.getElementById('logoLayer')
+const logoCanvas = document.getElementById('logoCanvas')
+const sfFade = document.getElementById('sfFade')
+
+let ctx = null, imageData = null, intensity = null, mask = null, field = null
+let stars = [], tile = null, cover = null
+let ow = 0, oh = 0, scale = SCALE, layerScale = SCALE
+let rafId = 0, lastFrame = 0, progress = 0
+
+/* ── 图标：把 SVG 路径按目标矩形栅格化成覆盖率场 ──
+ * 关键：覆盖率是 0/1 的二值形状（不像星点是平滑亮度场），
+ * 所以阈值化之后「内部」是恒定覆盖率 × 浓度 = 一张平铺网点，不是灰度图。
+ * ramp 就是给这层平铺补一个缓变，让它有明暗层次。 */
+const ANCHORS = {
+  bl: [0.15, 0.74], br: [0.85, 0.74], tl: [0.14, 0.20], tr: [0.86, 0.20], cc: [0.5, 0.44]
+}
+const anchorAt = (w, h) => {
+  const p = cfg.mode === 'center' ? ANCHORS.cc : (ANCHORS[cfg.anchor] || ANCHORS.bl)
+  return { cx: w * p[0], cy: h * p[1] }
+}
+
+const rampAt = (u, v) => {
+  if (cfg.ramp === 'down') return 1 - 0.88 * v
+  if (cfg.ramp === 'up') return 1 - 0.88 * (1 - v)
+  if (cfg.ramp === 'diag') return 1 - 0.88 * Math.min(1, Math.max(0, (u + v) / 2))
+  return 1
+}
+
+/** 在 w×h 的离屏网格上，把图标画到 anchor、缩放到 size，返回覆盖率（已乘 ramp） */
+const buildCover = (w, h, size) => {
+  const cv = document.createElement('canvas')
+  cv.width = w; cv.height = h
+  const c = cv.getContext('2d', { willReadFrequently: true })
+  const { cx, cy } = anchorAt(w, h)
+  const x0 = cx - size / 2, y0 = cy - size / 2
+  const s = size / LOGO_VB[2]
+  c.fillStyle = '#000'
+  c.save(); c.translate(x0, y0); c.scale(s, s)
+  for (const p of LOGO_PATHS) c.fill(p, 'evenodd')
+  c.restore()
+  const src = c.getImageData(0, 0, w, h).data
+  const out = new Float32Array(w * h)
+  for (let y = 0; y < h; y += 1) {
+    const v = (y + 0.5 - y0) / size
+    for (let x = 0; x < w; x += 1) {
+      const i = y * w + x
+      const a = src[(i << 2) + 3]
+      if (!a) continue
+      out[i] = (a / 255) * rampAt((x + 0.5 - x0) / size, v)
+    }
+  }
+  return out
+}
+
+/** 星点聚簇用的等距小图（192²），只用来做「落在图标内的概率」查询 */
+const buildTile = () => {
+  const N = 192
+  const cv = document.createElement('canvas')
+  cv.width = N; cv.height = N
+  const c = cv.getContext('2d', { willReadFrequently: true })
+  const s = N / LOGO_VB[2]
+  c.fillStyle = '#000'; c.scale(s, s)
+  for (const p of LOGO_PATHS) c.fill(p, 'evenodd')
+  const src = c.getImageData(0, 0, N, N).data
+  const out = new Float32Array(N * N)
+  let sum = 0
+  for (let y = 0; y < N; y += 1) for (let x = 0; x < N; x += 1) {
+    const v = (src[((y * N + x) << 2) + 3] / 255) * rampAt((x + 0.5) / N, (y + 0.5) / N)
+    out[y * N + x] = v
+    sum += v
+  }
+  /* mean = 图标实际占外接正方形的比例，聚簇时用它把总星数补回来 */
+  return { data: out, n: N, mean: sum / (N * N) }
+}
+
+const tileAt = (x, y) => {
+  if (!tile) return 0
+  const { cx, cy } = anchorAt(ow, oh)
+  const u = (x - (cx - cfg.size * scale / 2)) / (cfg.size * scale)
+  const v = (y - (cy - cfg.size * scale / 2)) / (cfg.size * scale)
+  if (u < 0 || u > 1 || v < 0 || v > 1) return 0
+  const n = tile.n
+  return tile.data[Math.min(n - 1, (v * n) | 0) * n + Math.min(n - 1, (u * n) | 0)]
+}
+
+/* ── 与站点同款的掩膜 / 密度场 / 星点 ── */
+const buildMask = (w, h) => {
+  const m = new Float32Array(w * h)
+  for (let y = 0; y < h; y += 1) {
+    const v = (y + 0.5) / h
+    const vFade = smoothstep(0, 0.12, v) * smoothstep(0, 0.16, 1 - v)
+    const dv = (v - 0.36) / 0.3
+    for (let x = 0; x < w; x += 1) {
+      const u = (x + 0.5) / w
+      const du = (u - 0.5) / 0.42
+      m[y * w + x] = vFade * smoothstep(0, 0.06, u) * smoothstep(0, 0.06, 1 - u)
+        * (1 - 0.5 * Math.exp(-(du * du + dv * dv)))
+    }
+  }
+  return m
+}
+
+const buildField = (w, h) => {
+  const amp = cfg.theme === 'dark' ? 0 : VIGNETTE_LIGHT
+  const f = new Float32Array(w * h)
+  if (!amp) return f
+  const cx = w * 0.5, cy = h * 0.46, rx = w * 0.5, ry = h * 0.5
+  for (let y = 0; y < h; y += 1) {
+    const ny = (y + 0.5 - cy) / ry
+    for (let x = 0; x < w; x += 1) {
+      const nx = (x + 0.5 - cx) / rx
+      f[y * w + x] = smoothstep(0.62, 1.3, Math.sqrt(nx * nx + ny * ny)) * amp
+    }
+  }
+  return f
+}
+
+const makeStars = (w, h, cssW, cssH) => {
+  const base = Math.round(Math.min(MAX_STARS, Math.max(MIN_STARS, cssW * cssH * STAR_PER_PX)))
+  const rnd = mulberry(20260918)
+  const list = []
+  const G = cfg.mode === 'cluster' ? 40 : 0
+  /*
+   * 聚簇模式：总星数要跟着涨，否则「把星点搬进图标」= 掏空其余区域。
+   * 目标总数 = base × (1 + G×A)，A 是图标占整个星空层的面积比 ——
+   * 这样轮廓外的密度与现状完全一致，图标里则是 (1+G) 倍。
+   */
+  let target = base
+  if (G) {
+    const iconPx = cfg.size * scale
+    const A = Math.min(1, (iconPx * iconPx * (tile.mean || 0.6)) / (w * h))
+    target = Math.min(1800, Math.round(base * (1 + G * A)))
+  }
+  let guard = 0
+  while (list.length < target && guard < target * 60) {
+    guard += 1
+    const x = rnd() * w, y = rnd() * h
+    const c = G ? tileAt(x, y) : 0
+    if (G && rnd() > (1 + G * c) / (1 + G)) continue
+    const depth = rnd(), bright = rnd() < 0.12
+    const near = 0.55 + depth * 0.75
+    list.push({
+      x, y,
+      r: (bright ? 2.6 + rnd() * 2.2 : 0.9 + rnd() * 0.9) * near,
+      gain: (bright ? 1.2 + rnd() * 0.5 : 0.8 + rnd() * 0.5) * near,
+      base: 0.35 + rnd() * 0.65,
+      depth, phase: rnd() * Math.PI * 2, speed: 0.5 + rnd() * 1.6
+    })
+  }
+  return list
+}
+
+const paintInk = () => {
+  if (!imageData) return
+  const ink = INK[cfg.theme]
+  const d = imageData.data
+  for (let i = 0; i < d.length; i += 4) { d[i] = ink[0]; d[i + 1] = ink[1]; d[i + 2] = ink[2] }
+}
+
+/* ── 星图层：重建（参数 / 尺寸变化时） ── */
+const build = () => {
+  const cssW = host.clientWidth, cssH = host.clientHeight
+  if (!cssW || !cssH) return
+  scale = Math.min(DITHER_DIM / cfg.cell, MAX_OFF_W / cssW)
+  ow = Math.max(1, Math.round(cssW * scale))
+  oh = Math.max(1, Math.round(cssH * scale))
+
+  canvas.width = ow; canvas.height = oh
+  ctx = canvas.getContext('2d', { alpha: true })
+  ctx.imageSmoothingEnabled = false
+  imageData = ctx.createImageData(ow, oh)
+  intensity = new Float32Array(ow * oh)
+  mask = buildMask(ow, oh)
+  field = buildField(ow, oh)
+
+  if (cfg.mode === 'cluster') { tile = buildTile(); cover = null }
+  else if (cfg.mode === 'center' || cfg.mode === 'side' || cfg.mode === 'knockout') {
+    tile = null
+    cover = buildCover(ow, oh, cfg.size * scale)
+  } else { tile = null; cover = null }
+
+  stars = makeStars(ow, oh, cssW, cssH)
+  paintInk()
+  render()
+}
+
+/* ── 星图层：逐帧 ── */
+const render = () => {
+  if (!ctx || !imageData) return
+  const t = performance.now() / 1000
+  intensity.fill(0)
+  const parallax = progress * (PARALLAX_VH / 100) * oh
+
+  for (let s = 0; s < stars.length; s += 1) {
+    const st = stars[s]
+    const wave = 0.5 + 0.5 * Math.sin(t * st.speed + st.phase)
+    const amp = st.gain * st.base * (0.4 + 0.6 * wave)
+    const r2 = st.r * st.r
+    const sy = (((st.y + (st.depth - 0.5) * parallax) % oh) + oh) % oh
+    const x0 = Math.max(0, Math.floor(st.x - st.r)), x1 = Math.min(ow - 1, Math.ceil(st.x + st.r))
+    const y0 = Math.max(0, Math.floor(sy - st.r)), y1 = Math.min(oh - 1, Math.ceil(sy + st.r))
+    for (let y = y0; y <= y1; y += 1) {
+      const dy = y + 0.5 - sy, dy2 = dy * dy, row = y * ow
+      for (let x = x0; x <= x1; x += 1) {
+        const dx = x + 0.5 - st.x, d2 = dx * dx + dy2
+        if (d2 >= r2) continue
+        const f = 1 - d2 / r2
+        intensity[row + x] += amp * f * f
+      }
+    }
+  }
+
+  const data = imageData.data
+  const alpha = Math.round(255 * INK_ALPHA[cfg.theme])
+  const add = (cfg.mode === 'center' || cfg.mode === 'side') ? cfg.density : 0
+  const cut = cfg.mode === 'knockout' ? Math.min(1, cfg.density * 2.6) : 0
+  let i = 0
+  for (let y = 0; y < oh; y += 1) {
+    const by = (y & 7) << 3
+    for (let x = 0; x < ow; x += 1, i += 1) {
+      let v = intensity[i] * mask[i] + field[i]
+      if (add && cover) v += cover[i] * add
+      if (cut && cover) v *= 1 - cover[i] * cut
+      data[(i << 2) + 3] = v > BAYER_THR[by | (x & 7)] ? alpha : 0
+    }
+  }
+  ctx.putImageData(imageData, 0, 0)
+}
+
+const loop = (ts) => {
+  rafId = requestAnimationFrame(loop)
+  if (ts - lastFrame < 1000 / FPS - 1) return
+  lastFrame = ts
+  render()
+}
+
+/* ── 独立细网点层：静态，一次性渲染（不进逐帧循环） ── */
+const renderLogoLayer = () => {
+  if (cfg.mode !== 'layer') { logoHost.hidden = true; return }
+  logoHost.hidden = false
+  const cssW = logoHost.clientWidth, cssH = logoHost.clientHeight
+  if (!cssW || !cssH) return
+  const MAX_OFF_W_L = 2600
+  const s = Math.min(DITHER_DIM / cfg.cellL, MAX_OFF_W_L / cssW)
+  layerScale = s
+  const w = Math.max(1, Math.round(cssW * s)), h = Math.max(1, Math.round(cssH * s))
+  logoCanvas.width = w; logoCanvas.height = h
+  const c = logoCanvas.getContext('2d', { alpha: true })
+  c.imageSmoothingEnabled = false
+  const img = c.createImageData(w, h)
+  const cov = buildCover(w, h, cfg.size * s)
+
+  const ink = INK[cfg.theme]
+  const d = img.data
+  for (let i = 0; i < d.length; i += 4) { d[i] = ink[0]; d[i + 1] = ink[1]; d[i + 2] = ink[2] }
+  const alpha = Math.round(255 * cfg.opacity)
+  const tone = cfg.density
+  for (let y = 0; y < h; y += 1) {
+    const by = (y & 7) << 3
+    for (let x = 0; x < w; x += 1) {
+      const i = y * w + x
+      d[(i << 2) + 3] = cov[i] * tone > BAYER_THR[by | (x & 7)] ? alpha : 0
+    }
+  }
+  c.putImageData(img, 0, 0)
+}
+
+/* ── 滚动编排（与站点同构：0→0.5 漂到中心，0.5→1 原地淡出，同时按 Hero 底边裁切） ── */
+const updateProgress = () => {
+  const hero = document.getElementById('hero')
+  const vh = window.innerHeight || 1
+  const rect = hero.getBoundingClientRect()
+  const total = Math.max(1, hero.offsetHeight)
+  progress = Math.min(1, Math.max(0, -rect.top / total))
+
+  const p = progress
+  let y, dim
+  if (p <= CENTER_AT) {
+    const t = easeInOutSine(p / CENTER_AT)
+    y = Y_START * (1 - t); dim = 0
+  } else {
+    y = 0; dim = easeInOutSine((p - CENTER_AT) / (1 - CENTER_AT))
+  }
+  const limit = Math.min(vh, Math.max(0, rect.bottom))
+  const cut = Math.max(0, (y / 100) * vh + SF_HEIGHT_VH * vh - limit)
+  const fade = Math.min(cut, SF_EDGE_FADE)
+  for (const el of [host, logoHost]) {
+    el.style.setProperty('--y', y.toFixed(2) + 'vh')
+    el.style.setProperty('--dim', dim.toFixed(4))
+    el.style.setProperty('--cut', cut.toFixed(1) + 'px')
+    el.style.setProperty('--fade', fade.toFixed(1) + 'px')
+  }
+}
+
+/* ── 面板 ── */
+const $ = (id) => document.getElementById(id)
+const MODE_NOTE = {
+  off: '当前站点状态：只有星点。',
+  center: '⚠ 已知会出问题的那一版：图标正压在大标题后面，阈值化会把它的轮廓变成一圈看得见的网点边界，正文可读性直接掉。',
+  side: '图标作为额外亮度叠加进星空层，共用同一张 16px 网屏 —— 点粗，图标必须够大才认得出。',
+  layer: '图标单独一层、自己的细网屏（2–8px），且是静态的：不进逐帧循环，分辨率也不必和星空将就。',
+  knockout: '不加墨，只在图标轮廓里让星点让位 —— 图标是一片「干净的空洞」，轮廓靠星点的缺席来交代。',
+  cluster: '星点按图标轮廓加权分布：图标由更密的星云自己长出来。注意视差会把这簇星拖散。'
+}
+const applyMode = () => { logoHost.hidden = cfg.mode !== 'layer' }
+
+const updateReadout = () => {
+  const read = $('read')
+  const cellPx = DITHER_DIM / scale
+  const cellLPx = DITHER_DIM / layerScale
+  read.innerHTML = [
+    `星空层离屏：<b>${ow}×${oh}</b>，网屏 <b>${cellPx.toFixed(1)}px</b>`
+      + (cellPx > cfg.cell + 0.05 ? '（已触 960px 上限，实际比设定更粗）' : ''),
+    `图标 <b>${cfg.size}px</b> ≈ 横跨 <b>${(cfg.size / cellPx).toFixed(1)}</b> 个网点`,
+    cfg.mode === 'layer'
+      ? `独立层离屏：<b>${logoCanvas.width}×${logoCanvas.height}</b>，网屏 <b>${cellLPx.toFixed(1)}px</b>`
+      : '',
+    cfg.mode === 'cluster' ? `本帧星点：<b>${stars.length}</b>` : ''
+  ].filter(Boolean).join('<br>')
+  $('warn').textContent = MODE_NOTE[cfg.mode]
+}
+
+const syncLabels = () => {
+  $('sizeV').textContent = cfg.size
+  $('densityV').textContent = cfg.density.toFixed(2).replace('0.', '.')
+  $('cellV').textContent = cfg.cell + 'px'
+  $('cellLV').textContent = cfg.cellL + 'px'
+  $('opacityV').textContent = cfg.opacity.toFixed(2).replace('0.', '.')
+}
+
+const refresh = () => {
+  syncLabels(); applyMode(); build(); renderLogoLayer(); updateReadout(); updateProgress()
+}
+
+$('mode').addEventListener('change', (e) => { cfg.mode = e.target.value; refresh() })
+$('anchor').addEventListener('change', (e) => { cfg.anchor = e.target.value; refresh() })
+$('ramp').addEventListener('change', (e) => { cfg.ramp = e.target.value; refresh() })
+$('theme').addEventListener('change', (e) => {
+  cfg.theme = e.target.value
+  document.documentElement.dataset.theme = cfg.theme
+  paintInk(); build(); renderLogoLayer(); updateReadout()
+})
+$('size').addEventListener('input', (e) => {
+  cfg.size = +e.target.value; syncLabels(); build(); renderLogoLayer(); updateReadout()
+})
+$('density').addEventListener('input', (e) => {
+  cfg.density = +e.target.value / 100; syncLabels(); render(); renderLogoLayer()
+})
+$('cell').addEventListener('input', (e) => { cfg.cell = +e.target.value; refresh() })
+$('cellL').addEventListener('input', (e) => {
+  cfg.cellL = +e.target.value; syncLabels(); renderLogoLayer(); updateReadout()
+})
+$('opacity').addEventListener('input', (e) => {
+  cfg.opacity = +e.target.value / 100; syncLabels(); renderLogoLayer()
+})
+
+window.addEventListener('scroll', updateProgress, { passive: true })
+let rzTimer = 0
+window.addEventListener('resize', () => {
+  clearTimeout(rzTimer)
+  rzTimer = setTimeout(() => { build(); renderLogoLayer(); updateProgress() }, 150)
+})
+
+/* 启动 */
+let bootTimer = 0
+const boot = () => {
+  if (!host.clientWidth) { bootTimer = setTimeout(boot, 60); return }
+  /* 跟随系统配色（也是无头截图切深浅色的入口）；面板里的下拉仍可手动覆盖 */
+  if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+    cfg.theme = 'dark'
+    $('theme').value = 'dark'
+    document.documentElement.dataset.theme = 'dark'
+  }
+  refresh()
+  rafId = requestAnimationFrame(loop)
+}
+boot()
+window.addEventListener('beforeunload', () => cancelAnimationFrame(rafId))
+</script>
+</body>
+</html>

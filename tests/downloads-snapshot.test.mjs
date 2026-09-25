@@ -2,8 +2,8 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 
-test('website downloads snapshot exists and is valid JSON', async () => {
-  const raw = await readFile(new URL('../src/data/downloads.json', import.meta.url), 'utf8')
+test('docs downloads snapshot exists and is valid JSON', async () => {
+  const raw = await readFile(new URL('../docs/.vitepress/data/downloads.json', import.meta.url), 'utf8')
   const data = JSON.parse(raw)
 
   assert.equal(typeof data.version, 'string')

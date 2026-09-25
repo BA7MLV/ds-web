@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>「使用流程」抖动图案 · 对照预览</title>
+<style>
+  /* 取站点里那两套真实值：--lp-tile 亮 #f5f5f7 / 暗 #26262a */
+  :root { --tile:#f5f5f7; --bg:#fff; --fg:#1d1d1f; --dim:#6e6e73; --line:rgba(0,0,0,.1); --invert:0 }
+  .dark { --tile:#26262a; --bg:#1b1b1f; --fg:#f5f5f7; --dim:#a1a1a6; --line:rgba(255,255,255,.14); --invert:1 }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);
+    font:400 14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}
+  .sec{padding:20px 24px}
+  .row{display:flex;gap:12px;align-items:flex-start}
+  .cell{min-width:0}
+  .cap{font-size:12px;color:var(--dim);margin:0 0 8px}
+  /* 与 .pair__card 同款：卡面 --lp-tile + 28px 圆角 + overflow:hidden */
+  .card{position:relative;border-radius:28px;background:var(--tile);overflow:hidden;
+    padding:28px;min-height:440px}
+  .card h3{margin:8px 0 0;font-size:1.9rem;font-weight:600;line-height:1.15;letter-spacing:-.028em}
+  .card p{margin:0;font-size:13px;font-weight:600}
+  /* 与 .pair__shot 同款定位：右 -6% / 下 -8%，宽 78% */
+  .shot{position:absolute;right:-6%;bottom:-8%;width:78%;height:auto;
+    filter:invert(var(--invert));display:block}
+  .flat{display:block;background:var(--tile);border-radius:8px;filter:invert(var(--invert))}
+  hr{border:0;border-top:1px solid var(--line);margin:0}
+</style>
+</head>
+<body>
+
+<section class="sec">
+  <p class="cap" id="mode">亮色 · 卡内实宽（左 356px 窄卡 / 右 712px 宽卡）</p>
+  <div class="row">
+    <div class="cell">
+      <div class="card" style="width:356px">
+        <p>想明白</p><h3>围绕你的材料对话。</h3>
+        <img class="shot" src="../../docs/public/flow-think-dither.svg" alt="" />
+      </div>
+    </div>
+    <div class="cell">
+      <div class="card" style="width:712px">
+        <p>记得住</p><h3>变成能复习的东西。</h3>
+        <img class="shot" src="../../docs/public/flow-review-dither.svg" alt="" />
+      </div>
+    </div>
+  </div>
+</section>
+<hr />
+
+<section class="sec">
+  <p class="cap">图案本体 1:1（左 280×176 / 右 544×340）</p>
+  <div class="row">
+    <div class="cell">
+      <img class="flat" src="../../docs/public/flow-think-dither.svg" width="280" height="176" alt="" />
+    </div>
+    <div class="cell">
+      <img class="flat" src="../../docs/public/flow-review-dither.svg" width="544" height="340" alt="" />
+    </div>
+  </div>
+</section>
+
+<script>
+  /* 跟随系统配色，方便一张截图里对比；也可用 ?theme=dark 强制 */
+  const q = new URLSearchParams(location.search).get('theme')
+  const dark = q ? q === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
+  if (dark) document.documentElement.classList.add('dark')
+  document.getElementById('mode').textContent =
+    (dark ? '深色' : '亮色') + ' · 卡内实宽（左 356px 窄卡 / 右 712px 宽卡）'
+</script>
+</body>
+</html>

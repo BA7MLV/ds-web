@@ -1,45 +1,42 @@
 import js from '@eslint/js'
 import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'docs/.vitepress/cache', 'docs/.vitepress/dist', 'docs/.vitepress/theme']),
+  globalIgnores([
+    'dist',
+    '.worktrees',
+    '.claude',
+    'Claude',
+    'docs/.vitepress/cache',
+    'docs/.vitepress/dist',
+    // VitePress 每次构建都会重建的临时产物；不排除的话一次本地 build 就能刷出上万条 lint 报错
+    'docs/.vitepress/.temp',
+    'docs/.vitepress/theme',
+    // 首页演示的同源镜像，是另一个工程的构建产物，不参与本站 lint
+    'docs/public/demo',
+  ]),
   {
-    files: ['**/*.{js,jsx}'],
-    extends: [
-      js.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-    ],
+    files: ['**/*.{js,mjs}'],
+    extends: [js.configs.recommended],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-      parserOptions: {
-        ecmaVersion: 'latest',
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module',
-      },
+      ecmaVersion: 'latest',
+      sourceType: 'module',
     },
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-      'react-refresh/only-export-components': 'off',
     },
   },
   {
-    files: ['vite.config.js', 'verify-dark-mode.js', 'scripts/**/*.{js,mjs}'],
+    files: ['scripts/**/*.{js,mjs}', 'docs/.vitepress/config.js'],
     languageOptions: {
       globals: globals.node,
     },
   },
   {
-    files: ['tests/**/*.{js,jsx}'],
+    files: ['tests/**/*.{js,mjs}'],
     languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.jest,
-      },
+      globals: globals.node,
     },
   },
 ])

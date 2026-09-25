@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./vendor-katex-DSydD-fn.css"])))=>i.map(i=>d[i]);
+import{_ as n}from"./vite-runtime-B5U0W3t5.js";const a=new Set;async function l(e,o){if(!a.has(e))try{await o(),a.add(e)}catch(r){console.warn(`[lazyStyles] Failed to load style "${e}":`,r)}}function s(e){return a.has(e)}let t=null;function i(){return t||(t=l("katex",()=>n(()=>import("./vendor-katex-Dd7obiW1.js").then(e=>e.c),__vite__mapDeps([0]),import.meta.url)),t)}function c(){s("katex")||i()}export{c as e};

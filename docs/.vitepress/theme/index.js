@@ -2,6 +2,7 @@ import { useData, useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { nextTick, onMounted, onUnmounted, watch } from 'vue'
 import Layout from './Layout.vue'
+import HomePage from './components/HomePage.vue'
 import './custom.css'
 
 let mediumZoomLoader
@@ -17,15 +18,23 @@ const loadMediumZoom = async () => {
 export default {
   extends: DefaultTheme,
   Layout,
+  enhanceApp({ app }) {
+    app.component('HomePage', HomePage)
+  },
   setup() {
     const route = useRoute()
-    const { isDark } = useData()
+    const { isDark, frontmatter } = useData()
     let zoomInstance = null
 
+    /**
+     * 落地页不显示 VitePress 自带搜索入口（SiteNav 在落地页也不给搜索图标）。
+     * 判据用 frontmatter.layout 而不是 route.path === '/'：
+     * 否则 /en/ 这个同样是落地页的路由会被漏掉，搜索图标会在英文首页冒出来。
+     */
     const hideSearchOnHome = () => {
       if (typeof document === 'undefined') return
       const root = document.documentElement
-      root.classList.toggle('home-no-search', route.path === '/')
+      root.classList.toggle('home-no-search', frontmatter.value?.layout === 'home')
     }
 
     // 初始化图片缩放功能

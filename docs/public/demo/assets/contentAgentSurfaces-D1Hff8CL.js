@@ -1,0 +1,1 @@
+const n=new Map;function f(t,e){return`${t}:${e}`}function c(t,e,u){const r=f(t,e);return n.set(r,u),()=>{n.get(r)===u&&n.delete(r)}}function g(t,e){return e?n.get(f(t,e))??null:null}export{g,c as r};

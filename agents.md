@@ -22,18 +22,32 @@
 # Repository Guidelines
 
 ## 项目结构与模块组织
-- `docs/`: 文档根目录（Markdown 内容）。
+- 本站为纯 VitePress 站点（React 官网已移除），部署在根路径 `/`（`base: '/'`）。
+- `docs/`: 站点根目录（Markdown 内容，含首页 `index.md` 与各指南专题页面）。
+  - `docs/en/index.md`: 英文落地页（同样是 `layout: home` + `<HomePage />`）。**英文目前只覆盖落地页**，文档正文只有中文；顶栏与页脚在 `/en/` 下的导航目标仍指向中文文档。
+    - 因此**语言开关只在落地页出现**：`SiteNav.vue` 里两处引用都带 `v-if="isLanding"`。文档页不给开关 —— 否则点「English」会跳到 `/en/` 落地页、把正在读的那页丢掉，像「切了语言但内容没变」。将来文档有英文版时，去掉这两个 `v-if` 即可。
 - `docs/.vitepress/`: 站点配置与主题。
-  - `config.js`: 标题、导航、侧边栏、本地搜索、编辑链接等。
+  - `config.js`: 标题、导航、侧边栏、本地搜索、编辑链接、SEO/GEO（canonical/OG/JSON-LD/sitemap）与 llms.txt 等。
   - `theme/`: 自定义主题（`index.js` 挂载 medium-zoom、暗色偏好；`custom.css` 已引入 Tailwind）。
-- `docs/guide/`: 指南与专题文档。
-- `docs/public/`: 公共静态资源（图片、图标）。
-- 根目录：`tailwind.config.js`、`postcss.config.js`、`package.json`。
+    - `theme/i18n/`: 主题文案的多语言表。`index.js` 提供 `useI18n()`（`t()` 取字符串并支持 `{param}` 插值，`tm()` 取列表），当前语言取自 `useData().lang`；`messages/<lang>.js` 一份语言一个文件。**组件里不要再写 `isEn ? ... : ...` 或硬编码文案**，新增语言只需在 `config.js` 的 `locales` 加一项（带 `lang`）+ 补一份消息表，`tests/i18n-messages.test.mjs` 会校验各语言 key 与列表结构是否对齐。
+  - `data/downloads.json`: 下载页数据，由 `scripts/sync-release-downloads.mjs` 在构建时从 GitHub Releases 同步。
+- `docs/public/`: 公共静态资源（图片、图标、`robots.txt`、`llms.txt`、favicon）。
+  - `demo/`: 首页 hero 实时演示的**同源镜像**（另一个工程的构建产物），由 `scripts/sync-demo.mjs` 同步，勿手改。
+  - `flow-*-dither.svg` / `feature-*-dither.svg`: 首页两组装饰图案，**由生成器产出，勿手改**（见下）。
+- `scripts/`: 构建辅助脚本。
+  - `sync-release-downloads.mjs`、`sync-demo.mjs` + `lib/`：构建期同步数据与演示镜像。
+  - `gen-flow-dither.mjs`、`gen-features-dither.mjs`：把首页的「使用流程」两张卡与功能区四扇窗口屏
+    烘焙成有序抖动 SVG。管线与全部图元在 `lib/dither.mjs`（**改图案只改这两个生成器，再跑一次**）。
+    口径与取舍见 `docs/plans/2026-09-25-flow-dither-scifi-design.md` 与 `2026-09-26-features-dither-design.md`。
+- `tests/`: Node 内置测试（`npm test`，即 `node --test` 自动发现），覆盖下载数据同步、演示镜像逻辑与 i18n 消息表结构校验。
+- 根目录：`package.json`（npm workspaces，命令代理到 `docs` workspace）、`vercel.json`（含 `/docs/*` → `/*` 301 重定向）。
 
 ## 构建、测试与本地开发
-- `npm run dev`: 本地开发，热更新（VitePress）。
-- `npm run build`: 生成静态站点到 `docs/.vitepress/dist`。
+- `npm run dev`: 本地开发，热更新（VitePress，端口 5174）。
+- `npm run build`: 先同步下载数据与演示镜像，再生成静态站点到 `docs/.vitepress/dist`。
+  - 演示镜像按入口指纹增量同步（秒级跳过）；源站不可用时保留现有镜像继续构建，`node scripts/sync-demo.mjs --strict` 可强制失败。
 - `npm run preview`: 预览构建产物以做最终检查。
+- `npm test`: 运行 `tests/` 下的 Node 测试。
 - 建议流程：修改 → `dev` 自查 → `build` 无警告 → `preview` 终检。
 
 ## 编码风格与命名约定

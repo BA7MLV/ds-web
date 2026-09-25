@@ -1,0 +1,1 @@
+import{j as a}from"./vendor-xyflow-BW53V0Mc.js";import{r as s}from"./vendor-i18n-COlme31C.js";import{d as t}from"./DsButton-D8C3CDek.js";const m=s.forwardRef(({className:e,...o},r)=>a.jsx("label",{ref:r,className:t("text-sm font-medium text-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",e),...o}));m.displayName="Label";export{m as L};

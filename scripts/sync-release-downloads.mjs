@@ -7,7 +7,6 @@ import { buildDownloadsData } from './lib/release-downloads.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DOCS_OUTPUT_PATH = resolve(__dirname, '../docs/.vitepress/data/downloads.json')
-const WEBSITE_OUTPUT_PATH = resolve(__dirname, '../src/data/downloads.json')
 const RELEASE_API_URL = 'https://api.github.com/repos/helixnow/deep-student/releases/latest'
 
 async function fileExists(filePath) {
@@ -52,27 +51,16 @@ async function syncReleaseDownloads() {
 
     const data = buildDownloadsData(release)
     await writeDownloadsFile(DOCS_OUTPUT_PATH, data)
-    await writeDownloadsFile(WEBSITE_OUTPUT_PATH, data)
     console.log(`[release-sync] Updated ${DOCS_OUTPUT_PATH} (${data.version})`)
-    console.log(`[release-sync] Updated ${WEBSITE_OUTPUT_PATH} (${data.version})`)
     return
   } catch (error) {
-    const hasDocsCache = await fileExists(DOCS_OUTPUT_PATH)
-    const hasWebsiteCache = await fileExists(WEBSITE_OUTPUT_PATH)
-    const hasCache = hasDocsCache || hasWebsiteCache
+    const hasCache = await fileExists(DOCS_OUTPUT_PATH)
 
     if (hasCache) {
-      const cachePath = hasWebsiteCache ? WEBSITE_OUTPUT_PATH : DOCS_OUTPUT_PATH
-      const cached = JSON.parse(await readFile(cachePath, 'utf-8'))
+      const cached = JSON.parse(await readFile(DOCS_OUTPUT_PATH, 'utf-8'))
       console.warn(`[release-sync] Failed to fetch latest release, using cached data (${cached.version || 'unknown'}).`)
       console.warn(`[release-sync] Reason: ${error.message}`)
-
-      if (hasDocsCache) {
-        await writeDownloadsFile(DOCS_OUTPUT_PATH, cached)
-      }
-      if (hasWebsiteCache) {
-        await writeDownloadsFile(WEBSITE_OUTPUT_PATH, cached)
-      }
+      await writeDownloadsFile(DOCS_OUTPUT_PATH, cached)
       return
     }
 
@@ -83,7 +71,6 @@ async function syncReleaseDownloads() {
     })
 
     await writeDownloadsFile(DOCS_OUTPUT_PATH, fallbackData)
-    await writeDownloadsFile(WEBSITE_OUTPUT_PATH, fallbackData)
     console.warn('[release-sync] Failed to fetch latest release and no cache found. Wrote fallback data.')
     console.warn(`[release-sync] Reason: ${error.message}`)
   }

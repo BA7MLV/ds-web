@@ -25,24 +25,13 @@ DeepStudent 是一款基于 **Tauri 2.0** 构建的 **AI 原生、本地优先**
 
 ---
 
-本仓库为 DeepStudent 的官网与文档站（`ds-web`），包含：
-
-- 官网：React + Vite（根目录）
-- 文档：VitePress（`docs/`）
+本仓库为 DeepStudent 的官网与文档站（`ds-web`），由 VitePress 构建（`docs/` 目录），部署在根路径 `/`。
 
 ## 本地开发
 
 ```bash
 npm i
-
-# 官网
 npm run dev
-
-# 文档
-npm run dev:docs
-
-# 官网 + 文档同时启动
-npm run dev:all
 ```
 
 ## 构建

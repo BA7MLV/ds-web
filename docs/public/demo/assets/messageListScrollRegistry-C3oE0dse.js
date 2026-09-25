@@ -1,0 +1,1 @@
+const t=new Map;function n(e,l){return t.set(e,l),()=>{t.get(e)===l&&t.delete(e)}}function r(e){return t.get(e)??null}export{r as getChatMessageListScrollHandle,n as registerChatMessageListScrollHandle};
