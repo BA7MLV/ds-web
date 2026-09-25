@@ -137,7 +137,12 @@ const stepScene = (delta) => {
 /* ── 隐私与数据：发丝线堆叠 ── */
 const privacy = computed(() => tm('home.privacy.items'))
 
-/* 用户评价：真实素材补齐后替换 i18n 里的占位文案 */
+/*
+ * 用户评价：真实素材还没补齐，先整块隐藏 —— 把 SHOW_VOICES 改回 true 即可恢复。
+ * i18n 里的占位条目故意留着：各语言的 key 必须严格对齐（tests/i18n-messages.test.mjs），
+ * 删掉就得连改两份消息表，素材到位时还要照原样写回来，不如只关渲染。
+ */
+const SHOW_VOICES = false
 const quotes = computed(() => tm('home.voices.items'))
 
 /* ── 常见问题（原文摘自 docs/A-Q.md） ── */
@@ -335,8 +340,8 @@ onMounted(() => {
       </div>
     </section>
 
-    <!-- ⑤ 用户评价：居中标题 + 2×2 发丝线网格（当前为占位素材，暂不进顶栏导航） -->
-    <section id="voices" class="lp-block">
+    <!-- ⑤ 用户评价：素材补齐前整块隐藏，开关见脚本里的 SHOW_VOICES -->
+    <section v-if="SHOW_VOICES" id="voices" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
           <h2 class="lp-title">{{ t('home.voices.title') }}</h2>
