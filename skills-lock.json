@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "huashu-flash": {
+      "source": "alchaincyf/huashu-flash",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "d9f3c51e51967c799d908eff18f30db079adf4502c493f4eccf12c4fe99e2053"
+    }
+  }
+}
