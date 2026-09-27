@@ -1,0 +1,10 @@
+{
+ "homepage-desktop::ready_p75": 1750.1,
+ "homepage-mobile::ready_p75": 1583.3,
+ "lcp-desktop::lcp_p75": 1820,
+ "lcp-mobile::lcp_p75": 1611,
+ "demo-mobile::demo_p75": 32091.4,
+ "requests-mobile::requests_p75": 219,
+ "bytes-mobile::bytes_p75": 3938906,
+ "blockingLongTasks-mobile::blockingLongTasks_p75": 469.8
+}

@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-09-27T04:42:04.610Z",
+  "dist": "/Users/ba7mlv/Documents/Coding/ds-web/docs/.vitepress/dist",
+  "site": "https://deepstudent.cn/",
+  "passed": true,
+  "counts": {
+    "htmlPages": 25,
+    "indexablePages": 24,
+    "sitemapUrls": 24,
+    "internalLinks": 1248,
+    "machineFiles": 24
+  },
+  "homepage": {
+    "scope": "Homepage head declarations only; icons excluded; dynamic imports, iframe and CSS imports are not included.",
+    "initialLocalResourceCount": 6,
+    "initialJavaScriptCount": 4,
+    "rawBytes": 417502,
+    "gzipBytes": 120684,
+    "brotliBytes": 104836,
+    "largestInitialResources": [
+      {
+        "url": "https://deepstudent.cn/assets/chunks/framework.DW1Qwr0A.js",
+        "kind": "modulepreload",
+        "critical": true,
+        "local": true,
+        "rawBytes": 108717,
+        "gzipBytes": 42984,
+        "brotliBytes": 38652
+      },
+      {
+        "url": "https://deepstudent.cn/assets/chunks/theme.DJhgrFaZ.js",
+        "kind": "modulepreload",
+        "critical": true,
+        "local": true,
+        "rawBytes": 123022,
+        "gzipBytes": 41948,
+        "brotliBytes": 35835
+      },
+      {
+        "url": "https://deepstudent.cn/assets/style.DYPs82l1.css",
+        "kind": "stylesheet",
+        "critical": true,
+        "local": true,
+        "rawBytes": 179116,
+        "gzipBytes": 33173,
+        "brotliBytes": 28190
+      },
+      {
+        "url": "https://deepstudent.cn/assets/index.md.DtcsSvYb.lean.js",
+        "kind": "modulepreload",
+        "critical": true,
+        "local": true,
+        "rawBytes": 4395,
+        "gzipBytes": 1316,
+        "brotliBytes": 1037
+      },
+      {
+        "url": "https://deepstudent.cn/assets/app.Bms2TZeC.js",
+        "kind": "script",
+        "critical": true,
+        "local": true,
+        "rawBytes": 1352,
+        "gzipBytes": 733,
+        "brotliBytes": 648
+      },
+      {
+        "url": "https://deepstudent.cn/vp-icons.css",
+        "kind": "stylesheet",
+        "critical": true,
+        "local": true,
+        "rawBytes": 900,
+        "gzipBytes": 530,
+        "brotliBytes": 474
+      }
+    ],
+    "nonCriticalHeadResources": [
+      {
+        "url": "https://deepstudent.cn/favicon.ico",
+        "kind": "icon",
+        "critical": false,
+        "local": true,
+        "rawBytes": 2099,
+        "gzipBytes": 2122,
+        "brotliBytes": 2103
+      },
+      {
+        "url": "https://deepstudent.cn/apple-touch-icon.png?v=20260212-2",
+        "kind": "icon",
+        "critical": false,
+        "local": true,
+        "rawBytes": 3260,
+        "gzipBytes": 3276,
+        "brotliBytes": 3264
+      }
+    ],
+    "externalHeadResources": [],
+    "missingLocalResources": []
+  },
+  "errors": [],
+  "warnings": []
+}

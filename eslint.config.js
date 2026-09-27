@@ -12,6 +12,7 @@ export default defineConfig([
     'docs/.vitepress/dist',
     // VitePress 每次构建都会重建的临时产物；不排除的话一次本地 build 就能刷出上万条 lint 报错
     'docs/.vitepress/.temp',
+    'docs/.vitepress/config.js.timestamp-*.mjs',
     'docs/.vitepress/theme',
     // 首页演示的同源镜像，是另一个工程的构建产物，不参与本站 lint
     'docs/public/demo',
@@ -28,7 +29,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['scripts/**/*.{js,mjs}', 'docs/.vitepress/config.js'],
+    files: ['scripts/**/*.{js,mjs}', 'docs/.vitepress/*.{js,mjs}', 'plans/dither-logo/build.mjs'],
     languageOptions: {
       globals: globals.node,
     },

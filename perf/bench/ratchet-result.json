@@ -1,0 +1,214 @@
+{
+  "generatedAt": "2026-09-27T04:11:44.474Z",
+  "source": "perf/bench/benchmark-final.json",
+  "protocol": {
+    "network": {
+      "label": "Explicit mobile profile (not a browser preset)",
+      "offline": false,
+      "latency": 150,
+      "downloadThroughput": 200000,
+      "uploadThroughput": 93750,
+      "connectionType": "cellular4g"
+    },
+    "cpuSlowdown": 4,
+    "compression": "gzip for HTML, JS, CSS, SVG and other compressible resources",
+    "cache": "New browser context per run, service workers blocked, browser disk cache cleared and disabled, static HTTP Cache-Control:no-store. OS DNS/cache and browser process startup are outside the measurement.",
+    "order": "For each device, A/B on even rounds, B/A on odd rounds; runs means samples per variant per device.",
+    "thirdParty": "All requests outside the local production server are aborted deterministically, for both variants. This isolates first-party cost and does not measure real Google Fonts, analytics or remote API latency/success.",
+    "usable": "Actual title, primary and secondary CTA and brand navigation visible, not occluded, stable for 2 frames; both CTA links must pass non-mutating visibility, enabled-state and hit-test checks.",
+    "demo": "After the homepage milestone, scroll the actual demo into view and click the start button when present. The mounted iframe must expose meaningful app text and a hit-testable enabled control, the loading overlay must be gone, and the control must pass non-mutating DOM actionability checks. Placeholder content and ready messages alone never count.",
+    "lcp": "Top-document LCP captured before explicit demo intent and again at end; iframe readiness is reported separately because browser LCP does not represent iframe usability.",
+    "percentiles": "Linear interpolation over finite samples; missing samples are never treated as zero. Valid counts and failed runs must accompany comparisons.",
+    "goal": "Mobile homepage usable p75 at least 50% lower; only judge with 10 successful runs per variant, and examine real demo readiness separately."
+  },
+  "results": {
+    "desktop-baseline": {
+      "url": "desktop/baseline",
+      "summary": {
+        "ready": {
+          "validSamples": 10,
+          "p50": 4518.2,
+          "p75": 4705.8,
+          "p95": 4868.2
+        },
+        "lcp": {
+          "validSamples": 10,
+          "p50": 3342,
+          "p75": 3437,
+          "p95": 3624.2
+        },
+        "demo": {
+          "validSamples": 10,
+          "p50": 20620.1,
+          "p75": 21699.3,
+          "p95": 23280.1
+        },
+        "demoAfterIntent": {
+          "validSamples": 10,
+          "p50": 15707.6,
+          "p75": 16420.4,
+          "p95": 16795.6
+        },
+        "requests": {
+          "validSamples": 10,
+          "p50": 239,
+          "p75": 239,
+          "p95": 246.7
+        },
+        "bytes": {
+          "validSamples": 10,
+          "p50": 3652761,
+          "p75": 3659436.5,
+          "p95": 3733243.3
+        },
+        "blockingLongTasks": {
+          "validSamples": 10,
+          "p50": 1276.5,
+          "p75": 1318.5,
+          "p95": 1481.9
+        }
+      }
+    },
+    "desktop-optimized": {
+      "url": "desktop/optimized",
+      "summary": {
+        "ready": {
+          "validSamples": 10,
+          "p50": 1705.6,
+          "p75": 1750.1,
+          "p95": 1803.5
+        },
+        "lcp": {
+          "validSamples": 10,
+          "p50": 1772,
+          "p75": 1820,
+          "p95": 1877
+        },
+        "demo": {
+          "validSamples": 10,
+          "p50": 17751.6,
+          "p75": 17813.7,
+          "p95": 19795.9
+        },
+        "demoAfterIntent": {
+          "validSamples": 10,
+          "p50": 15379.1,
+          "p75": 15499.6,
+          "p95": 17360
+        },
+        "requests": {
+          "validSamples": 10,
+          "p50": 209.5,
+          "p75": 210,
+          "p95": 215
+        },
+        "bytes": {
+          "validSamples": 10,
+          "p50": 2600130.5,
+          "p75": 2605139.3,
+          "p95": 2666196.8
+        },
+        "blockingLongTasks": {
+          "validSamples": 10,
+          "p50": 505.5,
+          "p75": 570.5,
+          "p95": 583.3
+        }
+      }
+    },
+    "mobile-baseline": {
+      "url": "mobile/baseline",
+      "summary": {
+        "ready": {
+          "validSamples": 10,
+          "p50": 3946.4,
+          "p75": 4496.7,
+          "p95": 5442.3
+        },
+        "lcp": {
+          "validSamples": 10,
+          "p50": 2762,
+          "p75": 2988,
+          "p95": 3999.8
+        },
+        "demo": {
+          "validSamples": 10,
+          "p50": 33722.8,
+          "p75": 35278.3,
+          "p95": 48602.1
+        },
+        "demoAfterIntent": {
+          "validSamples": 10,
+          "p50": 29670.1,
+          "p75": 30759.9,
+          "p95": 42939.1
+        },
+        "requests": {
+          "validSamples": 10,
+          "p50": 248,
+          "p75": 248,
+          "p95": 248.6
+        },
+        "bytes": {
+          "validSamples": 10,
+          "p50": 4992500,
+          "p75": 4992500,
+          "p95": 4992861.4
+        },
+        "blockingLongTasks": {
+          "validSamples": 10,
+          "p50": 550,
+          "p75": 903,
+          "p95": 1026
+        }
+      }
+    },
+    "mobile-optimized": {
+      "url": "mobile/optimized",
+      "summary": {
+        "ready": {
+          "validSamples": 10,
+          "p50": 1525.5,
+          "p75": 1583.3,
+          "p95": 1802.4
+        },
+        "lcp": {
+          "validSamples": 10,
+          "p50": 1538,
+          "p75": 1611,
+          "p95": 1863
+        },
+        "demo": {
+          "validSamples": 10,
+          "p50": 29321.1,
+          "p75": 32091.4,
+          "p95": 33590.7
+        },
+        "demoAfterIntent": {
+          "validSamples": 10,
+          "p50": 27525.6,
+          "p75": 29906.3,
+          "p95": 31422.2
+        },
+        "requests": {
+          "validSamples": 10,
+          "p50": 219,
+          "p75": 219,
+          "p95": 220
+        },
+        "bytes": {
+          "validSamples": 10,
+          "p50": 3938906,
+          "p75": 3938906,
+          "p95": 3939563
+        },
+        "blockingLongTasks": {
+          "validSamples": 10,
+          "p50": 339,
+          "p75": 469.8,
+          "p95": 484.7
+        }
+      }
+    }
+  }
+}
