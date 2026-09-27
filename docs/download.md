@@ -17,6 +17,9 @@ const publishedAt = formatDate(release?.publishedAt)
 
 # 下载
 
+选择适合设备的 DeepStudent 安装包，可从 GitHub Releases 或镜像下载。
+软件免费开源；安装后请按[快速上手](./start.md)配置自己的 AI 模型服务，模型调用费用由所选服务商决定。
+
 <p class="dl-version">
   当前版本 <strong>{{ release.version }}</strong><template v-if="publishedAt"> · 发布于 <strong>{{ publishedAt }}</strong></template>
 </p>

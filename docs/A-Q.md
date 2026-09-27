@@ -4,6 +4,9 @@ description: DeepStudent 常见问题：macOS「已损坏」修复、安装与�
 
 # 常见问题（FAQ）
 
+这里汇总 DeepStudent 的安装、AI 模型配置、资料检索、Anki 制卡和数据隐私问题。
+首次使用请先阅读[快速上手](start.md)；仍无法解决的问题可通过[支持页面](support.md)反馈。
+
 ## 安装与更新
 
 ### macOS 提示「已损坏，无法打开」怎么办？
@@ -82,9 +85,10 @@ OCR 模型（SiliconFlow「一键分配」会自动配好），然后重新导�
 
 ### 数据会上传到云端吗？
 
-不会。DeepStudent 本地优先，资料、笔记、聊天记录默认只保存在本机。
-只有两种情况数据会离开你的设备：① 使用 AI 时，相关内容发送给**你自己配置的**
-模型服务商；② 你主动配置了 WebDAV / S3 云同步。
+DeepStudent 本地优先，资料、笔记和聊天记录默认保存在本机，但这不等于所有功能都离线。
+使用 AI 时，请求所需的内容会发送给**你自己配置的**模型服务商；启用外部搜索或 MCP
+工具时，相关请求也会发送给对应服务。主动配置 WebDAV / S3 云同步后，选定的数据会同步
+到你配置的存储服务。使用前请确认各服务的数据处理方式。
 
 ### 我的数据保存在哪里？
 
@@ -124,4 +128,3 @@ OCR 模型（SiliconFlow「一键分配」会自动配好），然后重新导�
 - 项目仓库：[deep-student](https://github.com/helixnow/deep-student)（Issue / PR）
 - 社区交流：[QQ群（310134919）](https://qm.qq.com/q/1lTUkKSaB6)
 - 改进问卷：[DeepStudent 改进问卷](https://wj.qq.com/s2/25820904/035b/)
-

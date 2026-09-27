@@ -1,5 +1,5 @@
 ---
-description: DeepStudent 是一款免费开源的 AI 学习工作台：资料问答（RAG）、笔记、知识导图、刷题、翻译、作文批改与 Anki 制卡，数据默认保存在本地。
+description: 了解 DeepStudent 的资料问答、笔记、知识导图、刷题和 Anki 制卡能力，以及本地存储、AI 模型服务配置和支持平台等使用前提。
 ---
 
 # 什么是 DeepStudent
@@ -26,7 +26,9 @@ DeepStudent 是一款免费开源的 AI 学习工作台：把资料问答、笔�
 
 - AI 能力依赖你自己配置的模型服务（如 DeepSeek、SiliconFlow、OpenAI 等，共 11 家内置
   模板 + 自定义接口），需要自备 API 密钥。配置方法见 [快速上手](start.md)。
-- 数据本地优先：资料与聊天记录默认只保存在本机，密钥加密存储。
+- 数据本地优先：资料与聊天记录默认保存在本机，密钥加密存储。使用 AI 时，所需内容
+  会发送给你配置的模型服务；主动启用外部搜索、MCP 工具或云同步时，也可能涉及外部服务。
+- 软件免费开源，但模型服务商可能按用量收费，具体以所选服务的计费规则为准。
 - 支持 macOS、Windows、Linux、Android，iOS 需自行构建。
 
 ## 从这里开始
@@ -41,4 +43,3 @@ DeepStudent 是一款免费开源的 AI 学习工作台：把资料问答、笔�
 - 加入我们的社群：[QQ群（310134919）](https://qm.qq.com/q/1lTUkKSaB6)
 - 参与改进调研：[DeepStudent 改进问卷](https://wj.qq.com/s2/25820904/035b/)
 - 开源仓库：[helixnow/deep-student](https://github.com/helixnow/deep-student)（AGPL-3.0）
-

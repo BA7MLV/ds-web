@@ -27,7 +27,7 @@ const items = [
   },
   {
     q: '安装包多大？需要旧版本怎么办？',
-    a: '每个平台的文件名与体积都写在上面各自的下载行里。需要历史版本的话：',
+    a: '每个平台的版本与体积都写在上面各自的下载行里。需要历史版本的话：',
     link: {
       href: 'https://github.com/helixnow/deep-student/releases',
       text: 'GitHub Releases 发布记录'
