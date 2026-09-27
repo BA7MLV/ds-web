@@ -1,0 +1,70 @@
+From 3644eaf4a14eca76a12d4f7581139e78c08aa670 Mon Sep 17 00:00:00 2001
+From: Mirai <BA7MLV@163.com>
+Date: Thu, 9 Jul 2026 18:02:23 +0800
+Subject: [PATCH 8/9] polish: refine prototype horizontal scroll feel
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+---
+ src/components/feature-panel.jsx             | 4 ++--
+ src/components/horizontal-feature-scroll.jsx | 6 +++---
+ src/pages/PrototypeHome.jsx                  | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/components/feature-panel.jsx b/src/components/feature-panel.jsx
+index 979d945..3fe7626 100644
+--- a/src/components/feature-panel.jsx
++++ b/src/components/feature-panel.jsx
+@@ -51,11 +51,11 @@ export const FeaturePanel = ({
+         ) : null}
+       </div>
+ 
+-      <div className="flex min-w-0 flex-1 items-center justify-center">
++      <div className="flex min-w-0 flex-1 items-center justify-center overflow-hidden">
+         <img
+           src={imageSrc}
+           alt={imageAlt ?? ''}
+-          className="h-auto max-h-[70vh] w-full max-w-full object-contain"
++          className="h-auto max-h-[70vh] w-full max-w-full rounded-xl object-contain"
+           style={{
+             boxShadow: '0 8px 40px rgba(0, 0, 0, 0.06)',
+           }}
+diff --git a/src/components/horizontal-feature-scroll.jsx b/src/components/horizontal-feature-scroll.jsx
+index 74b47cc..e4ccb59 100644
+--- a/src/components/horizontal-feature-scroll.jsx
++++ b/src/components/horizontal-feature-scroll.jsx
+@@ -15,7 +15,7 @@ import {
+ import { FeaturePanel } from './feature-panel'
+ 
+ const MOBILE_QUERY = '(max-width: 768px)'
+-const SPRING_CONFIG = { stiffness: 150, damping: 32, mass: 0.85 }
++const SPRING_CONFIG = { stiffness: 220, damping: 36, mass: 0.75 }
+ const MotionTrack = motion.div
+ 
+ const ProgressDots = ({ panels, activeIndex }) => (
+@@ -31,8 +31,8 @@ const ProgressDots = ({ panels, activeIndex }) => (
+           key={panel.id ?? index}
+           role="presentation"
+           aria-hidden="true"
+-          className={`block h-1.5 w-1.5 rounded-full transition-colors duration-200 ${
+-            isActive ? 'bg-[#1D1D1F]' : 'bg-[#1D1D1F]/25'
++          className={`block h-1.5 rounded-full transition-[width,background-color] duration-200 ${
++            isActive ? 'w-4 bg-[#1D1D1F]' : 'w-1.5 bg-[#1D1D1F]/25'
+           }`}
+         />
+       )
+diff --git a/src/pages/PrototypeHome.jsx b/src/pages/PrototypeHome.jsx
+index 57f4c6f..e9b6291 100644
+--- a/src/pages/PrototypeHome.jsx
++++ b/src/pages/PrototypeHome.jsx
+@@ -54,7 +54,7 @@ export default function PrototypeHome() {
+         </a>
+       </header>
+ 
+-      <section className="mx-auto flex min-h-[72vh] max-w-3xl flex-col items-center justify-center px-6 pb-20 pt-10 text-center md:px-10 md:pb-28 md:pt-16">
++      <section className="mx-auto flex min-h-[72vh] max-w-3xl flex-col items-center justify-center px-6 pb-28 pt-10 text-center md:px-10 md:pb-36 md:pt-16">
+         <p className="text-[15px] font-semibold tracking-tight text-[#1D1D1F] md:text-[17px]">
+           Deep Student
+         </p>
+-- 
+2.39.5 (Apple Git-154)
+

@@ -1,0 +1,1660 @@
+diff --git a/src/App.jsx b/src/App.jsx
+index dce7533..525da7c 100644
+--- a/src/App.jsx
++++ b/src/App.jsx
+@@ -611,9 +611,9 @@ const FlowArrow = ({ label, sublabel, direction = 'right', className = '' }) =>
+           </line>
+         )}
+       </svg>
+-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-none transition-transform duration-300 group-hover:scale-105">
+-        <span className="text-[11px] sm:text-[12px] font-medium text-[color:var(--apple-ink)] bg-[color:var(--apple-card)]/80 backdrop-blur-sm px-2.5 py-0.5 rounded-md border border-[color:var(--apple-line)] shadow-sm whitespace-nowrap leading-tight">{label}</span>
+-        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--apple-card)]/80 backdrop-blur-sm px-1.5 py-0.5 mt-0.5 rounded-md border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight shadow-sm">{sublabel}</span>}
++      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-none">
++        <span className="text-[11px] sm:text-[12px] font-medium text-[color:var(--apple-ink)] bg-[color:var(--surface-elevated)] px-2.5 py-0.5 rounded-md border border-[color:var(--apple-line)] whitespace-nowrap leading-tight">{label}</span>
++        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--surface-elevated)] px-1.5 py-0.5 mt-0.5 rounded-md border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight">{sublabel}</span>}
+       </div>
+     </div>
+   )
+@@ -648,9 +648,9 @@ const FlowArrowVertical = ({ label, sublabel, direction = 'down' }) => {
+           </line>
+         )}
+       </svg>
+-      <div className="relative z-10 flex flex-col items-center bg-[color:var(--apple-card)]/80 backdrop-blur-sm px-2 py-1 rounded-md border border-[color:var(--apple-line)] shadow-sm pointer-events-none transition-transform duration-300 group-hover:scale-105">
++      <div className="relative z-10 flex flex-col items-center bg-[color:var(--surface-elevated)] px-2 py-1 rounded-md border border-[color:var(--apple-line)] pointer-events-none">
+         <span className="text-[11px] font-medium text-[color:var(--apple-ink)] whitespace-nowrap leading-tight">{label}</span>
+-        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--apple-card)]/50 px-1 py-0.5 mt-0.5 rounded border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight shadow-sm">{sublabel}</span>}
++        {sublabel && <span className="text-[9px] text-[color:var(--apple-muted)] bg-[color:var(--surface-panel-muted)] px-1 py-0.5 mt-0.5 rounded border border-[color:var(--apple-line)]/50 whitespace-nowrap leading-tight">{sublabel}</span>}
+       </div>
+     </div>
+   )
+@@ -702,13 +702,13 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
+ 
+   return (
+     <section
+-      className={`py-[4rem] sm:py-[6rem] px-4 sm:px-6 ${shouldAnimate ? 'animate-fade-in' : ''}`}
++      className={`py-[3rem] sm:py-[4.5rem] px-4 sm:px-6 ${shouldAnimate ? 'animate-fade-in' : ''}`}
+       style={shouldAnimate ? { animationDelay: '0.24s' } : undefined}
+     >
+       <div className="max-w-[80rem] mx-auto">
+         {/* 标题 */}
+         <div className="text-center mb-[2.5rem] sm:mb-[3.5rem]">
+-          <h2 className="text-[1.5rem] sm:text-[2rem] font-semibold text-[color:var(--apple-ink)] tracking-tight font-display mb-3">
++          <h2 className="text-[1.5rem] sm:text-[2rem] font-semibold text-[color:var(--apple-ink)] font-display mb-3">
+             {t('stats.title', 'AI 原生的学习闭环')}
+           </h2>
+           <p className="text-[color:var(--apple-muted)] text-[15px] sm:text-[17px] max-w-2xl mx-auto">
+@@ -721,10 +721,8 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
+           <div className="grid grid-cols-[1fr_auto_1fr] gap-y-0">
+             {/* 第一行：Chat V2 | 引用资源连接 | Learning Hub */}
+             <div className="flex flex-col items-center justify-center py-4 group cursor-default">
+-              <div className="relative w-[260px] h-[206px] transition-transform duration-500 ease-out group-hover:-translate-y-1">
+-                {/* 放大半透明对话气泡背景，增加发光效果 */}
+-                <div className="absolute inset-0 bg-blue-500/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+-                <svg className="absolute inset-0 w-full h-full opacity-[0.12] drop-shadow-sm transition-all duration-500 group-hover:opacity-[0.16] group-hover:drop-shadow-md" viewBox="0 0 60 60" fill="none" preserveAspectRatio="xMidYMid meet">
++              <div className="relative w-[260px] h-[206px]">
++                <svg className="absolute inset-0 w-full h-full opacity-[0.12]" viewBox="0 0 60 60" fill="none" preserveAspectRatio="xMidYMid meet">
+                   <rect x="1" y="1" width="58" height="46" rx="10" fill="var(--apple-muted)"/>
+                   <path d="M18 47L24 56L30 47" fill="var(--apple-muted)"/>
+                 </svg>
+@@ -733,13 +731,13 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
+                   {[chatRow1, chatRow2, chatRow3, chatRow4].map((row, i) => (
+                     <div key={i} className="flex justify-center gap-1.5">
+                       {row.map((feat) => (
+-                        <span key={feat} className="text-[8px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap bg-[color:var(--apple-card)]/50 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 group-hover:border-[color:var(--apple-muted)]/30 group-hover:shadow-sm group-hover:bg-[color:var(--apple-card)]/80">{feat}</span>
++                        <span key={feat} className="text-[8px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap bg-[color:var(--surface-elevated)] transition-colors duration-150 group-hover:border-[color:var(--apple-muted)]/30">{feat}</span>
+                       ))}
+                     </div>
+                   ))}
+                 </div>
+               </div>
+-              <div className="text-center mt-2 transition-transform duration-500 group-hover:-translate-y-0.5">
++              <div className="text-center mt-2">
+                 <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">Chat V2</div>
+                 <div className="text-[12px] text-[color:var(--apple-muted)] mt-0.5">{t('arch.chat.desc', '智能对话')}</div>
+               </div>
+@@ -752,16 +750,15 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
+ 
+             {/* Learning Hub */}
+             <div className="flex flex-col items-center justify-center py-4 group cursor-default">
+-              <div className="relative w-[270px] h-[202px] transition-transform duration-500 ease-out group-hover:-translate-y-1">
+-                <div className="absolute inset-0 bg-amber-500/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+-                <svg className="absolute inset-0 w-full h-full scale-[1.2] opacity-[0.10] drop-shadow-sm transition-all duration-500 group-hover:opacity-[0.14] group-hover:drop-shadow-md" viewBox="0 0 48 48" fill="none" preserveAspectRatio="xMidYMid meet">
++              <div className="relative w-[270px] h-[202px]">
++                <svg className="absolute inset-0 w-full h-full scale-[1.2] opacity-[0.10]" viewBox="0 0 48 48" fill="none" preserveAspectRatio="xMidYMid meet">
+                   <path d="M6 10C6 8.895 6.895 8 8 8H18L21 11H40C41.105 11 42 11.895 42 13V39C42 40.105 41.105 41 40 41H8C6.895 41 6 40.105 6 39V10Z" fill="#E8B849"/>
+                   <path d="M6 10C6 8.895 6.895 8 8 8H17C17.552 8 18 8.448 18 9V11H6V10Z" fill="#D4A53A"/>
+                 </svg>
+                 <div className="absolute inset-0 flex items-center justify-center pt-6 px-7">
+                   <div className="grid grid-cols-4 gap-x-5 gap-y-4 justify-items-center">
+                     {resourceTypes.map((item) => (
+-                      <div key={item.label} className="flex flex-col items-center gap-1 group/item transition-transform duration-300 hover:-translate-y-0.5">
++                      <div key={item.label} className="flex flex-col items-center gap-1 group/item">
+                         <div className="rounded-lg transition-colors duration-300 group-hover/item:bg-[color:var(--apple-line)]/50">
+                           <item.Icon size={22} />
+                         </div>
+@@ -771,7 +768,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
+                   </div>
+                 </div>
+               </div>
+-              <div className="text-center mt-2 transition-transform duration-500 group-hover:-translate-y-0.5">
++              <div className="text-center mt-2">
+                 <div className="text-[15px] font-semibold text-[color:var(--apple-ink)]">Learning Hub</div>
+                 <div className="text-[12px] text-[color:var(--apple-muted)] mt-0.5">{t('arch.hub.desc', '学习资源管理器')}</div>
+               </div>
+@@ -792,8 +789,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
+ 
+             {/* 第二行：Skills | 工具调用连接 | VFS */}
+             <div className="flex flex-col items-center py-2 group cursor-default">
+-              <div className="relative w-full border border-[color:var(--apple-line)] rounded-[20px] py-5 px-5 bg-[color:var(--apple-card)]/80 backdrop-blur-sm transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:shadow-md group-hover:border-[color:var(--apple-muted)]/30 group-hover:bg-[color:var(--apple-card)]">
+-                <div className="absolute inset-0 bg-emerald-500/5 blur-2xl rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
++              <div className="relative w-full border border-[color:var(--apple-line)] rounded-[20px] py-5 px-5 bg-[color:var(--surface-elevated)] transition-colors duration-150 group-hover:border-[color:var(--apple-muted)]/30">
+                 <div className="relative z-10 text-center">
+                   <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">Skills</div>
+                   <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.skills.subtitle', '技能编排 · 按需加载')}</div>
+@@ -820,8 +816,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
+ 
+             {/* VFS */}
+             <div className="flex flex-col items-center py-2 group cursor-default">
+-              <div className="relative w-full border border-[color:var(--apple-line)] rounded-[20px] py-5 px-5 bg-[color:var(--apple-card)]/80 backdrop-blur-sm transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:shadow-md group-hover:border-[color:var(--apple-muted)]/30 group-hover:bg-[color:var(--apple-card)]">
+-                <div className="absolute inset-0 bg-purple-500/5 blur-2xl rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
++              <div className="relative w-full border border-[color:var(--apple-line)] rounded-[20px] py-5 px-5 bg-[color:var(--surface-elevated)] transition-colors duration-150 group-hover:border-[color:var(--apple-muted)]/30">
+                 <div className="relative z-10 text-center">
+                   <div className="text-[16px] font-semibold text-[color:var(--apple-ink)]">VFS</div>
+                   <div className="text-[11px] text-[color:var(--apple-muted)] mt-1">{t('arch.vfs.desc', '虚拟文件系统 · 学习数据')}</div>
+@@ -872,7 +867,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
+                 {[chatRow1, chatRow2, chatRow3, chatRow4].map((row, i) => (
+                   <div key={i} className="flex justify-center gap-1.5">
+                     {row.map((feat) => (
+-                      <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap bg-[color:var(--apple-card)]/50 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 group-hover:border-[color:var(--apple-muted)]/30 group-hover:shadow-sm group-hover:bg-[color:var(--apple-card)]/80">{feat}</span>
++                      <span key={feat} className="text-[9px] text-[color:var(--apple-muted)] opacity-80 px-2 py-1 rounded border border-[color:var(--apple-line)] whitespace-nowrap bg-[color:var(--surface-elevated)] transition-colors duration-150">{feat}</span>
+                     ))}
+                   </div>
+                 ))}
+@@ -938,7 +933,7 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
+               <div className="absolute inset-0 flex items-center justify-center pt-8 px-8">
+                 <div className="grid grid-cols-4 gap-x-5 gap-y-3 justify-items-center">
+                   {resourceTypes.map((item) => (
+-                    <div key={item.label} className="flex flex-col items-center gap-0.5 group/item transition-transform duration-300 hover:-translate-y-0.5">
++                    <div key={item.label} className="flex flex-col items-center gap-0.5 group/item">
+                       <div className="rounded-lg transition-colors duration-300 group-hover/item:bg-[color:var(--apple-line)]/50">
+                         <item.Icon size={22} />
+                       </div>
+@@ -1098,7 +1093,7 @@ const App = () => {
+                   { labelKey: 'anki.templateEditor', descKey: 'anki.templateEditorDesc', imgSrc: '/img/example/模板库-2.png' },
+                 ]}
+               >
+-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
++                  <div className="bg-[color:var(--surface-elevated)] rounded-[6px] border border-[color:var(--border-soft)] shadow-[var(--shadow-content-soft)] w-full mx-auto overflow-hidden transition-[border-color,box-shadow] duration-150 hover:border-[color:var(--border-default)]">
+                   <OptimizedImage src="/img/example/anki-制卡2.png" alt={t('anki.preview')} className="w-full h-auto object-cover" />
+                 </div>
+               </FeatureSection>
+@@ -1116,7 +1111,7 @@ const App = () => {
+                   { labelKey: 'mcp.output', descKey: 'mcp.outputDesc', imgSrc: '/img/example/mcp-4.png' },
+                 ]}
+               >
+-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
++                  <div className="bg-[color:var(--surface-elevated)] rounded-[6px] border border-[color:var(--border-soft)] shadow-[var(--shadow-content-soft)] w-full mx-auto overflow-hidden transition-[border-color,box-shadow] duration-150 hover:border-[color:var(--border-default)]">
+                   <OptimizedImage src="/img/example/mcp-2.png" alt="MCP Tool Ecosystem" className="w-full h-auto object-cover" />
+                 </div>
+               </FeatureSection>
+@@ -1136,7 +1131,7 @@ const App = () => {
+                   { labelKey: 'research.save', descKey: 'research.saveDesc', imgSrc: '/img/example/调研-5.png' },
+                 ]}
+               >
+-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
++                  <div className="bg-[color:var(--surface-elevated)] rounded-[6px] border border-[color:var(--border-soft)] shadow-[var(--shadow-content-soft)] w-full mx-auto overflow-hidden transition-[border-color,box-shadow] duration-150 hover:border-[color:var(--border-default)]">
+                   <OptimizedImage src="/img/example/调研-1.png" alt="Deep Research" className="w-full h-auto object-cover" />
+                 </div>
+               </FeatureSection>
+@@ -1154,7 +1149,7 @@ const App = () => {
+                   { labelKey: 'reading.docx', descKey: 'reading.docxDesc', imgSrc: '/img/example/docx阅读-1.png' },
+                 ]}
+               >
+-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
++                  <div className="bg-[color:var(--surface-elevated)] rounded-[6px] border border-[color:var(--border-soft)] shadow-[var(--shadow-content-soft)] w-full mx-auto overflow-hidden transition-[border-color,box-shadow] duration-150 hover:border-[color:var(--border-default)]">
+                   <OptimizedImage src="/img/example/pdf阅读-1.png" alt="Deep Reading" className="w-full h-auto object-cover" />
+                 </div>
+               </FeatureSection>
+@@ -1175,7 +1170,7 @@ const App = () => {
+                   { labelKey: 'mindmap.recite', descKey: 'mindmap.reciteDesc', imgSrc: '/img/example/知识导图-6.png' },
+                 ]}
+               >
+-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
++                  <div className="bg-[color:var(--surface-elevated)] rounded-[6px] border border-[color:var(--border-soft)] shadow-[var(--shadow-content-soft)] w-full mx-auto overflow-hidden transition-[border-color,box-shadow] duration-150 hover:border-[color:var(--border-default)]">
+                   <OptimizedImage src="/img/example/知识导图-1.png" alt="Knowledge Mindmap" className="w-full h-auto object-cover" />
+                 </div>
+               </FeatureSection>
+@@ -1196,7 +1191,7 @@ const App = () => {
+                   { labelKey: 'memory.vector', descKey: 'memory.vectorDesc', imgSrc: '/img/example/向量化状态.png' },
+                 ]}
+               >
+-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
++                  <div className="bg-[color:var(--surface-elevated)] rounded-[6px] border border-[color:var(--border-soft)] shadow-[var(--shadow-content-soft)] w-full mx-auto overflow-hidden transition-[border-color,box-shadow] duration-150 hover:border-[color:var(--border-default)]">
+                   <OptimizedImage src="/img/example/笔记-1.png" alt="Notes & Memory Management" className="w-full h-auto object-cover" />
+                 </div>
+               </FeatureSection>
+@@ -1216,7 +1211,7 @@ const App = () => {
+                   { labelKey: 'qbank.knowledge', descKey: 'qbank.knowledgeDesc', imgSrc: '/img/example/题目集-5.png' },
+                 ]}
+               >
+-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
++                  <div className="bg-[color:var(--surface-elevated)] rounded-[6px] border border-[color:var(--border-soft)] shadow-[var(--shadow-content-soft)] w-full mx-auto overflow-hidden transition-[border-color,box-shadow] duration-150 hover:border-[color:var(--border-default)]">
+                   <OptimizedImage src="/img/example/题目集-1.png" alt="Smart Q-Bank" className="w-full h-auto object-cover" />
+                 </div>
+               </FeatureSection>
+@@ -1234,7 +1229,7 @@ const App = () => {
+                   { labelKey: 'essay.settings', descKey: 'essay.settingsDesc', imgSrc: '/img/example/作文-4.png' },
+                 ]}
+               >
+-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
++                  <div className="bg-[color:var(--surface-elevated)] rounded-[6px] border border-[color:var(--border-soft)] shadow-[var(--shadow-content-soft)] w-full mx-auto overflow-hidden transition-[border-color,box-shadow] duration-150 hover:border-[color:var(--border-default)]">
+                   <OptimizedImage src="/img/example/作文-2.png" alt="Essay Grading" className="w-full h-auto object-cover" />
+                 </div>
+               </FeatureSection>
+@@ -1252,7 +1247,7 @@ const App = () => {
+                   { labelKey: 'paperSearch.read', descKey: 'paperSearch.readDesc', imgSrc: '/img/example/论文搜索-3.png' },
+                 ]}
+               >
+-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
++                  <div className="bg-[color:var(--surface-elevated)] rounded-[6px] border border-[color:var(--border-soft)] shadow-[var(--shadow-content-soft)] w-full mx-auto overflow-hidden transition-[border-color,box-shadow] duration-150 hover:border-[color:var(--border-default)]">
+                   <OptimizedImage src="/img/example/论文搜索-1.png" alt="Paper Search" className="w-full h-auto object-cover" />
+                 </div>
+               </FeatureSection>
+@@ -1270,7 +1265,7 @@ const App = () => {
+                   { labelKey: 'translation.domain', descKey: 'translation.domainDesc', imgSrc: '/img/example/翻译-3.png' },
+                 ]}
+               >
+-                  <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl rounded-[6px] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] w-full mx-auto overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[var(--apple-shadow-xl)]">
++                  <div className="bg-[color:var(--surface-elevated)] rounded-[6px] border border-[color:var(--border-soft)] shadow-[var(--shadow-content-soft)] w-full mx-auto overflow-hidden transition-[border-color,box-shadow] duration-150 hover:border-[color:var(--border-default)]">
+                   <OptimizedImage src="/img/example/翻译-1.png" alt="Translation Workbench" className="w-full h-auto object-cover" />
+                 </div>
+               </FeatureSection>
+@@ -1296,33 +1291,33 @@ const TopNav = ({ onDownload = () => {} }) => {
+   return (
+     <nav
+       className={cn(
+-        'sticky top-0 z-nav pt-safe bg-white/75 backdrop-blur-[20px] backdrop-saturate-[180%] dark:bg-[color:var(--apple-nav-bg)] transition-transform duration-200 ease-out',
++        'sticky top-0 z-nav border-b border-[color:var(--apple-nav-border)] pt-safe bg-[color:var(--apple-nav-bg)] backdrop-blur-[14px] transition-transform duration-200 ease-out',
+         isHidden ? '-translate-y-full' : 'translate-y-0'
+       )}
+     >
+       <div className="max-w-6xl mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
+-        <a href="/" className="flex items-center gap-2.5 font-semibold text-slate-900 transition-opacity hover:opacity-80 dark:text-[color:var(--apple-ink)]">
++        <a href="/" className="flex items-center gap-2.5 font-semibold text-[color:var(--apple-ink)] transition-opacity hover:opacity-80">
+           <img src={logo} alt="" className="h-5 w-auto sm:h-6 dark:invert" loading="lazy" decoding="async" />
+           <span className="text-[15px] tracking-tight">DeepStudent</span>
+         </a>
+         <div className="flex items-center gap-4">
+           {/* Desktop navigation links */}
+           <div className="hidden items-center gap-3 text-[11px] font-normal text-[color:var(--apple-muted)] lg:flex lg:gap-4 lg:text-[12px]">
+-            <a href="#features" className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]">
++            <a href="#features" className="focus-ring transition-colors hover:text-[color:var(--apple-ink)]">
+               {t('nav.features')}
+             </a>
+-            <a href="#qa" className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]">
++            <a href="#qa" className="focus-ring transition-colors hover:text-[color:var(--apple-ink)]">
+               {t('nav.qa')}
+             </a>
+             <a
+               href="/docs/"
+-              className="focus-ring transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]"
++              className="focus-ring transition-colors hover:text-[color:var(--apple-ink)]"
+             >
+               {t('nav.docs')}
+             </a>
+             <a
+               href="https://github.com/helixnow/deep-student"
+-              className="focus-ring inline-flex items-center gap-1 transition-colors hover:text-slate-900 dark:hover:text-[color:var(--apple-ink)]"
++              className="focus-ring inline-flex items-center gap-1 transition-colors hover:text-[color:var(--apple-ink)]"
+               target="_blank"
+               rel="noopener noreferrer"
+             >
+@@ -1424,36 +1419,11 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
+       className="relative min-h-screen pt-20 pb-16 flex items-center overflow-hidden lg:overflow-visible"
+     >
+       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
+-        <div className="absolute top-[-10%] left-[12%] w-[56vw] h-[56vw] max-w-[680px] max-h-[680px] bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.12),transparent_60%)] blur-[84px] mix-blend-plus-lighter" />
+-        <div className="absolute top-[-22%] right-[-10%] w-[52vw] h-[52vw] max-w-[760px] max-h-[760px] bg-[radial-gradient(circle_at_center,rgba(120,119,126,0.08),transparent_62%)] blur-[96px] opacity-70" />
+-
+-        <div className="absolute inset-0 backdrop-blur-2xl backdrop-saturate-150" />
+-
+-        <div
+-          className="absolute top-[-30%] left-[-20%] right-[-20%] h-[80%] rounded-[100%] border-t border-[rgba(255,255,255,0.4)] dark:border-[rgba(255,255,255,0.2)] opacity-80"
+-          style={{
+-            boxShadow: 'inset 0 10px 40px -10px rgba(255,255,255,0.2)',
+-            maskImage: 'radial-gradient(ellipse at top, black 25%, transparent 60%)',
+-            WebkitMaskImage: 'radial-gradient(ellipse at top, black 25%, transparent 60%)',
+-          }}
+-        />
+-
+-        <div
+-          className="absolute top-[-30%] left-[-20%] right-[-20%] h-[80%] rounded-[100%] opacity-35 dark:opacity-45"
+-          style={{
+-            boxShadow: 'inset 0 18px 40px -14px rgba(255,255,255,0.22), inset 0 38px 86px -24px rgba(255,255,255,0.10)',
+-            maskImage: 'radial-gradient(ellipse at top, black 32%, transparent 66%)',
+-            WebkitMaskImage: 'radial-gradient(ellipse at top, black 32%, transparent 66%)',
+-          }}
+-        />
+-
+-        <div
+-          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] mix-blend-overlay pointer-events-none"
+-          style={{
+-            backgroundImage:
+-              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")',
+-          }}
+-        />
++        <div className="absolute inset-x-0 top-0 h-px bg-[color:var(--border-soft)]" />
++        <div className="absolute left-4 right-4 top-[7.5rem] h-px bg-[color:var(--border-soft)]/70 sm:left-6 sm:right-6 lg:left-8 lg:right-8" />
++        <div className="absolute left-[max(1rem,calc((100vw-72rem)/2))] top-28 h-24 w-px bg-[color:var(--border-soft)]/60" />
++        <div className="absolute right-[max(1rem,calc((100vw-72rem)/2))] top-28 h-24 w-px bg-[color:var(--border-soft)]/60" />
++        <div className="absolute right-[8%] top-[18%] h-40 w-40 rounded-full bg-[color:var(--brand-50)] opacity-60 blur-3xl" />
+       </div>
+ 
+       <div
+@@ -1464,7 +1434,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
+       >
+         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.76fr)_minmax(0,1.9fr)] gap-8 sm:gap-10 lg:gap-8 xl:gap-12 items-center">
+           <div className="flex flex-col items-start text-left order-2 lg:order-1">
+-            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold tracking-[-0.02em] mb-4 leading-[1.1] text-[color:var(--apple-ink)]">
++            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold mb-4 leading-[1.1] text-[color:var(--apple-ink)]">
+               {t('hero.headline.top')}
+               <br />
+               <span className={isChinese ? 'inline-block whitespace-nowrap' : 'whitespace-normal break-words text-balance'}>{t('hero.headline.bottom')}</span>
+@@ -1494,7 +1464,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
+               <button
+                 type="button"
+                 onClick={handleDownloadClick}
+-                className="group inline-flex w-full sm:w-auto items-center justify-center gap-1.5 px-8 py-3 bg-[color:var(--apple-ink)] text-[color:var(--apple-surface)] rounded-lg font-medium text-[15px] whitespace-nowrap hover:opacity-90 active:scale-[0.98] transition-all duration-200"
++                className="group inline-flex w-full sm:w-auto items-center justify-center gap-1.5 px-8 py-3 bg-[color:var(--button-prominent-bg)] text-[color:var(--button-prominent-fg)] rounded-[var(--button-radius)] font-medium text-[15px] whitespace-nowrap hover:bg-[color:var(--button-prominent-bg-hover)] active:translate-y-px transition-[background-color,color,box-shadow,transform] duration-150 shadow-[var(--shadow-content-subtle)]"
+               >
+                 <span className="whitespace-nowrap">{t('hero.cta.download')}</span>
+                 <svg
+@@ -1513,7 +1483,7 @@ const HeroSection = ({ onDownload = () => {}, motionScale = 1 }) => {
+               </button>
+               <a
+                 href="/docs/start.html"
+-                className="group inline-flex w-full sm:w-auto items-center justify-center gap-1.5 px-8 py-3 bg-transparent text-[color:var(--apple-ink)] border border-[color:var(--apple-line-strong)] rounded-lg font-medium text-[15px] hover:bg-[color:var(--apple-card)] transition-all duration-200"
++                className="group inline-flex w-full sm:w-auto items-center justify-center gap-1.5 px-8 py-3 bg-[color:var(--button-outline-bg)] text-[color:var(--button-outline-fg)] border border-[color:var(--button-outline-border)] rounded-[var(--button-radius)] font-medium text-[15px] hover:bg-[color:var(--button-tonal-bg)] transition-[background-color,color,border-color] duration-150"
+               >
+                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                   <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+@@ -1650,12 +1620,12 @@ const FreeModelsCallout = () => {
+   const siliconflowLogoDark = '/siliconflow_Chinese%20and%20English%20LOGO_dark.svg'
+ 
+   return (
+-    <div className="bg-[color:var(--apple-card)] backdrop-blur-2xl border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-xl)] rounded-[2rem] p-6 sm:p-8">
++    <div className="bg-[color:var(--surface-elevated)] border border-[color:var(--border-soft)] shadow-[var(--shadow-content-subtle)] rounded-[var(--radius-shell-panel)] p-6 sm:p-8">
+       <div className="flex flex-wrap gap-2 justify-center">
+         {freeModels.map((model) => (
+           <span
+             key={model.id}
+-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[color:var(--apple-card-strong)] border border-[color:var(--apple-line)] text-[12px] font-medium text-[color:var(--apple-ink)]"
++            className="inline-flex items-center gap-2 px-3 py-1 rounded-[var(--radius-shell-control)] bg-[color:var(--brand-50)] border border-[color:var(--brand-outline)] text-[12px] font-medium text-[color:var(--apple-ink)]"
+           >
+             <FreeModelLogo id={model.id} />
+             <span>{model.label}</span>
+@@ -1791,7 +1761,7 @@ const DownloadPage = ({ onBack = () => {} }) => {
+     <div className="relative min-h-screen min-h-[100svh] bg-transparent pb-[var(--space-page-bottom)]">
+       <div
+         className={cn(
+-          'sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-xl pt-safe transition-transform duration-200 ease-out',
++          'sticky top-0 z-40 border-b border-[color:var(--apple-line)] bg-[color:var(--apple-nav-bg)] backdrop-blur-[14px] pt-safe transition-transform duration-200 ease-out',
+           isHidden ? '-translate-y-full' : 'translate-y-0'
+         )}
+       >
+@@ -1811,7 +1781,7 @@ const DownloadPage = ({ onBack = () => {} }) => {
+       </div>
+ 
+       <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-[var(--space-section-top)] text-center">
+-        <h1 className="text-[2.2rem] sm:text-[3.2rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] font-display">
++        <h1 className="text-[2.2rem] sm:text-[3.2rem] font-semibold text-[color:var(--apple-ink)] font-display">
+           {t('download.title', 'DeepStudent {version}', { version: releaseVersion })}
+         </h1>
+         <p className="mt-3 text-sm text-[color:var(--apple-muted)] max-w-md mx-auto">
+@@ -1820,11 +1790,11 @@ const DownloadPage = ({ onBack = () => {} }) => {
+       </section>
+ 
+       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-[var(--space-section-top)]">
+-        <h2 className="text-[1.3rem] sm:text-[1.9rem] font-semibold text-[color:var(--apple-ink)] tracking-[-0.02em] font-display">
++        <h2 className="text-[1.3rem] sm:text-[1.9rem] font-semibold text-[color:var(--apple-ink)] font-display">
+           {t('download.selectPlatform')}
+         </h2>
+ 
+-        <div className="mt-4 inline-flex items-center rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] p-1">
++        <div className="mt-4 inline-flex items-center rounded-[var(--radius-shell-toolbar)] border border-[color:var(--border-soft)] bg-[color:var(--surface-panel-muted)] p-1">
+           {tabs.map((tab) => {
+             const active = tab.id === activeTab
+             return (
+@@ -1832,7 +1802,7 @@ const DownloadPage = ({ onBack = () => {} }) => {
+                 key={tab.id}
+                 type="button"
+                 onClick={() => setActiveTab(tab.id)}
+-                className={`focus-ring rounded-full px-4 py-2 text-xs font-medium transition-colors ${
++                className={`focus-ring rounded-[var(--radius-shell-control)] px-4 py-2 text-xs font-medium transition-colors ${
+                   active
+                     ? 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)]'
+                     : 'text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)]'
+@@ -1875,14 +1845,14 @@ const DownloadPage = ({ onBack = () => {} }) => {
+                 <div className="mt-4 flex flex-wrap items-center gap-2">
+                   <a
+                     href={platform.mirrorHref || platform.ctaHref}
+-                    className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--apple-btn-primary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-btn-primary-text)] leading-snug text-center whitespace-normal hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-95 transition-all shadow-[var(--apple-shadow-sm)]"
++                    className="focus-ring inline-flex items-center justify-center gap-2 rounded-[var(--button-radius)] bg-[color:var(--apple-btn-primary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-btn-primary-text)] leading-snug text-center whitespace-normal hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:translate-y-px transition-[background-color,color,transform] shadow-[var(--shadow-content-subtle)]"
+                   >
+                     {platform.mirrorHref ? t('download.fastDownload', '高速下载') : platform.ctaLabel}
+                   </a>
+                   {platform.mirrorHref ? (
+                     <a
+                       href={platform.ctaHref}
+-                      className="focus-ring inline-flex items-center justify-center gap-1.5 rounded-full border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-ink)] leading-snug text-center whitespace-normal hover:bg-[color:var(--apple-btn-secondary-bg-hover,var(--apple-card))] active:scale-95 transition-all"
++                      className="focus-ring inline-flex items-center justify-center gap-1.5 rounded-[var(--button-radius)] border border-[color:var(--border-soft)] bg-[color:var(--apple-btn-secondary-bg)] px-4 py-2 text-xs font-medium text-[color:var(--apple-ink)] leading-snug text-center whitespace-normal hover:bg-[color:var(--apple-btn-secondary-bg-hover,var(--apple-card))] active:translate-y-px transition-[background-color,color,border-color,transform]"
+                     >
+                       {t('download.backupDownload', '备用下载')}
+                     </a>
+@@ -1941,7 +1911,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
+       style={shouldAnimate ? { animationDelay: '0.12s' } : undefined}
+     >
+       <div className="text-center">
+-        <h2 className="text-[1.618rem] sm:text-[2.618rem] font-semibold text-[color:var(--apple-ink)] mb-[0.618rem] tracking-[-0.02em] font-display">
++        <h2 className="text-[1.618rem] sm:text-[2.618rem] font-semibold text-[color:var(--apple-ink)] mb-[0.618rem] font-display">
+           {t('faq.title')}
+         </h2>
+         <p className="text-sm sm:text-base text-[color:var(--apple-muted)] leading-relaxed">
+@@ -1953,11 +1923,11 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
+         {faqItems.map((item) => (
+           <details
+             key={item.id}
+-            className="group rounded-[1.75rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] shadow-[var(--apple-shadow-sm)] overflow-hidden transition-all duration-300 hover:shadow-[var(--apple-shadow-md)] open:bg-[color:var(--apple-card-strong)] open:shadow-[var(--apple-shadow-lg)]"
++            className="group rounded-[var(--radius-shell-panel)] bg-[color:var(--surface-elevated)] border border-[color:var(--border-soft)] shadow-[var(--shadow-content-subtle)] overflow-hidden transition-[border-color,box-shadow,background-color] duration-150 hover:border-[color:var(--border-default)] open:bg-[color:var(--surface-panel-strong)] open:shadow-[var(--shadow-content-soft)]"
+           >
+             <summary className="focus-ring flex items-center justify-between gap-4 p-[1.5rem] sm:p-[1.75rem] cursor-pointer select-none [&::-webkit-details-marker]:hidden">
+               <span className="min-w-0">
+-                <span className="min-w-0 text-[15px] sm:text-[17px] font-semibold text-[color:var(--apple-ink)] tracking-tight break-words">
++                <span className="min-w-0 text-[15px] sm:text-[17px] font-semibold text-[color:var(--apple-ink)] break-words">
+                   {item.question}
+                 </span>
+               </span>
+@@ -1985,7 +1955,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
+                   <button
+                     type="button"
+                     onClick={item.onAction}
+-                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all"
++                    className="focus-ring inline-flex items-center justify-center rounded-[var(--button-radius)] bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:translate-y-px transition-[background-color,color,transform]"
+                   >
+                     {item.actionLabel}
+                   </button>
+@@ -1993,7 +1963,7 @@ const FaqSection = ({ motionScale = 1, onOpenPolicy = () => {} }) => {
+                 {item.linkHref ? (
+                   <a
+                     href={item.linkHref}
+-                    className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:scale-95 transition-all"
++                    className="focus-ring inline-flex items-center justify-center rounded-[var(--button-radius)] bg-[color:var(--apple-btn-secondary-bg)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--apple-ink)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] active:translate-y-px transition-[background-color,color,transform]"
+                     target={item.linkHref.startsWith('http') ? '_blank' : undefined}
+                     rel={item.linkHref.startsWith('http') ? 'noopener noreferrer' : undefined}
+                   >
+@@ -2072,7 +2042,7 @@ const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, animatio
+   return (
+     <div
+       ref={itemRef}
+-      className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-6 sm:gap-8 md:gap-12 transition-all duration-700 ease-out ${isVisible ? anim.visible : anim.hidden}`}
++      className={`scroll-reveal-item flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 sm:gap-6 md:gap-10 transition-all duration-700 ease-out ${isVisible ? anim.visible : anim.hidden}`}
+       style={{ transitionDelay: `${Math.min(index * 100, 400)}ms` }}
+     >
+       <div className="w-full md:w-[66%] md:flex-shrink-0">
+@@ -2080,7 +2050,7 @@ const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, animatio
+           <OptimizedImage
+             src={imgSrc}
+             alt={title}
+-            className="w-full rounded-[6px] shadow-[var(--apple-shadow-md)] border border-[color:var(--apple-line)]"
++            className="w-full rounded-[6px] shadow-[var(--shadow-content-soft)] border border-[color:var(--border-soft)]"
+             loading="lazy"
+           />
+         ) : (
+@@ -2088,7 +2058,7 @@ const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, animatio
+         )}
+       </div>
+       <div className="flex-1 min-w-0 text-center md:text-left">
+-        <h3 className="text-[1.125rem] sm:text-[1.25rem] font-semibold text-[color:var(--apple-ink)] mb-2 tracking-tight">
++        <h3 className="text-[1.125rem] sm:text-[1.25rem] font-semibold text-[color:var(--apple-ink)] mb-2">
+           {title}
+         </h3>
+         <p className="text-[0.875rem] sm:text-[0.9375rem] text-[color:var(--apple-muted)] leading-relaxed max-w-md mx-auto md:mx-0">
+@@ -2099,22 +2069,73 @@ const ScrollRevealItem = ({ imgSrc, title, desc, align = 'left', index, animatio
+   )
+ }
+ 
++const MobileFeatureRail = ({ items, t }) => {
++  if (items.length === 0) return null
++
++  return (
++    <div className="md:hidden">
++      <div className="feature-rail -mx-4 sm:-mx-6 px-4 sm:px-6 snap-x snap-mandatory">
++        <div className="flex gap-3 pb-2">
++          {items.map((sf, index) => {
++            const title = t(sf.labelKey)
++            return (
++              <article
++                key={sf.labelKey}
++                className="snap-start shrink-0 w-[min(82vw,24rem)] rounded-[8px] border border-[color:var(--border-soft)] bg-[color:var(--surface-elevated)] shadow-[var(--shadow-content-subtle)] overflow-hidden"
++              >
++                <div className="aspect-video bg-[color:var(--surface-panel-muted)] border-b border-[color:var(--border-soft)] flex items-center justify-center overflow-hidden">
++                  {sf.imgSrc ? (
++                    <OptimizedImage
++                      src={sf.imgSrc}
++                      alt={title}
++                      className="w-full h-full object-contain"
++                      loading="lazy"
++                    />
++                  ) : (
++                    <ImagePlaceholder label={title} />
++                  )}
++                </div>
++                <div className="p-4">
++                  <div className="flex items-center gap-2 mb-2">
++                    <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-[color:var(--surface-panel-muted)] px-2 text-[11px] font-semibold text-[color:var(--apple-muted)]">
++                      {index + 1}/{items.length}
++                    </span>
++                    <h3 className="min-w-0 text-[0.98rem] font-semibold leading-tight text-[color:var(--apple-ink)]">
++                      {title}
++                    </h3>
++                  </div>
++                  <p className="text-[0.8125rem] leading-relaxed text-[color:var(--apple-muted)] overflow-hidden [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]">
++                    {t(sf.descKey)}
++                  </p>
++                </div>
++              </article>
++            )
++          })}
++        </div>
++      </div>
++    </div>
++  )
++}
++
+ // ===== 交错图文展示组件 =====
+ const AlternatingFeatureGroup = ({ items, t }) => {
+   return (
+-    <div className="space-y-[3rem] sm:space-y-[4rem] md:space-y-[6rem]">
+-      {items.map((sf, index) => (
+-        <ScrollRevealItem
+-          key={sf.labelKey}
+-          imgSrc={sf.imgSrc}
+-          title={t(sf.labelKey)}
+-          desc={t(sf.descKey)}
+-          align={index % 2 === 0 ? 'left' : 'right'}
+-          index={index}
+-          animation={getAnimationVariant(index)}
+-        />
+-      ))}
+-    </div>
++    <>
++      <MobileFeatureRail items={items} t={t} />
++      <div className="hidden md:block space-y-[4.5rem]">
++        {items.map((sf, index) => (
++          <ScrollRevealItem
++            key={sf.labelKey}
++            imgSrc={sf.imgSrc}
++            title={t(sf.labelKey)}
++            desc={t(sf.descKey)}
++            align={index % 2 === 0 ? 'left' : 'right'}
++            index={index}
++            animation={getAnimationVariant(index)}
++          />
++        ))}
++      </div>
++    </>
+   )
+ }
+ 
+@@ -2184,20 +2205,7 @@ const StickyImageFeatureGroup = ({ items, t }) => {
+ 
+   return (
+     <div className="relative">
+-      {/* 移动端：普通流式布局，带多样化进入动画 */}
+-      <div className="md:hidden space-y-[2.5rem]">
+-        {items.map((sf, index) => (
+-          <ScrollRevealItem
+-            key={sf.labelKey}
+-            imgSrc={sf.imgSrc}
+-            title={t(sf.labelKey)}
+-            desc={t(sf.descKey)}
+-            align={index % 2 === 0 ? 'left' : 'right'}
+-            index={index}
+-            animation={getAnimationVariant(index)}
+-          />
+-        ))}
+-      </div>
++      <MobileFeatureRail items={items} t={t} />
+ 
+       {/* 桌面端：左侧 CSS sticky 图片 + 右侧滚动文字 */}
+       <div className="hidden md:grid md:grid-cols-[2fr_1fr] gap-12 lg:gap-16">
+@@ -2267,10 +2275,10 @@ const StickyImageFeatureGroup = ({ items, t }) => {
+               return (
+                 <div
+                   key={sf.labelKey}
+-                  className="min-h-[50vh] flex items-center"
++                  className="min-h-[34vh] lg:min-h-[38vh] flex items-center"
+                 >
+                   <div
+-                    className={`py-6 transition-all duration-500 ease-out ${
++                    className={`py-4 transition-all duration-500 ease-out ${
+                       isActive
+                         ? 'opacity-100 translate-x-0'
+                         : 'opacity-30 translate-x-2'
+@@ -2291,7 +2299,7 @@ const StickyImageFeatureGroup = ({ items, t }) => {
+                         isActive ? 'bg-[color:var(--apple-line-strong)]' : 'bg-transparent'
+                       }`} />
+                     </div>
+-                    <h3 className="text-[1.25rem] sm:text-[1.375rem] font-semibold text-[color:var(--apple-ink)] mb-2.5 tracking-tight leading-tight">
++                    <h3 className="text-[1.25rem] sm:text-[1.375rem] font-semibold text-[color:var(--apple-ink)] mb-2.5 leading-tight">
+                       {t(sf.labelKey)}
+                     </h3>
+                     <p className="text-[0.9375rem] text-[color:var(--apple-muted)] leading-relaxed">
+@@ -2321,13 +2329,13 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
+   const juice = Math.pow(focus, 0.78)
+   const reveal = isStatic ? 1 : easeOutCubic(clamp((progress - 0.04) / 0.36, 0, 1))
+   const offset = (easedProgress - 0.5) * motionAmount
+-  const textShift = offset * (190 + 16 * juice)
+-  const mediaShift = offset * (260 + 45 * juice)
++  const textShift = offset * (128 + 12 * juice)
++  const mediaShift = offset * (170 + 28 * juice)
+   const opacity = isStatic ? 1 : 0.14 + reveal * 0.86
+ 
+   return (
+-    <section ref={ref} id={id} className="px-4 sm:px-6 max-w-[90rem] mx-auto py-[3rem] sm:py-[5rem] md:py-[8rem] scroll-mt-28">
+-      <div className={`flex flex-col ${contentDirection} items-center gap-[3rem] sm:gap-[5rem] md:gap-[4rem]`}>
++    <section ref={ref} id={id} className="px-4 sm:px-6 max-w-[90rem] mx-auto py-[2.5rem] sm:py-[4rem] md:py-[5.5rem] scroll-mt-28">
++      <div className={`flex flex-col ${contentDirection} items-center gap-[2.5rem] sm:gap-[4rem] md:gap-[3.5rem]`}>
+         <div
+           className="flex-1 md:max-w-[33%] text-center md:text-left"
+           style={{
+@@ -2336,10 +2344,10 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
+             willChange: shouldAnimate ? 'transform, opacity' : 'auto',
+           }}
+         >
+-          <h2 className="text-[2rem] sm:text-[3rem] font-semibold text-[color:var(--apple-ink)] mb-[1.5rem] tracking-tight font-display leading-[1.1]">
++          <h2 className="text-[2rem] sm:text-[3rem] font-semibold text-[color:var(--apple-ink)] mb-[1.5rem] font-display leading-[1.1]">
+             {title}
+           </h2>
+-          <p className="text-[color:var(--apple-muted)] leading-[1.6] text-[1.1rem] sm:text-[1.35rem] font-medium tracking-tight mx-auto md:mx-0">{desc}</p>
++          <p className="text-[color:var(--apple-muted)] leading-[1.6] text-[1.1rem] sm:text-[1.35rem] font-medium mx-auto md:mx-0">{desc}</p>
+         </div>
+ 
+         <div
+@@ -2356,7 +2364,7 @@ const FeatureSection = ({ id, title, desc, align, children, motionScale = 1, sub
+ 
+       {/* 子功能图文展示区 - 支持 Sticky 或交错布局 */}
+       {subFeatures.length > 0 && (
+-        <div className="mt-[3rem] sm:mt-[4rem] md:mt-[5rem]">
++        <div className="mt-[2.25rem] sm:mt-[3rem] md:mt-[3.75rem]">
+           {layout === 'sticky' ? (
+             <StickyImageFeatureGroup items={subFeatures} t={t} />
+           ) : (
+@@ -2439,10 +2447,10 @@ const PolicyModal = ({ type, onClose }) => {
+       aria-labelledby={titleId}
+       aria-describedby={descriptionId}
+     >
+-      <div className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-md" onClick={onClose} />
++      <div className="absolute inset-0 bg-black/50 dark:bg-black/70" onClick={onClose} />
+       <div
+         ref={dialogRef}
+-        className="relative w-full max-w-2xl max-h-[80vh] max-h-[80svh] overflow-y-auto bg-[color:var(--apple-card)] backdrop-blur-xl border border-[color:var(--apple-line)] rounded-[2.618rem] shadow-[var(--apple-shadow-xl)] p-[1.618rem] sm:p-[2.618rem]"
++        className="relative w-full max-w-2xl max-h-[80vh] max-h-[80svh] overflow-y-auto bg-[color:var(--surface-elevated)] border border-[color:var(--border-soft)] rounded-[var(--radius-shell-dialog)] shadow-[var(--shadow-shell-floating)] p-[1.618rem] sm:p-[2.618rem]"
+         onClick={(event) => event.stopPropagation()}
+         tabIndex={-1}
+       >
+@@ -2461,7 +2469,7 @@ const PolicyModal = ({ type, onClose }) => {
+           <button
+             type="button"
+             onClick={onClose}
+-            className="focus-ring flex-shrink-0 w-[2.618rem] h-[2.618rem] rounded-full border border-[color:var(--apple-line)] text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:border-[color:var(--apple-line-strong)] flex items-center justify-center transition-colors bg-[color:var(--apple-card-strong)]"
++            className="focus-ring flex-shrink-0 w-[2.618rem] h-[2.618rem] rounded-[var(--radius-shell-control)] border border-[color:var(--border-soft)] text-[color:var(--apple-muted)] hover:text-[color:var(--apple-ink)] hover:border-[color:var(--border-default)] flex items-center justify-center transition-colors bg-[color:var(--surface-panel-strong)]"
+             aria-label={t('policy.close', 'Close dialog')}
+             ref={closeButtonRef}
+           >
+@@ -2491,7 +2499,7 @@ const PolicyModal = ({ type, onClose }) => {
+         <button
+           type="button"
+           onClick={onClose}
+-          className="focus-ring mt-6 w-full py-[0.95rem] sm:py-[1.15rem] md:py-[1.35rem] rounded-[1.618rem] bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] text-sm md:text-base font-semibold hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:scale-[0.98] transition-all shadow-[var(--apple-shadow-md)]"
++          className="focus-ring mt-6 w-full py-[0.95rem] sm:py-[1.15rem] md:py-[1.35rem] rounded-[var(--button-radius)] bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] text-sm md:text-base font-semibold hover:bg-[color:var(--apple-btn-primary-bg-hover)] active:translate-y-px transition-[background-color,color,transform] shadow-[var(--shadow-content-subtle)]"
+         >
+           {t('policy.understood', 'I Understand')}
+         </button>
+@@ -2504,12 +2512,12 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
+   const { isDark } = useTheme()
+   const { t } = useLocale()
+   return (
+-    <footer className="border-t border-[color:var(--apple-line)] mt-4 sm:mt-6 bg-[color:var(--apple-card)] backdrop-blur-2xl">
++    <footer className="border-t border-[color:var(--apple-line)] mt-4 sm:mt-6 bg-[color:var(--surface-elevated)]">
+       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+         <div className="flex flex-col gap-8 sm:gap-10">
+           <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_auto] md:gap-12 items-start">
+             <div className="flex flex-col items-center md:items-start gap-4">
+-              <div className="flex items-center gap-3 font-bold text-[color:var(--apple-ink)] text-lg tracking-tight">
++              <div className="flex items-center gap-3 font-bold text-[color:var(--apple-ink)] text-lg">
+                 <img src={isDark ? logoFooterDark : logoFooter} alt="" className="h-9 w-auto" loading="lazy" decoding="async" />
+                 <span className="sr-only">DeepStudent</span>
+               </div>
+@@ -2558,7 +2566,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
+                 href="https://www.xiaohongshu.com/user/profile/648898bb0000000012037f8f"
+                 target="_blank"
+                 rel="noopener noreferrer"
+-                className="focus-ring inline-flex items-center justify-center w-10 h-10 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] border border-[color:var(--apple-line)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:scale-105 active:scale-95"
++                className="focus-ring inline-flex items-center justify-center w-10 h-10 rounded-[var(--radius-shell-control)] bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] border border-[color:var(--border-soft)] transition-[background-color,color,border-color,transform] duration-150 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] active:translate-y-px"
+                 aria-label={t('footer.xiaohongshu', 'Xiaohongshu')}
+                 title={t('footer.xiaohongshu', 'Xiaohongshu')}
+               >
+@@ -2577,7 +2585,7 @@ const Footer = ({ onOpenPolicy = () => {} }) => {
+                 href="https://qm.qq.com/q/UkEacMzuIW"
+                 target="_blank"
+                 rel="noopener noreferrer"
+-                className="focus-ring inline-flex items-center justify-center w-10 h-10 rounded-full bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] border border-[color:var(--apple-line)] backdrop-blur-xl transition duration-300 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] hover:scale-105 active:scale-95"
++                className="focus-ring inline-flex items-center justify-center w-10 h-10 rounded-[var(--radius-shell-control)] bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink-secondary)] border border-[color:var(--border-soft)] transition-[background-color,color,border-color,transform] duration-150 ease-apple hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:text-[color:var(--apple-ink)] active:translate-y-px"
+                 aria-label={t('footer.qq', 'QQ')}
+                 title={t('footer.qq', 'QQ')}
+               >
+diff --git a/src/components/locale-toggle.jsx b/src/components/locale-toggle.jsx
+index 4883034..747983b 100644
+--- a/src/components/locale-toggle.jsx
++++ b/src/components/locale-toggle.jsx
+@@ -194,10 +194,9 @@ export const LocaleToggle = ({ className = '', compact = false }) => {
+         onChange={(event) => setLocale(event.target.value)}
+         className={cn(
+           'focus-ring appearance-none cursor-pointer',
+-          compact ? 'h-8 w-full rounded-full' : 'h-9 w-full rounded-full',
++          compact ? 'h-8 w-full rounded-[var(--radius-shell-control)]' : 'h-9 w-full rounded-[var(--radius-shell-control)]',
+           'bg-[color:var(--apple-btn-secondary-bg)] border border-[color:var(--apple-line)]',
+-          'backdrop-blur-xl backdrop-saturate-[180%]',
+-          'shadow-[var(--apple-shadow-sm)]',
++          'shadow-[var(--shadow-content-subtle)]',
+           compact
+             ? 'text-[color:var(--apple-ink)] text-[12px] font-medium'
+             : 'text-[color:var(--apple-ink)] text-[13px] font-medium',
+diff --git a/src/components/mobile-nav-menu.jsx b/src/components/mobile-nav-menu.jsx
+index 4865387..b4e6761 100644
+--- a/src/components/mobile-nav-menu.jsx
++++ b/src/components/mobile-nav-menu.jsx
+@@ -151,7 +151,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
+     >
+       <button
+         type="button"
+-        className="absolute inset-0 w-full h-full bg-white/95 backdrop-blur-xl dark:bg-[color:var(--apple-nav-bg)]"
++        className="absolute inset-0 w-full h-full bg-[color:var(--surface-root)]/95"
+         onClick={() => setIsOpen(false)}
+         aria-label="关闭菜单"
+       />
+@@ -167,7 +167,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
+         <button
+           type="button"
+           onClick={() => setIsOpen(false)}
+-          className="focus-ring absolute z-10 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--apple-card)] text-[color:var(--apple-ink)] shadow-sm border border-[color:var(--apple-line)] hover:bg-[color:var(--apple-card-hover)] transition-colors"
++          className="focus-ring absolute z-10 flex h-10 w-10 items-center justify-center rounded-[var(--radius-shell-control)] bg-[color:var(--surface-elevated)] text-[color:var(--apple-ink)] border border-[color:var(--border-soft)] hover:bg-[color:var(--button-tonal-bg)] transition-colors"
+           style={{ top: 'calc(var(--sat) + 1rem)', right: '1.5rem' }}
+           aria-label="关闭菜单"
+           ref={closeButtonRef}
+@@ -195,7 +195,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
+               className={`px-4 py-3 rounded-xl text-[15px] font-medium transition-colors ${
+                 item.isPrimary
+                   ? 'text-[color:var(--apple-blue)] bg-[color:var(--apple-blue-soft)]'
+-                  : 'text-slate-900 hover:bg-slate-100 dark:text-[color:var(--apple-ink)] dark:hover:bg-white/10'
++                  : 'text-[color:var(--apple-ink)] hover:bg-[color:var(--button-tonal-bg)]'
+               }`}
+             >
+               {item.text}
+@@ -212,7 +212,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
+             href="https://github.com/helixnow/deep-student"
+             target="_blank"
+             rel="noopener noreferrer"
+-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-[color:var(--apple-muted)] transition-colors hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-white/10 dark:hover:text-[color:var(--apple-ink)]"
++            className="flex items-center gap-3 rounded-xl px-4 py-3 text-[color:var(--apple-muted)] transition-colors hover:bg-[color:var(--button-tonal-bg)] hover:text-[color:var(--apple-ink)]"
+           >
+             <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+               <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+@@ -230,7 +230,7 @@ export const MobileNavMenu = ({ onDownload = () => {} }) => {
+         type="button"
+         onClick={() => setIsOpen(!isOpen)}
+         ref={triggerRef}
+-        className="focus-ring relative flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg bg-transparent text-slate-900 transition-opacity hover:opacity-70 dark:text-[color:var(--apple-ink)]"
++        className="focus-ring relative flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-[var(--radius-shell-control)] bg-transparent text-[color:var(--apple-ink)] transition-colors hover:bg-[color:var(--button-plain-hover-bg)]"
+         aria-label={isOpen ? '关闭菜单' : '打开菜单'}
+         aria-expanded={isOpen}
+       >
+diff --git a/src/components/mode-switch-panel.jsx b/src/components/mode-switch-panel.jsx
+index c5d9ab3..5e38aec 100644
+--- a/src/components/mode-switch-panel.jsx
++++ b/src/components/mode-switch-panel.jsx
+@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
+ import { Button } from './ui/button'
+ import { Switch } from './ui/switch'
+ 
+-const ModeRow = ({ title, description, checked, onCheckedChange, gradientClass }) => {
++const ModeRow = ({ title, description, checked, onCheckedChange }) => {
+   const id = useId()
+ 
+   return (
+@@ -12,12 +12,9 @@ const ModeRow = ({ title, description, checked, onCheckedChange, gradientClass }
+       type="button"
+       variant="outline"
+       onClick={() => onCheckedChange(!checked)}
+-      className="group relative h-auto w-full justify-start overflow-hidden rounded-[1rem] px-3 py-2.5 text-left shadow-sm border border-[color:var(--apple-line)] hover:border-[color:var(--apple-line-strong)] bg-[color:var(--apple-card-strong)] hover:bg-[color:var(--apple-card-hover)]"
++      className="h-auto w-full justify-start rounded-[var(--radius-shell-row)] px-3 py-2.5 text-left border border-[color:var(--border-soft)] bg-[color:var(--surface-panel-strong)] hover:border-[color:var(--border-default)] hover:bg-[color:var(--surface-panel-muted)]"
+     >
+-      <span
+-        className={`pointer-events-none absolute inset-0 opacity-0 blur-2xl transition-opacity group-hover:opacity-100 ${gradientClass}`}
+-      />
+-        <span className="relative flex w-full items-start gap-3">
++      <span className="flex w-full items-start gap-3">
+         <span className="min-w-0 flex-1">
+           <span className="flex items-center gap-2">
+             <label htmlFor={id} className="text-sm font-semibold text-[color:var(--apple-ink)]">
+@@ -51,7 +48,7 @@ export const ModeSwitchPanel = ({
+   className = '',
+ }) => {
+   return (
+-    <Card className={`bg-[color:var(--apple-card)] backdrop-blur-xl ${className}`.trim()}>
++    <Card className={`bg-[color:var(--surface-elevated)] ${className}`.trim()}>
+       <CardHeader className="pb-3">
+         <div className="flex items-start justify-between gap-2">
+           <div>
+@@ -68,14 +65,12 @@ export const ModeSwitchPanel = ({
+           description="开启后模型会先进行推理思考，再给出更准确的回答。"
+           checked={deepThinking}
+           onCheckedChange={onDeepThinkingChange}
+-          gradientClass="bg-gradient-to-br from-[color:var(--apple-ink)]/5 via-[color:var(--apple-ink)]/2 to-[color:var(--apple-ink)]/5"
+         />
+         <ModeRow
+           title="学习模式"
+           description="开启后 AI 将以苏格拉底式提问引导你思考，而非直接给出答案。"
+           checked={learningMode}
+           onCheckedChange={onLearningModeChange}
+-          gradientClass="bg-gradient-to-br from-[color:var(--apple-ink)]/5 via-[color:var(--apple-ink)]/2 to-[color:var(--apple-ink)]/5"
+         />
+       </CardContent>
+     </Card>
+diff --git a/src/components/theme-toggle.jsx b/src/components/theme-toggle.jsx
+index 4b756ce..5a8232a 100644
+--- a/src/components/theme-toggle.jsx
++++ b/src/components/theme-toggle.jsx
+@@ -182,12 +182,12 @@ export const ThemeToggle = ({ className = '' }) => {
+       onClick={cycleTheme}
+       className={`
+         focus-ring relative flex items-center justify-center
+-        w-10 h-10 rounded-full
++        w-10 h-10 rounded-[var(--radius-shell-control)]
+         text-[color:var(--apple-muted)]
+         hover:text-[color:var(--apple-ink)]
+-        hover:bg-[color:var(--apple-card)]
+-        active:scale-90
+-        transition-all duration-200
++        hover:bg-[color:var(--button-plain-hover-bg)]
++        active:translate-y-px
++        transition-[background-color,color,transform] duration-150
+         ${className}
+       `.trim()}
+       aria-label={`当前：${getLabel()}，点击切换`}
+@@ -230,14 +230,14 @@ export const ThemeSelector = ({ className = '' }) => {
+         }}
+         className="
+           focus-ring flex items-center gap-2 
+-          px-3 py-1.5 rounded-full
++          px-3 py-1.5 rounded-[var(--radius-shell-control)]
+           text-xs font-medium
+-          bg-[color:var(--apple-card)] 
+-          border border-[color:var(--apple-line)]
++          bg-[color:var(--surface-elevated)] 
++          border border-[color:var(--border-soft)]
+           text-[color:var(--apple-muted)]
+           hover:text-[color:var(--apple-ink)]
+-          hover:bg-[color:var(--apple-card-hover)]
+-          transition-all duration-200
++          hover:bg-[color:var(--button-tonal-bg)]
++          transition-[background-color,color,border-color] duration-150
+         "
+         aria-haspopup="listbox"
+         aria-expanded={isOpen}
+@@ -250,10 +250,9 @@ export const ThemeSelector = ({ className = '' }) => {
+           className="
+             absolute right-0 mt-2 py-1.5
+             min-w-[120px] rounded-xl
+-            bg-[color:var(--apple-card-strong)]
+-            border border-[color:var(--apple-line)]
+-            shadow-[var(--apple-shadow-md)]
+-            backdrop-blur-xl
++            bg-[color:var(--surface-elevated)]
++            border border-[color:var(--border-soft)]
++            shadow-[var(--shadow-shell-floating)]
+             z-50
+           "
+           role="listbox"
+diff --git a/src/components/ui/button.jsx b/src/components/ui/button.jsx
+index 66b0fdd..1d97171 100644
+--- a/src/components/ui/button.jsx
++++ b/src/components/ui/button.jsx
+@@ -2,20 +2,20 @@ import * as React from 'react'
+ import { cn } from '../../lib/utils'
+ 
+ const buttonVariants = (variant = 'default', size = 'default', className = '') => {
+-  const baseStyles = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-[transform,opacity,background-color,box-shadow,color,border-color] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--apple-blue)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96] duration-150 ease-apple motion-reduce:transition-none'
++  const baseStyles = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--button-radius)] text-sm font-medium transition-[background-color,color,border-color,box-shadow,opacity] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:hsl(var(--ring))] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:translate-y-px duration-150 ease-apple motion-reduce:transition-none'
+   
+   const variants = {
+-    default: 'bg-[color:var(--apple-btn-primary-bg)] text-[color:var(--apple-btn-primary-text)] hover:bg-[color:var(--apple-btn-primary-bg-hover)] shadow-sm hover:shadow-md hover:-translate-y-0.5',
+-    secondary: 'bg-[color:var(--apple-btn-secondary-bg)] backdrop-blur-md text-[color:var(--apple-btn-secondary-text)] hover:bg-[color:var(--apple-btn-secondary-bg-hover)] hover:-translate-y-0.5',
+-    outline: 'border border-[color:var(--apple-line)] bg-transparent hover:bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink)] backdrop-blur-sm',
+-    ghost: 'hover:bg-[color:var(--apple-btn-secondary-bg)] text-[color:var(--apple-ink)]',
++    default: 'bg-[color:var(--button-prominent-bg)] text-[color:var(--button-prominent-fg)] hover:bg-[color:var(--button-prominent-bg-hover)] shadow-[var(--shadow-content-subtle)]',
++    secondary: 'bg-[color:var(--button-tonal-bg)] text-[color:var(--apple-btn-secondary-text)] hover:bg-[color:var(--button-tonal-bg-hover)]',
++    outline: 'border border-[color:var(--button-outline-border)] bg-[color:var(--button-outline-bg)] hover:bg-[color:var(--button-tonal-bg)] text-[color:var(--button-outline-fg)]',
++    ghost: 'hover:bg-[color:var(--button-plain-hover-bg)] text-[color:var(--apple-ink)]',
+     link: 'text-[color:var(--apple-blue)] underline-offset-4 hover:underline',
+   }
+ 
+   const sizes = {
+     default: 'h-10 px-5 py-2',
+-    sm: 'h-8 rounded-full px-3 text-xs',
+-    lg: 'h-12 rounded-full px-8 text-base',
++    sm: 'h-8 px-3 text-xs',
++    lg: 'h-11 px-7 text-base',
+     icon: 'h-10 w-10',
+   }
+ 
+diff --git a/src/components/ui/card.jsx b/src/components/ui/card.jsx
+index 539e191..692825d 100644
+--- a/src/components/ui/card.jsx
++++ b/src/components/ui/card.jsx
+@@ -5,7 +5,7 @@ const Card = React.forwardRef(({ className, ...props }, ref) => (
+   <div
+     ref={ref}
+     className={cn(
+-      'rounded-[2rem] border border-[color:var(--apple-line)] bg-[color:var(--apple-card)] text-[color:var(--apple-ink)] shadow-[var(--apple-shadow-sm)] backdrop-blur-2xl transition-[transform,box-shadow,background-color,border-color] duration-200 ease-apple hover:shadow-[var(--apple-shadow-lg)] hover:-translate-y-1 motion-reduce:transition-none',
++      'rounded-[var(--radius-shell-panel)] border border-[color:var(--border-soft)] bg-[color:var(--surface-elevated)] text-[color:var(--text-primary)] shadow-[var(--shadow-content-subtle)] transition-[box-shadow,background-color,border-color] duration-150 ease-apple hover:border-[color:var(--border-default)] hover:shadow-[var(--shadow-content-soft)] motion-reduce:transition-none',
+       className
+     )}
+     {...props}
+@@ -25,7 +25,7 @@ CardHeader.displayName = 'CardHeader'
+ const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
+   <div
+     ref={ref}
+-    className={cn('text-lg font-semibold leading-none tracking-tight text-[color:var(--apple-ink)]', className)}
++    className={cn('text-lg font-semibold leading-none text-[color:var(--text-primary)]', className)}
+     {...props}
+   />
+ ))
+@@ -34,7 +34,7 @@ CardTitle.displayName = 'CardTitle'
+ const CardDescription = React.forwardRef(({ className, ...props }, ref) => (
+   <div
+     ref={ref}
+-    className={cn('text-sm text-[color:var(--apple-muted)]', className)}
++    className={cn('text-sm text-[color:var(--text-muted)]', className)}
+     {...props}
+   />
+ ))
+diff --git a/src/index.css b/src/index.css
+index 62f637b..dc72dc4 100644
+--- a/src/index.css
++++ b/src/index.css
+@@ -11,156 +11,248 @@
+   }
+ 
+   :root {
+-    font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei',
+-      ui-sans-serif, sans-serif;
++    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC',
++      'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+     font-feature-settings: 'ss01', 'ss02', 'cv11';
+     color-scheme: light;
+-    color: #1d1d1f;
+-    background-color: #f5f5f7;
++    color: hsl(var(--foreground));
++    background-color: hsl(var(--background));
+     font-synthesis: none;
+     text-rendering: optimizeLegibility;
+     -webkit-font-smoothing: antialiased;
+     -moz-osx-font-smoothing: grayscale;
+ 
+-    /* Light theme tokens */
+-    --apple-ink: #1d1d1f;
+-    --apple-ink-secondary: #48484a;
+-    --apple-muted: #6e6e73;
+-    --apple-line: rgba(0, 0, 0, 0.08);
+-    --apple-line-strong: rgba(0, 0, 0, 0.12);
+-    --apple-accent-line: rgba(124, 132, 145, 0.36);
+-    --apple-soft-line: rgba(255, 255, 255, 0.8);
+-    --apple-surface: #fbfbfd;
+-    --apple-surface-elevated: #ffffff;
+-    --apple-card: rgba(255, 255, 255, 0.65);
+-    --apple-card-strong: rgba(255, 255, 255, 0.85);
+-    --apple-card-hover: rgba(255, 255, 255, 0.92);
+-    /* Monochrome premium look - replacing blue with deep ink */
+-    --apple-blue: #0071e3;
+-    --apple-blue-hover: #0077ed;
+-    --apple-blue-soft: rgba(0, 113, 227, 0.12);
+-    --apple-glow: rgba(0, 113, 227, 0.15);
+-    --apple-purple: #bf5af2;
+-    --apple-pink: #ff375f;
++    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans',
++      Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
++    --font-family-cn: -apple-system, BlinkMacSystemFont, 'Segoe UI',
++      'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
++      'Noto Sans CJK SC', sans-serif;
++    --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
++      'Liberation Mono', monospace;
++
++    --background: 0 0% 100%;
++    --foreground: 220 9% 18%;
++    --card: 0 0% 99%;
++    --muted: 0 0% 94%;
++    --muted-foreground: 220 6% 42%;
++    --accent: 0 0% 93%;
++    --border: 0 0% 88%;
++    --primary: 215 72% 42%;
++    --primary-foreground: 0 0% 100%;
++    --ring: 214 62% 50%;
++
++    --surface-root: hsl(var(--background));
++    --surface-root-strong: color-mix(in hsl, hsl(var(--card)) 74%, hsl(var(--background)) 26%);
++    --surface-elevated: hsl(var(--card));
++    --surface-muted: hsl(var(--muted));
++    --surface-overlay: color-mix(in hsl, hsl(var(--card)) 88%, transparent 12%);
++    --surface-divider: color-mix(in hsl, hsl(var(--border)) 72%, transparent 28%);
++    --surface-panel-muted: color-mix(in hsl, hsl(var(--muted)) 62%, hsl(var(--background)) 38%);
++    --surface-panel-strong: color-mix(in hsl, hsl(var(--card)) 86%, hsl(var(--background)) 14%);
++    --surface-nav: color-mix(in hsl, hsl(var(--background)) 86%, hsl(var(--muted)) 14%);
++
++    --text-primary: hsl(var(--foreground));
++    --text-secondary: color-mix(in hsl, hsl(var(--foreground)) 72%, hsl(var(--muted-foreground)) 28%);
++    --text-muted: hsl(var(--muted-foreground));
++    --text-inverse: hsl(var(--primary-foreground));
++
++    --border-default: hsl(var(--border));
++    --border-soft: color-mix(in hsl, hsl(var(--border)) 70%, transparent 30%);
++    --border-strong: color-mix(in hsl, hsl(var(--foreground)) 24%, hsl(var(--border)) 76%);
++    --interactive-hover: color-mix(in hsl, hsl(var(--foreground)) 8%, transparent 92%);
++    --interactive-selected: color-mix(in hsl, hsl(var(--primary)) 12%, transparent 88%);
++    --brand-primary: hsl(var(--primary));
++    --brand-primary-dark: hsl(215 72% 34%);
++    --brand-outline: color-mix(in hsl, hsl(var(--primary)) 34%, transparent 66%);
++    --brand-50: color-mix(in hsl, hsl(var(--primary)) 8%, hsl(var(--background)) 92%);
++    --brand-100: color-mix(in hsl, hsl(var(--primary)) 14%, hsl(var(--background)) 86%);
++    --brand-600: hsl(var(--primary));
++
++    --success: 154 45% 31%;
++    --warning: 32 72% 42%;
++    --info: 184 54% 30%;
++    --danger: 0 72% 42%;
++    --success-bg: color-mix(in hsl, hsl(var(--success)) 10%, transparent 90%);
++    --warning-bg: color-mix(in hsl, hsl(var(--warning)) 12%, transparent 88%);
++    --info-bg: color-mix(in hsl, hsl(var(--info)) 10%, transparent 90%);
++    --danger-bg: color-mix(in hsl, hsl(var(--danger)) 10%, transparent 90%);
++
++    /* Compatibility aliases for existing components while the site moves to DS tokens. */
++    --apple-ink: var(--text-primary);
++    --apple-ink-secondary: var(--text-secondary);
++    --apple-muted: var(--text-muted);
++    --apple-line: var(--border-soft);
++    --apple-line-strong: var(--border-default);
++    --apple-accent-line: var(--brand-outline);
++    --apple-soft-line: color-mix(in hsl, hsl(var(--background)) 90%, transparent 10%);
++    --apple-surface: var(--surface-root);
++    --apple-surface-elevated: var(--surface-elevated);
++    --apple-card: var(--surface-elevated);
++    --apple-card-strong: var(--surface-panel-strong);
++    --apple-card-hover: var(--surface-panel-muted);
++    --apple-blue: hsl(var(--primary));
++    --apple-blue-hover: hsl(215 72% 36%);
++    --apple-blue-soft: var(--brand-100);
++    --apple-glow: color-mix(in hsl, hsl(var(--primary)) 20%, transparent 80%);
++    --apple-purple: hsl(262 52% 42%);
++    --apple-pink: hsl(342 58% 39%);
+     
+-    /* Advanced layered shadows for realism */
+-    --apple-shadow-sm: 
+-      0 1px 2px rgba(0,0,0,0.04), 
+-      0 4px 8px rgba(0,0,0,0.02);
+-    --apple-shadow-md: 
+-      0 4px 12px rgba(0,0,0,0.03), 
+-      0 12px 32px rgba(0,0,0,0.04), 
+-      0 0 0 1px rgba(0,0,0,0.02); /* Subtle rim */
+-    --apple-shadow-lg: 
+-      0 8px 24px rgba(0,0,0,0.04), 
+-      0 24px 64px rgba(0,0,0,0.06),
+-      0 0 0 1px rgba(0,0,0,0.02);
+-    --apple-shadow-xl: 
+-      0 24px 48px rgba(0,0,0,0.08), 
+-      0 48px 100px rgba(0,0,0,0.12);
++    --shadow-content-subtle: 0 1px 2px rgba(16, 24, 40, 0.04);
++    --shadow-content-soft: 0 8px 24px rgba(16, 24, 40, 0.06);
++    --shadow-content-elevated: 0 18px 42px rgba(16, 24, 40, 0.08);
++    --shadow-shell-floating: 0 18px 48px rgba(16, 24, 40, 0.12);
++    --apple-shadow-sm: var(--shadow-content-subtle);
++    --apple-shadow-md: var(--shadow-content-soft);
++    --apple-shadow-lg: var(--shadow-content-soft);
++    --apple-shadow-xl: var(--shadow-content-elevated);
+ 
+     /* Easing */
+     --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
+     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+ 
+-    /* Title gradient - Apple style */
+-    --apple-title-gradient: linear-gradient(
+-      135deg,
+-      #1d1d1f 0%,
+-      #434344 100%
+-    );
++    --apple-title-gradient: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+ 
+     /* Button tokens */
+-    --apple-btn-primary-bg: #1d1d1f;
+-    --apple-btn-primary-bg-hover: #3a3a3c;
+-    --apple-btn-primary-text: #ffffff;
+-    --apple-btn-secondary-bg: rgba(0, 0, 0, 0.05);
+-    --apple-btn-secondary-bg-hover: rgba(0, 0, 0, 0.08);
+-    --apple-btn-secondary-text: #1d1d1f;
+-    --apple-btn-secondary-border: transparent;
+-
+-    /* Nav tokens */
+-    --apple-nav-bg: rgba(251, 251, 253, 0.75);
+-    --apple-nav-border: rgba(0, 0, 0, 0.05);
++    --button-radius: 12px;
++    --button-prominent-bg: hsl(var(--primary));
++    --button-prominent-bg-hover: hsl(215 72% 36%);
++    --button-prominent-fg: hsl(var(--primary-foreground));
++    --button-outline-bg: hsl(var(--background));
++    --button-outline-border: var(--border-default);
++    --button-outline-fg: var(--text-primary);
++    --button-tonal-bg: var(--surface-panel-muted);
++    --button-tonal-bg-hover: var(--interactive-hover);
++    --button-plain-hover-bg: var(--interactive-hover);
++    --apple-btn-primary-bg: var(--button-prominent-bg);
++    --apple-btn-primary-bg-hover: var(--button-prominent-bg-hover);
++    --apple-btn-primary-text: var(--button-prominent-fg);
++    --apple-btn-secondary-bg: var(--button-tonal-bg);
++    --apple-btn-secondary-bg-hover: var(--button-tonal-bg-hover);
++    --apple-btn-secondary-text: var(--text-primary);
++    --apple-btn-secondary-border: var(--border-soft);
++
++    --apple-nav-bg: color-mix(in hsl, hsl(var(--background)) 92%, transparent 8%);
++    --apple-nav-border: var(--border-soft);
+ 
+     /* Selection */
+-    --apple-selection-bg: rgba(0, 113, 227, 0.15);
++    --apple-selection-bg: var(--brand-100);
+     --apple-selection-text: inherit;
+ 
+     /* Noise overlay */
+-    --apple-noise-opacity: 0.035;
++    --apple-noise-opacity: 0;
+ 
+     --z-noise: 20;
+     --z-nav: 40;
+     --z-overlay: 50;
+     --z-modal: 60;
+ 
+-    --space-section-top: clamp(3.25rem, 5vw + 1rem, 5.75rem);
+-    --space-section-stack: clamp(5rem, 9vw, 11.5rem);
++    --space-section-top: clamp(2.75rem, 4vw + 0.75rem, 4.75rem);
++    --space-section-stack: clamp(3rem, 5.5vw, 6.75rem);
+     --space-page-bottom: clamp(6.5rem, 12vw, 12rem);
+     --space-block-lg: clamp(2.5rem, 5vw, 4.5rem);
+     --space-block-md: clamp(1.5rem, 3vw, 3rem);
+     --space-block-sm: clamp(1rem, 2vw, 2rem);
+ 
+-    --radius: 0.75rem;
++    --radius: 0.5rem;
++    --radius-shell-control: 12px;
++    --radius-shell-row: 14px;
++    --radius-shell-toolbar: 16px;
++    --radius-shell-panel: 18px;
++    --radius-shell-dialog: 22px;
++    --control-height-compact: 32px;
++    --control-height-touch: 44px;
++    --touch-target-size: var(--control-height-touch);
+   }
+ 
+   .dark {
+     color-scheme: dark;
+ 
+-    /* Dark theme tokens - Apple-inspired deep space */
+-    --apple-ink: #f5f5f7;
+-    --apple-ink-secondary: #86868b;
+-    --apple-muted: #86868b;
+-    --apple-line: rgba(255, 255, 255, 0.08);
+-    --apple-line-strong: rgba(255, 255, 255, 0.12);
+-    --apple-accent-line: rgba(194, 201, 212, 0.38);
+-    --apple-soft-line: rgba(255, 255, 255, 0.12);
+-    --apple-surface: #000000;
+-    --apple-surface-elevated: #1c1c1e;
+-    --apple-card: rgba(28, 28, 30, 0.65);
+-    --apple-card-strong: rgba(44, 44, 46, 0.75);
+-    --apple-card-hover: rgba(44, 44, 46, 0.85);
+-    /* Monochrome premium look - replacing blue with white */
+-    --apple-blue: #0a84ff;
+-    --apple-blue-hover: #0077ed;
+-    --apple-blue-soft: rgba(10, 132, 255, 0.15);
+-    --apple-glow: rgba(10, 132, 255, 0.25);
+-    --apple-purple: #bf5af2;
+-    --apple-pink: #ff375f;
+-    
+-    --apple-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+-    --apple-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.05);
+-    --apple-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255,255,255,0.05);
+-    --apple-shadow-xl: 0 32px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255,255,255,0.05);
+-
+-    /* Title gradient - Apple dark mode style with subtle silver highlight */
+-    --apple-title-gradient: linear-gradient(
+-      135deg,
+-      #ffffff 0%,
+-      #e5e5e5 50%,
+-      #a1a1a6 100%
+-    );
+-
+-    /* Button tokens - White primary in dark mode */
+-    --apple-btn-primary-bg: #ffffff;
+-    --apple-btn-primary-bg-hover: #f2f2f7;
+-    --apple-btn-primary-text: #000000;
+-    --apple-btn-secondary-bg: rgba(255, 255, 255, 0.08);
+-    --apple-btn-secondary-bg-hover: rgba(255, 255, 255, 0.12);
+-    --apple-btn-secondary-text: #ffffff;
+-    --apple-btn-secondary-border: transparent;
+-
+-    /* Nav tokens */
+-    --apple-nav-bg: rgba(0, 0, 0, 0.75);
+-    --apple-nav-border: rgba(255, 255, 255, 0.08);
+-
+-    /* Selection */
+-    --apple-selection-bg: rgba(10, 132, 255, 0.25);
++    --background: 0 0% 9%;
++    --foreground: 0 0% 96%;
++    --card: 0 0% 12%;
++    --muted: 0 0% 14%;
++    --muted-foreground: 0 0% 60%;
++    --accent: 0 0% 15%;
++    --border: 0 0% 18%;
++    --primary: 214 64% 72%;
++    --primary-foreground: 220 30% 10%;
++    --ring: 214 58% 68%;
++
++    --surface-root: hsl(var(--background));
++    --surface-root-strong: color-mix(in hsl, hsl(var(--card)) 72%, hsl(var(--background)) 28%);
++    --surface-elevated: hsl(var(--card));
++    --surface-muted: hsl(var(--muted));
++    --surface-overlay: color-mix(in hsl, hsl(var(--card)) 88%, transparent 12%);
++    --surface-divider: color-mix(in hsl, hsl(var(--border)) 76%, transparent 24%);
++    --surface-panel-muted: color-mix(in hsl, hsl(var(--muted)) 64%, hsl(var(--background)) 36%);
++    --surface-panel-strong: color-mix(in hsl, hsl(var(--card)) 86%, hsl(var(--background)) 14%);
++    --surface-nav: color-mix(in hsl, hsl(var(--background)) 84%, hsl(var(--muted)) 16%);
++    --text-primary: hsl(var(--foreground));
++    --text-secondary: color-mix(in hsl, hsl(var(--foreground)) 76%, hsl(var(--muted-foreground)) 24%);
++    --text-muted: hsl(var(--muted-foreground));
++    --text-inverse: hsl(var(--primary-foreground));
++    --border-default: hsl(var(--border));
++    --border-soft: color-mix(in hsl, hsl(var(--border)) 70%, transparent 30%);
++    --border-strong: color-mix(in hsl, hsl(var(--foreground)) 22%, hsl(var(--border)) 78%);
++    --interactive-hover: color-mix(in hsl, hsl(var(--foreground)) 10%, transparent 90%);
++    --interactive-selected: color-mix(in hsl, hsl(var(--primary)) 14%, transparent 86%);
++    --brand-primary: hsl(var(--primary));
++    --brand-primary-dark: hsl(214 64% 80%);
++    --brand-outline: color-mix(in hsl, hsl(var(--primary)) 38%, transparent 62%);
++    --brand-50: color-mix(in hsl, hsl(var(--primary)) 10%, hsl(var(--background)) 90%);
++    --brand-100: color-mix(in hsl, hsl(var(--primary)) 18%, hsl(var(--background)) 82%);
++    --brand-600: hsl(var(--primary));
++    --success: 154 42% 68%;
++    --warning: 32 72% 70%;
++    --info: 184 48% 68%;
++    --danger: 0 68% 72%;
++    --shadow-content-subtle: 0 1px 2px rgba(0, 0, 0, 0.32);
++    --shadow-content-soft: 0 12px 28px rgba(0, 0, 0, 0.34);
++    --shadow-content-elevated: 0 22px 46px rgba(0, 0, 0, 0.42);
++    --shadow-shell-floating: 0 22px 56px rgba(0, 0, 0, 0.5);
++    --apple-ink: var(--text-primary);
++    --apple-ink-secondary: var(--text-secondary);
++    --apple-muted: var(--text-muted);
++    --apple-line: var(--border-soft);
++    --apple-line-strong: var(--border-default);
++    --apple-accent-line: var(--brand-outline);
++    --apple-soft-line: color-mix(in hsl, hsl(var(--foreground)) 12%, transparent 88%);
++    --apple-surface: var(--surface-root);
++    --apple-surface-elevated: var(--surface-elevated);
++    --apple-card: var(--surface-elevated);
++    --apple-card-strong: var(--surface-panel-strong);
++    --apple-card-hover: var(--surface-panel-muted);
++    --apple-blue: hsl(var(--primary));
++    --apple-blue-hover: hsl(214 64% 82%);
++    --apple-blue-soft: var(--brand-100);
++    --apple-glow: color-mix(in hsl, hsl(var(--primary)) 22%, transparent 78%);
++    --apple-purple: hsl(262 52% 74%);
++    --apple-pink: hsl(340 58% 72%);
++    --apple-shadow-sm: var(--shadow-content-subtle);
++    --apple-shadow-md: var(--shadow-content-soft);
++    --apple-shadow-lg: var(--shadow-content-soft);
++    --apple-shadow-xl: var(--shadow-content-elevated);
++    --apple-title-gradient: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
++    --button-prominent-bg: hsl(var(--primary));
++    --button-prominent-bg-hover: hsl(214 64% 82%);
++    --button-prominent-fg: hsl(var(--primary-foreground));
++    --button-outline-bg: hsl(var(--background));
++    --button-outline-border: var(--border-default);
++    --button-outline-fg: var(--text-primary);
++    --button-tonal-bg: var(--surface-panel-muted);
++    --button-tonal-bg-hover: var(--interactive-hover);
++    --apple-btn-primary-bg: var(--button-prominent-bg);
++    --apple-btn-primary-bg-hover: var(--button-prominent-bg-hover);
++    --apple-btn-primary-text: var(--button-prominent-fg);
++    --apple-btn-secondary-bg: var(--button-tonal-bg);
++    --apple-btn-secondary-bg-hover: var(--button-tonal-bg-hover);
++    --apple-btn-secondary-text: var(--text-primary);
++    --apple-btn-secondary-border: var(--border-soft);
++    --apple-nav-bg: color-mix(in hsl, hsl(var(--background)) 88%, transparent 12%);
++    --apple-nav-border: var(--border-soft);
++    --apple-selection-bg: var(--brand-100);
+     --apple-selection-text: #ffffff;
+-
+-    /* Noise overlay */
+-    --apple-noise-opacity: 0.05;
++    --apple-noise-opacity: 0;
+   }
+ 
+   body {
+@@ -169,20 +261,11 @@
+     overflow-x: hidden;
+     overflow-x: clip;
+     position: relative;
+-    color: var(--apple-ink);
+-    background-color: var(--apple-surface);
+-    background-image: 
+-      /* Subtle top gradient orb - Neutral/Warm */
+-      radial-gradient(ellipse 120% 80% at 50% -20%, rgba(120, 119, 126, 0.05), transparent 50%),
+-      /* Base gradient */
+-      linear-gradient(180deg, 
+-        #fbfbfd 0%, 
+-        #ffffff 20%, 
+-        #f5f5f7 60%,
+-        #fbfbfd 100%
+-      );
++    color: var(--text-primary);
++    background-color: var(--surface-root);
++    background-image: linear-gradient(180deg, var(--surface-root) 0%, var(--surface-root-strong) 100%);
+     background-attachment: fixed;
+-    transition: background-color 0.4s ease, color 0.3s ease;
++    transition: background-color 150ms ease, color 150ms ease;
+   }
+ 
+   h1,
+@@ -209,16 +292,9 @@
+     mix-blend-mode: overlay;
+   }
+ 
+-  /* Dark mode body - Apple-inspired dramatic dark */
+   .dark body {
+-    background-color: #000000;
+-    background-image: 
+-      /* Primary neutral orb - top left */
+-      radial-gradient(ellipse 100% 80% at 20% -30%, rgba(255, 255, 255, 0.08), transparent 50%),
+-      /* Ambient glow for depth */
+-      radial-gradient(ellipse 150% 100% at 50% 50%, rgba(28, 28, 30, 0.5), transparent 70%),
+-      /* Base black */
+-      linear-gradient(180deg, #000000 0%, #000000 100%);
++    background-color: var(--surface-root);
++    background-image: linear-gradient(180deg, var(--surface-root) 0%, var(--surface-root-strong) 100%);
+     background-attachment: fixed;
+   }
+ 
+@@ -264,13 +340,13 @@
+   }
+ 
+   :root .focus-ring {
+-    --tw-ring-color: rgba(29, 29, 31, 0.2);
+-    --tw-ring-offset-color: rgba(255, 255, 255, 0.9);
++    --tw-ring-color: hsl(var(--ring));
++    --tw-ring-offset-color: hsl(var(--background));
+   }
+ 
+   .dark .focus-ring {
+-    --tw-ring-color: rgba(255, 255, 255, 0.3);
+-    --tw-ring-offset-color: rgba(0, 0, 0, 0.9);
++    --tw-ring-color: hsl(var(--ring));
++    --tw-ring-offset-color: hsl(var(--background));
+   }
+ 
+   .segmented-control-wrap {
+@@ -285,6 +361,17 @@
+     display: none;
+   }
+ 
++  .feature-rail {
++    overflow-x: auto;
++    overflow-y: hidden;
++    -webkit-overflow-scrolling: touch;
++    scrollbar-width: none;
++  }
++
++  .feature-rail::-webkit-scrollbar {
++    display: none;
++  }
++
+   .segmented-control {
+     display: inline-flex;
+     align-items: center;
+@@ -293,30 +380,26 @@
+     min-width: max-content;
+     padding: 2px;
+     border-radius: 13px;
+-    /* Glass */
+-    background: rgba(255, 255, 255, 0.15);
+-    backdrop-filter: blur(20px) saturate(180%);
+-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
++    background: var(--surface-panel-muted);
++    border: 1px solid var(--border-soft);
++    box-shadow: none;
+     overflow: hidden;
+   }
+ 
+   @media (max-width: 1023px) {
+     .segmented-control {
+-      background: rgba(255, 255, 255, 0.92);
+-      backdrop-filter: blur(8px) saturate(140%);
+-      -webkit-backdrop-filter: blur(8px) saturate(140%);
++      background: var(--surface-panel-muted);
+     }
+ 
+     .dark .segmented-control {
+-      background: rgba(18, 18, 20, 0.9);
+-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
++      background: var(--surface-panel-muted);
++      box-shadow: none;
+     }
+   }
+ 
+   .dark .segmented-control {
+-    background: rgba(255, 255, 255, 0.12);
+-    box-shadow: 0 18px 56px rgba(0, 0, 0, 0.55);
++    background: var(--surface-panel-muted);
++    box-shadow: none;
+   }
+ 
+   .segmented-control__btn {
+@@ -330,14 +413,14 @@
+     padding: 7px 12px;
+     font-size: 13px;
+     font-weight: 600;
+-    color: #3a3a3c;
++    color: var(--text-secondary);
+     cursor: pointer;
+     border-radius: 11px;
+     outline: none;
+     user-select: none;
+     white-space: nowrap;
+-    transition: color 0.2s ease;
+-    letter-spacing: -0.01em;
++    transition: color 150ms ease, background-color 150ms ease;
++    letter-spacing: 0;
+     -webkit-font-smoothing: antialiased;
+     -moz-osx-font-smoothing: grayscale;
+     min-height: 24px;
+@@ -358,19 +441,19 @@
+   }
+ 
+   .dark .segmented-control__btn {
+-    color: rgba(255, 255, 255, 0.75);
+-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
++    color: var(--text-secondary);
++    text-shadow: none;
+   }
+ 
+   .segmented-control__btn.is-active {
+-    color: #000000;
+-    font-weight: 700;
++    color: var(--text-primary);
++    font-weight: 600;
+     text-shadow: none;
+   }
+ 
+   .dark .segmented-control__btn.is-active {
+-    color: #000000;
+-    font-weight: 700;
++    color: var(--text-primary);
++    font-weight: 600;
+     text-shadow: none;
+   }
+ 
+@@ -379,9 +462,10 @@
+     top: 2px;
+     left: 2px;
+     height: calc(100% - 4px);
+-    background: rgba(255, 255, 255, 0.85);
++    background: var(--surface-elevated);
++    border: 1px solid var(--border-soft);
+     border-radius: 11px;
+-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
++    box-shadow: var(--shadow-content-subtle);
+     z-index: 1;
+     pointer-events: none;
+     backdrop-filter: blur(10px);
+@@ -389,30 +473,12 @@
+     transition: transform 200ms var(--ease-apple);
+   }
+ 
+-  /* Apple-style gradient text */
+   .gradient-text {
+-    background: var(--apple-title-gradient);
+-    background-size: 200% 200%;
+-    -webkit-background-clip: text;
+-    background-clip: text;
+-    -webkit-text-fill-color: transparent;
++    color: var(--text-primary);
+   }
+ 
+-  /* Animated gradient for special emphasis */
+   .gradient-text-animated {
+-    background: linear-gradient(
+-      90deg,
+-      var(--apple-ink) 0%,
+-      var(--apple-blue) 25%,
+-      var(--apple-purple) 50%,
+-      var(--apple-blue) 75%,
+-      var(--apple-ink) 100%
+-    );
+-    background-size: 200% 100%;
+-    -webkit-background-clip: text;
+-    background-clip: text;
+-    -webkit-text-fill-color: transparent;
+-    animation: gradient-shift 8s ease infinite;
++    color: var(--text-primary);
+   }
+ 
+   @keyframes gradient-shift {
+@@ -420,47 +486,39 @@
+     50% { background-position: 100% 50%; }
+   }
+ 
+-  /* Glass morphism card */
+   .glass-card {
+-    background: var(--apple-card);
+-    backdrop-filter: saturate(180%) blur(20px);
+-    -webkit-backdrop-filter: saturate(180%) blur(20px);
+-    border: 1px solid var(--apple-line);
+-    box-shadow: var(--apple-shadow-md);
++    background: var(--surface-elevated);
++    border: 1px solid var(--border-soft);
++    box-shadow: var(--shadow-content-subtle);
+   }
+ 
+   .glass-card-strong {
+-    background: var(--apple-card-strong);
+-    backdrop-filter: saturate(200%) blur(30px);
+-    -webkit-backdrop-filter: saturate(200%) blur(30px);
+-    border: 1px solid var(--apple-line-strong);
+-    box-shadow: var(--apple-shadow-lg);
++    background: var(--surface-panel-strong);
++    border: 1px solid var(--border-default);
++    box-shadow: var(--shadow-content-soft);
+   }
+ 
+-  /* Glow effect for interactive elements */
+   .glow-blue {
+-    box-shadow: 0 0 20px var(--apple-glow), 0 0 40px rgba(0, 0, 0, 0.05);
++    box-shadow: 0 0 0 1px var(--brand-outline);
+   }
+ 
+   .dark .glow-blue {
+-    box-shadow: 0 0 30px var(--apple-glow), 0 0 60px rgba(255, 255, 255, 0.05);
++    box-shadow: 0 0 0 1px var(--brand-outline);
+   }
+ 
+-  /* Subtle hover lift effect */
+   .hover-lift {
+-    transition: transform 150ms var(--ease-out), box-shadow 150ms ease;
++    transition: border-color 150ms ease, box-shadow 150ms ease;
+   }
+ 
+   .hover-lift:hover {
+-    transform: translateY(-2px);
+-    box-shadow: var(--apple-shadow-lg);
++    box-shadow: var(--shadow-content-soft);
+   }
+ }
+ 
+ /* Theme transition - respect reduced motion */
+ @media (prefers-reduced-motion: no-preference) {
+   :root {
+-    --theme-transition-duration: 0.4s;
++    --theme-transition-duration: 150ms;
+   }
+   
+   body,
+diff --git a/src/lib/download-badge.js b/src/lib/download-badge.js
+index 6b16b5b..ddcca60 100644
+--- a/src/lib/download-badge.js
++++ b/src/lib/download-badge.js
+@@ -2,6 +2,6 @@ import { cn } from './utils.js'
+ 
+ export const getRecommendedBadgeClassName = () =>
+   cn(
+-    'absolute left-5 top-0 -translate-y-1/2 rounded-full px-2.5 py-0.5 text-[10px] font-semibold text-[color:var(--apple-ink)]',
+-    'border border-[color:var(--apple-line-strong)] bg-[color:var(--apple-surface-elevated)] shadow-[var(--apple-shadow-sm)]'
++    'absolute left-5 top-0 -translate-y-1/2 rounded-[var(--radius-shell-control)] px-2.5 py-0.5 text-[10px] font-semibold text-[color:var(--brand-primary)]',
++    'border border-[color:var(--brand-outline)] bg-[color:var(--surface-elevated)] shadow-[var(--shadow-content-subtle)]'
+   )
+diff --git a/src/lib/download-card.js b/src/lib/download-card.js
+index 70deef1..f9958d5 100644
+--- a/src/lib/download-card.js
++++ b/src/lib/download-card.js
+@@ -1,10 +1,10 @@
+ import { cn } from './utils.js'
+ 
+ const baseCardClassName =
+-  'rounded-[1.5rem] bg-[color:var(--apple-card)] border border-[color:var(--apple-line)] p-[1.5rem] sm:p-[1.75rem] shadow-[var(--apple-shadow-sm)] transition-[border-color,box-shadow] duration-300 ease-[var(--ease-apple)]'
++  'rounded-[var(--radius-shell-panel)] bg-[color:var(--surface-elevated)] border border-[color:var(--border-soft)] p-[1.5rem] sm:p-[1.75rem] shadow-[var(--shadow-content-subtle)] transition-[border-color,box-shadow,background-color] duration-150 ease-[var(--ease-apple)]'
+ 
+ const recommendedCardClassName =
+-  'relative border-[1.5px] border-[color:var(--apple-accent-line)] shadow-[var(--apple-shadow-md)]'
++  'relative border-[1.5px] border-[color:var(--brand-outline)] bg-[color:var(--brand-50)] shadow-[var(--shadow-content-soft)]'
+ 
+ export const getDownloadCardClassName = (isRecommended = false) =>
+   cn(baseCardClassName, isRecommended && recommendedCardClassName)
+diff --git a/src/lib/locale-slider-ui.js b/src/lib/locale-slider-ui.js
+index a095f76..9a7fc46 100644
+--- a/src/lib/locale-slider-ui.js
++++ b/src/lib/locale-slider-ui.js
+@@ -2,22 +2,21 @@ import { cn } from './utils.js'
+ 
+ export const getLocaleSliderTrackClassName = ({ compact = false } = {}) =>
+   cn(
+-    'relative isolate grid grid-cols-3 items-center overflow-hidden rounded-full',
+-    'border border-[color:var(--apple-line)] bg-[color:var(--apple-btn-secondary-bg)]',
+-    'backdrop-blur-xl backdrop-saturate-[180%] shadow-[var(--apple-shadow-sm)]',
+-    'before:pointer-events-none before:absolute before:inset-px before:rounded-full',
+-    'before:border before:border-[color:var(--apple-soft-line)] before:opacity-70',
++    'relative isolate grid grid-cols-3 items-center overflow-hidden rounded-[var(--radius-shell-toolbar)]',
++    'border border-[color:var(--border-soft)] bg-[color:var(--apple-btn-secondary-bg)]',
++    'shadow-[var(--shadow-content-subtle)]',
++    'before:pointer-events-none before:absolute before:inset-px before:rounded-[calc(var(--radius-shell-toolbar)-1px)]',
++    'before:border before:border-[color:var(--apple-soft-line)] before:opacity-40',
+     compact ? 'h-9 p-0.5' : 'h-10 p-0.5',
+     'focus-within:ring-2 focus-within:ring-offset-2',
+-    'focus-within:ring-[rgba(29,29,31,0.2)] focus-within:ring-offset-[rgba(255,255,255,0.9)]',
+-    'dark:focus-within:ring-[rgba(255,255,255,0.3)] dark:focus-within:ring-offset-[rgba(0,0,0,0.9)]'
++    'focus-within:ring-[color:hsl(var(--ring))] focus-within:ring-offset-[color:hsl(var(--background))]'
+   )
+ 
+ export const getLocaleSliderThumbClassName = () =>
+   cn(
+-    'absolute left-0.5 top-0.5 bottom-0.5 rounded-full',
++    'absolute left-0.5 top-0.5 bottom-0.5 rounded-[var(--radius-shell-control)]',
+     'border border-[color:var(--apple-soft-line)] bg-[color:var(--apple-surface-elevated)]',
+-    'shadow-[var(--apple-shadow-sm)]',
++    'shadow-[var(--shadow-content-subtle)]',
+     'transform transition-transform duration-150 ease-out motion-reduce:transition-none'
+   )
+ 
+@@ -28,7 +27,7 @@ export const getLocaleSliderThumbStyle = (index, count = 3) => ({
+ 
+ export const getLocaleSliderLabelClassName = ({ compact = false, checked = false } = {}) =>
+   cn(
+-    'inline-flex h-full w-full items-center justify-center rounded-full px-2',
++    'inline-flex h-full w-full items-center justify-center rounded-[var(--radius-shell-control)] px-2',
+     'cursor-pointer select-none transition-colors duration-150 motion-reduce:transition-none',
+     'peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-inset',
+     'peer-focus-visible:ring-[rgba(29,29,31,0.14)] dark:peer-focus-visible:ring-[rgba(255,255,255,0.2)]',

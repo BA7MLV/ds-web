@@ -1,0 +1,133 @@
+From 7a89352803c2ae8dee7227971f22ddc6c4462cff Mon Sep 17 00:00:00 2001
+From: Mirai <BA7MLV@163.com>
+Date: Thu, 9 Jul 2026 17:56:25 +0800
+Subject: [PATCH 7/9] feat: add prototype home behind ?view=prototype
+
+---
+ src/main.jsx                |  6 ++-
+ src/pages/PrototypeHome.jsx | 94 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 99 insertions(+), 1 deletion(-)
+ create mode 100644 src/pages/PrototypeHome.jsx
+
+diff --git a/src/main.jsx b/src/main.jsx
+index b9a1a6d..f98900a 100644
+--- a/src/main.jsx
++++ b/src/main.jsx
+@@ -2,9 +2,13 @@ import { StrictMode } from 'react'
+ import { createRoot } from 'react-dom/client'
+ import './index.css'
+ import App from './App.jsx'
++import PrototypeHome from './pages/PrototypeHome.jsx'
++
++const params = new URLSearchParams(window.location.search)
++const isPrototype = params.get('view') === 'prototype'
+ 
+ createRoot(document.getElementById('root')).render(
+   <StrictMode>
+-    <App />
++    {isPrototype ? <PrototypeHome /> : <App />}
+   </StrictMode>,
+ )
+diff --git a/src/pages/PrototypeHome.jsx b/src/pages/PrototypeHome.jsx
+new file mode 100644
+index 0000000..57f4c6f
+--- /dev/null
++++ b/src/pages/PrototypeHome.jsx
+@@ -0,0 +1,94 @@
++import { HorizontalFeatureScroll } from '../components/horizontal-feature-scroll'
++
++const FONT_STACK =
++  '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif'
++
++const FEATURE_PANELS = [
++  {
++    id: 'agent-chat',
++    eyebrow: '01',
++    title: 'Agent 对话',
++    description: '以 Chat V2 为入口，打通学习与制卡',
++    imageSrc: '/img/example/软件主页图.png',
++    imageAlt: 'Deep Student Agent 对话界面',
++  },
++  {
++    id: 'anki-cards',
++    eyebrow: '02',
++    title: 'Anki 制卡',
++    description: '上传文档，自动生成并同步到 Anki',
++    imageSrc: '/img/example/anki-制卡2.png',
++    imageAlt: 'Deep Student Anki 制卡界面',
++  },
++  {
++    id: 'learning-hub',
++    eyebrow: '03',
++    title: '学习中枢',
++    description: '资料、笔记与记忆统一管理',
++    imageSrc: '/img/example/学习资源管理器.png',
++    imageAlt: 'Deep Student 学习中枢界面',
++  },
++]
++
++const linkClass =
++  'text-[15px] font-medium text-[#1D1D1F] transition-opacity hover:opacity-70'
++
++const primaryCtaClass =
++  'inline-flex items-center justify-center rounded-full bg-[#1D1D1F] px-6 py-3 text-[15px] font-medium text-white transition-opacity hover:opacity-85'
++
++const secondaryCtaClass =
++  'inline-flex items-center justify-center rounded-full px-6 py-3 text-[15px] font-medium text-[#1D1D1F] transition-opacity hover:opacity-70'
++
++export default function PrototypeHome() {
++  return (
++    <div
++      className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F]"
++      style={{ fontFamily: FONT_STACK }}
++    >
++      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 md:px-10">
++        <a href="/?view=prototype" className={`${linkClass} tracking-tight`}>
++          Deep Student
++        </a>
++        <a href="/?view=download" className={linkClass}>
++          下载
++        </a>
++      </header>
++
++      <section className="mx-auto flex min-h-[72vh] max-w-3xl flex-col items-center justify-center px-6 pb-20 pt-10 text-center md:px-10 md:pb-28 md:pt-16">
++        <p className="text-[15px] font-semibold tracking-tight text-[#1D1D1F] md:text-[17px]">
++          Deep Student
++        </p>
++        <h1 className="mt-4 text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1D1D1F] md:text-[56px]">
++          学习，从对话开始
++        </h1>
++        <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-[#86868B] md:text-[19px]">
++          AI 学习助手：对话、制卡与资料管理，一处完成。
++        </p>
++        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
++          <a href="/?view=download" className={primaryCtaClass}>
++            下载
++          </a>
++          <a href="#features" className={secondaryCtaClass}>
++            了解功能
++          </a>
++        </div>
++      </section>
++
++      <div id="features">
++        <HorizontalFeatureScroll panels={FEATURE_PANELS} />
++      </div>
++
++      <section className="mx-auto flex max-w-3xl flex-col items-center px-6 py-24 text-center md:px-10 md:py-32">
++        <h2 className="text-[28px] font-semibold tracking-tight text-[#1D1D1F] md:text-[36px]">
++          开始使用 Deep Student
++        </h2>
++        <p className="mt-4 text-[17px] leading-relaxed text-[#86868B] md:text-[19px]">
++          下载桌面端，把学习流程收进一个工作区。
++        </p>
++        <a href="/?view=download" className={`${primaryCtaClass} mt-8`}>
++          下载 Deep Student
++        </a>
++      </section>
++    </div>
++  )
++}
+-- 
+2.39.5 (Apple Git-154)
+

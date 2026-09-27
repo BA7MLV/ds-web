@@ -1,0 +1,391 @@
+From 9427ecda2e1aabc4fa077dc0c836b1e1c828816d Mon Sep 17 00:00:00 2001
+From: Mirai <BA7MLV@163.com>
+Date: Thu, 9 Jul 2026 18:38:46 +0800
+Subject: [PATCH 9/9] feat: wire horizontal scroll into existing homepage shell
+
+Keep TopNav, Hero, architecture, FAQ and footer; replace the feature stack with sticky horizontal panels for Agent, Anki and notes/memory behind ?view=prototype.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+---
+ src/App.jsx                                  | 73 ++++++++++++---
+ src/components/feature-panel.jsx             | 22 ++---
+ src/components/horizontal-feature-scroll.jsx | 10 ++-
+ src/main.jsx                                 |  6 +-
+ src/pages/PrototypeHome.jsx                  | 94 --------------------
+ 5 files changed, 75 insertions(+), 130 deletions(-)
+ delete mode 100644 src/pages/PrototypeHome.jsx
+
+diff --git a/src/App.jsx b/src/App.jsx
+index dce7533..f63c477 100644
+--- a/src/App.jsx
++++ b/src/App.jsx
+@@ -1,4 +1,5 @@
+ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
++import { HorizontalFeatureScroll } from './components/horizontal-feature-scroll'
+ import { LocaleToggle, useLocale } from './components/locale-toggle'
+ import { MobileNavMenu } from './components/mobile-nav-menu'
+ import { ThemeToggle, useTheme } from './components/theme-toggle'
+@@ -52,12 +53,18 @@ const trackUiEvent = (name, payload = {}) => {
+   }
+ }
+ 
+-const getIsDownloadFromLocation = () => {
+-  if (typeof window === 'undefined') return false
++const getViewFromLocation = () => {
++  if (typeof window === 'undefined') return 'home'
+   const params = new URLSearchParams(window.location.search)
+-  return params.get('view') === 'download'
++  const view = params.get('view')
++  if (view === 'download') return 'download'
++  if (view === 'prototype') return 'prototype'
++  return 'home'
+ }
+ 
++const getIsDownloadFromLocation = () => getViewFromLocation() === 'download'
++const getIsPrototypeFromLocation = () => getViewFromLocation() === 'prototype'
++
+ const buildResponsiveSrcSet = (basePath, extension) =>
+   RESPONSIVE_IMAGE_WIDTHS.map((width) => `${basePath}-${width}.${extension} ${width}w`).join(', ')
+ 
+@@ -960,24 +967,28 @@ const ArchitectureDiagram = ({ motionScale = 1 }) => {
+ const App = () => {
+   const [activePolicy, setActivePolicy] = useState(null)
+   const [isDownloadPage, setIsDownloadPage] = useState(() => getIsDownloadFromLocation())
++  const [isPrototypeHome, setIsPrototypeHome] = useState(() => getIsPrototypeFromLocation())
+   const { t, ready } = useLocale()
+   const { motionScale } = useResponsiveMotion()
+   const homeScrollRef = useRef(0)
+   const downloadScrollRef = useRef(0)
+   const syncHistoryWithView = useCallback(
+-    (nextIsDownload, { replace = false } = {}) => {
++    (nextIsDownload, { replace = false, keepPrototype = isPrototypeHome } = {}) => {
+       if (typeof window === 'undefined') return
+       const url = new URL(window.location.href)
+-      const current = url.searchParams.get('view') === 'download'
++      const currentView = url.searchParams.get('view')
+       if (nextIsDownload) {
+         url.searchParams.set('view', 'download')
++      } else if (keepPrototype) {
++        url.searchParams.set('view', 'prototype')
+       } else {
+         url.searchParams.delete('view')
+       }
+-      const method = replace || current === nextIsDownload ? 'replaceState' : 'pushState'
++      const nextView = url.searchParams.get('view')
++      const method = replace || currentView === nextView ? 'replaceState' : 'pushState'
+       window.history[method]({}, '', url)
+     },
+-    []
++    [isPrototypeHome]
+   )
+ 
+   const handlePolicyOpen = (type) => setActivePolicy(type)
+@@ -986,7 +997,9 @@ const App = () => {
+   useEffect(() => {
+     if (typeof window === 'undefined') return undefined
+     const handlePopState = () => {
+-      setIsDownloadPage(getIsDownloadFromLocation())
++      const view = getViewFromLocation()
++      setIsDownloadPage(view === 'download')
++      setIsPrototypeHome(view === 'prototype')
+     }
+     window.addEventListener('popstate', handlePopState)
+     return () => window.removeEventListener('popstate', handlePopState)
+@@ -994,8 +1007,8 @@ const App = () => {
+ 
+   useEffect(() => {
+     if (typeof window === 'undefined') return
+-    syncHistoryWithView(isDownloadPage, { replace: true })
+-  }, [isDownloadPage, syncHistoryWithView])
++    syncHistoryWithView(isDownloadPage, { replace: true, keepPrototype: isPrototypeHome })
++  }, [isDownloadPage, isPrototypeHome, syncHistoryWithView])
+ 
+   useEffect(() => {
+     if (typeof window === 'undefined') return
+@@ -1008,14 +1021,44 @@ const App = () => {
+   const handleDownloadOpen = () => {
+     homeScrollRef.current = window.scrollY || 0
+     setIsDownloadPage(true)
+-    syncHistoryWithView(true)
++    syncHistoryWithView(true, { keepPrototype: false })
+   }
+   const handleDownloadClose = () => {
+     downloadScrollRef.current = window.scrollY || 0
+     setIsDownloadPage(false)
+-    syncHistoryWithView(false)
++    syncHistoryWithView(false, { keepPrototype: isPrototypeHome })
+   }
+ 
++  const prototypeFeaturePanels = useMemo(
++    () => [
++      {
++        id: 'feature-agent',
++        eyebrow: '01',
++        title: t('feature.agent.title'),
++        description: t('feature.agent.desc'),
++        imageSrc: '/img/example/软件主页图.png',
++        imageAlt: t('feature.agent.title'),
++      },
++      {
++        id: 'feature-anki',
++        eyebrow: '02',
++        title: t('feature.anki_full.title'),
++        description: t('feature.anki_full.desc'),
++        imageSrc: '/img/example/anki-制卡2.png',
++        imageAlt: t('feature.anki_full.title'),
++      },
++      {
++        id: 'feature-notes-memory',
++        eyebrow: '03',
++        title: t('feature.notes_memory.title'),
++        description: t('feature.notes_memory.desc'),
++        imageSrc: '/img/example/学习资源管理器.png',
++        imageAlt: t('feature.notes_memory.title'),
++      },
++    ],
++    [t]
++  )
++
+   if (!ready) {
+     return (
+       <div className="min-h-screen min-h-[100svh] bg-transparent text-[color:var(--apple-ink)] font-sans">
+@@ -1048,6 +1091,11 @@ const App = () => {
+             }`}
+             style={motionScale > 0 ? { animationDelay: '0.18s' } : undefined}
+           >
++            {isPrototypeHome ? (
++              <div className="pt-[var(--space-section-top)]">
++                <HorizontalFeatureScroll panels={prototypeFeaturePanels} />
++              </div>
++            ) : (
+             <div className="space-y-[var(--space-section-stack)] pt-[var(--space-section-top)]">
+               <FeatureSection
+                 id="feature-free-models"
+@@ -1276,6 +1324,7 @@ const App = () => {
+               </FeatureSection>
+ 
+             </div>
++            )}
+ 
+             <FaqSection motionScale={motionScale} onOpenPolicy={handlePolicyOpen} />
+           </main>
+diff --git a/src/components/feature-panel.jsx b/src/components/feature-panel.jsx
+index 3fe7626..da32d40 100644
+--- a/src/components/feature-panel.jsx
++++ b/src/components/feature-panel.jsx
+@@ -1,9 +1,7 @@
+-const FONT_STACK =
+-  '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif'
+-
+ /**
+  * Presentational feature panel: copy left, large image right.
+  * Designed for sticky horizontal scroll sections.
++ * Uses site Apple tokens so it matches the existing homepage.
+  */
+ export const FeaturePanel = ({
+   eyebrow,
+@@ -29,23 +27,20 @@ export const FeaturePanel = ({
+ 
+   return (
+     <section
+-      className={`flex h-full w-full flex-col items-center justify-center gap-8 px-6 py-10 md:flex-row md:gap-12 md:px-12 lg:gap-16 lg:px-16 ${className}`.trim()}
+-      style={{
+-        fontFamily: FONT_STACK,
+-        ...fadeStyle,
+-      }}
++      className={`flex h-full w-full flex-col items-center justify-center gap-8 px-6 py-10 font-sans md:flex-row md:gap-12 md:px-12 lg:gap-16 lg:px-16 ${className}`.trim()}
++      style={fadeStyle}
+     >
+       <div className="flex w-full max-w-md shrink-0 flex-col justify-center md:w-[38%] md:max-w-[22rem]">
+         {eyebrow ? (
+-          <p className="mb-3 text-[13px] font-semibold uppercase tracking-[0.06em] text-[#86868B]">
++          <p className="mb-3 text-[13px] font-semibold uppercase tracking-[0.06em] text-[color:var(--apple-muted)]">
+             {eyebrow}
+           </p>
+         ) : null}
+-        <h2 className="text-[28px] font-semibold leading-tight tracking-tight text-[#1D1D1F] md:text-[36px] lg:text-[40px]">
++        <h2 className="text-[28px] font-semibold leading-tight tracking-tight text-[color:var(--apple-ink)] md:text-[36px] lg:text-[40px]">
+           {title}
+         </h2>
+         {description ? (
+-          <p className="mt-4 text-[17px] leading-relaxed text-[#86868B] md:text-[19px]">
++          <p className="mt-4 text-[17px] leading-relaxed text-[color:var(--apple-muted)] md:text-[19px]">
+             {description}
+           </p>
+         ) : null}
+@@ -55,10 +50,7 @@ export const FeaturePanel = ({
+         <img
+           src={imageSrc}
+           alt={imageAlt ?? ''}
+-          className="h-auto max-h-[70vh] w-full max-w-full rounded-xl object-contain"
+-          style={{
+-            boxShadow: '0 8px 40px rgba(0, 0, 0, 0.06)',
+-          }}
++          className="h-auto max-h-[70vh] w-full max-w-full rounded-xl object-contain shadow-[var(--apple-shadow-xl)]"
+           draggable={false}
+         />
+       </div>
+diff --git a/src/components/horizontal-feature-scroll.jsx b/src/components/horizontal-feature-scroll.jsx
+index e4ccb59..775342e 100644
+--- a/src/components/horizontal-feature-scroll.jsx
++++ b/src/components/horizontal-feature-scroll.jsx
+@@ -32,7 +32,9 @@ const ProgressDots = ({ panels, activeIndex }) => (
+           role="presentation"
+           aria-hidden="true"
+           className={`block h-1.5 rounded-full transition-[width,background-color] duration-200 ${
+-            isActive ? 'w-4 bg-[#1D1D1F]' : 'w-1.5 bg-[#1D1D1F]/25'
++            isActive
++              ? 'w-4 bg-[color:var(--apple-ink)]'
++              : 'w-1.5 bg-[color:var(--apple-ink)]/25'
+           }`}
+         />
+       )
+@@ -43,7 +45,7 @@ const ProgressDots = ({ panels, activeIndex }) => (
+ const SkipLink = ({ href }) => (
+   <a
+     href={href}
+-    className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:text-[#1D1D1F] focus:shadow-md"
++    className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-[color:var(--apple-surface-elevated)] focus:px-3 focus:py-2 focus:text-sm focus:text-[color:var(--apple-ink)] focus:shadow-md"
+   >
+     跳过功能展示
+   </a>
+@@ -137,7 +139,7 @@ export const HorizontalFeatureScroll = ({ panels = [] }) => {
+     return (
+       <>
+         <SkipLink href={`#${skipTargetId}`} />
+-        <section aria-label="功能展示" className="bg-[#F5F5F7]">
++        <section aria-label="功能展示" className="bg-[color:var(--apple-surface)]">
+           {panels.map((panel) => (
+             <div
+               key={panel.id}
+@@ -173,7 +175,7 @@ export const HorizontalFeatureScroll = ({ panels = [] }) => {
+       >
+         <div
+           ref={stickyRef}
+-          className="sticky top-0 h-screen w-full overflow-hidden bg-[#F5F5F7]"
++          className="sticky top-0 h-screen w-full overflow-hidden bg-[color:var(--apple-surface)]"
+         >
+           <MotionTrack
+             className="flex h-full will-change-transform"
+diff --git a/src/main.jsx b/src/main.jsx
+index f98900a..b9a1a6d 100644
+--- a/src/main.jsx
++++ b/src/main.jsx
+@@ -2,13 +2,9 @@ import { StrictMode } from 'react'
+ import { createRoot } from 'react-dom/client'
+ import './index.css'
+ import App from './App.jsx'
+-import PrototypeHome from './pages/PrototypeHome.jsx'
+-
+-const params = new URLSearchParams(window.location.search)
+-const isPrototype = params.get('view') === 'prototype'
+ 
+ createRoot(document.getElementById('root')).render(
+   <StrictMode>
+-    {isPrototype ? <PrototypeHome /> : <App />}
++    <App />
+   </StrictMode>,
+ )
+diff --git a/src/pages/PrototypeHome.jsx b/src/pages/PrototypeHome.jsx
+deleted file mode 100644
+index e9b6291..0000000
+--- a/src/pages/PrototypeHome.jsx
++++ /dev/null
+@@ -1,94 +0,0 @@
+-import { HorizontalFeatureScroll } from '../components/horizontal-feature-scroll'
+-
+-const FONT_STACK =
+-  '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif'
+-
+-const FEATURE_PANELS = [
+-  {
+-    id: 'agent-chat',
+-    eyebrow: '01',
+-    title: 'Agent 对话',
+-    description: '以 Chat V2 为入口，打通学习与制卡',
+-    imageSrc: '/img/example/软件主页图.png',
+-    imageAlt: 'Deep Student Agent 对话界面',
+-  },
+-  {
+-    id: 'anki-cards',
+-    eyebrow: '02',
+-    title: 'Anki 制卡',
+-    description: '上传文档，自动生成并同步到 Anki',
+-    imageSrc: '/img/example/anki-制卡2.png',
+-    imageAlt: 'Deep Student Anki 制卡界面',
+-  },
+-  {
+-    id: 'learning-hub',
+-    eyebrow: '03',
+-    title: '学习中枢',
+-    description: '资料、笔记与记忆统一管理',
+-    imageSrc: '/img/example/学习资源管理器.png',
+-    imageAlt: 'Deep Student 学习中枢界面',
+-  },
+-]
+-
+-const linkClass =
+-  'text-[15px] font-medium text-[#1D1D1F] transition-opacity hover:opacity-70'
+-
+-const primaryCtaClass =
+-  'inline-flex items-center justify-center rounded-full bg-[#1D1D1F] px-6 py-3 text-[15px] font-medium text-white transition-opacity hover:opacity-85'
+-
+-const secondaryCtaClass =
+-  'inline-flex items-center justify-center rounded-full px-6 py-3 text-[15px] font-medium text-[#1D1D1F] transition-opacity hover:opacity-70'
+-
+-export default function PrototypeHome() {
+-  return (
+-    <div
+-      className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F]"
+-      style={{ fontFamily: FONT_STACK }}
+-    >
+-      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 md:px-10">
+-        <a href="/?view=prototype" className={`${linkClass} tracking-tight`}>
+-          Deep Student
+-        </a>
+-        <a href="/?view=download" className={linkClass}>
+-          下载
+-        </a>
+-      </header>
+-
+-      <section className="mx-auto flex min-h-[72vh] max-w-3xl flex-col items-center justify-center px-6 pb-28 pt-10 text-center md:px-10 md:pb-36 md:pt-16">
+-        <p className="text-[15px] font-semibold tracking-tight text-[#1D1D1F] md:text-[17px]">
+-          Deep Student
+-        </p>
+-        <h1 className="mt-4 text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1D1D1F] md:text-[56px]">
+-          学习，从对话开始
+-        </h1>
+-        <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-[#86868B] md:text-[19px]">
+-          AI 学习助手：对话、制卡与资料管理，一处完成。
+-        </p>
+-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+-          <a href="/?view=download" className={primaryCtaClass}>
+-            下载
+-          </a>
+-          <a href="#features" className={secondaryCtaClass}>
+-            了解功能
+-          </a>
+-        </div>
+-      </section>
+-
+-      <div id="features">
+-        <HorizontalFeatureScroll panels={FEATURE_PANELS} />
+-      </div>
+-
+-      <section className="mx-auto flex max-w-3xl flex-col items-center px-6 py-24 text-center md:px-10 md:py-32">
+-        <h2 className="text-[28px] font-semibold tracking-tight text-[#1D1D1F] md:text-[36px]">
+-          开始使用 Deep Student
+-        </h2>
+-        <p className="mt-4 text-[17px] leading-relaxed text-[#86868B] md:text-[19px]">
+-          下载桌面端，把学习流程收进一个工作区。
+-        </p>
+-        <a href="/?view=download" className={`${primaryCtaClass} mt-8`}>
+-          下载 Deep Student
+-        </a>
+-      </section>
+-    </div>
+-  )
+-}
+-- 
+2.39.5 (Apple Git-154)
+

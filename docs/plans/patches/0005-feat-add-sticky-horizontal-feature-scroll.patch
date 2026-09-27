@@ -1,0 +1,250 @@
+From 5f2ae5ae0eacb2491583dcea9fa00ef0a4f38c20 Mon Sep 17 00:00:00 2001
+From: Mirai <BA7MLV@163.com>
+Date: Thu, 9 Jul 2026 17:47:25 +0800
+Subject: [PATCH 5/9] feat: add sticky horizontal feature scroll
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+---
+ src/components/horizontal-feature-scroll.jsx | 195 +++++++++++++++++++
+ src/hooks/use-media-query.js                 |  27 +++
+ 2 files changed, 222 insertions(+)
+ create mode 100644 src/components/horizontal-feature-scroll.jsx
+ create mode 100644 src/hooks/use-media-query.js
+
+diff --git a/src/components/horizontal-feature-scroll.jsx b/src/components/horizontal-feature-scroll.jsx
+new file mode 100644
+index 0000000..1e4970d
+--- /dev/null
++++ b/src/components/horizontal-feature-scroll.jsx
+@@ -0,0 +1,195 @@
++import { useEffect, useId, useRef, useState } from 'react'
++import {
++  motion,
++  useMotionValue,
++  useReducedMotion,
++  useSpring,
++} from 'motion/react'
++
++import { useMediaQuery } from '../hooks/use-media-query'
++import {
++  getActiveIndex,
++  getScrollProgress,
++  getTranslateX,
++} from '../lib/horizontal-scroll-progress'
++import { FeaturePanel } from './feature-panel'
++
++const MOBILE_QUERY = '(max-width: 768px)'
++const SPRING_CONFIG = { stiffness: 150, damping: 32, mass: 0.85 }
++const MotionTrack = motion.div
++
++const getPanelProgressLocal = (progress, index, panelCount) => {
++  if (panelCount <= 1) return 1
++  const scaled = progress * (panelCount - 1)
++  const distance = Math.abs(scaled - index)
++  return Math.min(1, Math.max(0, 1 - distance))
++}
++
++const ProgressDots = ({ panels, activeIndex }) => (
++  <div
++    className="pointer-events-none absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2.5"
++    role="tablist"
++    aria-label="功能面板进度"
++  >
++    {panels.map((panel, index) => {
++      const isActive = index === activeIndex
++      return (
++        <span
++          key={panel.id ?? index}
++          role="tab"
++          aria-label={panel.title ?? `面板 ${index + 1}`}
++          aria-current={isActive ? 'true' : undefined}
++          className={`block h-1.5 w-1.5 rounded-full transition-colors duration-200 ${
++            isActive ? 'bg-[#1D1D1F]' : 'bg-[#1D1D1F]/25'
++          }`}
++        />
++      )
++    })}
++  </div>
++)
++
++const SkipLink = ({ href }) => (
++  <a
++    href={href}
++    className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:text-[#1D1D1F] focus:shadow-md"
++  >
++    跳过功能展示
++  </a>
++)
++
++/**
++ * Sticky horizontal feature scroller driven by vertical scroll progress.
++ * Falls back to a vertical stack on narrow viewports or reduced motion.
++ */
++export const HorizontalFeatureScroll = ({ panels = [] }) => {
++  const panelCount = panels.length
++  const reactId = useId()
++  const skipTargetId = `hfs-end-${reactId.replace(/:/g, '')}`
++
++  const containerRef = useRef(null)
++  const prefersReducedMotion = useReducedMotion()
++  const isMobile = useMediaQuery(MOBILE_QUERY)
++  const shouldStack = Boolean(prefersReducedMotion) || isMobile
++
++  const xTarget = useMotionValue(0)
++  const xSpring = useSpring(xTarget, SPRING_CONFIG)
++  const x = prefersReducedMotion ? xTarget : xSpring
++
++  const [activeIndex, setActiveIndex] = useState(0)
++  const [progress, setProgress] = useState(0)
++
++  useEffect(() => {
++    if (shouldStack || panelCount === 0) return undefined
++
++    const container = containerRef.current
++    if (!container) return undefined
++
++    let rafId = 0
++
++    const measure = () => {
++      const scrollY = window.scrollY || window.pageYOffset || 0
++      const rect = container.getBoundingClientRect()
++      const containerTop = rect.top + scrollY
++      const containerHeight = container.offsetHeight
++      const viewportHeight = window.innerHeight
++      const viewportWidth = window.innerWidth
++
++      const nextProgress = getScrollProgress({
++        scrollY,
++        containerTop,
++        containerHeight,
++        viewportHeight,
++      })
++
++      const nextX = getTranslateX({
++        progress: nextProgress,
++        panelCount,
++        viewportWidth,
++      })
++
++      xTarget.set(nextX)
++      setProgress(nextProgress)
++      setActiveIndex(getActiveIndex({ progress: nextProgress, panelCount }))
++    }
++
++    const schedule = () => {
++      if (rafId) return
++      rafId = window.requestAnimationFrame(() => {
++        rafId = 0
++        measure()
++      })
++    }
++
++    measure()
++    window.addEventListener('scroll', schedule, { passive: true })
++    window.addEventListener('resize', schedule)
++
++    return () => {
++      if (rafId) window.cancelAnimationFrame(rafId)
++      window.removeEventListener('scroll', schedule)
++      window.removeEventListener('resize', schedule)
++    }
++  }, [shouldStack, panelCount, xTarget])
++
++  if (panelCount === 0) return null
++
++  if (shouldStack) {
++    return (
++      <>
++        <SkipLink href={`#${skipTargetId}`} />
++        <section aria-label="功能展示" className="bg-[#F5F5F7]">
++          {panels.map((panel) => (
++            <div
++              key={panel.id}
++              className="flex min-h-screen w-full items-center justify-center"
++            >
++              <FeaturePanel
++                eyebrow={panel.eyebrow}
++                title={panel.title}
++                description={panel.description}
++                imageSrc={panel.imageSrc}
++                imageAlt={panel.imageAlt}
++              />
++            </div>
++          ))}
++        </section>
++        <div id={skipTargetId} tabIndex={-1} />
++      </>
++    )
++  }
++
++  return (
++    <>
++      <SkipLink href={`#${skipTargetId}`} />
++      <section
++        ref={containerRef}
++        aria-label="功能展示"
++        className="relative"
++        style={{ height: `${panelCount * 100}vh` }}
++      >
++        <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#F5F5F7]">
++          <MotionTrack className="flex h-full will-change-transform" style={{ x }}>
++            {panels.map((panel, index) => (
++              <div
++                key={panel.id}
++                className="h-full w-screen shrink-0"
++              >
++                <FeaturePanel
++                  eyebrow={panel.eyebrow}
++                  title={panel.title}
++                  description={panel.description}
++                  imageSrc={panel.imageSrc}
++                  imageAlt={panel.imageAlt}
++                  progressLocal={getPanelProgressLocal(progress, index, panelCount)}
++                />
++              </div>
++            ))}
++          </MotionTrack>
++
++          <ProgressDots panels={panels} activeIndex={activeIndex} />
++        </div>
++      </section>
++      <div id={skipTargetId} tabIndex={-1} />
++    </>
++  )
++}
+diff --git a/src/hooks/use-media-query.js b/src/hooks/use-media-query.js
+new file mode 100644
+index 0000000..053e712
+--- /dev/null
++++ b/src/hooks/use-media-query.js
+@@ -0,0 +1,27 @@
++import { useSyncExternalStore } from 'react'
++
++import { subscribeToMediaQueryChange } from '../lib/media-query-subscribe'
++
++/**
++ * Subscribe to a CSS media query and return whether it currently matches.
++ * @param {string} query
++ * @returns {boolean}
++ */
++export const useMediaQuery = (query) => {
++  return useSyncExternalStore(
++    (onStoreChange) => {
++      if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
++        return () => {}
++      }
++      const mediaQueryList = window.matchMedia(query)
++      return subscribeToMediaQueryChange(mediaQueryList, onStoreChange)
++    },
++    () => {
++      if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
++        return false
++      }
++      return window.matchMedia(query).matches
++    },
++    () => false,
++  )
++}
+-- 
+2.39.5 (Apple Git-154)
+

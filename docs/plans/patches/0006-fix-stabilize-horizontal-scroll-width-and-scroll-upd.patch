@@ -1,0 +1,167 @@
+From 63ece5ba5f5dca1ec33afbd8308d76d07bc08ddb Mon Sep 17 00:00:00 2001
+From: Mirai <BA7MLV@163.com>
+Date: Thu, 9 Jul 2026 17:51:24 +0800
+Subject: [PATCH 6/9] fix: stabilize horizontal scroll width and scroll updates
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+---
+ src/components/horizontal-feature-scroll.jsx | 74 +++++++++++---------
+ 1 file changed, 42 insertions(+), 32 deletions(-)
+
+diff --git a/src/components/horizontal-feature-scroll.jsx b/src/components/horizontal-feature-scroll.jsx
+index 1e4970d..74b47cc 100644
+--- a/src/components/horizontal-feature-scroll.jsx
++++ b/src/components/horizontal-feature-scroll.jsx
+@@ -1,4 +1,4 @@
+-import { useEffect, useId, useRef, useState } from 'react'
++import { useId, useLayoutEffect, useRef, useState } from 'react'
+ import {
+   motion,
+   useMotionValue,
+@@ -18,27 +18,19 @@ const MOBILE_QUERY = '(max-width: 768px)'
+ const SPRING_CONFIG = { stiffness: 150, damping: 32, mass: 0.85 }
+ const MotionTrack = motion.div
+ 
+-const getPanelProgressLocal = (progress, index, panelCount) => {
+-  if (panelCount <= 1) return 1
+-  const scaled = progress * (panelCount - 1)
+-  const distance = Math.abs(scaled - index)
+-  return Math.min(1, Math.max(0, 1 - distance))
+-}
+-
+ const ProgressDots = ({ panels, activeIndex }) => (
+   <div
+     className="pointer-events-none absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2.5"
+-    role="tablist"
+-    aria-label="功能面板进度"
++    role="status"
++    aria-label={`当前第 ${activeIndex + 1} 个功能面板，共 ${panels.length} 个`}
+   >
+     {panels.map((panel, index) => {
+       const isActive = index === activeIndex
+       return (
+         <span
+           key={panel.id ?? index}
+-          role="tab"
+-          aria-label={panel.title ?? `面板 ${index + 1}`}
+-          aria-current={isActive ? 'true' : undefined}
++          role="presentation"
++          aria-hidden="true"
+           className={`block h-1.5 w-1.5 rounded-full transition-colors duration-200 ${
+             isActive ? 'bg-[#1D1D1F]' : 'bg-[#1D1D1F]/25'
+           }`}
+@@ -67,22 +59,25 @@ export const HorizontalFeatureScroll = ({ panels = [] }) => {
+   const skipTargetId = `hfs-end-${reactId.replace(/:/g, '')}`
+ 
+   const containerRef = useRef(null)
++  const stickyRef = useRef(null)
++  const activeIndexRef = useRef(0)
++
+   const prefersReducedMotion = useReducedMotion()
+   const isMobile = useMediaQuery(MOBILE_QUERY)
+   const shouldStack = Boolean(prefersReducedMotion) || isMobile
+ 
+   const xTarget = useMotionValue(0)
+-  const xSpring = useSpring(xTarget, SPRING_CONFIG)
+-  const x = prefersReducedMotion ? xTarget : xSpring
++  // Horizontal path never runs under reduced-motion (that path stacks), so always spring.
++  const x = useSpring(xTarget, SPRING_CONFIG)
+ 
+   const [activeIndex, setActiveIndex] = useState(0)
+-  const [progress, setProgress] = useState(0)
+ 
+-  useEffect(() => {
++  useLayoutEffect(() => {
+     if (shouldStack || panelCount === 0) return undefined
+ 
+     const container = containerRef.current
+-    if (!container) return undefined
++    const sticky = stickyRef.current
++    if (!container || !sticky) return undefined
+ 
+     let rafId = 0
+ 
+@@ -92,7 +87,8 @@ export const HorizontalFeatureScroll = ({ panels = [] }) => {
+       const containerTop = rect.top + scrollY
+       const containerHeight = container.offsetHeight
+       const viewportHeight = window.innerHeight
+-      const viewportWidth = window.innerWidth
++      // Same width basis as CSS panels (sticky clientWidth), not 100vw / innerWidth.
++      const viewportWidth = sticky.clientWidth || window.innerWidth
+ 
+       const nextProgress = getScrollProgress({
+         scrollY,
+@@ -101,15 +97,19 @@ export const HorizontalFeatureScroll = ({ panels = [] }) => {
+         viewportHeight,
+       })
+ 
+-      const nextX = getTranslateX({
+-        progress: nextProgress,
+-        panelCount,
+-        viewportWidth,
+-      })
++      xTarget.set(
++        getTranslateX({
++          progress: nextProgress,
++          panelCount,
++          viewportWidth,
++        }),
++      )
+ 
+-      xTarget.set(nextX)
+-      setProgress(nextProgress)
+-      setActiveIndex(getActiveIndex({ progress: nextProgress, panelCount }))
++      const nextIndex = getActiveIndex({ progress: nextProgress, panelCount })
++      if (nextIndex !== activeIndexRef.current) {
++        activeIndexRef.current = nextIndex
++        setActiveIndex(nextIndex)
++      }
+     }
+ 
+     const schedule = () => {
+@@ -158,6 +158,10 @@ export const HorizontalFeatureScroll = ({ panels = [] }) => {
+     )
+   }
+ 
++  // Track is panelCount × sticky width; each panel is 1/panelCount of the track (= sticky width).
++  const trackWidthPercent = panelCount * 100
++  const panelWidthPercent = 100 / panelCount
++
+   return (
+     <>
+       <SkipLink href={`#${skipTargetId}`} />
+@@ -167,12 +171,19 @@ export const HorizontalFeatureScroll = ({ panels = [] }) => {
+         className="relative"
+         style={{ height: `${panelCount * 100}vh` }}
+       >
+-        <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#F5F5F7]">
+-          <MotionTrack className="flex h-full will-change-transform" style={{ x }}>
+-            {panels.map((panel, index) => (
++        <div
++          ref={stickyRef}
++          className="sticky top-0 h-screen w-full overflow-hidden bg-[#F5F5F7]"
++        >
++          <MotionTrack
++            className="flex h-full will-change-transform"
++            style={{ x, width: `${trackWidthPercent}%` }}
++          >
++            {panels.map((panel) => (
+               <div
+                 key={panel.id}
+-                className="h-full w-screen shrink-0"
++                className="h-full shrink-0"
++                style={{ width: `${panelWidthPercent}%` }}
+               >
+                 <FeaturePanel
+                   eyebrow={panel.eyebrow}
+@@ -180,7 +191,6 @@ export const HorizontalFeatureScroll = ({ panels = [] }) => {
+                   description={panel.description}
+                   imageSrc={panel.imageSrc}
+                   imageAlt={panel.imageAlt}
+-                  progressLocal={getPanelProgressLocal(progress, index, panelCount)}
+                 />
+               </div>
+             ))}
+-- 
+2.39.5 (Apple Git-154)
+
