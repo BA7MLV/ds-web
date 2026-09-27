@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useData } from 'vitepress'
 import { useI18n } from '../i18n/index.js'
+import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
 
 /**
  * 应用演示壳。
@@ -10,7 +11,7 @@ import { useI18n } from '../i18n/index.js'
  *   · 内屏按应用真实窗口尺寸 1112×773 渲染，再等比缩放到窗壳宽度
  *     —— 这样应用永远走桌面布局，不会被 768 断点切到移动端
  *   · 红绿灯放在内屏里跟着一起缩放（应用顶栏预留了空位）
- *   · iframe 首帧前用加载占位盖住
+ *   · iframe 就绪前使用服务端可见的界面预览
  *
  * 演示产物是同源镜像（scripts/sync-demo.mjs 抓进 docs/public/demo/），
  * 不是远程地址 —— 远程 iframe 有三个绕不过的坑：
@@ -46,17 +47,28 @@ const resolvedSrc = computed(
  * 只有被覆盖成绝对地址时才要防混合内容（https 页面嵌 http 会被拦掉）。
  */
 const embeddable = () => {
-  const url = resolvedSrc.value
-  if (!url || typeof window === 'undefined') return false
-  if (!/^https?:\/\//i.test(url)) return true
-  return !(window.location.protocol === 'https:' && url.startsWith('http:'))
+  if (!resolvedSrc.value || typeof window === 'undefined') return false
+  try {
+    const url = new URL(resolvedSrc.value, window.location.href)
+    return ['http:', 'https:'].includes(url.protocol)
+      && !(window.location.protocol === 'https:' && url.protocol === 'http:')
+  } catch {
+    return false
+  }
 }
 
-/** 演示自身支持 ?theme=dark，跟随站点主题，免得壳是深色、里面还是白的 */
+/** 显式覆盖演示的深浅色参数，同时保留覆盖地址的其他 query 和 hash。 */
 const frameSrc = computed(() => {
   const url = resolvedSrc.value
-  if (!url || !isDark.value) return url
-  return `${url}${url.includes('?') ? '&' : '?'}theme=dark`
+  if (!url) return url
+  const hashAt = url.indexOf('#')
+  const pathAndQuery = hashAt < 0 ? url : url.slice(0, hashAt)
+  const hash = hashAt < 0 ? '' : url.slice(hashAt)
+  const queryAt = pathAndQuery.indexOf('?')
+  const path = queryAt < 0 ? pathAndQuery : pathAndQuery.slice(0, queryAt)
+  const query = new URLSearchParams(queryAt < 0 ? '' : pathAndQuery.slice(queryAt + 1))
+  query.set('theme', isDark.value ? 'dark' : 'light')
+  return `${path}?${query}${hash}`
 })
 
 /** 同源后 demo 的 postMessage 才收得到（跨域时它发给自己 origin） */
@@ -73,16 +85,34 @@ const windowEl = ref(null)
 const screenEl = ref(null)
 const frameEl = ref(null)
 const loading = ref(true)
-/*
- * iframe 与骨架都等挂载后再渲染：
- * SSR 阶段既解析不出真实深浅色偏好，也拿不到页面协议，
- * 先渲染任何一边都会在客户端水合时被替换 —— 索性让首屏 HTML 保持确定性。
- */
+const started = ref(false)
+const timedOut = ref(false)
+const frameKey = ref(0)
+const measured = ref(false)
+/** SSR 保留完整预览和相同尺寸，只把 iframe 的网络请求延后。 */
 const mounted = ref(false)
-const showFrame = computed(() => mounted.value && embeddable())
-const showFallback = computed(() => mounted.value && !embeddable())
+const canEmbed = computed(() => mounted.value && embeddable())
+const showFrame = computed(() => canEmbed.value && started.value)
+const previewStatus = computed(() => {
+  if (timedOut.value) return t('appShell.delayed')
+  if (showFrame.value) return t('appShell.loading')
+  if (mounted.value && !canEmbed.value) return t('appShell.unavailable')
+  return t('appShell.waiting')
+})
 
 let hideTimer = null
+let fitFrame = 0
+let cancelAutomaticStart = () => {}
+let stopObserving = () => {}
+let nearViewport = false
+let pageReady = false
+let readyFrameWindow = null
+
+/** 只接收本次挂载的 iframe 消息；重载到 DOM 更新之间保持关闭。 */
+const setFrame = (frame) => {
+  frameEl.value = frame
+  readyFrameWindow = frame?.contentWindow ?? null
+}
 
 const clearHideTimer = () => {
   if (hideTimer) {
@@ -94,11 +124,39 @@ const clearHideTimer = () => {
 const hideLoading = () => {
   clearHideTimer()
   loading.value = false
+  timedOut.value = false
 }
 
 const armTimeout = () => {
   clearHideTimer()
-  hideTimer = setTimeout(hideLoading, 15000)
+  hideTimer = setTimeout(() => {
+    timedOut.value = true
+  }, 15000)
+}
+
+const startDemo = () => {
+  if (!canEmbed.value || (started.value && !timedOut.value)) return
+  cancelAutomaticStart()
+  stopObserving()
+  readyFrameWindow = null
+  if (started.value) frameKey.value += 1
+  started.value = true
+  timedOut.value = false
+  loading.value = true
+  armTimeout()
+}
+
+const maybeStartDemo = () => {
+  if (pageReady && nearViewport && !started.value && !document.hidden) startDemo()
+}
+
+/** 意图可以提前启动，但滚动时经过窗壳不算主动体验。 */
+const onPointerIntent = (event) => {
+  if (event.pointerType === 'mouse' && !timedOut.value) startDemo()
+}
+
+const onFocusIntent = () => {
+  if (!timedOut.value) startDemo()
 }
 
 /**
@@ -132,14 +190,19 @@ const containFrameScroll = () => {
 }
 
 /** 跨域时收不到 demo 的 postMessage（它发给自己 origin），用 load 事件兜底 */
-const onFrameLoad = () => {
+const onFrameLoad = (event) => {
+  if (!readyFrameWindow || event.currentTarget !== frameEl.value) return
   containFrameScroll()
-  clearHideTimer()
-  hideTimer = setTimeout(hideLoading, 600)
+  // 同源镜像由应用真正挂载后发 ready；跨域调试不能收到它，才用 load 兜底。
+  if (demoOrigin.value !== window.location.origin) {
+    clearHideTimer()
+    hideTimer = setTimeout(hideLoading, 600)
+  }
 }
 
 const onMessage = (event) => {
   if (!demoOrigin.value || event.origin !== demoOrigin.value) return
+  if (!readyFrameWindow || event.source !== readyFrameWindow) return
   if (event.data?.type === 'demo-shell-ready') hideLoading()
 }
 
@@ -164,72 +227,105 @@ const fit = () => {
   const scr = screenEl.value
   if (!win || !scr) return
 
-  if (!showFrame.value || isMobile()) {
+  if (isMobile()) {
     scr.style.transform = ''
     return
   }
 
   scr.style.transform = `scale(${win.clientWidth / NATIVE_W})`
+  measured.value = true
 }
 
 watch(frameSrc, () => {
   if (!showFrame.value) return
+  // 同步失效旧窗口，避免旧 ready 在 Vue 更新 iframe 之前被当作新文档的消息。
+  readyFrameWindow = null
+  frameKey.value += 1
   loading.value = true
+  timedOut.value = false
   armTimeout()
-})
+}, { flush: 'sync' })
 
 onMounted(() => {
   mounted.value = true
   window.addEventListener('message', onMessage)
   window.addEventListener('resize', fit)
-  armTimeout()
-  // 等 iframe 挂上再量宽度
-  requestAnimationFrame(() => fit())
+  document.addEventListener('visibilitychange', maybeStartDemo)
+  fit()
+  fitFrame = requestAnimationFrame(fit)
+  stopObserving = observeNearViewport(windowEl.value, (near) => {
+    nearViewport = near
+    maybeStartDemo()
+  }, 240)
+  cancelAutomaticStart = afterPageLoad(() => {
+    pageReady = true
+    maybeStartDemo()
+  }, { delay: 800 })
 })
 
 onUnmounted(() => {
+  readyFrameWindow = null
   window.removeEventListener('message', onMessage)
   window.removeEventListener('resize', fit)
+  document.removeEventListener('visibilitychange', maybeStartDemo)
+  cancelAnimationFrame(fitFrame)
+  cancelAutomaticStart()
+  stopObserving()
   clearHideTimer()
 })
 </script>
 
 <template>
-  <figure class="sh sh--phone" :class="{ 'sh--embed': showFrame }">
-    <div ref="windowEl" class="sh__window">
+  <figure class="sh sh--phone sh--embed" :class="{ 'sh--measured': measured }">
+    <div
+      ref="windowEl"
+      class="sh__window"
+      @pointerenter="onPointerIntent"
+      @focusin="onFocusIntent"
+    >
       <div ref="screenEl" class="sh__screen">
-        <iframe
-          v-if="showFrame"
-          ref="frameEl"
-          class="sh__frame"
-          :src="frameSrc"
-          :title="t('appShell.title')"
-          loading="eager"
-          @load="onFrameLoad"
-        />
+        <div class="sh__stage">
+          <iframe
+            v-if="showFrame"
+            :key="frameKey"
+            :ref="setFrame"
+            class="sh__frame"
+            :src="frameSrc"
+            :title="t('appShell.title')"
+            loading="lazy"
+            @load="onFrameLoad"
+          />
 
-        <!-- 演示不可嵌入（https 下的混合内容）时，退回轻量骨架 -->
-        <div v-else-if="showFallback" class="sh__fallback">
-          <slot />
+          <!-- 预览先随 HTML 到达；应用 ready 后才移除，不把空白当加载成功。 -->
+          <div v-if="!showFrame || loading" class="sh__preview">
+            <div class="sh__preview-note">
+              <p class="sh__preview-title">{{ t('appShell.previewTitle') }}</p>
+              <p class="sh__preview-description">{{ t('appShell.previewDescription') }}</p>
+              <div class="sh__preview-actions">
+                <span role="status">{{ previewStatus }}</span>
+                <button
+                  v-if="canEmbed && (!started || timedOut)"
+                  type="button"
+                  @click="startDemo"
+                >{{ timedOut ? t('appShell.retry') : t('appShell.start') }}</button>
+              </div>
+            </div>
+            <div class="sh__preview-body"><slot /></div>
+          </div>
+
+          <div v-if="showFrame && !loading" class="sh__lights" aria-hidden="true">
+            <i /><i /><i />
+          </div>
         </div>
 
         <!--
          * 手机壳的状态栏：灵动岛在这里占掉一块真实高度，
          * 演示内容自然被推到下面 —— 跟 iOS 一样，应用不会跑到岛底下。
-         * 放在 iframe / fallback 之后是为了不打断那对 v-if / v-else-if 的邻接，靠 order: -1 提到最前。
+         * 靠 order: -1 放在演示区域前面。
          * 窄屏之外一律 display: none，所以桌面端看不到它。
          * -->
         <div class="sh__status" aria-hidden="true">
           <span class="sh__island" />
-        </div>
-
-        <div v-if="showFrame" class="sh__lights" aria-hidden="true">
-          <i /><i /><i />
-        </div>
-
-        <div v-if="showFrame" class="sh__loading" :class="{ 'is-done': !loading }" aria-hidden="true">
-          <span class="sh__pulse" />
-          <span>{{ t('appShell.loading') }}</span>
         </div>
 
         <!--
@@ -358,9 +454,24 @@ onUnmounted(() => {
 }
 
 .sh--embed .sh__screen {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   transform-origin: top left;
-  width: 1112px;
-  height: 773px;
+}
+
+@media (min-width: 768px) {
+  .sh--measured .sh__screen {
+    width: 1112px;
+    height: 773px;
+  }
+}
+
+.sh__stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .sh__frame {
@@ -372,8 +483,89 @@ onUnmounted(() => {
   border: 0;
 }
 
-.sh__fallback {
-  position: relative;
+.sh__preview {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--sh-window-bg);
+}
+
+.sh__preview-note {
+  flex: 0 0 auto;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid var(--sh-window-border);
+  text-align: left;
+}
+
+.sh__preview-title {
+  margin: 0;
+  color: var(--vp-c-text-1);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.sh__preview-description {
+  margin: 6px 0 0;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.sh__preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  min-height: 30px;
+  margin-top: 10px;
+  color: var(--sh-ink-3);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.sh__preview-actions button {
+  padding: 4px 10px;
+  border: 1px solid var(--sh-window-border);
+  border-radius: 999px;
+  color: var(--sh-accent);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.sh__preview-actions button:focus-visible {
+  outline: 2px solid var(--sh-accent);
+  outline-offset: 3px;
+}
+
+.sh__preview-body {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.sh__preview :deep(.Demo) {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  max-width: none;
+  margin: 0;
+}
+
+.sh__preview :deep(.Demo__window) {
+  flex: 1 1 auto;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.sh__preview :deep(.Demo__caption) {
+  display: none;
 }
 
 /* macOS 红绿灯：放在内屏里随应用一起缩放，与应用顶栏预留空位对齐 */
@@ -407,53 +599,9 @@ onUnmounted(() => {
   background: #28c840;
 }
 
-/* 加载占位：应用首帧前盖住，可感知而不是一片白 */
-.sh__loading {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: var(--sh-window-bg);
-  color: var(--sh-ink-3);
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  pointer-events: none;
-  transition: opacity 300ms ease, visibility 0s linear 300ms;
-}
-
-.sh__loading.is-done {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.sh__pulse {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--sh-accent);
-  animation: sh-pulse 1.2s ease-in-out infinite;
-}
-
 @keyframes sh-rise {
   from {
-    opacity: 0;
     transform: translateY(12px);
-  }
-}
-
-@keyframes sh-pulse {
-  0%,
-  100% {
-    opacity: 0.35;
-    transform: scale(0.8);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 
@@ -601,22 +749,16 @@ onUnmounted(() => {
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.55);
   }
 
-  /* iframe 从绝对定位改成吃剩余高度的 flex 子项，才会给状态栏让位 */
-  .sh--phone .sh__frame {
-    position: relative;
-    inset: auto;
+  /* 演示与预览共用同一块剩余空间，给状态栏和底部安全区让位。 */
+  .sh--phone .sh__stage {
     flex: 1 1 auto;
     min-height: 0;
     width: 100%;
     height: auto;
   }
 
-  /* 退回骨架时同样撑满内屏，免得手机壳里留一大块空底 */
-  .sh--phone .sh__fallback {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    min-height: 0;
+  .sh--phone .sh__preview-note {
+    padding: 16px;
   }
 
   /* 骨架自带的是桌面窗壳，装进手机壳里就重了，顺便拉满内屏 */
@@ -650,14 +792,6 @@ onUnmounted(() => {
 @media (prefers-reduced-motion: reduce) {
   .sh__window {
     animation: none;
-  }
-
-  .sh__pulse {
-    animation: none;
-  }
-
-  .sh__loading {
-    transition: none;
   }
 }
 </style>

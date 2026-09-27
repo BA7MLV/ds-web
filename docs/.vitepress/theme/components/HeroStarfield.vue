@@ -1,6 +1,7 @@
 <script setup>
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useData } from 'vitepress'
+import { afterPageLoad } from '../lib/deferred-work.js'
 
 /**
  * Hero 星空底图（ordered dithering starfield）。
@@ -256,6 +257,8 @@ let field = null
 let stars = []
 let ow = 0
 let oh = 0
+let builtWidth = 0
+let builtHeight = 0
 let progress = 0
 let loopId = 0
 let lastFrame = 0
@@ -265,7 +268,13 @@ let resizeTimer = 0
 let ro = null
 let io = null
 let running = false
-let inView = true
+let inView = false
+let animationReady = false
+let firstPaint = 0
+let staticPaint = 0
+let motionQuery = null
+let pendingLogo = null
+let cancelAnimationStart = () => {}
 
 /* 品牌标记：logo 的栅格化结果 + 画布几何，换主题时只需重跑阈值化 */
 let logoImg = null
@@ -273,7 +282,7 @@ let brandGeo = null
 
 /** 闪烁循环只在「页面可见 + 星空在视口内」时跑；滑出画面后就别再烧帧了 */
 const syncLoop = () => {
-  if (reduced.value || document.hidden || !inView) stopLoop()
+  if (!animationReady || !ready.value || reduced.value || document.hidden || !inView) stopLoop()
   else startLoop()
 }
 
@@ -583,9 +592,23 @@ const stopLoop = () => {
 }
 
 const onIntersect = (entries) => {
-  inView = entries[0]?.isIntersecting ?? true
+  inView = entries[0]?.isIntersecting ?? false
   syncLoop()
 }
+
+/** fixed 背景永远在视口中，必须观察它对应的 Hero 内容区域。 */
+const observeHero = () => {
+  io?.disconnect()
+  const anchor = props.anchor
+  if (!anchor || !hostEl.value) return
+  if (typeof IntersectionObserver !== 'undefined') {
+    io = new IntersectionObserver(onIntersect)
+    io.observe(anchor)
+  }
+  updateProgress()
+}
+
+watch(() => props.anchor, observeHero)
 
 const updateProgress = () => {
   const host = hostEl.value
@@ -599,6 +622,7 @@ const updateProgress = () => {
     host.style.setProperty('--sf-dim', '0')
     host.style.setProperty('--sf-cut', '0px')
     host.style.setProperty('--sf-fade', '0px')
+    progress = 0
     return
   }
 
@@ -611,8 +635,14 @@ const updateProgress = () => {
     const total = Math.max(1, anchor.offsetHeight || rect.height)
     p = -rect.top / total
     heroBottom = rect.bottom
+    const visible = rect.bottom > 0 && rect.top < vh
+    if (visible !== inView) {
+      inView = visible
+      syncLoop()
+    }
   } else {
     p = window.scrollY / vh
+    inView = p < 1
   }
   p = Math.min(1, Math.max(0, p))
   progress = p
@@ -670,6 +700,16 @@ const onVisibility = () => {
   syncLoop()
 }
 
+const onMotionChange = async (event) => {
+  reduced.value = event.matches
+  syncLoop()
+  // 等 is-static 的定位规则落地，再按新的坐标系计算品牌图层。
+  await nextTick()
+  updateProgress()
+  buildBrand()
+  if (!running) renderFrame()
+}
+
 const build = () => {
   const host = hostEl.value
   const canvas = canvasEl.value
@@ -678,6 +718,11 @@ const build = () => {
   const cssW = host.clientWidth
   const cssH = host.clientHeight
   if (!cssW || !cssH) return
+  // ResizeObserver 首次通知也会触发 resize；尺寸没变就复用像素缓冲和星点。
+  if (imageData && cssW === builtWidth && cssH === builtHeight) {
+    buildBrand()
+    return
+  }
 
   const scale = Math.min(SCALE, MAX_OFF_W / cssW)
   ow = Math.max(1, Math.round(cssW * scale))
@@ -687,6 +732,8 @@ const build = () => {
   canvas.height = oh
   ctx = canvas.getContext('2d', { alpha: true })
   if (!ctx) return
+  builtWidth = cssW
+  builtHeight = cssH
   ctx.imageSmoothingEnabled = false
 
   imageData = ctx.createImageData(ow, oh)
@@ -716,22 +763,35 @@ const onThemeChange = () => {
 watch(isDark, onThemeChange)
 
 onMounted(() => {
-  reduced.value = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
+  motionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)')
+  reduced.value = motionQuery?.matches === true
+  motionQuery?.addEventListener('change', onMotionChange)
 
-  build()
-  onScroll()
+  // 首屏文字先获得绘制机会；星空先只画一帧，持续动画交给 load 后的空闲时段。
+  firstPaint = requestAnimationFrame(() => {
+    staticPaint = requestAnimationFrame(() => {
+      updateProgress()
+      build()
+      observeHero()
+    })
+  })
 
   /*
    * 品牌标记：logo 走 <img> 加载，首帧通常赶不上 —— 先把星空铺上，
    * 图到了再补画一层。加载失败就静默跳过，退化成原来的纯星空。
    */
-  const logo = new Image()
-  logo.decoding = 'async'
-  logo.onload = () => {
-    logoImg = logo
-    buildBrand()
-  }
-  logo.src = LOGO_URL
+  cancelAnimationStart = afterPageLoad(() => {
+    animationReady = true
+    syncLoop()
+    pendingLogo = new Image()
+    pendingLogo.decoding = 'async'
+    pendingLogo.fetchPriority = 'low'
+    pendingLogo.onload = () => {
+      logoImg = pendingLogo
+      buildBrand()
+    }
+    pendingLogo.src = LOGO_URL
+  }, { delay: 1400 })
 
   window.addEventListener('scroll', onScroll, { passive: true })
   window.addEventListener('resize', onResize)
@@ -742,16 +802,21 @@ onMounted(() => {
     ro.observe(hostEl.value)
   }
 
-  if (hostEl.value && typeof IntersectionObserver !== 'undefined') {
-    io = new IntersectionObserver(onIntersect)
-    io.observe(hostEl.value)
-  }
-
-  syncLoop()
+  observeHero()
 })
 
 onUnmounted(() => {
+  // 已排队的观察器或可见性回调仍可能到达，不再允许它们重新启动循环。
+  animationReady = false
   stopLoop()
+  cancelAnimationFrame(firstPaint)
+  cancelAnimationFrame(staticPaint)
+  cancelAnimationStart()
+  motionQuery?.removeEventListener('change', onMotionChange)
+  if (pendingLogo) {
+    pendingLogo.onload = null
+    pendingLogo.removeAttribute('src')
+  }
   if (scrollId) cancelAnimationFrame(scrollId)
   if (resizeTimer) clearTimeout(resizeTimer)
   ro?.disconnect()

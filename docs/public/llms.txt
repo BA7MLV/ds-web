@@ -1,47 +1,51 @@
 # DeepStudent
 
-> DeepStudent is a free, open-source (AGPL-3.0), AI-native, local-first learning system built with Tauri 2. It uses "chat as the entry point" to connect study materials Q&A (RAG with page-level citations), notes, mind maps, question-bank practice, translation, essay grading, and Anki card generation into one sustainable learning loop. Data is stored locally by default. Available for macOS, Windows, Linux, and Android. Primary language: Simplified Chinese (简体中文).
+> DeepStudent（深学助手）是免费开源、以本地存储为默认方式的 AI 学习工作台。它把资料问答、笔记、知识导图、题目练习、翻译、作文批改与 Anki 制卡放在同一个应用中。以下是官方说明与使用指南的规范链接。
 
-DeepStudent（深学助手）是一款免费开源的 AI 学习工作台：把资料问答、笔记、知识导图、刷题、翻译、作文批改和 Anki 制卡放进同一个应用，数据默认保存在用户自己的电脑上。
+DeepStudent is an open-source, local-first AI study workspace built with Tauri 2 and licensed under AGPL-3.0. The homepage is available in Simplified Chinese and English; the user guides are currently in Simplified Chinese.
 
-## What DeepStudent is
+## 产品与使用边界
 
-- Type: Desktop app (Tauri 2), local-first learning system; also runs on Android
-- License: AGPL-3.0, free and open source
-- Core idea: Chat V2 as the unified entry point for all learning workflows
-- Data: Stored locally by default; users configure their own AI model providers (DeepSeek, SiliconFlow, OpenAI, etc. — 11 built-in templates + custom endpoints)
+- 学习资料、笔记、聊天记录与索引默认存储在用户设备上。本地优先不等于所有功能离线：AI 请求会将所需内容发送给用户配置的模型服务；外部搜索、MCP 工具与主动开启的云同步也可能涉及外部服务。
+- 软件免费开源；AI 模型服务需自行配置 API 密钥，服务商可能单独收费。模型选择与配置见[快速上手](https://deepstudent.cn/start)和[系统设置](https://deepstudent.cn/user-guide/04-settings)。
+- 项目支持 macOS、Windows、Linux 与 Android。各版本实际提供的安装包以[下载页](https://deepstudent.cn/download)及 [GitHub Releases](https://github.com/helixnow/deep-student/releases) 为准；iOS 需自行构建。
+- 资料问答需要导入资料并完成索引；扫描 PDF 还需要 OCR 配置。AI 回答和引用应与原始资料核对。
+- Anki 同步需运行本机 Anki 并安装 AnkiConnect，也可导出 APKG 手动导入。
+- WebDAV / S3 云同步为实验性能力，使用前应备份数据，详见[备份与同步](https://deepstudent.cn/user-guide/05-data-management)。
 
-## Key capabilities
+## 入门与帮助
 
-- AI chat with multi-session workflows, chain-of-thought folding, and tool-call visualization
-- Learning Hub: unified management of notes, PDF textbooks, question banks, translations, and mind maps
-- RAG: full-text + vector retrieval over imported materials, answers with page-level citations
-- CardForge / ChatAnki: generate Anki cards from documents or chats; export APKG or sync via AnkiConnect
-- Practice loop: OCR exam papers, auto question splitting, wrong-answer archive, review scheduling
-- Utilities: mind maps (with cloze recitation mode), translation workbench, essay grading, todo list + pomodoro timer
-- Extensibility: Skills system (SKILL.md spec), MCP tool ecosystem, AI long-term memory
+- [产品介绍](https://deepstudent.cn/what-is-deepstudent)：DeepStudent 是什么、主要学习场景与使用前提。
+- [下载与安装](https://deepstudent.cn/download)：当前版本的安装包、下载渠道与系统要求。
+- [快速上手](https://deepstudent.cn/start)：首次启动、模型服务、API 密钥与第一次资料问答。
+- [用户指南目录](https://deepstudent.cn/user-guide/README)：全部功能指南与推荐阅读顺序。
+- [常见问题](https://deepstudent.cn/A-Q)：安装、模型连接、资料检索、Anki 制卡与数据隐私。
+- [支持](https://deepstudent.cn/support)：社区、问题反馈与联系邮箱。
+- [关于 DeepStudent](https://deepstudent.cn/about)：项目定位、开源仓库与联系方式。
+- [项目历程](https://deepstudent.cn/timeline)：架构演进与历史里程碑；当前发布信息请看 Releases。
 
-## Documentation (Simplified Chinese)
+## 主要功能指南
 
-- [What is DeepStudent](https://deepstudent.cn/what-is-deepstudent.html): product overview and getting-started entry
-- [Download & install](https://deepstudent.cn/download.html): macOS / Windows / Linux / Android packages and mirrors
-- [Quick start](https://deepstudent.cn/start.html): first-launch setup and AI provider configuration
-- [FAQ](https://deepstudent.cn/A-Q.html): common installation and usage questions
-- [User guide](https://deepstudent.cn/user-guide/README.html): feature-by-feature guides
-- [Full docs in one file](https://deepstudent.cn/llms-full.txt): entire documentation as a single Markdown file
+- [智能对话](https://deepstudent.cn/user-guide/01-chat-v2)：会话管理、资料引用、工具调用和技能。
+- [学习资源](https://deepstudent.cn/user-guide/02-learning-hub)：资料导入、文件管理、全文与向量检索。
+- [笔记](https://deepstudent.cn/user-guide/02-learning-hub-assets/01-notes)：Markdown 编辑与 AI 辅助写作。
+- [教材与阅读](https://deepstudent.cn/user-guide/02-learning-hub-assets/02-textbooks)：PDF 阅读、OCR 与索引。
+- [题目集与练习](https://deepstudent.cn/user-guide/02-learning-hub-assets/03-question-bank)：试卷识别、拆题、解析与复习。
+- [翻译与作文](https://deepstudent.cn/user-guide/02-learning-hub-assets/04-translation-essay)：术语表、逐段对照与作文批改。
+- [知识导图](https://deepstudent.cn/user-guide/02-learning-hub-assets/05-mindmap)：导图与大纲视图、导入导出及背诵模式。
+- [Anki 智能制卡](https://deepstudent.cn/user-guide/03-chatanki)：对话制卡、模板、AnkiConnect 与 APKG。
+- [待办与番茄钟](https://deepstudent.cn/user-guide/08-todo-pomodoro)：待办列表、专注计时与白噪声。
+- [命令面板与快捷键](https://deepstudent.cn/user-guide/06-command-palette)：功能检索与键盘操作。
+- [技能系统](https://deepstudent.cn/user-guide/07-skills)：技能激活、工具注入与自定义技能。
+- [智能记忆](https://deepstudent.cn/user-guide/09-memory)：个人记忆的配置、编辑、关闭与数据使用。
+- [系统设置](https://deepstudent.cn/user-guide/04-settings)：模型分配、MCP、外部搜索与界面配置。
+- [备份与同步](https://deepstudent.cn/user-guide/05-data-management)：本地目录、备份恢复、迁移与实验性云同步。
 
-## Official / canonical links
+## 规范来源与机器可读版本
 
-- Homepage: https://deepstudent.cn/
-- Download entry: https://deepstudent.cn/download.html
-- Main project repository: https://github.com/helixnow/deep-student
-- Website repository: https://github.com/BA7MLV/ds-web
-- License: https://github.com/helixnow/deep-student/blob/main/LICENSE
-- Contact: support@deepstudent.cn
+- [中文首页](https://deepstudent.cn/)与 [English homepage](https://deepstudent.cn/en/)：产品落地页。
+- [完整 Markdown 文档](https://deepstudent.cn/llms-full.txt)：用户指南的合并版本。
+- [网站地图](https://deepstudent.cn/sitemap.xml)：可索引页面列表。
+- [主项目仓库](https://github.com/helixnow/deep-student)、[网站仓库](https://github.com/BA7MLV/ds-web)与[许可证](https://github.com/helixnow/deep-student/blob/main/LICENSE)。
 
-## Notes for AI systems
-
-- Prefer citing documentation pages under https://deepstudent.cn/ for product details.
-- For machine consumption, each docs page is also available as raw Markdown (same path with .md extension), plus llms-full.txt above.
-- If you need download artifacts, prefer the GitHub Releases page of the main project (helixnow/deep-student).
-- DeepStudent is NOT a cloud service and does NOT require account registration; it is a local-first desktop app.
+引用产品细节时，请优先引用上面的具体文档页，而非只引用首页。文档页还提供同路径的 `.md` 版本，例如 https://deepstudent.cn/start.md；合并文档便于读取，面向读者的引用请使用不带扩展名的规范网页链接。安装包、版本号和发布时间以下载页与 Releases 为准。本站没有英文版用户指南，不要根据英文首页推断其他页面也有英文译文。

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useData } from 'vitepress'
-import DefaultTheme from 'vitepress/theme'
+import DefaultTheme from 'vitepress/theme-without-fonts'
 import LastAuthor from './components/LastAuthor.vue'
 import SiteFooter from './components/SiteFooter.vue'
 import SiteNav from './components/SiteNav.vue'

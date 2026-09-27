@@ -1,11 +1,15 @@
 import { defineConfig } from 'vitepress'
-import { withMermaid } from 'vitepress-plugin-mermaid'
 import llmstxt from 'vitepress-plugin-llms'
 import { loadEnv } from 'vite'
 import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
+import { mermaidMarkdown } from './mermaid.mjs'
+import { finalizeMachineDocs } from './machine-docs.mjs'
+import {
+  SITE_ORIGIN, SITE_URL, TITLE_TEMPLATE, applyPageSeo, getNotFoundHead, isNotFoundPage
+} from './seo.mjs'
 
 const guideSidebar = [
   {
@@ -85,42 +89,6 @@ const LA_CK =
 // 只有对着远程改版调试时才需要填一个绝对地址。
 const DEMO_URL = process.env.VITE_DEMO_URL || env.VITE_DEMO_URL || ''
 
-// —— GEO / SEO 常量 ——
-const SITE_ORIGIN = 'https://deepstudent.cn'
-const SITE_URL = `${SITE_ORIGIN}/`
-/**
- * 页面没有自己的 description 时的兜底，按语言分开：
- * 英文落地页（docs/en/index.md）不能落中文描述。
- * key 用 lang 标签，与 theme/i18n/messages 保持一致。
- */
-const DEFAULT_DESCRIPTION = {
-  'zh-CN':
-    'DeepStudent 官方文档：AI 原生、本地优先的开源学习系统。资料问答（RAG）、笔记、知识导图、刷题、翻译、作文批改与 Anki 制卡。',
-  'en-US':
-    'DeepStudent documentation: an AI-native, local-first, open-source learning system — material chat with citations (RAG), notes, mind maps, practice questions, translation, essay grading and Anki card generation.'
-}
-const OG_IMAGE = `${SITE_ORIGIN}/img/index.png`
-
-/**
- * 落地页的中英互译关系，用于输出 hreflang。
- * 目前只有落地页有英文版（docs/en/index.md），文档正文只有中文，
- * 所以只给落地页输出 hreflang —— 给没有译文的页面输出，会指向并不存在的地址，反而误导爬虫。
- * 以后新增语言的落地页，在这里补一行。
- */
-const LANDING_ALTERNATES = [
-  { hreflang: 'zh-CN', href: SITE_URL },
-  { hreflang: 'en-US', href: `${SITE_URL}en/` },
-  { hreflang: 'x-default', href: SITE_URL }
-]
-
-// 由页面相对路径推导线上 canonical URL（未启用 cleanUrls，产物为 .html）
-const getPageUrl = (relativePath) => {
-  const path = relativePath
-    .replace(/(^|\/)index\.md$/, '$1')
-    .replace(/\.md$/, '.html')
-  return `${SITE_URL}${path}`
-}
-
 const gitEditorsCache = new Map()
 
 const getGitEditors = (absPath) => {
@@ -148,17 +116,19 @@ const getGitEditors = (absPath) => {
   }
 }
 
-export default withMermaid(defineConfig({
+export default defineConfig({
   appearance: true,
   markdown: {
+    config: mermaidMarkdown,
     image: {
       lazyLoading: true
     }
   },
   title: 'DeepStudent',
-  titleTemplate: ':title｜DeepStudent',
+  titleTemplate: TITLE_TEMPLATE,
   description: 'AI 原生、本地优先的开源学习系统',
   base: '/',
+  cleanUrls: true,
   // 内部工程计划与仓库规范不进入站点与搜索
   srcExclude: ['plans/**', 'AGENTS.md'],
   // 生成 /sitemap.xml，供搜索引擎与 AI 爬虫发现全部页面
@@ -168,7 +138,8 @@ export default withMermaid(defineConfig({
   vite: {
     // 把根级 .env 里的演示地址注入到客户端代码（组件里读 import.meta.env.VITE_DEMO_URL）
     define: {
-      'import.meta.env.VITE_DEMO_URL': JSON.stringify(DEMO_URL)
+      'import.meta.env.VITE_DEMO_URL': JSON.stringify(DEMO_URL),
+      'import.meta.env.VITE_LA_CONFIG': JSON.stringify(LA_ID ? { id: LA_ID, ck: LA_CK } : null)
     },
     plugins: [
       // 生成 /llms-full.txt 及每页的 .md 版本（llmstxt.org 标准）
@@ -177,6 +148,7 @@ export default withMermaid(defineConfig({
         domain: SITE_ORIGIN,
         ignoreFiles: ['plans/**', 'AGENTS.md', 'en/**'],
         generateLLMsTxt: false,
+        injectLLMHint: false,
         title: 'DeepStudent Documentation',
         description:
           'DeepStudent is an AI-native, local-first, open-source learning system (AGPL-3.0). Official documentation in Simplified Chinese.',
@@ -192,30 +164,10 @@ export default withMermaid(defineConfig({
     ['meta', { name: 'theme-color', content: '#f5f5f7', media: '(prefers-color-scheme: light)' }],
     ['meta', { name: 'theme-color', content: '#0a0a0c', media: '(prefers-color-scheme: dark)' }],
     ['meta', { name: 'color-scheme', content: 'light dark' }],
-    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
-    ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' }],
-    [
-      'link',
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap',
-      },
-    ],
-    ...(LA_ID
-      ? [
-          [
-            'script',
-            {
-              charset: 'UTF-8',
-              id: 'LA_COLLECT',
-              src: 'https://sdk.51.la/js-sdk-pro.min.js',
-            },
-          ],
-          ['script', {}, `LA.init({id:"${LA_ID}",ck:"${LA_CK}",hashMode:true});`],
-        ]
-      : []),
   ],
   themeConfig: {
+    // 正文尚无英文译本；默认主题即便被隐藏，也不能输出不存在的对应页面链接。
+    i18nRouting: false,
     logo: { light: '/logo-black.svg', dark: '/logo-white.svg' },
     siteTitle: '', // 有 logo 时不显示标题文本
     // 顶栏由 theme/components/SiteNav.vue 渲染（Apple 风格浮动胶囊），此处保持一致以备用
@@ -330,6 +282,12 @@ export default withMermaid(defineConfig({
   lastUpdated: {
     text: '最后更新时间'
   },
+  transformHead({ pageData }) {
+    return isNotFoundPage(pageData) ? getNotFoundHead() : []
+  },
+  async buildEnd(siteConfig) {
+    await finalizeMachineDocs(siteConfig)
+  },
   transformPageData(pageData) {
     if (!pageData?.relativePath?.endsWith('.md')) return
 
@@ -338,85 +296,6 @@ export default withMermaid(defineConfig({
     pageData.editors = editors
     pageData.lastAuthor = editors[0] || ''
 
-    // —— GEO：为每个页面注入 canonical / Open Graph / JSON-LD ——
-    const pageUrl = getPageUrl(pageData.relativePath)
-    /*
-     * 用 layout 判定落地页，而不是 relativePath === 'index.md'：
-     * 英文落地页 en/index.md 同样是 layout: home，只看路径会让它掉进「文章」分支 ——
-     * og:title 会拼两次品牌名、og:type 变成 article、JSON-LD 也变成 TechArticle。
-     */
-    const isHome = pageData.frontmatter?.layout === 'home'
-    const isEnglish = pageData.relativePath.startsWith('en/')
-    const locale = isEnglish ? 'en-US' : 'zh-CN'
-    // 首页 frontmatter title 已是完整标题（DeepStudent - …），不再拼接品牌名
-    const pageTitle = isHome
-      ? pageData.title || 'DeepStudent'
-      : pageData.title
-        ? `${pageData.title}｜DeepStudent`
-        : 'DeepStudent'
-    const pageDescription =
-      pageData.frontmatter?.description || pageData.description || DEFAULT_DESCRIPTION[locale]
-    // VitePress 会用 pageData.description 渲染 <meta name="description">
-    pageData.description = pageDescription
-
-    const jsonLd = {
-      '@context': 'https://schema.org',
-      '@type': isHome ? 'WebSite' : 'TechArticle',
-      name: isHome ? 'DeepStudent' : pageData.title || 'DeepStudent',
-      headline: pageData.title || 'DeepStudent',
-      description: pageDescription,
-      url: pageUrl,
-      inLanguage: isEnglish ? 'en-US' : 'zh-CN',
-      isPartOf: {
-        '@type': 'WebSite',
-        name: 'DeepStudent',
-        url: SITE_URL
-      },
-      about: {
-        '@type': 'SoftwareApplication',
-        name: 'DeepStudent',
-        applicationCategory: 'EducationalApplication',
-        operatingSystem: 'macOS, Windows, Linux, Android',
-        url: SITE_ORIGIN,
-        sameAs: ['https://github.com/helixnow/deep-student']
-      },
-      publisher: {
-        '@type': 'Organization',
-        name: 'DeepStudent Team',
-        url: SITE_ORIGIN
-      }
-    }
-    if (pageData.lastUpdated) {
-      jsonLd.dateModified = new Date(pageData.lastUpdated).toISOString()
-    }
-
-    // 落地页才输出 hreflang 与「另一种语言」的 og:locale:alternate（见 LANDING_ALTERNATES）
-    const alternates = isHome
-      ? [
-          ...LANDING_ALTERNATES.map(({ hreflang, href }) => [
-            'link',
-            { rel: 'alternate', hreflang, href }
-          ]),
-          ['meta', { property: 'og:locale:alternate', content: isEnglish ? 'zh_CN' : 'en_US' }]
-        ]
-      : []
-
-    pageData.frontmatter.head ??= []
-    pageData.frontmatter.head.push(
-      ['link', { rel: 'canonical', href: pageUrl }],
-      ...alternates,
-      ['meta', { property: 'og:site_name', content: 'DeepStudent' }],
-      ['meta', { property: 'og:type', content: isHome ? 'website' : 'article' }],
-      ['meta', { property: 'og:locale', content: isEnglish ? 'en_US' : 'zh_CN' }],
-      ['meta', { property: 'og:title', content: pageTitle }],
-      ['meta', { property: 'og:description', content: pageDescription }],
-      ['meta', { property: 'og:url', content: pageUrl }],
-      ['meta', { property: 'og:image', content: OG_IMAGE }],
-      ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-      ['meta', { name: 'twitter:title', content: pageTitle }],
-      ['meta', { name: 'twitter:description', content: pageDescription }],
-      ['meta', { name: 'twitter:image', content: OG_IMAGE }],
-      ['script', { type: 'application/ld+json' }, JSON.stringify(jsonLd)]
-    )
+    applyPageSeo(pageData)
   },
-}))
+})

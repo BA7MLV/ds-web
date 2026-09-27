@@ -62,7 +62,14 @@ export default {
 
   appShell: {
     title: 'DeepStudent live demo',
-    loading: 'Loading live demo…'
+    previewTitle: 'DeepStudent interface preview',
+    previewDescription: 'Discuss your study materials, then turn your understanding into mind maps, practice questions and Anki cards.',
+    waiting: 'This is a layout sketch. The live demo will load automatically.',
+    loading: 'Loading the interactive live demo…',
+    delayed: 'The live demo is not ready yet. Retry or explore the features below.',
+    unavailable: 'The live demo cannot be embedded here. This is a layout sketch.',
+    start: 'Try it now',
+    retry: 'Reload demo'
   },
 
   demo: {
@@ -219,15 +226,15 @@ export default {
 
     privacy: {
       title: 'Data is stored on your machine by default.',
-      lede: 'No network access and no uploads by default; AI calls use the key you configure yourself.',
+      lede: 'Study materials are stored locally by default; AI, search and sync access services according to your configuration.',
       items: [
         {
           title: 'Local storage',
-          desc: 'Material, notes and chat history are written to your own machine by default. Nothing is uploaded and no statistics are collected.'
+          desc: 'Materials, notes and chat history are stored on your machine by default. Use Settings → Data governance to back them up or move them to another device.'
         },
         {
           title: 'When data leaves your machine',
-          desc: 'When you call an AI model, the relevant context is sent to the provider you configured. If you enable WebDAV or S3 sync, data inside the sync scope is written to that cloud storage.'
+          desc: 'Model calls, external search and MCP send relevant requests to the corresponding services. Enabling cloud sync or Sentry error reporting also sends the relevant data to those services.'
         },
         {
           title: 'Open source, verifiable',
@@ -258,7 +265,7 @@ export default {
         },
         {
           q: 'Does my data get uploaded to the cloud?',
-          a: 'No. Material, notes and chat history stay on your own machine by default. Data only leaves your device in two cases: when you use AI, where the relevant content goes to the model provider you configured, or when you set up WebDAV / S3 sync yourself.'
+          a: 'Study materials are stored locally by default, but local-first does not mean every feature is offline. AI sends the necessary content to your configured model provider. External search, MCP, and cloud sync or error reporting that you enable may also send relevant requests or data. Desktop apps also check for updates according to your settings.'
         },
         {
           q: 'Where is my data stored?',

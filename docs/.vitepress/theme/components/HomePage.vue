@@ -1,6 +1,7 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from '../i18n/index.js'
+import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
 import AppShell from './AppShell.vue'
 import DemoSkeleton from './DemoSkeleton.vue'
 import HeroStarfield from './HeroStarfield.vue'
@@ -13,13 +14,17 @@ const GITHUB_URL = `https://github.com/${GITHUB_REPO}`
 const STARS_CACHE_KEY = 'ds-gh-stars'
 const STARS_CACHE_TTL = 30 * 60 * 1000
 
-/* ── Hero 文案交错入场 ── */
-const heroShown = ref(false)
-
 /** Hero section：星空底图的滚动进度基准 */
 const heroEl = ref(null)
 /** 演示窗壳：品牌水印的淡出基准（上沿这条线之前必须淡尽） */
 const demoEl = ref(null)
+const featuresEl = ref(null)
+let cancelStars = () => {}
+let cancelImageWarmup = () => {}
+let stopFeatureObserver = () => {}
+let starsController = null
+let starsTimeout = 0
+const warmedImages = []
 
 /* ── GitHub Star 数（带会话缓存，避免触发限流） ── */
 const stars = ref(null)
@@ -57,11 +62,15 @@ const fetchStars = async () => {
   }
 
   try {
+    starsController = new AbortController()
+    starsTimeout = window.setTimeout(() => starsController?.abort(), 8000)
     const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}`, {
       headers: { Accept: 'application/vnd.github+json' },
+      signal: starsController.signal,
     })
     if (!response.ok) return
     const data = await response.json()
+    if (starsController.signal.aborted) return
     if (typeof data?.stargazers_count !== 'number') return
     stars.value = data.stargazers_count
     try {
@@ -74,6 +83,8 @@ const fetchStars = async () => {
     }
   } catch {
     /* 离线或限流：保持「Star on GitHub」 */
+  } finally {
+    clearTimeout(starsTimeout)
   }
 }
 
@@ -82,22 +93,22 @@ const scenes = computed(() => tm('home.features.scenes'))
 
 /*
  * 四个场景共用同一个屏幕，切 tab 时只是换 src —— 没预热的话会先看到一块空屏。
- * 首屏只加载当前那张（<img loading="lazy">），其余三张等浏览器空闲了再拉：
- * 不拖慢首屏，点过去又是瞬间出图。
+ * 场景资源是生成器产出的 SVG，首屏只允许当前图片原生懒加载。
+ * 功能区接近视口后，再等主页面加载完成、空闲时低优先级预热其余图；
+ * 省流量和慢速网络下仅按需加载。
  */
 const warmSceneImages = () => {
-  const rest = scenes.value.slice(1).map((scene) => scene.img)
-  const load = () => {
-    rest.forEach((src) => {
+  const connection = navigator.connection
+  if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '')) return
+  cancelImageWarmup = afterPageLoad(() => {
+    scenes.value.filter((scene) => scene.img !== currentScene.value.img).forEach((scene) => {
       const img = new Image()
-      img.src = src
+      img.decoding = 'async'
+      img.fetchPriority = 'low'
+      img.src = scene.img
+      warmedImages.push(img)
     })
-  }
-  if (typeof window.requestIdleCallback === 'function') {
-    window.requestIdleCallback(load, { timeout: 3000 })
-  } else {
-    setTimeout(load, 1500)
-  }
+  })
 }
 
 const activeScene = ref(0)
@@ -154,11 +165,25 @@ const toggleFaq = (index) => {
 }
 
 onMounted(() => {
-  requestAnimationFrame(() => {
-    heroShown.value = true
-  })
-  fetchStars()
-  warmSceneImages()
+  const cached = readStarsCache()
+  if (cached != null) stars.value = cached
+  else cancelStars = afterPageLoad(fetchStars, { delay: 2200 })
+
+  stopFeatureObserver = observeNearViewport(featuresEl.value, (near) => {
+    if (!near) return
+    stopFeatureObserver()
+    warmSceneImages()
+  }, 360)
+})
+
+onUnmounted(() => {
+  cancelStars()
+  cancelImageWarmup()
+  stopFeatureObserver()
+  starsController?.abort()
+  clearTimeout(starsTimeout)
+  warmedImages.forEach((img) => img.removeAttribute('src'))
+  warmedImages.length = 0
 })
 </script>
 
@@ -173,8 +198,7 @@ onMounted(() => {
       <!-- 标题后的柔光：压住身后的星点，让大字有落脚点（深浅色各一套） -->
       <div class="lp-hero__glow" aria-hidden="true"></div>
       <div
-        class="t-stagger lp-wrap pb-16 pt-14 text-center md:pb-20 md:pt-20"
-        :class="{ 'is-shown': heroShown }"
+        class="t-stagger is-shown lp-wrap pb-16 pt-14 text-center md:pb-20 md:pt-20"
       >
         <div class="t-stagger-line t-stagger-line--1">
           <a
@@ -218,7 +242,7 @@ onMounted(() => {
 
         <div class="t-stagger-line t-stagger-line--5">
           <div ref="demoEl" class="lp-hero__demo">
-            <!-- 实时演示装在应用窗壳里；演示不可嵌入时退回骨架 -->
+            <!-- HTML 先呈现界面预览，实时演示在页面就绪后自动载入。 -->
             <AppShell>
               <DemoSkeleton />
             </AppShell>
@@ -231,7 +255,7 @@ onMounted(() => {
     <StepFlow />
 
     <!-- ③ 功能展示：一张轮播卡（左文案 / 右窗口），卡下圆点 + 左右箭头 -->
-    <section id="features" class="lp-block">
+    <section id="features" ref="featuresEl" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
           <h2 class="lp-title">{{ t('home.features.title') }}</h2>
@@ -270,6 +294,7 @@ onMounted(() => {
                       :src="currentScene.img"
                       :alt="currentScene.alt"
                       loading="lazy"
+                      decoding="async"
                       class="lp-shot"
                     />
                   </div>

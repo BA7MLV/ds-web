@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* 独立演示自带样式，不扫描其压缩构建产物来生成官网 utilities。 */
+@source not '../../public/demo';
+
 /* Tailwind v4：dark: 变体跟随 VitePress 的 .dark class（而非系统媒体查询） */
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -52,7 +55,8 @@ html.flow-locked {
 }
 
 :root {
-  --vp-font-family-base: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', ui-sans-serif, sans-serif;
+  --vp-font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Microsoft YaHei', 'Noto Sans SC', sans-serif;
   --vp-font-family-mono: 'SFMono-Regular', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
 

@@ -1,8 +1,9 @@
 import { useData, useRoute } from 'vitepress'
-import DefaultTheme from 'vitepress/theme'
-import { nextTick, onMounted, onUnmounted, watch } from 'vue'
+import DefaultTheme from 'vitepress/theme-without-fonts'
+import { defineAsyncComponent, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import Layout from './Layout.vue'
 import HomePage from './components/HomePage.vue'
+import { scheduleAnalytics } from './lib/analytics.js'
 import './custom.css'
 
 let mediumZoomLoader
@@ -20,6 +21,7 @@ export default {
   Layout,
   enhanceApp({ app }) {
     app.component('HomePage', HomePage)
+    app.component('MermaidDiagram', defineAsyncComponent(() => import('./components/MermaidDiagram.vue')))
   },
   setup() {
     const route = useRoute()
@@ -72,6 +74,7 @@ export default {
     }
 
     onMounted(() => {
+      scheduleAnalytics(import.meta.env.VITE_LA_CONFIG)
       nextTick(() => {
         initZoom()
         updateThemeColor()
