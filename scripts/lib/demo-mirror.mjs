@@ -92,6 +92,40 @@ export function extractRefs(text, baseUrl) {
   return found
 }
 
+/** html 属性里的资源引用，入口改写与抓取引用共用这一个形状 */
+const ATTR_REF = /\b(src|href)\s*=\s*(["'])([^"']*)\2/gi
+
+/**
+ * 把入口 HTML 里的资源引用钉到镜像的挂载路径上。
+ *
+ * 打包器给出的入口引用是 `./assets/x.js` 这类相对路径，浏览器按**当前 URL** 解析，
+ * 所以镜像换个地址打开就指向另一批文件：
+ *   · /demo/index.html → /demo/assets/x.js  ✓
+ *   · /demo/           → /demo/assets/x.js  ✓
+ *   · /demo            → /assets/x.js       ✗ 落到站点根目录，整站白屏
+ * 线上 `cleanUrls: true` 正好把 /demo/index.html 308 到 /demo，演示应用因此起不来，
+ * 首页一直停在「正在载入可交互的实时演示…」。写盘前统一改写成根绝对路径，
+ * 镜像就与最终 URL 无关了：dev 走 /demo/index.html、线上走 /demo，结果一样。
+ *
+ * 只改同源且属于镜像范围（MIRROR_EXT）的引用：外站 CDN、页内锚点、
+ * 指向非资源页面的链接都原样保留。query 一并带上，避免丢掉带版本参数的资源。
+ */
+export function pinEntryRefs(html, baseUrl, mountPath) {
+  const mount = `/${mountPath.replace(/^\/+/, '').replace(/\/+$/, '')}`
+  const origin = new URL(baseUrl).origin
+
+  return html.replace(ATTR_REF, (match, attr, quote, value) => {
+    let url
+    try {
+      url = new URL(value, baseUrl)
+    } catch {
+      return match
+    }
+    if (url.origin !== origin || !MIRROR_EXT.test(url.pathname)) return match
+    return `${attr}=${quote}${mount}${url.pathname}${url.search}${quote}`
+  })
+}
+
 /** 入口 HTML 引用的那组资源名就是整站的版本指纹（Vite 文件名带内容 hash） */
 export function signatureOf(paths) {
   return createHash('sha256').update([...paths].sort().join('\n')).digest('hex')

@@ -1,9 +1,12 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFile } from 'node:fs/promises'
+import { fileURLToPath } from 'node:url'
 
-import { extractRefs, normalizeRef, signatureOf } from '../scripts/lib/demo-mirror.mjs'
+import { extractRefs, normalizeRef, pinEntryRefs, signatureOf } from '../scripts/lib/demo-mirror.mjs'
 
 const BASE = 'http://demo.local/demo.html'
+const MIRROR_ENTRY = fileURLToPath(new URL('../docs/public/demo/index.html', import.meta.url))
 
 test('extractRefs picks up html entry assets', () => {
   const html = `
@@ -67,4 +70,51 @@ test('signatureOf is order independent and changes with the asset set', () => {
 
   assert.equal(a, b)
   assert.notEqual(a, signatureOf(['/assets/a-AAAAAAAA.js']))
+})
+
+test('pinEntryRefs rewrites relative entry assets to the mount path', () => {
+  const html = `
+    <link rel="icon" href="./app-icon.png" />
+    <script type="module" src="./assets/demo-DFjhO9op.js"></script>
+    <link rel="modulepreload" href="../assets/vendor-x.js" />
+  `
+
+  const pinned = pinEntryRefs(html, BASE, 'demo')
+
+  assert.match(pinned, /href="\/demo\/app-icon\.png"/)
+  assert.match(pinned, /src="\/demo\/assets\/demo-DFjhO9op\.js"/)
+  // ../ 也是按源站入口的目录解析，落盘后同样要挂到 /demo 下
+  assert.match(pinned, /href="\/demo\/assets\/vendor-x\.js"/)
+})
+
+test('pinEntryRefs keeps foreign, inline and non-asset references intact', () => {
+  const html = `
+    <link rel="stylesheet" href="https://fonts.example/x.css" />
+    <a href="#top">top</a>
+    <a href="/user-guide/01-chat-v2">guide</a>
+    <img src="data:image/svg+xml;base64,AAA" />
+    <script type="module" src="/assets/already-rooted-AAAAAAAA.js"></script>
+  `
+
+  assert.equal(
+    pinEntryRefs(html, BASE, 'demo'),
+    html.replace('/assets/already-rooted-AAAAAAAA.js', '/demo/assets/already-rooted-AAAAAAAA.js')
+  )
+})
+
+test('pinEntryRefs preserves query strings and normalizes the mount path', () => {
+  assert.match(
+    pinEntryRefs('<img src="./app-icon.png?v=2" />', BASE, '/demo/'),
+    /src="\/demo\/app-icon\.png\?v=2"/
+  )
+})
+
+test('committed mirror entry pins its own assets, so any URL resolves them', async () => {
+  const html = await readFile(MIRROR_ENTRY, 'utf8')
+
+  // 线上 cleanUrls 把 /demo/index.html 308 到 /demo，入口若还留着相对引用，
+  // 资源就会被解析到站点根目录 /assets/…，演示应用起不来，首页永远停在载入态。
+  for (const [, value] of html.matchAll(/\b(?:src|href)\s*=\s*["']([^"']+)["']/gi)) {
+    assert.match(value, /^\/demo\//, `入口引用未钉到 /demo/ 下：${value}`)
+  }
 })

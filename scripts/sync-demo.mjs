@@ -21,7 +21,7 @@ import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { extractRefs, signatureOf, TEXT_EXT } from './lib/demo-mirror.mjs'
+import { extractRefs, pinEntryRefs, signatureOf, TEXT_EXT } from './lib/demo-mirror.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DEST_DIR = resolve(__dirname, '../docs/public/demo')
@@ -30,8 +30,15 @@ const MANIFEST_PATH = resolve(__dirname, '../docs/.vitepress/data/demo-mirror.js
 
 const SOURCE = (process.env.DEMO_SOURCE || 'http://47.88.78.106:8010').replace(/\/+$/, '')
 const ENTRY_PATH = '/demo.html'
-/** 入口在镜像里改名叫 index.html，/demo/ 才能直接访问 */
+/** 入口在镜像里改名叫 index.html，dev 下 VitePress 404 fallback 才抢不走 */
 const ENTRY_DEST = 'index.html'
+/** 镜像挂在 public/demo/，线上就是 /demo/ —— 入口资源引用要钉在这个前缀下 */
+const MOUNT_PATH = 'demo'
+/**
+ * 入口写盘方式改了就把指纹算作变一次，逼着重抓一次把老镜像换掉；
+ * 否则增量跳过会让改写前的镜像一直留在盘上。
+ */
+const ENTRY_REVISION = 'entry-pinned-v1'
 const CONCURRENCY = Number(process.env.DEMO_SYNC_CONCURRENCY || 16)
 const TIMEOUT_MS = Number(process.env.DEMO_SYNC_TIMEOUT || 30000)
 const USER_AGENT = 'ds-web-demo-sync'
@@ -165,8 +172,12 @@ async function crawl(entryHtml) {
     return next
   }
 
-  // 入口先写盘（改名为 index.html），再展开它的引用
-  await writeFileSafe(ENTRY_DEST, Buffer.from(entryHtml, 'utf-8'))
+  // 入口先写盘（改名为 index.html，并把资源引用钉到 /demo/ 下），再展开它的引用。
+  // 抓取仍按源站的原始 HTML 走：pin 只改落盘形态，不该影响往哪抓。
+  await writeFileSafe(
+    ENTRY_DEST,
+    Buffer.from(pinEntryRefs(entryHtml, `${SOURCE}${ENTRY_PATH}`, MOUNT_PATH), 'utf-8')
+  )
 
   let layer = []
   for (const [ref, meta] of extractRefs(entryHtml, `${SOURCE}${ENTRY_PATH}`)) {
@@ -233,14 +244,14 @@ async function main() {
     const installed = (await fileSize(resolve(DEST_DIR, ENTRY_DEST))) >= 0
     const explain = installed
       ? '沿用已提交的镜像继续构建'
-      : '本地还没有镜像，首页会退回 DemoSkeleton 骨架'
+      : '本地还没有镜像，首页会退回界面截图'
     if (STRICT) throw error
     warn(`源站不可用（${error.message}），${explain}`)
     return
   }
 
   const entryRefs = [...extractRefs(entryHtml, `${SOURCE}${ENTRY_PATH}`).keys()]
-  const signature = signatureOf(entryRefs)
+  const signature = signatureOf([...entryRefs, ENTRY_REVISION])
 
   if (!FORCE && (await mirrorIntact(manifest, signature))) {
     const size = ((manifest.bytes || 0) / 1024 / 1024).toFixed(1)
