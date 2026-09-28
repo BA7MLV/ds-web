@@ -11,14 +11,23 @@ import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
  *   · 内屏按应用真实窗口尺寸 1112×773 渲染，再等比缩放到窗壳宽度
  *     —— 这样应用永远走桌面布局，不会被 768 断点切到移动端
  *   · 红绿灯放在内屏里跟着一起缩放（应用顶栏预留了空位）
- *   · iframe 就绪前使用服务端可见的界面预览
+ *   · iframe 就绪前铺一张真实界面截图（不是灰条骨架）
  *
  * 演示产物是同源镜像（scripts/sync-demo.mjs 抓进 docs/public/demo/），
  * 不是远程地址 —— 远程 iframe 有三个绕不过的坑：
- *   · https 站点嵌 http 演示会被浏览器按混合内容直接拦掉，线上只能退回骨架；
+ *   · https 站点嵌 http 演示会被浏览器按混合内容直接拦掉，线上只能退回截图；
  *   · 演示源站慢或挂，首页就白一块；
  *   · 跨域 iframe 的 touch 事件在子文档里被吃掉，手指落在演示上滑不动页面。
  * props.src / VITE_DEMO_URL 仍可覆盖成绝对地址，方便对着远程改版调试。
+ *
+ * 截图（docs/public/demo-poster*.webp）就是演示的真实界面，重拍办法：
+ *   1. 临时在 docs/public/ 放一个只含单个 iframe 的页面，尺寸按下表
+ *      POSTER_VIEWPORT，src 指向 /demo/index.html?theme=light|dark；
+ *   2. 在该尺寸下打开，等演示脚本走到「已生成 5 张卡片」那一屏；
+ *   3. 截图后裁出 iframe 那一块（设备像素 = 尺寸 × DPR），存 WebP q88。
+ * 演示镜像同步过（demo-mirror.json 的 signature 变了）就该重拍一次，
+ * 否则截图和真应用对不上。
+ *   POSTER_VIEWPORT = { 桌面: 1112×773, 手机: 296×569 }
  */
 const NATIVE_W = 1112
 const NATIVE_H = 773
@@ -27,6 +36,9 @@ const NATIVE_H = 773
  * 同源镜像入口（docs/public/demo/index.html）。
  * 写全 index.html 而不是 /demo/：dev 模式下带尾斜杠的路径会被
  * VitePress 的 404 fallback 接管，iframe 里就变成一个 404 页。
+ * 线上 cleanUrls 会把 /demo/index.html 308 到 /demo，两种地址都留着 ——
+ * 镜像入口的资源引用已由 sync-demo.mjs 钉成 /demo/ 下的根绝对路径，
+ * 所以最终落在哪个 URL 上都指向同一批资源（见 pinEntryRefs）。
  */
 const MIRROR_SRC = '/demo/index.html'
 
@@ -93,9 +105,13 @@ const measured = ref(false)
 const mounted = ref(false)
 const canEmbed = computed(() => mounted.value && embeddable())
 const showFrame = computed(() => canEmbed.value && started.value)
+/**
+ * 图注右侧的状态。图注一直在（真实演示就绪后也还在），
+ * 所以就绪后必须换一句 —— 否则会一直停在「正在载入」。
+ */
 const previewStatus = computed(() => {
   if (timedOut.value) return t('appShell.delayed')
-  if (showFrame.value) return t('appShell.loading')
+  if (showFrame.value) return loading.value ? t('appShell.loading') : t('appShell.ready')
   if (mounted.value && !canEmbed.value) return t('appShell.unavailable')
   return t('appShell.waiting')
 })
@@ -296,24 +312,43 @@ onUnmounted(() => {
             @load="onFrameLoad"
           />
 
-          <!-- 预览先随 HTML 到达；应用 ready 后才移除，不把空白当加载成功。 -->
-          <div v-if="!showFrame || loading" class="sh__preview">
-            <div class="sh__preview-note">
-              <p class="sh__preview-title">{{ t('appShell.previewTitle') }}</p>
-              <p class="sh__preview-description">{{ t('appShell.previewDescription') }}</p>
-              <div class="sh__preview-actions">
-                <span role="status">{{ previewStatus }}</span>
-                <button
-                  v-if="canEmbed && (!started || timedOut)"
-                  type="button"
-                  @click="startDemo"
-                >{{ timedOut ? t('appShell.retry') : t('appShell.start') }}</button>
-              </div>
-            </div>
-            <div class="sh__preview-body"><slot /></div>
-          </div>
+          <!--
+            真实界面截图：随 HTML 一起到达，首屏就是成品而不是灰条骨架。
+            应用 ready 后才淡出，不把空白当加载成功。
+            尺寸按 iframe 实际渲染尺寸抓（桌面 1112×773、手机 296×569），
+            所以换成真应用时几乎不发生重排。
 
-          <div v-if="showFrame && !loading" class="sh__lights" aria-hidden="true">
+            四张图由 <picture> 按视口宽度与 prefers-color-scheme 选，
+            一次只会下载一张。src / 第三条 source 额外绑到 isDark：
+            手动切外观与系统偏好相反时也能对上（系统偏好优先那条 source
+            不受影响，唯一兜不住的是「系统暗色 + 手动切亮 + 窄屏」这一种）。
+          -->
+          <Transition name="sh-poster">
+            <div v-if="!showFrame || loading" class="sh__poster">
+              <picture>
+                <source
+                  media="(max-width: 639px) and (prefers-color-scheme: dark)"
+                  srcset="/demo-poster-mobile-dark.webp"
+                />
+                <source media="(prefers-color-scheme: dark)" srcset="/demo-poster-dark.webp" />
+                <source
+                  media="(max-width: 639px)"
+                  :srcset="isDark ? '/demo-poster-mobile-dark.webp' : '/demo-poster-mobile.webp'"
+                />
+                <img
+                  class="sh__poster-img"
+                  :src="isDark ? '/demo-poster-dark.webp' : '/demo-poster.webp'"
+                  :alt="t('appShell.posterAlt')"
+                  width="1112"
+                  height="773"
+                  decoding="async"
+                  fetchpriority="high"
+                />
+              </picture>
+            </div>
+          </Transition>
+
+          <div class="sh__lights" aria-hidden="true">
             <i /><i /><i />
           </div>
         </div>
@@ -340,6 +375,24 @@ onUnmounted(() => {
         <span class="sh__safe" aria-hidden="true" />
       </div>
     </div>
+
+    <!--
+      说明与状态放在窗壳**下面**当图注：上面只留成品画面。
+      文案仍在 SSR HTML 里（爬虫和关掉 JS 的人要看得到），
+      只是不再压在截图上方抢视觉。
+    -->
+    <figcaption class="sh__caption">
+      <p class="sh__caption-title">{{ t('appShell.previewTitle') }}</p>
+      <p class="sh__caption-text">{{ t('appShell.previewDescription') }}</p>
+      <p class="sh__caption-actions">
+        <span role="status">{{ previewStatus }}</span>
+        <button
+          v-if="canEmbed && (!started || timedOut)"
+          type="button"
+          @click="startDemo"
+        >{{ timedOut ? t('appShell.retry') : t('appShell.start') }}</button>
+      </p>
+    </figcaption>
   </figure>
 </template>
 
@@ -483,89 +536,97 @@ onUnmounted(() => {
   border: 0;
 }
 
-.sh__preview {
+/*
+ * 真实界面截图。
+ *
+ * 铺满 .sh__stage —— 也就是 iframe 实际占的那块：桌面下 stage 就是整块内屏，
+ * 手机下 stage 是状态栏与安全区之间的那一段。截图按同样的尺寸抓（1112×773 /
+ * 296×569），所以换帧时基本不重排。
+ *
+ * object-fit: cover 只在 640–767 那一档（窗壳 480×680，比例对不上）起作用，
+ * 裁掉一截而不是把画面拉变形；另两档比例一致，cover 等于原尺寸。
+ */
+.sh__poster {
   position: absolute;
   inset: 0;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
   background: var(--sh-window-bg);
 }
 
-.sh__preview-note {
-  flex: 0 0 auto;
-  padding: 22px 24px 16px;
-  border-bottom: 1px solid var(--sh-window-border);
+.sh__poster picture,
+.sh__poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.sh__poster img {
+  object-fit: cover;
+  object-position: center;
+  /* 截图自带界面配色，不参与主题反色 */
+  user-select: none;
+}
+
+/* 截图淡出：真应用已经就位，交叉一下再撤，避免硬跳 */
+.sh-poster-leave-active {
+  transition: opacity 0.22s ease;
+}
+
+.sh-poster-leave-to {
+  opacity: 0;
+}
+
+/* 图注：窗壳下方的说明 + 状态 + 手动开始 */
+.sh__caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 18px;
+  margin-top: 14px;
   text-align: left;
 }
 
-.sh__preview-title {
+.sh__caption-title {
   margin: 0;
   color: var(--vp-c-text-1);
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 600;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
-.sh__preview-description {
-  margin: 6px 0 0;
+.sh__caption-text {
+  flex: 1 1 260px;
+  margin: 0;
   color: var(--vp-c-text-2);
   font-size: 13px;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
-.sh__preview-actions {
+.sh__caption-actions {
   display: flex;
+  flex: 0 0 auto;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 16px;
-  min-height: 30px;
-  margin-top: 10px;
+  gap: 6px 12px;
+  margin: 0;
   color: var(--sh-ink-3);
   font-size: 12px;
   line-height: 1.6;
 }
 
-.sh__preview-actions button {
-  padding: 4px 10px;
+.sh__caption-actions button {
+  padding: 3px 10px;
   border: 1px solid var(--sh-window-border);
   border-radius: 999px;
+  background: transparent;
   color: var(--sh-accent);
   font-weight: 500;
   cursor: pointer;
 }
 
-.sh__preview-actions button:focus-visible {
+.sh__caption-actions button:focus-visible {
   outline: 2px solid var(--sh-accent);
   outline-offset: 3px;
-}
-
-.sh__preview-body {
-  display: flex;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-.sh__preview :deep(.Demo) {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  min-height: 0;
-  max-width: none;
-  margin: 0;
-}
-
-.sh__preview :deep(.Demo__window) {
-  flex: 1 1 auto;
-  min-height: 0;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.sh__preview :deep(.Demo__caption) {
-  display: none;
 }
 
 /* macOS 红绿灯：放在内屏里随应用一起缩放，与应用顶栏预留空位对齐 */
@@ -749,39 +810,12 @@ onUnmounted(() => {
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.55);
   }
 
-  /* 演示与预览共用同一块剩余空间，给状态栏和底部安全区让位。 */
+  /* 演示与截图共用同一块剩余空间，给状态栏和底部安全区让位。 */
   .sh--phone .sh__stage {
     flex: 1 1 auto;
     min-height: 0;
     width: 100%;
     height: auto;
-  }
-
-  .sh--phone .sh__preview-note {
-    padding: 16px;
-  }
-
-  /* 骨架自带的是桌面窗壳，装进手机壳里就重了，顺便拉满内屏 */
-  .sh--phone :deep(.Demo) {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    min-height: 0;
-    width: 100%;
-    margin: 0;
-  }
-
-  .sh--phone :deep(.Demo__window) {
-    flex: 1 1 auto;
-    min-height: 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-  }
-
-  .sh--phone :deep(.Demo__chrome) {
-    display: none;
   }
 
   .sh--phone .sh__safe {
@@ -792,6 +826,10 @@ onUnmounted(() => {
 @media (prefers-reduced-motion: reduce) {
   .sh__window {
     animation: none;
+  }
+
+  .sh-poster-leave-active {
+    transition: none;
   }
 }
 </style>

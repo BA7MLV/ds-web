@@ -3,7 +3,6 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from '../i18n/index.js'
 import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
 import AppShell from './AppShell.vue'
-import DemoSkeleton from './DemoSkeleton.vue'
 import HeroStarfield from './HeroStarfield.vue'
 import StepFlow from './StepFlow.vue'
 
@@ -242,10 +241,8 @@ onUnmounted(() => {
 
         <div class="t-stagger-line t-stagger-line--5">
           <div ref="demoEl" class="lp-hero__demo">
-            <!-- HTML 先呈现界面预览，实时演示在页面就绪后自动载入。 -->
-            <AppShell>
-              <DemoSkeleton />
-            </AppShell>
+            <!-- 壳内自带真实界面截图；实时演示在页面就绪后自动载入。 -->
+            <AppShell />
           </div>
         </div>
       </div>

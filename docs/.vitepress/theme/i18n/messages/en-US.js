@@ -64,28 +64,16 @@ export default {
     title: 'DeepStudent live demo',
     previewTitle: 'DeepStudent interface preview',
     previewDescription: 'Discuss your study materials, then turn your understanding into mind maps, practice questions and Anki cards.',
-    waiting: 'This is a layout sketch. The live demo will load automatically.',
+    /** Alt text for the real-UI screenshot in the shell; it is the same interface the demo shows */
+    posterAlt:
+      'The DeepStudent app: resources and conversations on the left, a material-grounded Q&A with citations on the right, already turned into 5 Anki cards.',
+    waiting: 'The live demo loads automatically. Start it here instead.',
     loading: 'Loading the interactive live demo…',
+    ready: 'Live demo loaded — go ahead and try it.',
     delayed: 'The live demo is not ready yet. Retry or explore the features below.',
-    unavailable: 'The live demo cannot be embedded here. This is a layout sketch.',
+    unavailable: 'The live demo cannot be embedded here. This is a screenshot of the interface.',
     start: 'Try it now',
     retry: 'Reload demo'
-  },
-
-  demo: {
-    tabsLabel: 'Feature demo',
-    sideLabel: 'Switch demo section',
-    views: [
-      { id: 'chat', label: 'Chat' },
-      { id: 'library', label: 'Library' },
-      { id: 'mindmap', label: 'Mind map' },
-      { id: 'quiz', label: 'Practice' },
-      { id: 'anki', label: 'Anki cards' }
-    ],
-    branches: ['Definitions', 'Key derivations', 'Worked examples', 'Common pitfalls'],
-    chips: ['Material · Ch. 3', 'Notes · Review outline'],
-    mindRoot: 'Core concepts',
-    caption: 'Layout sketch · click a section on the left to switch'
   },
 
   home: {

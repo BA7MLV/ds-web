@@ -29,6 +29,25 @@ const home = template('HomePage')
 const shell = template('AppShell')
 const emptyDecoration = { render: () => null }
 
+/** 只渲染 AppShell（默认语言），用来单独检查壳本身的 SSR 输出。 */
+const shellOnly = () => {
+  const t = (path, params = {}) => {
+    const value = path.split('.').reduce((acc, key) => acc[key], messages['zh-CN'])
+    return String(value).replace(/\{(\w+)\}/g, (_, key) => params[key] ?? '')
+  }
+  return createSSRApp({
+    ssrRender: shell.ssrRender,
+    setup: () => ({
+      t,
+      measured: false,
+      showFrame: false,
+      loading: true,
+      canEmbed: false,
+      previewStatus: t('appShell.waiting')
+    })
+  })
+}
+
 for (const [locale, words] of Object.entries(messages)) {
   test(`${locale} landing SSR includes visible hero, actions and an informative preview`, async () => {
     const tm = (path) => path.split('.').reduce((value, key) => value[key], words)
@@ -63,7 +82,7 @@ for (const [locale, words] of Object.entries(messages)) {
         previewStatus: words.appShell.waiting,
       }),
     })
-    for (const component of ['HeroStarfield', 'StepFlow', 'DemoSkeleton']) {
+    for (const component of ['HeroStarfield', 'StepFlow']) {
       app.component(component, emptyDecoration)
     }
 
@@ -77,9 +96,30 @@ for (const [locale, words] of Object.entries(messages)) {
     assert.ok(html.includes(words.appShell.previewTitle))
     assert.ok(html.includes(words.appShell.previewDescription))
     assert.ok(html.includes(words.appShell.waiting))
+    // 壳内先铺真实界面截图，所以首屏 HTML 里有图，而不是等 JS 再画
+    assert.match(html, /<img[^>]+src="\/demo-poster\.webp"[^>]+alt="[^"]+"/)
     assert.doesNotMatch(html, /<iframe\b/)
   })
 }
+
+test('hero ships every poster variant so no layout is left without a real screenshot', async () => {
+  const html = await renderToString(shellOnly())
+  for (const src of [
+    '/demo-poster.webp',
+    '/demo-poster-dark.webp',
+    '/demo-poster-mobile.webp',
+    '/demo-poster-mobile-dark.webp'
+  ]) {
+    assert.ok(html.includes(src), `缺少截图：${src}`)
+  }
+  // 深浅色各配一张，靠 prefers-color-scheme 选，不额外发请求
+  assert.match(html, /media="\(prefers-color-scheme: dark\)"/)
+  assert.match(html, /media="\(max-width: 639px\) and \(prefers-color-scheme: dark\)"/)
+  // 截图铺在 iframe 那一块上，铺满内屏
+  assert.match(html, /class="sh__poster"/)
+  // 替代文字要说清这张图是什么（截图与实时演示是同一个界面）
+  assert.ok(html.includes(messages['zh-CN'].appShell.posterAlt))
+})
 
 test('landing visibility does not depend on mounted state or transparent window animation', () => {
   assert.doesNotMatch(home.descriptor.scriptSetup.content, /heroShown/)

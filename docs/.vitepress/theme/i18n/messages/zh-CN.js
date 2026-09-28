@@ -70,28 +70,16 @@ export default {
     title: 'DeepStudent 实时演示',
     previewTitle: 'DeepStudent 界面预览',
     previewDescription: '围绕学习资料展开对话，再把理解整理成知识导图、练习题和 Anki 卡片。',
-    waiting: '下方为界面结构示意，实时演示将自动载入。',
+    /** 壳内那张真实界面截图的替代文字；截图与实时演示是同一个界面 */
+    posterAlt:
+      'DeepStudent 应用界面：左侧是学习资源与对话列表，右侧是围绕资料的问答，回答带引用出处，并已整理成 5 张 Anki 卡片。',
+    waiting: '实时演示将自动载入，点这里也可以马上开始。',
     loading: '正在载入可交互的实时演示…',
-    delayed: '实时演示暂未就绪，你可以重试或先浏览下方功能。',
-    unavailable: '当前无法嵌入实时演示，下方为界面结构示意。',
+    ready: '实时演示已载入，可以直接操作。',
+    delayed: '实时演示暂未就绪，你可以重试或先看下方功能。',
+    unavailable: '当前无法嵌入实时演示，下方是界面截图。',
     start: '立即体验',
     retry: '重新载入'
-  },
-
-  demo: {
-    tabsLabel: '功能演示',
-    sideLabel: '演示功能切换',
-    views: [
-      { id: 'chat', label: '智能对话' },
-      { id: 'library', label: '学习资源' },
-      { id: 'mindmap', label: '知识导图' },
-      { id: 'quiz', label: '题目练习' },
-      { id: 'anki', label: 'Anki 制卡' }
-    ],
-    branches: ['定义与边界', '关键推导', '典型例题', '常见易错点'],
-    chips: ['资料 · 第 3 章', '笔记 · 复习提纲'],
-    mindRoot: '核心概念',
-    caption: '界面结构示意 · 点击左侧栏目可切换'
   },
 
   home: {
