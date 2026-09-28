@@ -124,8 +124,8 @@ export default {
         {
           label: 'Think it through',
           statement: 'Converse around your own material.',
-          img: '/flow-think-dither.svg',
-          alt: 'A single dithered question bubble',
+          art: 'think',
+          alt: 'A single ASCII-art question bubble',
           items: [
             {
               title: 'Answers with sources',
@@ -144,8 +144,8 @@ export default {
         {
           label: 'Make it stick',
           statement: 'Turn it into something you can review.',
-          img: '/flow-review-dither.svg',
-          alt: 'A single dithered review loop symbol',
+          art: 'review',
+          alt: 'A single ASCII-art review loop symbol',
           items: [
             {
               title: 'Mind maps',

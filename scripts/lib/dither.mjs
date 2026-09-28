@@ -15,8 +15,8 @@
  * 画布尺寸 = 这张图在页面里的实际显示宽度，所以 1px 就是 1px，网点不会被二次缩放。
  *
  * 消费者（各自只管构图与写盘）：
- *   scripts/gen-flow-dither.mjs      「使用流程」两张卡：280×176 / 544×340
- *   scripts/gen-features-dither.mjs  功能区四扇窗口屏：452×282
+ *   scripts/gen-flow-ascii.mjs      「使用流程」两张卡：字符画，量化与字形在 lib/ascii.mjs
+ *   scripts/gen-features-dither.mjs 功能区四扇窗口屏：452×282
  */
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
@@ -74,6 +74,31 @@ export const circle = (cx, cy, r) =>
   shape([cx - r, cy - r, cx + r, cy + r], (px, py) =>
     (px - cx) * (px - cx) + (py - cy) * (py - cy) <= r * r ? 1 : 0
   )
+
+/**
+ * 实心椭圆（`circle` 的非等比版：rx / ry 分开给）。
+ *
+ * 字符画那边要它：字符格是 6 × 11 的竖长条，一个圆点想「占满整格」就得
+ * 按格的比例给 rx / ry —— 正圆要么横向伸进邻格、要么竖向占不满，
+ * 两种情况都会被覆盖率打折，量化出来是一小片浅字而不是一个实心点。
+ */
+export const ellipse = (cx, cy, rx, ry) =>
+  shape([cx - rx, cy - ry, cx + rx, cy + ry], (px, py) => {
+    const dx = (px - cx) / rx
+    const dy = (py - cy) / ry
+    return dx * dx + dy * dy <= 1 ? 1 : 0
+  })
+
+/**
+ * 环带：外圈减内圈。圆角矩形版的「描边」—— 给两个同心的圆角矩形就行。
+ *
+ * 字符画那边画不了半透明：形状若是**实心**，一格里画的是哪个档位就只剩一个数，
+ * 轮廓和内部同档，整块读出来是一片均匀的字，形状自己反而糊了。
+ * 描边把「有边界」和「有内部」分成两件事，符号才立得住。
+ * （dither 那边不需要它：网点本身就有疏密，实心块的边界靠点距就分得开。）
+ */
+export const hollow = (outer, inner) =>
+  shape(outer.bbox, (px, py) => (outer.hit(px, py) && !inner.hit(px, py) ? 1 : 0))
 
 /** 任意多边形。气泡尾巴和循环箭头都用它，避免为了两个小尖角引入 SVG 原语。 */
 export const polygon = (points) => {
@@ -244,12 +269,14 @@ export const paint = (field, s, gray, cv, SS = 4) => {
  * 边缘溶解：给一个「缓坡宽度」的工厂，按边给，单位是**该边长的比例**。
  *
  * 只在指定的那几条边拉缓坡，其余边留硬边。用哪几条边由图案在页面里的处境决定：
- * - 「使用流程」两张只化左边与顶边（`{ left: 0.1, top: 0.11 }`）—— 它们定位在
- *   right:-6% / bottom:-8%，右边和底边本来就落在卡片外被切掉，那儿留硬边才对；
- *   左上两边的缓坡是给文字让路，网点由密到疏自己化掉，图案才像从卡面里长出来。
  * - 功能区四张四边都化 —— 硬边界交给窗口壳，图案在屏里「浮」着。
+ * - 「使用流程」两张**不用它**。那一版曾按 `{ left: 0.1, top: 0.11 }` 只化左 / 上，
+ *   理由是图案定位在 `right:-6% / bottom:-8%`、右底两边落在卡片外；后来定位改成
+ *   `right: 8% / bottom: 7%`，图案整个收进卡面，缓坡其实再也碰不到主体。
+ *   换成字符画之后索性去掉：溶解做在**档位**上，一条横跨形状的缓坡会把边框的一侧
+ *   整体压低一两档，上下两条边一个深一个浅，读起来是画错了，不是「长出来」。
  *
- * 缓坡宽度按比例给是因为两张画布的尺寸差着量级：
+ * 缓坡宽度按比例给是因为各张画布的尺寸差着量级：
  * 0.066 × 452 与 0.106 × 282 都约等于 30px，四边化掉的范围一样宽。
  */
 export const rampEdges = ({ left = 0, right = 0, top = 0, bottom = 0 }) => {
@@ -329,15 +356,23 @@ export const canvas = (w, h) => {
 }
 
 /* ── 写盘 ──
- * 两个生成器共用的收尾：算完、写盘、打一行「多大 / 几条矩形」。
- * 路径按「脚本 → 仓库根 → docs/public」推，两个生成器都在 scripts/ 下。
+ * 两个生成器共用的收尾：算完、写盘、打一行「多大 / 几个图元」。
+ *
+ * `dir` 是仓库根下的相对路径，默认 `docs/public`（页面静态资源）。
+ * 字符画那两张不走 public 而是写进 `theme/assets`：它们是被组件 `?raw` 引进来
+ * **内联进 DOM** 的，墨色靠 `currentColor` 继承页面主题；再在 public 留一份
+ * 同样的文件就是白白多发一遍、还多一份没人引用的死文件。
+ *
+ * `unit` 是给调用方改词的：dither 吐的是矩形，字符画吐的是笔画子路径，
+ * 打同一句「条矩形」会让人以为产物变了样。
  */
-const PUBLIC = resolve(dirname(fileURLToPath(import.meta.url)), '../../docs/public')
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
-export const emit = (files) => {
-  mkdirSync(PUBLIC, { recursive: true })
+export const emit = (files, { dir = 'docs/public', unit = '条矩形' } = {}) => {
+  const out = resolve(ROOT, dir)
+  mkdirSync(out, { recursive: true })
   for (const [name, svg] of files) {
-    writeFileSync(resolve(PUBLIC, name), svg)
-    console.log(`✓ ${name}  ${(svg.length / 1024).toFixed(1)} kB  ${(svg.match(/M/g) || []).length} 条矩形`)
+    writeFileSync(resolve(out, name), svg)
+    console.log(`✓ ${name}  ${(svg.length / 1024).toFixed(1)} kB  ${(svg.match(/M/g) || []).length} ${unit}`)
   }
 }

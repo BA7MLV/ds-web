@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>使用流程两张卡 · 字符画底图对照</title>
+    <style>
+      /* 只做校对的对照页：卡片的尺寸 / 圆角 / 底图定位都照 StepFlow.vue 抄。
+         和组件一样把 SVG 内联进来 —— 墨色必须是 currentColor 才有意义，
+         所以这里不能图省事用 <img>（那是独立文档，颜色取不到页面）。
+
+         内联要读文件，file:// 下 fetch 会被拦，请起一个静态服务再打开：
+           cd <repo> && python3 -m http.server 8899 --bind 127.0.0.1
+           然后访问 http://127.0.0.1:8899/plans/flow-ascii/preview.html
+      */
+      :root {
+        --lp-text: #1d1d1f;
+        --lp-text-3: #86868b;
+        --lp-tile: #f5f5f7;
+        --page: #ffffff;
+      }
+      html.dark {
+        --lp-text: #f5f5f7;
+        --lp-text-3: #8e8e93;
+        --lp-tile: #26262a;
+        --page: #1b1b1f;
+      }
+      /*
+       * 深色那一排要真的落到深色作用域里：变量在真实站点上挂在 `html.dark`，
+       * 这里不能靠给整页加类（那会让浅色那一排也变深），所以把同一组值复述一份，
+       * 挂在那一段的容器上 —— 内联 SVG 的 currentColor 才会取到浅墨。
+       */
+      .dark-scope {
+        --lp-text: #f5f5f7;
+        --lp-text-3: #8e8e93;
+        --lp-tile: #26262a;
+        --page: #1b1b1f;
+        width: max-content;
+        padding: 24px;
+        border-radius: 24px;
+        background: var(--page);
+        color: var(--lp-text);
+      }
+      body {
+        margin: 0;
+        padding: 40px 32px 80px;
+        background: var(--page);
+        color: var(--lp-text);
+        font: 15px/1.5 -apple-system, "PingFang SC", "Segoe UI", sans-serif;
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0 0 8px;
+      }
+      h2 {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--lp-text-3);
+        margin: 48px 0 16px;
+      }
+      .note {
+        color: var(--lp-text-3);
+        font-size: 13px;
+        margin: 0 0 16px;
+        max-width: 46em;
+      }
+      code {
+        background: var(--lp-tile);
+        border-radius: 4px;
+        padding: 1px 5px;
+      }
+      .pair {
+        display: grid;
+        grid-template-columns: minmax(0, 356px) minmax(0, 712px);
+        gap: 12px;
+        width: max-content;
+      }
+      .card {
+        position: relative;
+        min-height: 440px;
+        padding: 28px;
+        border-radius: 28px;
+        background: var(--lp-tile);
+        overflow: hidden;
+        isolation: isolate;
+      }
+      .label {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .title {
+        margin: 8px 0 0;
+        max-width: 16em;
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 1.15;
+        letter-spacing: -0.028em;
+      }
+      /* 与组件里同一条：容器定位，里面 svg 铺满、按 viewBox 比例收。
+         这几个数值直接抄 StepFlow.vue —— 元素框现在 ≈ 图案本身（viewBox 按墨迹裁过），
+         所以也就是「图案自己多大、落在哪儿」。 */
+      .shot {
+        position: absolute;
+        z-index: -1;
+        max-width: none;
+        color: var(--lp-text);
+      }
+      .shot > svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .shot--0 {
+        right: 11.8%;
+        bottom: 4.4%;
+        width: 76.6%;
+      }
+      .shot--1 {
+        right: 22.8%;
+        bottom: 7%;
+        width: 41.4%;
+      }
+      .zoom {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+      }
+      .zoom .shot {
+        position: static;
+      }
+      .zoom .w1 {
+        width: 1104px;
+      }
+      .zoom .w2 {
+        width: 1080px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>使用流程两张卡 · 字符画底图</h1>
+    <p class="note">
+      与组件一样把 SVG 内联进 DOM，墨色由 <code>currentColor</code> 继承 ——
+      所以这一页能直接看出深浅两套是不是真的跟着主题走。
+      需要静态服务（<code>fetch</code> 在 <code>file://</code> 下会被拦），见文件头的命令。
+    </p>
+
+    <h2>浅色 · 真实尺寸</h2>
+    <section class="pair" id="light">
+      <div class="card">
+        <p class="label">想明白</p>
+        <h3 class="title">围绕你的材料对话。</h3>
+        <span class="shot shot--0" data-art="think"></span>
+      </div>
+      <div class="card">
+        <p class="label">记得住</p>
+        <h3 class="title">变成能复习的东西。</h3>
+        <span class="shot shot--1" data-art="review"></span>
+      </div>
+    </section>
+
+    <h2>深色 · 真实尺寸</h2>
+    <section>
+      <div id="dark-mount" class="dark-scope"></div>
+    </section>
+
+    <h2>4 倍放大</h2>
+    <section class="zoom" id="zoom">
+      <span class="shot w1" data-art="think"></span>
+      <span class="shot w2" data-art="review"></span>
+    </section>
+
+    <script>
+      const BASE = '../../docs/.vitepress/theme/assets/'
+      const FILES = { think: 'flow-think-ascii.svg', review: 'flow-review-ascii.svg' }
+
+      // 深色那一组直接复制浅色那组，省得写两遍结构
+      const mount = document.getElementById('dark-mount')
+      const clone = document.getElementById('light').cloneNode(true)
+      clone.removeAttribute('id')
+      mount.appendChild(clone)
+
+      const inline = async () => {
+        const entries = await Promise.all(
+          Object.entries(FILES).map(async ([key, file]) => {
+            const res = await fetch(BASE + file)
+            if (!res.ok) throw new Error(`${file}: HTTP ${res.status}`)
+            return [key, await res.text()]
+          })
+        )
+        const art = Object.fromEntries(entries)
+        for (const slot of document.querySelectorAll('[data-art]')) {
+          slot.innerHTML = art[slot.dataset.art]
+        }
+        // 4 倍放大：按 SVG 自己的固有尺寸翻倍，不在这里另抄一份画布尺寸
+        for (const el of document.querySelectorAll('#zoom .shot')) {
+          el.style.width = Number(el.querySelector('svg').getAttribute('width')) * 4 + 'px'
+        }
+      }
+
+      inline().catch((err) => {
+        document.body.insertAdjacentHTML(
+          'afterbegin',
+          `<p class="note">读不到 SVG：${err.message}<br>请先用静态服务打开这一页（见文件头）。</p>`
+        )
+      })
+    </script>
+  </body>
+</html>

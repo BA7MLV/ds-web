@@ -128,8 +128,8 @@ export default {
         {
           label: '想明白',
           statement: '围绕你的材料对话。',
-          img: '/flow-think-dither.svg',
-          alt: '单个问答气泡的抖动图案',
+          art: 'think',
+          alt: '单个问答气泡的字符画',
           items: [
             {
               title: '答案带出处',
@@ -148,8 +148,8 @@ export default {
         {
           label: '记得住',
           statement: '变成能复习的东西。',
-          img: '/flow-review-dither.svg',
-          alt: '单个循环复习符号的抖动图案',
+          art: 'review',
+          alt: '单个循环复习符号的字符画',
           items: [
             {
               title: '知识导图',
