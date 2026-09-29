@@ -47,6 +47,9 @@ docs/.vitepress/config.js.timestamp-*.mjs
 /.openchamber/
 /.workbuddy/
 
+# 生成器的临时对照预览页与截图（正式口径都在 docs/plans/ 的设计稿里）
+/plans/features-ascii/
+
 # 性能测量的原始 runs 数据与迭代中间产物（单次 benchmark-final.json 约 6MB，
 # 随时可用 scripts/bench-site.mjs 重跑生成）。入库的只有结论：
 #   perf/bench/ceilings.json       棘轮上限，ratchet 脚本据此判断是否回退
