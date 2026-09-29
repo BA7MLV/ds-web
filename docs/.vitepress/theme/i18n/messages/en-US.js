@@ -69,7 +69,6 @@ export default {
       'The DeepStudent app: resources and conversations on the left, a material-grounded Q&A with citations on the right, already turned into 5 Anki cards.',
     waiting: 'The live demo loads automatically. Start it here instead.',
     loading: 'Loading the interactive live demo…',
-    ready: 'Live demo loaded — go ahead and try it.',
     delayed: 'The live demo is not ready yet. Retry or explore the features below.',
     unavailable: 'The live demo cannot be embedded here. This is a screenshot of the interface.',
     start: 'Try it now',

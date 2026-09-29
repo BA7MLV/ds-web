@@ -99,7 +99,7 @@ const component = (t, name, exports, { props = {}, demoUrl = '' } = {}) => {
 
 const shell = (t, options) => component(t, 'AppShell', [
   'frameSrc', 'frameKey', 'frameEl', 'setFrame', 'startDemo', 'onMessage', 'onFrameLoad',
-  'loading', 'timedOut', 'showFrame',
+  'loading', 'timedOut', 'showFrame', 'previewStatus',
 ], options)
 
 const frame = (name) => markRaw({ contentWindow: { name }, contentDocument: null })
@@ -203,6 +203,43 @@ test('cross-origin load fallback ignores a retiring frame and safely handles acc
   assert.doesNotThrow(() => env.api.onFrameLoad({ currentTarget: currentFrame }))
   env.timeout(600)
   assert.equal(env.api.loading.value, false)
+})
+
+test('caption speaks only while the demo is not live, and never swallows a retry', (t) => {
+  const env = shell(t)
+  env.mount()
+
+  // 还没开始：得解释「为什么不动」，并给一个立刻开始的口子
+  assert.equal(env.api.previewStatus.value, 'appShell.waiting')
+
+  env.api.startDemo()
+  assert.equal(env.api.previewStatus.value, 'appShell.loading')
+
+  // 真应用就绪 = 用户看得见点得着，再报一次「已载入」纯属噪音，整行消失
+  const live = frame('live')
+  env.api.setFrame(live)
+  env.api.onMessage(ready(live))
+  assert.equal(env.api.previewStatus.value, '')
+
+  // 演示已经活着时再点开始是个空操作，不该把这行又变回「正在载入」
+  env.api.startDemo()
+  assert.equal(env.api.previewStatus.value, '')
+
+  // 另一条路径：一直没就绪 → 超时。这行必须出声，
+  // 不然「重新载入」按钮凭空浮在图注右边，没有上下文
+  const slow = shell(t)
+  slow.mount()
+  slow.api.startDemo()
+  slow.api.setFrame(frame('stuck'))
+  slow.timeout(15000)
+  assert.equal(slow.api.timedOut.value, true)
+  assert.equal(slow.api.previewStatus.value, 'appShell.delayed')
+
+  // 图注里那行是按状态渲染的：空串必须真的不占位，否则留下一条空的 role="status"
+  const template = parse(
+    readFileSync(new URL('../docs/.vitepress/theme/components/AppShell.vue', import.meta.url), 'utf8')
+  ).descriptor.template.content
+  assert.match(template, /<p v-if="previewStatus" class="sh__caption-actions">/)
 })
 
 test('starfield pauses and resumes normally but late callbacks cannot restart it after unmount', async (t) => {

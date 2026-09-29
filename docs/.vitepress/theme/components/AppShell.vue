@@ -20,13 +20,25 @@ import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
  *   · 跨域 iframe 的 touch 事件在子文档里被吃掉，手指落在演示上滑不动页面。
  * props.src / VITE_DEMO_URL 仍可覆盖成绝对地址，方便对着远程改版调试。
  *
- * 截图（docs/public/demo-poster*.webp）就是演示的真实界面，重拍办法：
- *   1. 临时在 docs/public/ 放一个只含单个 iframe 的页面，尺寸按下表
- *      POSTER_VIEWPORT，src 指向 /demo/index.html?theme=light|dark；
- *   2. 在该尺寸下打开，等演示脚本走到「已生成 5 张卡片」那一屏；
- *   3. 截图后裁出 iframe 那一块（设备像素 = 尺寸 × DPR），存 WebP q88。
+ * 截图（docs/public/demo-poster*.webp）就是演示的真实界面。
+ * 用本机 Chrome 的 headless 截图抓（--force-device-scale-factor 指定密度，
+ * --virtual-time-budget 把演示脚本快进到「已生成 5 张卡片」那一屏）：
+ *
+ *   1. 临时在 docs/public/ 放一个只含单个 iframe 的页面，尺寸按下表，
+ *      src 指向 /demo/index.html?theme=light|dark；
+ *   2. 起一个能供静态资源的服务器（npm run dev 也行）；
+ *   3. Chrome --headless --force-device-scale-factor=<密度>
+ *      --window-size=<宽>,<高> --virtual-time-budget=40000
+ *      --screenshot=<落点.png> "http://localhost:5174/__poster.html?w=<宽>&h=<高>&theme=<主题>"
+ *   4. 编码成 WebP：桌面 q76，手机 q76。
+ *
+ * 密度不是越高越好，是算过账的（tests/poster-density.test.mjs 守着这条线）：
+ *   桌面 2× —— 3× 要 119 KB（+51 KB），而 DPR 3 的桌面屏极少，不值；
+ *   手机 3× —— 44 KB，比 2× 的 37 KB 只多 7 KB，而手机几乎全是 3× 屏，
+ *             2× 时正好欠 1.5×，文字发虚。这 7 KB 换的是多数人的清晰度。
  * 演示镜像同步过（demo-mirror.json 的 signature 变了）就该重拍一次，
  * 否则截图和真应用对不上。
+ *
  *   POSTER_VIEWPORT = { 桌面: 1112×773, 手机: 296×569 }
  */
 const NATIVE_W = 1112
@@ -106,12 +118,16 @@ const mounted = ref(false)
 const canEmbed = computed(() => mounted.value && embeddable())
 const showFrame = computed(() => canEmbed.value && started.value)
 /**
- * 图注右侧的状态。图注一直在（真实演示就绪后也还在），
- * 所以就绪后必须换一句 —— 否则会一直停在「正在载入」。
+ * 图注右侧的状态，**只在非就绪时说话**。
+ *
+ * 这一行存在的意义是解释「为什么还没动」和「出事了怎么办」：
+ * 还没开始（waiting）、正在载入（loading）、超时可重试（delayed）、
+ * 嵌不进来（unavailable）。一旦真应用就绪，「已载入，可以直接操作」是废话 ——
+ * 用户看得到、能点，告诉他这件事不产生任何新信息，所以返回空串让整块消失。
  */
 const previewStatus = computed(() => {
   if (timedOut.value) return t('appShell.delayed')
-  if (showFrame.value) return loading.value ? t('appShell.loading') : t('appShell.ready')
+  if (showFrame.value) return loading.value ? t('appShell.loading') : ''
   if (mounted.value && !canEmbed.value) return t('appShell.unavailable')
   return t('appShell.waiting')
 })
@@ -328,12 +344,12 @@ onUnmounted(() => {
               <picture>
                 <source
                   media="(max-width: 639px) and (prefers-color-scheme: dark)"
-                  srcset="/demo-poster-mobile-dark.webp"
+                  srcset="/demo-poster-mobile-dark@3x.webp"
                 />
                 <source media="(prefers-color-scheme: dark)" srcset="/demo-poster-dark.webp" />
                 <source
                   media="(max-width: 639px)"
-                  :srcset="isDark ? '/demo-poster-mobile-dark.webp' : '/demo-poster-mobile.webp'"
+                  :srcset="isDark ? '/demo-poster-mobile-dark@3x.webp' : '/demo-poster-mobile@3x.webp'"
                 />
                 <img
                   class="sh__poster-img"
@@ -384,7 +400,8 @@ onUnmounted(() => {
     <figcaption class="sh__caption">
       <p class="sh__caption-title">{{ t('appShell.previewTitle') }}</p>
       <p class="sh__caption-text">{{ t('appShell.previewDescription') }}</p>
-      <p class="sh__caption-actions">
+      <!-- 就绪后整块连同「重新载入」一起消失，剩标题与说明当图注 -->
+      <p v-if="previewStatus" class="sh__caption-actions">
         <span role="status">{{ previewStatus }}</span>
         <button
           v-if="canEmbed && (!started || timedOut)"

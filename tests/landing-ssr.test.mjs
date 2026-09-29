@@ -107,8 +107,8 @@ test('hero ships every poster variant so no layout is left without a real screen
   for (const src of [
     '/demo-poster.webp',
     '/demo-poster-dark.webp',
-    '/demo-poster-mobile.webp',
-    '/demo-poster-mobile-dark.webp'
+    '/demo-poster-mobile@3x.webp',
+    '/demo-poster-mobile-dark@3x.webp'
   ]) {
     assert.ok(html.includes(src), `缺少截图：${src}`)
   }
