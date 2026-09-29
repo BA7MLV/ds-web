@@ -35,15 +35,16 @@
   - `data/downloads.json`: 下载页数据，由 `scripts/sync-release-downloads.mjs` 在构建时从 GitHub Releases 同步。
 - `docs/public/`: 公共静态资源（图片、图标、`robots.txt`、`llms.txt`、favicon）。
   - `demo/`: 首页 hero 实时演示的**同源镜像**（另一个工程的构建产物），由 `scripts/sync-demo.mjs` 同步，勿手改。
-  - `feature-*-dither.svg`: 首页功能区四扇窗口屏的装饰图案，**由生成器产出，勿手改**（见下）。
+  - `feature-*-ascii.svg`: 首页功能区四扇窗口屏的字符画，**由生成器产出，勿手改**（见下）。
 - `scripts/`: 构建辅助脚本。
   - `sync-release-downloads.mjs`、`sync-demo.mjs` + `lib/`：构建期同步数据与演示镜像。
-  - `gen-flow-ascii.mjs`、`gen-features-dither.mjs`：把首页的「使用流程」两张卡与功能区四扇窗口屏
-    烘焙成 SVG。前者是**字符画** —— 形状仍是 `lib/dither.mjs` 的解析几何，
-    每个格子按墨量挑一个字符（`.:-=+*#@`），量化与字形在 `lib/ascii.mjs`，
-    产物写进 `theme/assets/`（要内联，见上）；后者是有序抖动网点，产物写进 `docs/public/`。
+  - `gen-flow-ascii.mjs`、`gen-features-ascii.mjs`：把首页的「使用流程」两张卡与功能区四扇窗口屏
+    烘焙成 SVG。两者都是**字符画** —— 形状仍是 `lib/dither.mjs` 的解析几何，
+    每个格子按墨量挑一个字符（`.:-=+*#@`），量化与字形在 `lib/ascii.mjs`。
+    产物落点不同：前者进 `theme/assets/`（要 `?raw` 内联，墨色由 `currentColor` 跟着主题走），
+    后者进 `docs/public/`（走 `<img src>`，墨色写死 —— 那扇窗的屏两套主题下都是深色）。
     **改图案只改这两个生成器，再跑一次。**
-    口径与取舍见 `docs/plans/2026-09-28-flow-ascii-design.md`、`2026-09-26-features-dither-design.md`
+    口径与取舍见 `docs/plans/2026-09-28-flow-ascii-design.md`、`2026-09-29-features-ascii-design.md`
     与 `2026-09-25-flow-dither-scifi-design.md`。
 - `tests/`: Node 内置测试（`npm test`，即 `node --test` 自动发现），覆盖下载数据同步、演示镜像逻辑与 i18n 消息表结构校验。
 - 根目录：`package.json`（npm workspaces，命令代理到 `docs` workspace）、`vercel.json`（含 `/docs/*` → `/*` 301 重定向）。

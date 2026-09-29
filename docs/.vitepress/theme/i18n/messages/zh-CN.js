@@ -182,8 +182,8 @@ export default {
           lead: '围绕你自己的材料学习，而不是通用聊天。',
           desc: '支持图片、语音和文件；引用面板直接调取你的资料；复杂问题切深度推理。',
           link: '/user-guide/01-chat-v2',
-          img: '/feature-chat-dither.svg',
-          alt: '材料与对话引线的抖动图案'
+          img: '/feature-chat-ascii.svg',
+          alt: '材料与对话引线的字符画'
         },
         {
           tab: '知识导图',
@@ -191,8 +191,8 @@ export default {
           lead: '把知识整理成结构。',
           desc: '一句话生成完整知识体系，边聊边改，遮住节点就能自测。',
           link: '/user-guide/02-learning-hub-assets/05-mindmap',
-          img: '/feature-mindmap-dither.svg',
-          alt: '知识导图节点层级的抖动图案'
+          img: '/feature-mindmap-ascii.svg',
+          alt: '知识导图节点层级的字符画'
         },
         {
           tab: '题目练习',
@@ -200,8 +200,8 @@ export default {
           lead: '把教材、试卷变成可练习的题库。',
           desc: '自动从教材里提取或生成题目，自动判分，掌握度按知识点追踪。',
           link: '/user-guide/02-learning-hub-assets/03-question-bank',
-          img: '/feature-quiz-dither.svg',
-          alt: '试卷与判分徽章的抖动图案'
+          img: '/feature-quiz-ascii.svg',
+          alt: '试卷与判分徽章的字符画'
         },
         {
           tab: 'Anki 制卡',
@@ -209,8 +209,8 @@ export default {
           lead: '把理解变成长期记忆。',
           desc: '说一句话就能制卡，批量生成，一键同步到 Anki。',
           link: '/user-guide/03-chatanki',
-          img: '/feature-anki-dither.svg',
-          alt: '卡片堆与遗忘曲线的抖动图案'
+          img: '/feature-anki-ascii.svg',
+          alt: '卡片堆与遗忘曲线的字符画'
         }
       ]
     },

@@ -314,10 +314,11 @@ const MARGIN = 12
  * `preserveAspectRatio` 写出来是**声明意图**：默认值就是 xMidYMid meet，
  * 但「装不下时按比例缩到装得下、居中」这件事对这份图是硬要求，写明白不吃亏。
  *
- * **墨色不写死**：`stroke="currentColor"`，颜色由页面给。这份文件是被组件
+ * **墨色默认不写死**：`stroke="currentColor"`，颜色由页面给。这份文件是被组件
  * `?raw` 引进来、内联进 DOM 的（不再是 `<img src>`），所以 `currentColor`
  * 解析在**宿主文档**里 —— 深色模式直接继承主题色，不需要 `filter: invert(1)`
  * 把近黑反成一片 #e2e2e0，也就没有「反相出来的灰」和站点正文色对不上这回事。
+ * 需要相反的场合（见下 `color`）才写死。
  *
  * `fill="none"`：八个字形全是笔画，没有一个靠填充。`stroke-linecap: round`
  * 兼作圆点、也把折线的拐角磨圆 —— 与 dither 那边胶囊笔的观感是同一条。
@@ -327,23 +328,51 @@ const MARGIN = 12
  * dump 成文本去校对的脚本）可以直接按序号取档，不必靠「出现顺序」去猜 ——
  * 上面已经因为跳空档位踩过一次，白白多看了两轮错图。
  * 代价是每份多一百来字节，在十几 kB 的产物里看不出来。
+ *
+ * ── opts ──
+ * 两处「换个用法就要换个默认值」的地方，都收在这里而不是让调用方改包一层：
+ *
+ * · **`crop: false` —— 画布即边框，`viewBox` 固定为 `0 0 cv.w cv.h`。**
+ *   裁到墨迹对**各自独立**的图片是对的（打开就是一张居中的图），
+ *   但功能区那四张是**轮播**：同一块屏里轮换显示。四张各自裁一次，
+ *   viewBox 的长宽比就各不相同（实测 1.69 ~ 1.99），屏盒是固定的一个比例，
+ *   `object-fit: cover` 只好把每张各自缩放 —— 切一下 tab 图案就跳一下大小。
+ *   固定成同一框之后四张严格同尺同位，留白差由构图自己负责。
+ *
+ * · **`color` —— 把 `currentColor` 换成写死的色值。**
+ *   内联的那几张靠页面给色；这四张不是，它们是 `<img src>` 指向的独立文档，
+ *   `currentColor` 在自己那份文档里解析、看不见页面的主题 ——
+ *   而这扇窗的屏幕本来就在**两套主题下都是深色**，浅墨两套通用，
+ *   写死反而是最省事也最准的口径（深色模式不靠反相、也就没有反相出来的灰）。
  */
-export const wrapAscii = (cv, groups, ink) => {
+export const wrapAscii = (cv, groups, ink, opts = {}) => {
   // 可见墨迹 = 几何包围盒四边各外扩半个笔宽（笔画是圆头的，端点会探出去）
   const x0 = ink.x0 - STROKE / 2
   const y0 = ink.y0 - STROKE / 2
   const x1 = ink.x1 + STROKE / 2
   const y1 = ink.y1 + STROKE / 2
-  const vx = Math.round(x0 - MARGIN)
-  const vy = Math.round(y0 - MARGIN)
-  const vw = Math.round(x1 + MARGIN) - vx
-  const vh = Math.round(y1 + MARGIN) - vy
+  let vx
+  let vy
+  let vw
+  let vh
+  if (opts.crop === false) {
+    // 「画布即边框」：四张图共用同一个 viewBox，切 tab 时不缩放（见上面 opts.crop）
+    vx = 0
+    vy = 0
+    vw = cv.w
+    vh = cv.h
+  } else {
+    vx = Math.round(x0 - MARGIN)
+    vy = Math.round(y0 - MARGIN)
+    vw = Math.round(x1 + MARGIN) - vx
+    vh = Math.round(y1 + MARGIN) - vy
+  }
   const paths = groups.map((list) => `<path d="${list.join('')}"/>`).join('')
   return (
     `<svg xmlns="http://www.w3.org/2000/svg" width="${vw}" height="${vh}" ` +
     `viewBox="${vx} ${vy} ${vw} ${vh}" preserveAspectRatio="xMidYMid meet" ` +
     `role="presentation" focusable="false">` +
-    `<g fill="none" stroke="currentColor" stroke-width="${STROKE}" ` +
+    `<g fill="none" stroke="${opts.color || 'currentColor'}" stroke-width="${STROKE}" ` +
     `stroke-linecap="round" stroke-linejoin="round">${paths}</g></svg>`
   )
 }
@@ -351,4 +380,44 @@ export const wrapAscii = (cv, groups, ink) => {
 /** 打一行「各档各多少个字符」，生成器收尾用 —— 梯度有没有真的用起来一眼能看出来 */
 export const describeLevels = (counts) =>
   RAMP.map((ch, i) => `${ch}:${counts[i]}`).join('  ') + `  共 ${counts.reduce((a, b) => a + b, 0)}`
+
+/**
+ * 把画布反解成**字符网格**：一行一个字符串，空格是留白。
+ *
+ * 这是这套图案最重要的调试手段，也是它跟网点图最不一样的地方。
+ * 网点是连续采样、阈值化之后「大致在那儿」；字符画是离散的 ——
+ * 一格只能挑一个字符，于是**一个形状压没压住格线、占了几行几列**都能数出来。
+ * 而这些恰恰是最容易画错的地方（笔画骑不骑分界线、描边够不够一整行）。
+ *
+ * 光看渲染出来的 SVG 是数不准的：几十 kB 的路径数据里没有「第几格」这个概念，
+ * 放大截图去数还受抗锯齿干扰。dump 成文本之后，`node gen-*.mjs --dump`
+ * 就能在终端里逐格核对，改一个坐标立刻能看到它挪了哪几格。
+ *
+ * 用 `levelAt` 而不是 `bakeAscii`：要的就是量化**之后**的结果 ——
+ * 覆盖率没够 COV_MIN 的格子在这里显示为空格，跟产物里「这里不画字」完全一致。
+ */
+export const dumpGrid = (cv, ramp) => {
+  const lines = []
+  for (let gy = 0; gy < cv.gh; gy += 1) {
+    let line = ''
+    for (let gx = 0; gx < cv.gw; gx += 1) {
+      const lv = levelAt(cv, gy * cv.gw + gx, gx / cv.gw, gy / cv.gh, ramp)
+      line += lv < 0 ? ' ' : RAMP[lv]
+    }
+    lines.push(line)
+  }
+  return lines
+}
+
+/** 把 `dumpGrid` 的结果排上行列号打出来 —— 数格子时不用自己数手指头 */
+export const printGrid = (name, cv, ramp) => {
+  const lines = dumpGrid(cv, ramp)
+  const ruler = Array.from({ length: cv.gw }, (_, i) => (i % 10 === 0 ? String((i / 10) % 10) : ' ')).join('')
+  console.log(`\n── ${name}  ${cv.gw} × ${cv.gh} 格（${cv.w} × ${cv.h} px）──`)
+  console.log(`     ${ruler}`)
+  lines.forEach((line, r) => {
+    console.log(`${String(r).padStart(3, ' ')}  ${line}`)
+  })
+  console.log(`     ${ruler}\n`)
+}
 

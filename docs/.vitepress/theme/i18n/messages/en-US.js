@@ -178,8 +178,8 @@ export default {
           lead: 'Learn around your own material, not just generic chat.',
           desc: 'Images, voice and files in; a citation panel that pulls from your sources; deep reasoning for hard questions.',
           link: '/user-guide/01-chat-v2',
-          img: '/feature-chat-dither.svg',
-          alt: 'Dithered artwork of a material page linked to a chat bubble'
+          img: '/feature-chat-ascii.svg',
+          alt: 'Character art of a material page linked to a chat bubble'
         },
         {
           tab: 'Mind maps',
@@ -187,8 +187,8 @@ export default {
           lead: 'Organise knowledge into structure.',
           desc: 'Generate a full knowledge structure from one sentence, edit it as you chat, and hide nodes to test yourself.',
           link: '/user-guide/02-learning-hub-assets/05-mindmap',
-          img: '/feature-mindmap-dither.svg',
-          alt: 'Dithered artwork of a mind map with node levels'
+          img: '/feature-mindmap-ascii.svg',
+          alt: 'Character art of a mind map with node levels'
         },
         {
           tab: 'Practice',
@@ -196,8 +196,8 @@ export default {
           lead: 'Turn textbooks and exam papers into a drillable bank.',
           desc: 'Questions are pulled from your material or generated, graded automatically, and tracked per topic.',
           link: '/user-guide/02-learning-hub-assets/03-question-bank',
-          img: '/feature-quiz-dither.svg',
-          alt: 'Dithered artwork of a quiz sheet with a grading badge'
+          img: '/feature-quiz-ascii.svg',
+          alt: 'Character art of a quiz sheet with a grading badge'
         },
         {
           tab: 'Anki cards',
@@ -205,8 +205,8 @@ export default {
           lead: 'Turn understanding into long-term memory.',
           desc: 'Say the word and cards get made — in bulk, and synced to Anki in one click.',
           link: '/user-guide/03-chatanki',
-          img: '/feature-anki-dither.svg',
-          alt: 'Dithered artwork of a card stack with a forgetting curve'
+          img: '/feature-anki-ascii.svg',
+          alt: 'Character art of a card stack with a forgetting curve'
         }
       ]
     },
