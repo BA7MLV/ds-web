@@ -377,29 +377,29 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ⑥ 常见问题：居中标题 + 发丝线折叠行 -->
+    <!-- ⑥ 常见问题：胶囊折叠条 -->
     <section id="faq" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
           <h2 class="lp-title">{{ t('home.faq.title') }}</h2>
         </div>
-        <div class="lp-faq">
+        <div class="lp-cap">
           <div
             v-for="(faq, index) in faqs"
             :key="faq.q"
-            class="lp-faq__item"
+            class="lp-cap__item"
             :data-open="openFaq === index"
           >
             <h3>
               <button
-                class="lp-faq__btn"
+                class="lp-cap__btn"
                 type="button"
                 :aria-expanded="openFaq === index"
                 @click="toggleFaq(index)"
               >
                 <span>{{ faq.q }}</span>
                 <svg
-                  class="lp-faq__chev"
+                  class="lp-cap__chev"
                   viewBox="0 0 16 16"
                   fill="none"
                   stroke="currentColor"
@@ -410,9 +410,9 @@ onUnmounted(() => {
                 </svg>
               </button>
             </h3>
-            <div class="lp-faq__panel">
-              <div class="lp-faq__inner">
-                <p class="lp-faq__answer">{{ faq.a }}</p>
+            <div class="lp-cap__panel">
+              <div class="lp-cap__inner">
+                <p class="lp-cap__answer">{{ faq.a }}</p>
               </div>
             </div>
           </div>

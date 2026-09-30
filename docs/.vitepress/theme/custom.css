@@ -922,6 +922,92 @@ a.lp-quote__handle:hover {
   color: var(--lp-text-3);
 }
 
+/* ── 胶囊版 FAQ（首页 #faq）──
+ * 收起态是**真胶囊**：一行 46px 高、圆角 24px，两端正好是半圆。
+ * 展开后答案把行撑到几十上百像素，圆角必须跟着退到 18px —— 同一个 24px
+ * 落在 120px 高的块上不再是半圆，而是一道会切到答案的弧。
+ * 两级只差 6px，够看出「胶囊松开了」，又不至于塌成方块。
+ *
+ * 面取 --lp-tile，和功能区轮播卡、页脚卡片同一个浅面；
+ * 不描边也不投影，区分靠底色差（口径见 --fc-face 那段）。
+ *
+ * 五条并排不加分类筛选，也不给分类色点：整站只有一套灰阶
+ * （--lp-accent 亮 #1d1d1f / 暗 #f5f5f7），色点会是页面上唯一的饱和像素，
+ * 比它要表达的信息还抢眼；而话题本身只有五条，一排筛选胶囊要占的位置
+ * 和它省下的滚动差不多。
+ */
+.lp-cap {
+  margin-top: 2.75rem;
+}
+
+.lp-cap__item {
+  margin-bottom: 0.5rem;
+  border-radius: 24px;
+  background: var(--lp-tile);
+  overflow: hidden;
+  transition: border-radius 0.34s var(--lp-ease);
+}
+
+.lp-cap__item[data-open='true'] {
+  border-radius: 18px;
+}
+
+.lp-cap__item > h3 {
+  margin: 0;
+}
+
+.lp-cap__btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 0.85rem 1.35rem;
+  border: 0;
+  background: none;
+  text-align: left;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--lp-text);
+  cursor: pointer;
+}
+
+.lp-cap__chev {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  color: var(--lp-text-3);
+  transition: transform 0.34s var(--lp-ease);
+}
+
+.lp-cap__item[data-open='true'] .lp-cap__chev {
+  transform: rotate(180deg);
+}
+
+.lp-cap__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.34s var(--lp-ease);
+}
+
+.lp-cap__item[data-open='true'] .lp-cap__panel {
+  grid-template-rows: 1fr;
+}
+
+.lp-cap__inner {
+  overflow: hidden;
+}
+
+.lp-cap__answer {
+  margin: 0;
+  padding: 0 1.35rem 1.15rem;
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  color: var(--lp-text-2);
+}
+
 /* ── 功能区轮播卡（.lp-fcard）──
  * 一张圆角卡：左半是卡面，右半直接展示字符画。
  * 切场景 = **整卡飞出飞入**：外包一层 .lp-fstage 做出场/入场的裁剪与位移，
@@ -1432,7 +1518,8 @@ a.lp-quote__handle:hover {
     padding-left: 0;
   }
 
-  .lp-faq__answer {
+  .lp-faq__answer,
+  .lp-cap__answer {
     padding-right: 1rem;
   }
 
@@ -1451,6 +1538,21 @@ a.lp-quote__handle:hover {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.85rem;
+  }
+
+  /* 手机上条目占满屏宽，圆角与内边距都收一档，别让留白吃掉正文 */
+  .lp-cap__item {
+    border-radius: 20px;
+  }
+
+  .lp-cap__item[data-open='true'] {
+    border-radius: 16px;
+  }
+
+  .lp-cap__btn,
+  .lp-cap__answer {
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
   }
 
   /* 手机上卡片占满屏宽，圆角与内边距都收一档，别让留白吃掉正文 */
@@ -1866,7 +1968,10 @@ a.lp-quote__handle:hover {
   .vp-doc .dl-btn,
   .vp-doc .dl-copy__btn,
   .lp-faq__panel,
-  .lp-faq__chev {
+  .lp-faq__chev,
+  .lp-cap__item,
+  .lp-cap__panel,
+  .lp-cap__chev {
     transition: none;
   }
 
