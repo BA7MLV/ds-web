@@ -193,12 +193,12 @@ onUnmounted(() => {
 
   <!-- 负 margin 抵消 VPHome 自带的 margin-bottom，让最后一个区块与页脚衔接 -->
   <div class="home-apple -mb-24 md:-mb-32">
-    <!-- ① 首屏：整宽，文字左对齐（与下载按钮、版本清单同一条左轨） -->
+    <!-- ① 首屏：整宽居中 -->
     <section ref="heroEl" class="lp-hero overflow-hidden">
       <!-- 标题后的柔光：压住身后的星点，让大字有落脚点（深浅色各一套） -->
       <div class="lp-hero__glow" aria-hidden="true"></div>
       <div
-        class="t-stagger is-shown lp-wrap pb-16 pt-14 md:pb-20 md:pt-20"
+        class="t-stagger is-shown lp-wrap pb-16 pt-14 text-center md:pb-20 md:pt-20"
       >
         <div class="t-stagger-line t-stagger-line--1">
           <a
@@ -510,12 +510,8 @@ onUnmounted(() => {
   color: var(--lp-text);
 }
 
-/*
- * 导语不设 `margin: auto` 居中：整屏文字都压在左边那条轨上（标题、导语、主按钮、版本清单）。
- * `max-width: 32em` 只是控制一行别太长，与对齐无关。
- */
 .lp-hero__lede {
-  margin: 26px 0 0;
+  margin: 26px auto 0;
   max-width: 32em;
   font-size: 1.0625rem;
   line-height: 1.7;
@@ -528,7 +524,7 @@ onUnmounted(() => {
   flex-wrap: wrap;
   gap: 0.75rem 2rem;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   margin-top: 2.25rem;
 }
 
