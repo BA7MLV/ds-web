@@ -315,6 +315,10 @@ onUnmounted(() => {
  * 贴左缘而不是右缘：清单是「从这条按钮往右铺开」的读法，且胶囊基本居中，
  * 往右铺在任何宽度下都不会出屏幕（往左贴时窄屏会从左边溢出）。
  *
+ * 宽度交给内容（`max-content`）而不是写死一个数：行内文字现在是整行靠左、不留右缘空档，
+ * 固定宽度只有两种下场 —— 窄了最长那行撑出横向滚动条（`overflow-y: auto` 会顺带把
+ * overflow-x 也变成 auto），宽了每行右边空一片。换了版本名长度或换个系统字体，它自己会跟。
+ *
  * 这里的 z-index 只在自己这一行内部生效（.t-stagger-line 是层叠上下文，见 HomePage.vue），
  * 盖住下面那扇演示窗壳靠的是 `.lp-hero__actions-line` 那一层，别在这儿试。
  *
@@ -329,7 +333,8 @@ onUnmounted(() => {
   z-index: 20;
   display: grid;
   gap: 2px;
-  width: 264px;
+  width: max-content;
+  min-width: 240px;
   max-width: calc(100vw - 32px);
   margin: 0;
   padding: 6px;
@@ -379,13 +384,18 @@ onUnmounted(() => {
 }
 
 .home-download__item-label {
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .home-download__item.is-current .home-download__item-label {
   font-weight: 500;
 }
 
+/*
+ * 体积紧跟版本名，整行一起靠左 —— 不再给它 `margin-left: auto` 推到右缘。
+ * 代价是四行的体积各自长短、右边缘不齐；换来的是「一行读下来」的顺，读清单的人
+ * 本来就是要挑一个包，不需要把体积当成一列去比对。
+ */
 .home-download__item-size {
   font-size: 12px;
   color: var(--vp-c-text-3);
