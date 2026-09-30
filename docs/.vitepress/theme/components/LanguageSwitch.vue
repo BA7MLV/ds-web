@@ -273,19 +273,12 @@ watch(
   align-items: center;
   height: 32px;
   padding: 0 8px 0 10px;
-  border-radius: 999px;
-  /* 与顶栏同一套液态玻璃（移动端面板里是独立控件，所以自带玻璃底） */
-  background-color: var(--sn-surface);
-  background-image:
-    radial-gradient(
-      120% 100% at var(--sn-spec-x, 14%) var(--sn-spec-y, -46%),
-      var(--sn-glass-spec) 0%,
-      transparent 62%
-    ),
-    var(--sn-glass-sheen);
-  backdrop-filter: var(--sn-glass-blur);
-  -webkit-backdrop-filter: var(--sn-glass-blur);
-  box-shadow: var(--sn-shadow);
+  /* 自带 1px 描边，必须 border-box —— 否则控件实际高 34px，与旁边 32px 的图标对不齐 */
+  box-sizing: border-box;
+  border-radius: var(--sn-radius-ctl);
+  /* 与顶栏同一套扁平语言（移动端面板里是独立控件，所以自带底与描边） */
+  background: var(--sn-menu-bg);
+  border: 1px solid var(--sn-border);
 }
 
 .LangSelect__button {
@@ -308,7 +301,7 @@ watch(
 .LangSelect__button:focus-visible {
   outline: 2px solid var(--vp-c-brand-1);
   outline-offset: 3px;
-  border-radius: 999px;
+  border-radius: var(--sn-radius-ctl);
 }
 
 /* 固定下限：避免「简体中文 / English」宽度不同，切换语言时整块控件抖一下 */
@@ -333,7 +326,7 @@ watch(
   transform: rotate(180deg);
 }
 
-/* ── 下拉面板：和顶栏同一套液态玻璃；Teleport 到 body，所以是 fixed + 自己算坐标 ── */
+/* ── 下拉面板：与顶栏面板同一张实心面；Teleport 到 body，所以是 fixed + 自己算坐标 ── */
 .LangSelect__menu {
   position: fixed;
   z-index: 60;
@@ -342,18 +335,10 @@ watch(
   margin: 0;
   padding: 6px;
   list-style: none;
-  border-radius: 16px;
-  background-color: var(--sn-sheet-bg);
-  background-image:
-    radial-gradient(
-      120% 100% at var(--sn-spec-x, 14%) var(--sn-spec-y, -46%),
-      var(--sn-glass-spec) 0%,
-      transparent 62%
-    ),
-    var(--sn-glass-sheen);
-  backdrop-filter: var(--sn-glass-blur);
-  -webkit-backdrop-filter: var(--sn-glass-blur);
-  box-shadow: var(--sn-shadow-lg);
+  border-radius: var(--sn-radius-panel);
+  background: var(--sn-menu-bg);
+  border: 1px solid var(--sn-border);
+  box-shadow: var(--sn-menu-shadow);
 }
 
 .LangSelect__item {
@@ -361,7 +346,7 @@ watch(
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
-  border-radius: 10px;
+  border-radius: var(--sn-radius-ctl);
   font-size: 13px;
   font-weight: 450;
   line-height: 1.2;
@@ -396,19 +381,21 @@ watch(
   stroke-linejoin: round;
 }
 
-/* ── 裸样式：嵌在顶栏胶囊内部（去掉玻璃底与外沿，高度对齐胶囊内高 36px） ── */
+/* ── 裸样式：嵌在通栏里（去掉自有底与描边，高度对齐旁边的图标按钮 32px） ── */
 .LangSelect.is-bare {
-  height: 36px;
-  padding: 0 6px 0 12px;
+  height: 32px;
+  padding: 0 8px;
   background: transparent;
-  background-image: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  box-shadow: none;
+  border-color: transparent;
+  transition: background-color 0.16s ease;
+}
+
+.LangSelect.is-bare:hover {
+  background: var(--sn-hover);
 }
 
 .LangSelect.is-bare .LangSelect__button {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--sn-text);
 }
 

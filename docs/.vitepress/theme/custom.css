@@ -7,24 +7,6 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
- * 液态玻璃的镜面光斑位置。
- * 用 @property 注册成 <percentage> 才能参与 transition —— 没注册的自定义属性是「不可插值」的，
- * 光斑会硬跳；注册之后 SiteNav 里的 transition 就会把光斑「拖」过去，像玻璃在流动。
- * 只影响支持 @property 的浏览器（Chrome / Safari 16.4+），不支持就退化成直接跳变。
- */
-@property --sn-spec-x {
-  syntax: '<percentage>';
-  inherits: true;
-  initial-value: 14%;
-}
-
-@property --sn-spec-y {
-  syntax: '<percentage>';
-  inherits: true;
-  initial-value: -46%;
-}
-
-/*
  * 首页流程卡「长成整页浮层」时的圆角。
  *
  * 浮层是用 transform 从卡片的位置与尺寸放大过去的，圆角会被一起缩放 ——
@@ -109,55 +91,31 @@ html.flow-locked {
   --learn-out: 350ms;
   --learn-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* ── Apple 风格顶栏（SiteNav）──
-   * 液态玻璃（Liquid Glass）没有用 border：真实折射（背景在玻璃边缘被扭曲）
-   * CSS 做不到，这里用「半透明底 + 强 backdrop 模糊/饱和/提亮 + 多层高光 + 双色内描边 + 大外投影」来演。
-   * 镜面光斑的径向渐变写在组件里（用的 --sn-spec-x/y 由 SiteNav 跟着指针写），
-   * 这里只给高光色 —— 原因见下面的 --sn-glass-spec 注释。
+  /* ── 顶栏（SiteNav）：顶端透明的通栏，滚动后右侧浮出一颗胶囊 ──
+   * 页面在顶端时顶栏整条透明（没有任何底色与分界，内容从它下面穿过），
+   * 一旦内容滚到顶栏下面，右侧那一丛（导航 + 工具 + 语言 + 下载）才浮成一颗胶囊：
+   * 实心底 + 圆角 + 投影；左侧的品牌标只有图形标，始终不给底。
+   * 面板（移动端展开 / 语言下拉）与这颗胶囊共用同一张实心面。
+   * 圆角照 Notion：按钮是圆角矩形，只有右侧那一丛是胶囊。
    */
-  --sn-surface: rgba(255, 255, 255, 0.54);
-  --sn-sheet-bg: rgba(250, 250, 252, 0.72);
-  --sn-border: rgba(0, 0, 0, 0.07);
-  --sn-hover: rgba(0, 0, 0, 0.045);
-  --sn-text: #1d1d1f;
+  --sn-bar-bg: #ffffff;
+  --sn-capsule-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 10px 28px -12px rgba(0, 0, 0, 0.3);
+  --sn-menu-bg: #ffffff;
+  --sn-menu-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.22), 0 2px 6px rgba(0, 0, 0, 0.06);
+  --sn-border: rgba(0, 0, 0, 0.08);
+  --sn-hover: rgba(0, 0, 0, 0.05);
+  --sn-text: rgba(0, 0, 0, 0.9);
   --sn-text-muted: #6e6e73;
   --sn-cta-bg: #1d1d1f;
   --sn-cta-text: #ffffff;
   /* 品牌标：黑白两态，浅色近黑 / 深色纯白 */
   --sn-mark: #1a1a1a;
-  --sn-glass-blur: blur(26px) saturate(200%) brightness(1.05);
-  /* 顶缘高光：上亮下透，做出玻璃的厚度感 */
-  --sn-glass-sheen: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.72) 0%,
-    rgba(255, 255, 255, 0.16) 42%,
-    rgba(255, 255, 255, 0) 66%
-  );
-  /*
-   * 镜面光斑的「高光色」。
-   * 注意：整个 radial-gradient 写在用它的组件里（见 SiteNav.vue / LanguageSwitch.vue），
-   * 不在这里拼好 —— var() 是在「声明该变量的元素」上替换的，若在 :root 拼好渐变，
-   * SiteNav 往顶栏写的 --sn-spec-x 就传不进去（拿到的永远是 :root 的值）。
-   */
-  --sn-glass-spec: rgba(255, 255, 255, 0.92);
-  --sn-ring: rgba(38, 35, 31, 0.09);
-  --sn-highlight: rgba(255, 255, 255, 0.85);
-  --sn-glass-edge-bottom: rgba(255, 255, 255, 0.42);
-  --sn-glass-inner: rgba(38, 35, 31, 0.055);
-  --sn-shadow:
-    inset 0 0 0 1px var(--sn-ring),
-    inset 0 1px 0 var(--sn-highlight),
-    inset 0 -1px 0 var(--sn-glass-edge-bottom),
-    inset 0 -12px 16px -14px var(--sn-glass-inner),
-    0 1px 2px rgba(38, 35, 31, 0.06),
-    0 8px 26px -14px rgba(38, 35, 31, 0.28);
-  --sn-shadow-lg:
-    inset 0 0 0 1px var(--sn-ring),
-    inset 0 1px 0 var(--sn-highlight),
-    inset 0 -1px 0 var(--sn-glass-edge-bottom),
-    0 2px 6px rgba(38, 35, 31, 0.08),
-    0 30px 70px -26px rgba(38, 35, 31, 0.36);
-  --sn-cta-shadow: 0 1px 2px rgba(38, 35, 31, 0.16), 0 6px 18px -8px rgba(38, 35, 31, 0.34);
+  --sn-radius-ctl: 6px;
+  --sn-radius-btn: 8px;
+  --sn-radius-panel: 12px;
+  /* 通栏 ↔ 胶囊的过渡：一条时间线同时管底、圆角、投影与高度 */
+  --sn-capsule-dur: 360ms;
+  --sn-capsule-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* ── 首页可操作骨架 Demo ── */
   --ds-text: #1d1d1f;
@@ -231,44 +189,22 @@ html.flow-locked {
   --tabs-bar-bg: #2c2c2e;
   --tabs-pill-bg: #636366;
 
-  /* ── Apple 风格顶栏（SiteNav）：液态玻璃的深色版 ── */
-  --sn-surface: rgba(30, 30, 32, 0.5);
-  --sn-sheet-bg: rgba(28, 28, 30, 0.74);
+  /* ── 顶栏（SiteNav）：胶囊态的深色版 ──
+   * 胶囊不用纯黑：Notion 深色顶栏是 #191919，比正文底(#0a0a0c)略亮一档，
+   * 于是浮起来的那颗胶囊能靠明度与页面分开，不必依赖描边。
+   */
+  --sn-bar-bg: #191919;
+  --sn-capsule-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px -12px rgba(0, 0, 0, 0.72);
+  --sn-menu-bg: #202020;
+  --sn-menu-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.62), 0 2px 6px rgba(0, 0, 0, 0.4);
   --sn-border: rgba(255, 255, 255, 0.12);
-  --sn-hover: rgba(255, 255, 255, 0.07);
-  --sn-text: #f5f5f7;
+  --sn-hover: rgba(255, 255, 255, 0.08);
+  --sn-text: rgba(255, 255, 255, 0.92);
   --sn-text-muted: #a1a1a6;
   --sn-cta-bg: #f5f5f7;
   --sn-cta-text: #1d1d1f;
   /* 品牌标：黑白两态，浅色近黑 / 深色纯白 */
   --sn-mark: #ffffff;
-  /* 深色下把背后的内容提亮，玻璃才像「被点亮」而不是一块黑 */
-  --sn-glass-blur: blur(26px) saturate(180%) brightness(1.16);
-  --sn-glass-sheen: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.14) 0%,
-    rgba(255, 255, 255, 0.04) 40%,
-    rgba(255, 255, 255, 0) 64%
-  );
-  --sn-glass-spec: rgba(255, 255, 255, 0.22);
-  --sn-ring: rgba(240, 238, 232, 0.13);
-  --sn-highlight: rgba(240, 238, 232, 0.2);
-  --sn-glass-edge-bottom: rgba(240, 238, 232, 0.06);
-  --sn-glass-inner: rgba(0, 0, 0, 0.34);
-  --sn-shadow:
-    inset 0 0 0 1px var(--sn-ring),
-    inset 0 1px 0 var(--sn-highlight),
-    inset 0 -1px 0 var(--sn-glass-edge-bottom),
-    inset 0 -12px 18px -14px var(--sn-glass-inner),
-    0 1px 2px rgba(0, 0, 0, 0.4),
-    0 10px 30px -16px rgba(0, 0, 0, 0.7);
-  --sn-shadow-lg:
-    inset 0 0 0 1px var(--sn-ring),
-    inset 0 1px 0 var(--sn-highlight),
-    inset 0 -1px 0 var(--sn-glass-edge-bottom),
-    0 2px 8px rgba(0, 0, 0, 0.5),
-    0 34px 80px -28px rgba(0, 0, 0, 0.85);
-  --sn-cta-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 6px 18px -8px rgba(0, 0, 0, 0.7);
 
   /* ── 首页可操作骨架 Demo ── */
   --ds-text: #f5f5f7;
@@ -689,10 +625,11 @@ html.home-no-search .VPNavBar .VPNavBarSearch {
 /* 语言切换已改成原生下拉（LanguageSwitch.vue），滑动开关的动画就不再需要了；
    若之后还有别的开关要复用，从 git 历史里取回这段即可。 */
 
-/* ══ 站点顶栏：自定义 Apple 风格胶囊导航（SiteNav.vue）══════════════
+/* ══ 站点顶栏：自定义「顶端透明 → 滚动后浮出胶囊」导航（SiteNav.vue）══
  * 默认导航栏仅隐藏视觉（visibility 而非 display），
  * 这样 VitePress 的搜索弹窗、Cmd/Ctrl+K 快捷键与主题状态仍保持挂载可用，
- * 同时移动端 .VPNav 仍是 position: relative 参与文档流，页面顶部间距不变。
+ * 同时 .VPNav 仍占据 --vp-nav-height 的文档流高度，页面顶部间距不变
+ * （自定义顶栏的高度也取同一个变量，两者始终对齐）。
  */
 .VPNav {
   visibility: hidden !important;
@@ -757,8 +694,9 @@ html.sn-menu-open body {
 .lp-block {
   padding-bottom: var(--lp-block);
   /*
-   * 顶栏是固定胶囊，首页顶栏导航跳的是页内锚点，必须给它让位，
-   * 否则区块标题会被压在胶囊下面（胶囊底沿约 56px，这里留到 88px 的呼吸）。
+   * 顶栏是固定的一条（内容高 48px，居中在 --vp-nav-height 这条带子里），
+   * 首页顶栏导航跳的是页内锚点，必须给它让位，
+   * 否则区块标题会被压在顶栏下面（这里留到 --vp-nav-height + 24px 的呼吸）。
    */
   scroll-margin-top: calc(var(--vp-nav-height) + 24px);
 }
