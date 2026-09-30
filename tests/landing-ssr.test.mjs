@@ -27,6 +27,7 @@ const template = (name) => {
 
 const home = template('HomePage')
 const shell = template('AppShell')
+const download = template('HomeDownload')
 const emptyDecoration = { render: () => null }
 
 /** 只渲染 AppShell（默认语言），用来单独检查壳本身的 SSR 输出。 */
@@ -82,7 +83,26 @@ for (const [locale, words] of Object.entries(messages)) {
         previewStatus: words.appShell.waiting,
       }),
     })
-    for (const component of ['HeroStarfield', 'StepFlow']) {
+    app.component('HomeDownload', {
+      ssrRender: download.ssrRender,
+      setup: () => ({
+        t,
+        options: Object.keys(words.home.hero.downloadOptions).map((key) => ({
+          key,
+          asset: { name: `${key}.bin`, url: `https://files.test/${key}`, sizeBytes: 1024 },
+        })),
+        key: '',
+        icon: 'download',
+        label: words.home.hero.download,
+        href: '/download',
+        fileName: '',
+        open: false,
+        formatSize: (bytes) => `${bytes} B`,
+        toggle: () => {},
+        pick: () => {},
+      }),
+    })
+    for (const component of ['HeroStarfield', 'StepFlow', 'DlIcon']) {
       app.component(component, emptyDecoration)
     }
 
@@ -92,6 +112,13 @@ for (const [locale, words] of Object.entries(messages)) {
     assert.match(html, /<h1[^>]*>[^<]+<\/h1>/)
     assert.ok(html.includes(words.home.hero.title))
     assert.match(html, /href="\/download"/)
+    // 服务端认不出设备：按钮一律指向下载页，不替用户选包、也不带 download 属性
+    assert.ok(html.includes(words.home.hero.download))
+    assert.doesNotMatch(html, /\sdownload="/)
+    // 版本清单是自写面板、默认收起 —— 展开态属于客户端才知道的事，SSR 里不能先画出来
+    assert.match(html, /<button[^>]*aria-expanded="false"/)
+    assert.ok(html.includes(words.home.hero.switchDownload))
+    assert.doesNotMatch(html, /home-download__menu/)
     assert.match(html, /href="\/start"/)
     assert.ok(html.includes(words.appShell.previewTitle))
     assert.ok(html.includes(words.appShell.previewDescription))

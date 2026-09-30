@@ -14,6 +14,18 @@
  *   node scripts/export-session.mjs --session <id|latest>
  *   node scripts/export-session.mjs --include-reasoning --tool-output full
  *
+ * 截取一段（「上下文从这条开始」）：
+ *   node scripts/export-session.mjs --from "你觉得 hero 页面的 dithering"
+ *   node scripts/export-session.mjs --from 15 --to 20              # 按消息序号（闭区间）
+ *   node scripts/export-session.mjs --from "…" --from-occurrence first
+ *
+ *   --from / --to 给数字是消息序号；给文字就在正文里找包含它的那条。
+ *   文字默认匹配**最后**一次出现（说「从这里开始」通常指的是最近这一次提问）；
+ *   要匹配第一次就加 --from-occurrence first。匹配的序号与摘要会打到标准错误，
+ *   导出文件里的 range 字段也记着，方便事后确认切对了没有。
+ *   匹配会先忽略空白与常见中英文标点，失败时再退化成只比前 10 个字。
+ *   counts / filesTouched 都按截取后的范围重算，不是全会话的。
+ *
  * 默认行为（都是为了避免把注入内容当成对话倒出去）：
  *   - 剥掉 <system-reminder>…</system-reminder>：那是每轮注入的 user_info /
  *     identity_context / project_context，不是人说的话，占了绝大部分体积。
@@ -50,6 +62,9 @@ const outPath = value('out', '')
 const sessionArg = value('session', 'current')
 const toolOutputMode = value('tool-output', 'preview')
 const maxChars = Number(value('max-output-chars', DEFAULT_PREVIEW))
+const fromArg = value('from', '')
+const toArg = value('to', '')
+const occurrence = value('from-occurrence', 'last') // 文字匹配取第一次还是最后一次
 
 /* ── 定位会话 ─────────────────────────────────────────────────────── */
 
@@ -284,6 +299,91 @@ messages.forEach((m) => {
 
 const iso = (ms) => (ms ? new Date(ms).toISOString() : null)
 
+/* ── 截取范围：--from / --to ──────────────────────────────────────── */
+
+/** 归一化后再比：忽略空白与常见标点，容忍全角/半角与换行差异 */
+const norm = (s) =>
+  String(s)
+    .replace(/\s+/g, '')
+    .replace(/[，。！？、；：""''（）《》「」.,!?;:'"()]/g, '')
+
+/**
+ * 定位一条消息。数字 = 序号；文字 = 正文里找包含它的那条。
+ * pick='last' 时取最后一次出现 —— 「从这里开始」一般指最近这次提问。
+ */
+const locate = (list, spec, pick) => {
+  if (/^\d+$/.test(spec)) {
+    return { index: Math.max(0, Math.min(Number(spec), list.length - 1)), how: 'index', hits: 1 }
+  }
+  const key = norm(spec)
+  const hitAt = (k) => list.reduce((acc, m, i) => (norm(m.text).includes(k) ? [...acc, i] : acc), [])
+  let hits = hitAt(key)
+  let how = 'text'
+  if (!hits.length) {
+    /* 退化：只比前 10 个字，容忍用户只记得半句 */
+    hits = hitAt(key.slice(0, 10))
+    how = 'text/prefix'
+  }
+  if (!hits.length) {
+    console.error(`--from/--to 没匹配到任何消息：${spec}`)
+    console.error('提示：先不带参数全量导出一次，看 messages[].n 的序号，再用数字指定。')
+    process.exit(1)
+  }
+  return { index: pick === 'first' ? hits[0] : hits[hits.length - 1], how, hits }
+}
+
+const summary = (m, i, how, hits = []) => ({
+  n: i,
+  ts: iso(m.ts),
+  role: m.role,
+  matchedBy: how,
+  matchedCount: hits.length,
+  /* 命中多条时把候选都记下来，方便核对是不是切到了想要的那条 */
+  candidates:
+    hits.length > 1
+      ? hits.map((h) => ({ n: h, ts: iso(messages[h].ts), preview: messages[h].text.replace(/\s+/g, ' ').slice(0, 50) }))
+      : undefined,
+  preview: m.text.replace(/\s+/g, ' ').slice(0, 80)
+})
+
+let ranged = messages
+let range = { from: null, to: null, total: messages.length, exported: messages.length }
+
+if (fromArg || toArg) {
+  const a = fromArg ? locate(messages, fromArg, occurrence) : { index: 0, how: 'start', hits: 1 }
+  const b = toArg ? locate(messages, toArg, occurrence) : { index: messages.length - 1, how: 'end', hits: 1 }
+  const lo = Math.min(a.index, b.index)
+  const hi = Math.max(a.index, b.index)
+  ranged = messages.slice(lo, hi + 1)
+  range = {
+    from: summary(messages[lo], lo, a.how, a.hits),
+    to: summary(messages[hi], hi, b.how, b.hits),
+    total: messages.length,
+    exported: ranged.length
+  }
+}
+
+/* counts 与 filesTouched 按截取后的范围重算：不截取时沿用全会话的 */
+const recount = (list) => {
+  const c = { user: 0, assistant: 0, toolCalls: 0, toolResults: 0, reasoning: 0 }
+  for (const m of list) {
+    if (m.role === 'user') c.user += 1
+    else c.assistant += 1
+    const tools = m.tools || []
+    c.toolCalls += tools.length
+    c.toolResults += tools.filter((t) => t.status === 'completed').length
+    c.reasoning += (m.reasoning || []).length
+  }
+  return c
+}
+
+const rangeCounts = ranged === messages ? counts : recount(ranged)
+
+const rangeFiles = new Set()
+for (const m of ranged) {
+  for (const t of m.tools || []) filesInArgs(t.args, cwd).forEach((f) => rangeFiles.add(f))
+}
+
 const payload = {
   schema: SCHEMA,
   exportedAt: new Date().toISOString(),
@@ -295,10 +395,12 @@ const payload = {
     lastWriteAt: iso(target.mtimeMs),
     sourceFile: target.file
   },
-  counts,
-  filesTouched: [...touched].sort(),
-  messages: messages.map((m, i) => ({
+  counts: rangeCounts,
+  filesTouched: [...rangeFiles].sort(),
+  range,
+  messages: ranged.map((m, i) => ({
     i,
+    n: range.from ? range.from.n + i : i,
     id: m.id,
     ts: iso(m.ts),
     role: m.role,
@@ -320,6 +422,14 @@ const toMarkdown = (data) => {
     `- 计数：用户 ${data.counts.user} 条 / 助手 ${data.counts.assistant} 条 / 工具调用 ${data.counts.toolCalls} 次`,
     ''
   ]
+  if (data.range?.from) {
+    lines.push(
+      `- 范围：第 ${data.range.from.n} 条 → 第 ${data.range.to.n} 条（共 ${data.range.total} 条，导出 ${data.range.exported} 条）`,
+      '',
+      `  起点是 ${data.range.from.role} 在 ${data.range.from.ts} 说的：${data.range.from.preview}`,
+      ''
+    )
+  }
   if (data.filesTouched.length) {
     lines.push('## 涉及的文件', '', ...data.filesTouched.map((f) => `- \`${f}\``), '')
   }
@@ -342,7 +452,22 @@ const body = format === 'md' ? toMarkdown(payload) : `${JSON.stringify(payload, 
 if (outPath) {
   writeFileSync(outPath, body, 'utf8')
   const kb = (Buffer.byteLength(body) / 1024).toFixed(1)
-  console.error(`已导出 ${payload.messages.length} 条消息 → ${outPath}（${kb} kB）`)
+  const span = range.from
+    ? `${range.exported}/${range.total} 条（#${range.from.n}→#${range.to.n}）`
+    : `${payload.messages.length} 条（全会话）`
+  console.error(`已导出 ${span} → ${outPath}（${kb} kB）`)
+  if (range.from) {
+    console.error(`  起点 #${range.from.n} ${range.from.role} · ${range.from.ts}`)
+    console.error(`  ${range.from.preview}`)
+    if (range.from.matchedBy === 'text/prefix') {
+      console.error(`  ⚠️ 整句没匹配上，是按前 10 个字退化的匹配，请核对`)
+    }
+    if (range.from.candidates?.length) {
+      console.error(`  ⚠️ 这句话在会话里出现了 ${range.from.candidates.length} 次，取的是最后一次（#${range.from.n}）：`)
+      for (const c of range.from.candidates) console.error(`     #${c.n} ${c.ts}  ${c.preview}`)
+      console.error(`  要另选就换成数字，例如 --from ${range.from.candidates[0].n}`)
+    }
+  }
 } else {
   process.stdout.write(body)
 }

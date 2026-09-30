@@ -9,6 +9,9 @@
  */
 
 import data from '../../data/downloads.json'
+import { detectPlatform } from './download-device.js'
+
+export { detectPlatform } from './download-device.js'
 
 export const release = data
 
@@ -64,25 +67,6 @@ const GROUPS = { desktop: DESKTOP_ROWS, mobile: MOBILE_ROWS }
 
 /** 取某一组里真正有安装包的行 */
 export const buildRows = (group) => (GROUPS[group] ?? []).filter((item) => Boolean(item?.asset?.url))
-
-/**
- * 当前设备属于哪一类。
- *
- * 只判断设备类别，**不猜芯片架构**：Safari 的 UA 里没有架构信息，靠 `arm` 关键字认
- * Apple Silicon 并不可靠，猜错会把 M 系列用户送去下 Intel 包。所以 macOS 一律返回
- * `mac`，由界面把两种 DMG 都摆出来让用户自己选。
- */
-export const detectPlatform = () => {
-  if (typeof navigator === 'undefined') return 'other'
-
-  const ua = `${navigator.userAgent || ''}`.toLowerCase()
-
-  if (ua.includes('android')) return 'android'
-  if (ua.includes('macintosh') || ua.includes('mac os x')) return 'mac'
-  if (ua.includes('windows')) return 'win'
-
-  return 'other'
-}
 
 /**
  * 推荐位要展示什么。

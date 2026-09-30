@@ -94,6 +94,21 @@ html.flow-locked {
   --stagger-blur: 3px;
   --stagger-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
+  /* transitions-dev: text states swap / icon swap / learn more hover */
+  --text-swap-dur: 150ms;
+  --text-swap-translate-y: 4px;
+  --text-swap-blur: 2px;
+  --text-swap-ease: ease-in-out;
+  --icon-swap-dur: 250ms;
+  --icon-swap-blur: 2px;
+  --icon-swap-start-scale: 0.25;
+  --icon-swap-ease: ease-in-out;
+  --learn-shift: 2px;
+  --learn-spread: 8deg;
+  --learn-in: 350ms;
+  --learn-out: 350ms;
+  --learn-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
   /* ── Apple 风格顶栏（SiteNav）──
    * 液态玻璃（Liquid Glass）没有用 border：真实折射（背景在玻璃边缘被扭曲）
    * CSS 做不到，这里用「半透明底 + 强 backdrop 模糊/饱和/提亮 + 多层高光 + 双色内描边 + 大外投影」来演。
@@ -173,13 +188,13 @@ html.flow-locked {
   --ds-accent: #1d1d1f;
 
   /* ── 功能区轮播卡（.lp-fcard）──
-   * 一张圆角卡：左半是卡面，右半是一整块深色品牌面。
+   * 一张圆角卡：左半是卡面，右半的字符画直接落在卡面上。
    * 卡不描边也不投影 —— 区分靠的是卡面与页面的**底色差**（+ 圆角）。
    * 所以卡面取 --lp-tile：和使用流程那两张卡、页脚卡片是同一个面，
    * 亮暗两套自动跟随，不必各写一份。
    */
   --fc-face: var(--lp-tile);
-  --fc-dark: #131316;
+  --fc-art-filter: invert(1);
   /*
    * 整卡「推挤」切换（用在 .fcard-* 过渡类上）。
    * 新卡从一侧滑进来、把旧卡顶出去 —— 两张卡是**贴着一起走**的，
@@ -196,24 +211,6 @@ html.flow-locked {
    */
   --fc-dur: 1200ms;
   --fc-ease: cubic-bezier(0.35, 0.35, 0.25, 1);
-  /*
-   * 窗口壳两套主题同色：屏里那四张图都是深色界面（主色 rgb(31,32,33)），
-   * 壳跟着内容走、不做暗色版 —— 否则会出现「深色标题栏 + 浅色屏幕」的割裂。
-   * 换句话说这扇窗是**一块设备屏幕**，不参与页面的深色切换；
-   * 要改的是屏里的墨（见 --fc-screen 那一段），不是这层壳。
-   */
-  --fc-win-bar: #f2f2f4;
-  --fc-win-line: rgba(0, 0, 0, 0.07);
-  /*
-   * 屏幕底色。屏里是浅墨字符画（docs/plans/2026-09-29-features-ascii-design.md），
-   * 底色会真的露出来，所以必须显式给一个 —— 取四张截图里出现最多的那个值，
-   * 图案的浅墨（#e8e8ea）就是照它配的。
-   *
-   * 两套主题同色、不进 .dark：这扇窗是「一块设备屏幕」，它有自己的一套明暗，
-   * 不跟页面翻。窗口壳（--fc-win-bar）同理，深浅两套都停在同一个浅色 ——
-   * 整个窗（浅色标题栏 + 深色屏 + 浅墨图案）在两种主题下是同一张图。
-   */
-  --fc-screen: #1f2021;
   --fc-dot: rgba(0, 0, 0, 0.16);
   --fc-dot-hover: rgba(0, 0, 0, 0.34);
   --fc-dot-on: #1d1d1f;
@@ -309,7 +306,7 @@ html.flow-locked {
    * 暗部人眼对这点差异不敏感，卡就糊回背景里去了（实测截图确认）。
    */
   --fc-face: #2e2e33;
-  --fc-dark: #0e0e10;
+  --fc-art-filter: none;
   --fc-dot: rgba(255, 255, 255, 0.24);
   --fc-dot-hover: rgba(255, 255, 255, 0.5);
   --fc-dot-on: #f5f5f7;
@@ -478,6 +475,85 @@ html.home-no-search .VPNavBar .VPNavBarSearch {
   .home-typing-caret {
     animation: none;
   }
+}
+
+/* ── transitions-dev: text states swap ─────────────────────────── */
+.t-text-swap {
+  display: inline-block;
+  transform: translateY(0);
+  filter: blur(0);
+  opacity: 1;
+  transition:
+    transform var(--text-swap-dur) var(--text-swap-ease),
+    filter    var(--text-swap-dur) var(--text-swap-ease),
+    opacity   var(--text-swap-dur) var(--text-swap-ease);
+  will-change: transform, filter, opacity;
+}
+.t-text-swap.is-exit {
+  transform: translateY(calc(var(--text-swap-translate-y) * -1));
+  filter: blur(var(--text-swap-blur));
+  opacity: 0;
+}
+.t-text-swap.is-enter-start {
+  transform: translateY(var(--text-swap-translate-y));
+  filter: blur(var(--text-swap-blur));
+  opacity: 0;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-text-swap { transition: none !important; }
+}
+
+/* ── transitions-dev: icon swap ────────────────────────────────── */
+.t-icon-swap {
+  position: relative;
+  display: inline-grid;
+}
+.t-icon-swap .t-icon {
+  grid-area: 1 / 1;
+  transition:
+    opacity   var(--icon-swap-dur) var(--icon-swap-ease),
+    filter    var(--icon-swap-dur) var(--icon-swap-ease),
+    transform var(--icon-swap-dur) var(--icon-swap-ease);
+  will-change: opacity, filter, transform;
+}
+.t-icon-swap[data-state="a"] .t-icon[data-icon="a"],
+.t-icon-swap[data-state="b"] .t-icon[data-icon="b"] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+.t-icon-swap[data-state="a"] .t-icon[data-icon="b"],
+.t-icon-swap[data-state="b"] .t-icon[data-icon="a"] {
+  opacity: 0;
+  filter: blur(var(--icon-swap-blur));
+  transform: scale(var(--icon-swap-start-scale));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-icon-swap .t-icon { transition: none !important; }
+}
+
+/* ── transitions-dev: learn more hover ─────────────────────────── */
+.t-learn-chevron {
+  display: inline-flex;
+  transform: translateX(0);
+  transition: transform var(--learn-out) var(--learn-ease);
+}
+.t-learn-arm {
+  transform-box: view-box;
+  transform-origin: 10px 8px;
+  vector-effect: non-scaling-stroke;
+  transition: transform var(--learn-out) var(--learn-ease);
+}
+.t-learn:hover .t-learn-chevron { transform: translateX(var(--learn-shift)); transition-duration: var(--learn-in); }
+.t-learn:hover .t-learn-arm { transition-duration: var(--learn-in); }
+.t-learn:hover .t-learn-arm-top { transform: rotate(var(--learn-spread)); }
+.t-learn:hover .t-learn-arm-bot { transform: rotate(calc(var(--learn-spread) * -1)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .t-learn-chevron, .t-learn-arm { transition: none !important; }
 }
 
 /* ── transitions-dev: tabs sliding ─────────────────────────────── */
@@ -909,12 +985,12 @@ a.lp-quote__handle:hover {
 }
 
 /* ── 功能区轮播卡（.lp-fcard）──
- * 一张圆角卡：左半是卡面，右半是一整块深色品牌面，面里浮着窗口。
+ * 一张圆角卡：左半是卡面，右半直接展示字符画。
  * 切场景 = **整卡飞出飞入**：外包一层 .lp-fstage 做出场/入场的裁剪与位移，
- * 卡片自己不动内部动效（文字、窗口都跟着整卡走）。
+ * 卡片自己不动内部动效（文字、字符画都跟着整卡走）。
  *
- * 两列等宽（1fr 1fr），卡高由内容决定：右列窗口按百分比定宽、按屏盒自己的比例定高，
- * 网格行高自动取左右两者的较大值，所以不会出现「文字短了窗口就顶出去」。
+ * 两列等宽（1fr 1fr），卡高由内容决定：右列字符画按百分比定宽、按自身比例定高，
+ * 网格行高自动取左右两者的较大值，所以不会出现「文字短了图案就顶出去」。
  */
 /*
  * 推挤切换的舞台。overflow: hidden 负责把被顶出去的旧卡裁掉。
@@ -1010,6 +1086,9 @@ a.lp-quote__handle:hover {
 }
 
 .lp-fcard__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
   margin-top: 1.85rem;
   font-size: 0.9375rem;
   font-weight: 500;
@@ -1021,111 +1100,28 @@ a.lp-quote__handle:hover {
   color: #2997ff;
 }
 
+.lp-fcard__link .t-learn-chevron svg {
+  width: 16px;
+  height: 16px;
+}
+
 .lp-fcard__link:hover {
   text-decoration: underline;
 }
 
-/* 右半：深色品牌面，窗口在里面居中 */
+/* 右半：字符画直接落在轮播卡自己的主题底色上 */
 .lp-fcard__stage {
   display: grid;
   place-items: center;
   padding: clamp(1.75rem, 3.4vw, 2.75rem);
-  background:
-    radial-gradient(120% 90% at 72% 8%, rgba(255, 255, 255, 0.07), transparent 62%),
-    var(--fc-dark);
 }
 
-/* 窗口壳：动画交给整卡，这里只是一扇静止的窗 */
-.lp-win {
-  width: min(100%, 460px);
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--fc-win-bar);
-  box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.3),
-    0 30px 60px -26px rgba(0, 0, 0, 0.75);
-}
-
-.lp-win__bar {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  height: 30px;
-  padding: 0 12px;
-  background: var(--fc-win-bar);
-  border-bottom: 1px solid var(--fc-win-line);
-}
-
-/* 交通灯与 Hero 的应用窗壳（AppShell.vue）同色，只是小一号 */
-.lp-win__lights {
-  display: flex;
-  flex: none;
-  gap: 6px;
-}
-
-.lp-win__lights i {
-  display: block;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.2);
-}
-
-.lp-win__lights i:nth-child(1) {
-  background: #ff5f57;
-}
-
-.lp-win__lights i:nth-child(2) {
-  background: #febc2e;
-}
-
-.lp-win__lights i:nth-child(3) {
-  background: #28c840;
-}
-
-/*
- * 标题要真居中：左侧三盏灯占掉 39px（3 × 9 + 2 × 6），
- * 右边补上同样的宽度，文字才落在窗口正中而不是向右偏 20px。
- */
-.lp-win__title {
-  flex: 1;
-  min-width: 0;
-  margin-right: 39px;
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 1;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #6e6e73;
-}
-
-.lp-win__screen {
-  position: relative;
-  /*
-   * 比例照**资产本身**取，不是照一个想当然的 16:10。
-   *
-   * 屏里现在是 450×286 的字符画（`docs/plans/2026-09-29-features-ascii-design.md`），
-   * `object-fit: cover` 只有在盒与图同比例时才等于「原尺寸铺满」——
-   * 不同比例就是一次重采样，网点图的边缘会因此挂出一圈灰边。
-   * 1440 视口下屏盒实测 452 宽，比画布宽 2px（0.44%），
-   * 是一处**均匀**缩放：字符笔画不落在非整数像素上，看不出来。
-   * 换素材时这里要跟着换成素材的实际比例。
-   */
-  aspect-ratio: 450 / 286;
-  background: var(--fc-screen);
-}
-
-/*
- * 铺满窗口：图案与屏幕同比例，cover 裁不到任何东西。
- * 图案是 SVG，`object-fit` 一样成立，不需要另开一套规则。
- */
+/* 四张 SVG 存浅色墨；浅色主题反相成深墨，深色主题保留浅墨。 */
 .lp-shot {
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: min(100%, 460px);
+  height: auto;
+  filter: var(--fc-art-filter);
 }
 
 /* ── 卡片下的圆点 + 左右箭头 ──
@@ -1502,10 +1498,7 @@ a.lp-quote__handle:hover {
     padding-right: 1rem;
   }
 
-  /*
-   * 轮播卡塌成单列：文案在上、深色面在下。
-   * 深色面里的窗口这时按卡片宽度走，比两列时更宽 —— 窄屏反而看得清屏里的内容。
-   */
+  /* 轮播卡塌成单列：文案在上、字符画展示区在下。 */
   .lp-fcard {
     grid-template-columns: minmax(0, 1fr);
   }

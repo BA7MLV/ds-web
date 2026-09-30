@@ -31,6 +31,13 @@ export default {
     primary: '主导航'
   },
 
+  copyLine: {
+    copy: '复制',
+    copied: '已复制',
+    label: '复制命令',
+    failed: '复制失败，请手动选择命令复制。'
+  },
+
   footer: {
     /**
      * 右下角图标的无障碍名，也是悬停提示。画面上只有图标，
@@ -91,6 +98,18 @@ export default {
       title: '开源的终身学习空间',
       lede: ['开源、本地优先的学习工作台，', '资料和数据都在你自己手里'],
       download: '立即下载',
+      downloadMac: '下载 macOS 版',
+      downloadWin: '下载 Windows 版',
+      downloadAndroid: '下载 Android 版',
+      chooseDownload: '选择下载版本',
+      switchDownload: '切换下载版本',
+      /* 下拉里要能分清 macOS 的两个包，所以这一处必须带架构；主按钮上不带 */
+      downloadOptions: {
+        'mac-arm': 'macOS · Apple Silicon',
+        'mac-x64': 'macOS · Intel',
+        'win-x64': 'Windows · x64',
+        'android-arm64': 'Android · ARM64'
+      },
       quickStart: '快速上手'
     },
 

@@ -30,6 +30,13 @@ export default {
     primary: 'Primary navigation'
   },
 
+  copyLine: {
+    copy: 'Copy',
+    copied: 'Copied',
+    label: 'Copy command',
+    failed: 'Copy failed. Please select and copy the command manually.'
+  },
+
   footer: {
     /** Accessible name and tooltip. The corner shows icons only */
     social: {
@@ -86,6 +93,17 @@ export default {
       /* 第二行前面靠这个尾随空格和第一行断开；移动端 <br> 生效时它会被折叠掉 */
       lede: ['Open source and local-first — ', 'your material and data stay with you'],
       download: 'Download',
+      downloadMac: 'Download for macOS',
+      downloadWin: 'Download for Windows',
+      downloadAndroid: 'Download for Android',
+      chooseDownload: 'Choose a download',
+      switchDownload: 'Switch download version',
+      downloadOptions: {
+        'mac-arm': 'macOS · Apple Silicon',
+        'mac-x64': 'macOS · Intel',
+        'win-x64': 'Windows · x64',
+        'android-arm64': 'Android · ARM64'
+      },
       quickStart: 'Quick start'
     },
 

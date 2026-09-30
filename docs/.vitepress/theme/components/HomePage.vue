@@ -4,6 +4,7 @@ import { useI18n } from '../i18n/index.js'
 import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
 import AppShell from './AppShell.vue'
 import HeroStarfield from './HeroStarfield.vue'
+import HomeDownload from './HomeDownload.vue'
 import StepFlow from './StepFlow.vue'
 
 const { t, tm } = useI18n()
@@ -192,12 +193,12 @@ onUnmounted(() => {
 
   <!-- 负 margin 抵消 VPHome 自带的 margin-bottom，让最后一个区块与页脚衔接 -->
   <div class="home-apple -mb-24 md:-mb-32">
-    <!-- ① 首屏：整宽居中 -->
+    <!-- ① 首屏：整宽，文字左对齐（与下载按钮、版本清单同一条左轨） -->
     <section ref="heroEl" class="lp-hero overflow-hidden">
       <!-- 标题后的柔光：压住身后的星点，让大字有落脚点（深浅色各一套） -->
       <div class="lp-hero__glow" aria-hidden="true"></div>
       <div
-        class="t-stagger is-shown lp-wrap pb-16 pt-14 text-center md:pb-20 md:pt-20"
+        class="t-stagger is-shown lp-wrap pb-16 pt-14 md:pb-20 md:pt-20"
       >
         <div class="t-stagger-line t-stagger-line--1">
           <a
@@ -227,12 +228,9 @@ onUnmounted(() => {
           </template>
         </p>
 
-        <div class="t-stagger-line t-stagger-line--4">
+        <div class="t-stagger-line t-stagger-line--4 lp-hero__actions-line">
           <div class="lp-hero__actions">
-            <a
-              href="/download"
-              class="home-btn-primary inline-block rounded-full px-8 py-3 text-base font-medium transition-colors"
-            >{{ t('home.hero.download') }}</a>
+            <HomeDownload />
             <a href="/start" class="home-link lp-hero__more">
               {{ t('home.hero.quickStart') }}<span aria-hidden="true"> →</span>
             </a>
@@ -251,7 +249,7 @@ onUnmounted(() => {
     <!-- ② 想明白 / 记得住：不对称双卡，点 + 打开整页浮层（见 StepFlow.vue） -->
     <StepFlow />
 
-    <!-- ③ 功能展示：一张轮播卡（左文案 / 右窗口），卡下圆点 + 左右箭头 -->
+    <!-- ③ 功能展示：一张轮播卡（左文案 / 右字符画），卡下圆点 + 左右箭头 -->
     <section id="features" ref="featuresEl" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
@@ -274,28 +272,27 @@ onUnmounted(() => {
                 <h3 class="lp-fcard__title">{{ currentScene.title }}</h3>
                 <p class="lp-fcard__lead">{{ currentScene.lead }}</p>
                 <p class="lp-fcard__desc">{{ currentScene.desc }}</p>
-                <a :href="currentScene.link" class="home-link lp-fcard__link">
-                  {{ t('home.features.more') }}<span aria-hidden="true"> ›</span>
+                <a :href="currentScene.link" class="home-link lp-fcard__link t-learn">
+                  {{ t('home.features.more') }}
+                  <span class="t-learn-chevron" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path class="t-learn-arm t-learn-arm-top" d="M6 4L10 8" />
+                      <path class="t-learn-arm t-learn-arm-bot" d="M10 8L6 12" />
+                    </svg>
+                  </span>
                 </a>
               </div>
 
-              <!-- 右半：深色品牌面 + 窗口壳 -->
+              <!-- 右半：直接展示字符画，墨色随站点主题切换 -->
               <div class="lp-fcard__stage">
-                <div class="lp-win">
-                  <div class="lp-win__bar">
-                    <span class="lp-win__lights" aria-hidden="true"><i /><i /><i /></span>
-                    <span class="lp-win__title">{{ currentScene.tab }}</span>
-                  </div>
-                  <div class="lp-win__screen">
-                    <img
-                      :src="currentScene.img"
-                      :alt="currentScene.alt"
-                      loading="lazy"
-                      decoding="async"
-                      class="lp-shot"
-                    />
-                  </div>
-                </div>
+                <img
+                  :src="currentScene.img"
+                  :alt="currentScene.alt"
+                  loading="lazy"
+                  decoding="async"
+                  class="lp-shot"
+                />
               </div>
             </div>
           </Transition>
@@ -513,8 +510,12 @@ onUnmounted(() => {
   color: var(--lp-text);
 }
 
+/*
+ * 导语不设 `margin: auto` 居中：整屏文字都压在左边那条轨上（标题、导语、主按钮、版本清单）。
+ * `max-width: 32em` 只是控制一行别太长，与对齐无关。
+ */
 .lp-hero__lede {
-  margin: 26px auto 0;
+  margin: 26px 0 0;
   max-width: 32em;
   font-size: 1.0625rem;
   line-height: 1.7;
@@ -527,8 +528,19 @@ onUnmounted(() => {
   flex-wrap: wrap;
   gap: 0.75rem 2rem;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin-top: 2.25rem;
+}
+
+/*
+ * 下载按钮的版本清单要盖住下面那扇演示窗壳。
+ * 每个 `.t-stagger-line` 都带 transform / filter，各自成层叠上下文 —— 面板在自己的层里
+ * 把 z-index 抬到多高都出不了这一行，只能在这里把整行抬到演示行（--5）之上：
+ * 两行都是 z-index: auto 时按 DOM 顺序画，演示行在后，所以面板必被压在底下。
+ */
+.lp-hero__actions-line {
+  position: relative;
+  z-index: 2;
 }
 
 /* 次级行动：纯文字，不抢主按钮的注意力 */
