@@ -13,7 +13,8 @@
  *
  * 首屏（含 SSR）不猜设备，一律退回「立即下载 → 下载页」（英文页去 GitHub Releases）：服务端没有 navigator，
  * 若在 setup 顶层就按设备算，服务端会渲染成兜底、客户端再变成 Mac 包，水合时两边对不上。
- * 所以整颗按钮等挂载后再收窄；认不出的设备（iPad 的桌面 UA、ARM 版 Linux）就一直留着兜底。
+ * 所以整颗按钮等挂载后再收窄；认不出的设备（ARM 版 Linux 等）就一直留着兜底，
+ * iPhone / iPad 没有安装包，按钮改说「在电脑上下载」、仍去下载页。
  * 清单同理默认收起 —— 展开态也属于「客户端才知道的事」。
  */
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
@@ -32,7 +33,8 @@ const PLATFORMS = {
   mac: { label: 'home.hero.downloadMac', icon: 'apple' },
   win: { label: 'home.hero.downloadWin', icon: 'windows' },
   linux: { label: 'home.hero.downloadLinux', icon: 'linux' },
-  android: { label: 'home.hero.downloadAndroid', icon: 'android' }
+  android: { label: 'home.hero.downloadAndroid', icon: 'android' },
+  ios: { label: 'home.hero.downloadOnComputer', icon: 'download' }
 }
 
 /** 安装包的 key 都是 `系统-架构`；认不出平台就退回通用箭头 */
@@ -158,6 +160,12 @@ const applyDevice = (hints) => {
 
   const detected = detectPlatform(navigator)
   if (detected === 'other') return
+
+  // iPhone / iPad 没有安装包：按钮改说「在电脑上下载」，仍去下载页（那里给分享 / 复制链接）
+  if (detected === 'ios') {
+    platform.value = 'ios'
+    return
+  }
 
   // 该平台的包没上传成功时同样留兜底 —— 宁可少给一次直下，也不要一个点了必然 404 的按钮
   const row = options.find((item) => item.key === recommendedDownloadKey(navigator, hints))

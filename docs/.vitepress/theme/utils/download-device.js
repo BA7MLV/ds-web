@@ -1,10 +1,13 @@
-/** 只读取浏览器提供的信息；iPad 的桌面 UA 不能当成 Mac。 */
+/**
+ * 只读取浏览器提供的信息；iPad 的桌面 UA 不能当成 Mac。
+ * iPhone / iPad 单独认出来（'ios'）：没有安装包，但要告诉他们「在电脑上下载」，而不是当成认不出的设备。
+ */
 export const detectPlatform = (device = globalThis.navigator) => {
   const ua = (device?.userAgent || '').toLowerCase()
   const platform = (device?.userAgentData?.platform || device?.platform || '').toLowerCase()
 
   if (/iphone|ipad|ipod/.test(ua) || (platform.includes('mac') && device?.maxTouchPoints > 1)) {
-    return 'other'
+    return 'ios'
   }
   if (ua.includes('android') || platform === 'android') return 'android'
   if (ua.includes('macintosh') || ua.includes('mac os x') || platform.includes('mac')) return 'mac'

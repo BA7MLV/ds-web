@@ -112,6 +112,8 @@ export default {
       downloadWin: '下载 Windows 版',
       downloadLinux: '下载 Linux 版',
       downloadAndroid: '下载 Android 版',
+      /* iPhone / iPad 访客：没有 iOS 安装包，按钮带他们去下载页拿链接 */
+      downloadOnComputer: '在电脑上下载',
       chooseDownload: '选择下载版本',
       switchDownload: '切换下载版本',
       /* 下拉里要能分清 macOS 的两个包，所以这一处必须带架构；主按钮上不带 */

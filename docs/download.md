@@ -81,6 +81,7 @@ const publishedAt = formatDate(release?.publishedAt)
   <li class="dl-notes__item"><strong>Windows</strong> —— Windows 11，或 Windows 10 22H2 及以上。</li>
   <li class="dl-notes__item"><strong>Linux</strong> —— x86_64，需要 WebKitGTK 4.1（Ubuntu 22.04、Debian 12 及以上自带）。</li>
   <li class="dl-notes__item"><strong>Android</strong> —— ARM64 设备。</li>
+  <li class="dl-notes__item"><strong>iPhone / iPad</strong> —— 暂无安装包，需要自行用 Xcode 构建。</li>
 </ul>
 
 ## 常见问题

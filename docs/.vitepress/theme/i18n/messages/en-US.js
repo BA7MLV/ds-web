@@ -107,6 +107,7 @@ export default {
       downloadWin: 'Download for Windows',
       downloadLinux: 'Download for Linux',
       downloadAndroid: 'Download for Android',
+      downloadOnComputer: 'Get it on your computer',
       chooseDownload: 'Choose a download',
       switchDownload: 'Switch download version',
       downloadOptions: {

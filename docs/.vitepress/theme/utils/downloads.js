@@ -124,6 +124,11 @@ export const buildRecommendation = () => {
     }
   }
 
+  // 没有 iOS 安装包：推荐位改成「在电脑上下载」，由 DownloadPick 给分享 / 复制链接
+  if (platform === 'ios') {
+    return { key: 'ios', primary: null, secondary: null }
+  }
+
   if (platform === 'android' && android) {
     return {
       key: 'android',

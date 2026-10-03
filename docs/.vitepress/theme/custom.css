@@ -1681,6 +1681,14 @@ a.lp-quote__handle:hover {
   color: var(--dl-solid-fg);
 }
 
+/* 推荐位里 iPhone 的「发送到电脑」是 <button>（调起系统分享面板），边框与颜色得单独给 */
+.vp-doc button.dl-btn {
+  border: 0;
+  color: var(--dl-solid-fg);
+  font-family: inherit;
+  cursor: pointer;
+}
+
 .vp-doc .dl-btn:hover {
   background: color-mix(in srgb, var(--dl-solid-bg) 84%, var(--dl-solid-fg));
   transform: translateY(-1px);

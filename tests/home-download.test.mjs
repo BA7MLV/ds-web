@@ -33,7 +33,23 @@ test('download defaults match supported devices without treating iOS as Mac or A
   // Chrome 的 UA 在 ARM Linux 上也写 x86_64，只有 Client Hints 说得准
   assert.equal(recommendedDownloadKey(linux, { architecture: 'arm' }), '')
   assert.equal(detectPlatform(linux), 'linux')
+  assert.equal(detectPlatform({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)' }), 'ios')
+  assert.equal(detectPlatform({ ...mac, maxTouchPoints: 5 }), 'ios')
   assert.equal(detectPlatform({}), 'other')
+})
+
+test('iPhone and iPad get "download on your computer" and stay on the download page', async () => {
+  for (const device of [
+    { userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)' },
+    { ...mac, maxTouchPoints: 5 },
+  ]) {
+    const env = setup(device)
+    await env.mount()
+    assert.deepEqual(
+      [env.api.label.value, env.api.icon.value, env.api.href.value, env.api.key.value],
+      ['home.hero.downloadOnComputer', 'download', '/download', '']
+    )
+  }
 })
 
 // Execute the component's actual setup to cover delayed browser hints and missing release assets.

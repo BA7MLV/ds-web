@@ -11,8 +11,13 @@
  *
  * 按钮走当前语言的主通道（中文页是国内镜像），另一条通道放在元信息下面一行，
  * 主通道下不动时一眼就能找到，见 download-channel.js。
+ *
+ * iPhone / iPad 是例外：没有 iOS 安装包，下面那一排 dmg / exe 对他们一个都用不上。
+ * 推荐位改成「在电脑上下载」—— 系统分享面板（隔空投送到 Mac、发到微信）+ 复制链接，
+ * 小红书、微信里点进来的手机访客多，得给他们一条把链接带到电脑上的路。
  */
 import { computed, onMounted, ref } from 'vue'
+import CopyLine from './CopyLine.vue'
 import DlIcon from './DlIcon.vue'
 import { useI18n } from '../i18n/index.js'
 import { backupUrl, primaryUrl } from '../utils/download-channel.js'
@@ -20,14 +25,19 @@ import { buildRecommendation, formatDate, release } from '../utils/downloads.js'
 
 const { locale } = useI18n()
 const pick = ref(null)
+const pageUrl = ref('')
+const canShare = ref(false)
 
 /** 点过之后按钮文案变一下，给一个「确实点到了」的反馈 */
 const active = ref('')
 
 onMounted(() => {
   pick.value = buildRecommendation()
+  pageUrl.value = `${window.location.origin}/download`
+  canShare.value = typeof navigator.share === 'function'
 })
 
+const isIos = computed(() => pick.value?.key === 'ios')
 const primary = computed(() => pick.value?.primary ?? null)
 const secondary = computed(() => pick.value?.secondary ?? null)
 const hrefOf = (item) => primaryUrl(item, locale.value)
@@ -45,6 +55,18 @@ const onClick = (item) => {
   window.setTimeout(() => {
     if (active.value === item.key) active.value = ''
   }, 1600)
+}
+
+const share = async () => {
+  try {
+    await navigator.share({
+      title: 'DeepStudent 下载',
+      text: '在电脑上打开这个链接，下载 DeepStudent',
+      url: pageUrl.value
+    })
+  } catch {
+    // 用户关掉分享面板也会走到这里，不算出错；下面还有复制链接可用。
+  }
 }
 
 /** 文件名 · 体积 · 发布日期；认不出设备时退化成「版本 · 发布日期」 */
@@ -66,7 +88,21 @@ const meta = computed(() => {
 </script>
 
 <template>
-  <div class="dl-pick">
+  <div v-if="isIos" class="dl-pick">
+    <p class="lp-eyebrow">在电脑上下载</p>
+    <p class="dl-pick__alt">
+      暂时没有 iPhone / iPad 安装包。把下载页链接发到电脑上，打开就能装：
+    </p>
+    <div v-if="canShare" class="dl-pick__actions">
+      <button type="button" class="dl-btn" @click="share">
+        <DlIcon name="download" />
+        发送到电脑
+      </button>
+    </div>
+    <CopyLine :command="pageUrl" />
+  </div>
+
+  <div v-else class="dl-pick">
     <p class="lp-eyebrow">推荐</p>
 
     <div class="dl-pick__actions">
