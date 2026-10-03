@@ -1,1 +1,0 @@
-const o={not_configured:"未配置",configured:"已配置",to_be_configured:"待配置"},e={labels:o};export{e as default,o as labels};

@@ -1,0 +1,1 @@
+import{f as s}from"./vendor-react-tHTFg3V7.js";function c(t){const e=s.useMemo(()=>({requestId:0,disposed:!1}),[t]),r=s.useRef(e);return r.current=e,s.useEffect(()=>(e.disposed=!1,()=>{e.disposed=!0,e.requestId+=1}),[e]),s.useCallback(()=>{const u=++e.requestId;return()=>r.current===e&&!e.disposed&&e.requestId===u},[e])}export{c as u};
