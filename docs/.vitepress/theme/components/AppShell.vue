@@ -55,6 +55,12 @@ const NATIVE_H = 773
  */
 const MIRROR_SRC = '/demo/index.html'
 
+/**
+ * 海报拍的是这条剧本会话（高数错题 → Anki 卡片）播完的样子，
+ * 演示要直接打开它，海报淡出后才接得上。覆盖地址里自带 scene 时以覆盖为准。
+ */
+const POSTER_SCENE = 'demo-anki-cards'
+
 const props = defineProps({
   /** 覆盖演示地址；不传则用 VITE_DEMO_URL / 同源镜像 */
   src: { type: String, default: '' }
@@ -82,7 +88,7 @@ const embeddable = () => {
   }
 }
 
-/** 显式覆盖演示的深浅色参数，同时保留覆盖地址的其他 query 和 hash。 */
+/** 显式覆盖演示的深浅色参数、补上海报那条会话，同时保留覆盖地址的其他 query 和 hash。 */
 const frameSrc = computed(() => {
   const url = resolvedSrc.value
   if (!url) return url
@@ -93,6 +99,7 @@ const frameSrc = computed(() => {
   const path = queryAt < 0 ? pathAndQuery : pathAndQuery.slice(0, queryAt)
   const query = new URLSearchParams(queryAt < 0 ? '' : pathAndQuery.slice(queryAt + 1))
   query.set('theme', isDark.value ? 'dark' : 'light')
+  if (!query.has('scene')) query.set('scene', POSTER_SCENE)
   return `${path}?${query}${hash}`
 })
 
@@ -241,10 +248,17 @@ const onFrameLoad = (event) => {
   }
 }
 
+/**
+ * ready = 海报那条会话已经上屏，可以撤海报了。
+ * 演示被嵌入时不会自己开播（防止访客还没看到就播完），要父页发 demo:activate；
+ * iframe 本来就是滚到附近才开始载入的，所以就绪即开播。
+ */
 const onMessage = (event) => {
   if (!demoOrigin.value || event.origin !== demoOrigin.value) return
   if (!readyFrameWindow || event.source !== readyFrameWindow) return
-  if (event.data?.type === 'demo-shell-ready') hideLoading()
+  if (event.data?.type !== 'demo-shell-ready') return
+  hideLoading()
+  readyFrameWindow.postMessage({ type: 'demo:activate' }, demoOrigin.value)
 }
 
 /*

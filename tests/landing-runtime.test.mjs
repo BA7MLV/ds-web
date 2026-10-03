@@ -104,7 +104,12 @@ const shell = (t, options) => component(t, 'AppShell', [
   'loading', 'timedOut', 'showFrame', 'previewStatus',
 ], options)
 
-const frame = (name) => markRaw({ contentWindow: { name }, contentDocument: null })
+const frame = (name) => markRaw({
+  contentWindow: { name, posted: [], postMessage(data, origin) { this.posted.push([data, origin]) } },
+  contentDocument: null,
+})
+// 消息对象在 vm 里创建，原型不同于测试这边，先过一遍 JSON 再比
+const plain = (value) => JSON.parse(JSON.stringify(value))
 const ready = (source, origin = 'https://site.test') => ({
   source: source.contentWindow,
   origin,
@@ -125,6 +130,42 @@ test('demo URL overrides both themes without losing query values or fragments', 
     assert.equal(url.hash, '#intro')
     assert.equal(url.origin + url.pathname, 'https://demo.test/demo.html')
   }
+})
+
+test('demo opens the poster scene unless the override already names one', (t) => {
+  const mirror = shell(t)
+  mirror.mount()
+  const mirrorUrl = new URL(mirror.api.frameSrc.value, 'https://site.test')
+  assert.equal(mirrorUrl.pathname, '/demo/index.html')
+  assert.equal(mirrorUrl.searchParams.get('scene'), 'demo-anki-cards')
+
+  const pinned = shell(t, { demoUrl: 'https://demo.test/demo.html?scene=demo-pdf-deepread' })
+  pinned.mount()
+  assert.deepEqual(new URL(pinned.api.frameSrc.value).searchParams.getAll('scene'), ['demo-pdf-deepread'])
+})
+
+test('ready starts playback only in the frame that reported it', async (t) => {
+  const env = shell(t)
+  env.mount()
+  env.api.startDemo()
+  const retired = frame('retired')
+  env.api.setFrame(retired)
+  env.isDark.value = true
+  await nextTick()
+  env.api.onMessage(ready(retired))
+  assert.deepEqual(retired.contentWindow.posted, [])
+
+  env.api.setFrame(null)
+  const current = frame('current')
+  env.api.setFrame(current)
+  env.api.onMessage(ready(current, 'https://unrelated.test'))
+  env.api.onMessage({ ...ready(current), data: { type: 'unrelated' } })
+  assert.deepEqual(current.contentWindow.posted, [])
+  assert.equal(env.api.loading.value, true)
+
+  env.api.onMessage(ready(current))
+  assert.equal(env.api.loading.value, false)
+  assert.deepEqual(plain(current.contentWindow.posted), [[{ type: 'demo:activate' }, 'https://site.test']])
 })
 
 test('theme reload invalidates old ready messages before and after the DOM patch', async (t) => {
