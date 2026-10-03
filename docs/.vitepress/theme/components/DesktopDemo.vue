@@ -158,11 +158,13 @@ let readyFrameWindow = null
 let hideTimer = null
 let startedAt = 0
 let nearViewport = false
+let inViewport = false
 let pageReady = false
 let liveQuery = null
 let resizeObserver = null
 let cancelAutomaticStart = () => {}
 let stopObserving = () => {}
+let stopWatchingView = () => {}
 
 /** 只认本次挂载的 iframe 发来的消息；重载到 DOM 更新之间一律不认 */
 const setFrame = (frame) => {
@@ -217,6 +219,7 @@ const startDemo = (trigger = 'button') => {
   if (!canEmbed.value || (started.value && !timedOut.value)) return
   cancelAutomaticStart()
   stopObserving()
+  stopWatchingView()
   readyFrameWindow = null
   track('desktop_demo_start', { trigger: started.value ? 'retry' : trigger })
   startedAt = performance.now()
@@ -227,8 +230,14 @@ const startDemo = (trigger = 'button') => {
   armTimeout()
 }
 
+/**
+ * 何时开机：同源 iframe 和首页共用一个主线程，开机那一两秒会和首屏演示抢 CPU。
+ * 所以平时等首屏演示就绪（它发的 demo-shell-ready，或页面加载后的兜底计时）、且这一节已在一屏多以内再开；
+ * 访客已经直接滚到这一节、看着它了，就不等首屏，马上开
+ */
 const maybeStartDemo = () => {
-  if (pageReady && nearViewport && !started.value && !document.hidden) startDemo('auto')
+  if (started.value || document.hidden) return
+  if (inViewport || (pageReady && nearViewport)) startDemo('auto')
 }
 
 /** 滚动经过不算想用；鼠标停上来、键盘焦点进来才提前开 */
@@ -242,8 +251,19 @@ const onFocusIntent = () => {
 
 const onMessage = (event) => {
   if (!demoOrigin.value || event.origin !== demoOrigin.value) return
-  if (!readyFrameWindow || event.source !== readyFrameWindow) return
   if (event.data?.type !== 'demo-shell-ready') return
+  // 别的 iframe（首屏演示）就绪了：轮到这一节，等主线程空一下再开（首屏这时正开始打字）
+  if (!readyFrameWindow || event.source !== readyFrameWindow) {
+    if (!started.value && !pageReady) {
+      const go = () => {
+        pageReady = true
+        maybeStartDemo()
+      }
+      if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(go, { timeout: 1500 })
+      else setTimeout(go, 300)
+    }
+    return
+  }
   hideLoading()
   tuneFrameScroll()
 }
@@ -296,11 +316,15 @@ onMounted(() => {
     nearViewport = near
     maybeStartDemo()
   }, 900)
-  // 首屏演示先载（访客第一眼看的是它），这一节晚一拍再开始
+  stopWatchingView = observeNearViewport(stageEl.value, (visible) => {
+    inViewport = visible
+    maybeStartDemo()
+  }, 0)
+  // 首屏演示没报就绪（没载成、或者被跳过）时的兜底
   cancelAutomaticStart = afterPageLoad(() => {
     pageReady = true
     maybeStartDemo()
-  }, { delay: 2500 })
+  }, { delay: 4000 })
 })
 
 onUnmounted(() => {
@@ -313,6 +337,7 @@ onUnmounted(() => {
   resizeObserver?.disconnect()
   cancelAutomaticStart()
   stopObserving()
+  stopWatchingView()
   clearHideTimer()
 })
 </script>
