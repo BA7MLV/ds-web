@@ -696,5 +696,9 @@ onUnmounted(() => {
   .dd-poster-leave-active {
     transition: none;
   }
+
+  .dd-viewer__hint {
+    animation: none;
+  }
 }
 </style>

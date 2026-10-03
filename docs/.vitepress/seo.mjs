@@ -1,3 +1,5 @@
+import messages from './theme/i18n/messages/index.js'
+
 export const SITE_ORIGIN = 'https://deepstudent.cn'
 export const SITE_URL = `${SITE_ORIGIN}/`
 export const SITE_NAME = 'DeepStudent'
@@ -119,6 +121,8 @@ function createGraph(pageData, { pageUrl, pageTitle, description, locale, isLand
       url: SITE_URL,
       applicationCategory: 'EducationalApplication',
       operatingSystem: 'macOS, Windows, Linux, Android',
+      // 和首页「全部应用」同一份清单，搜索引擎和 AI 摘要能直接读到有哪些模块
+      featureList: messages[locale].home.apps.items.map((app) => app.name),
       license: `${REPOSITORY_URL}/blob/main/LICENSE`,
       downloadUrl: getPageUrl('download.md'),
       sameAs: [REPOSITORY_URL],

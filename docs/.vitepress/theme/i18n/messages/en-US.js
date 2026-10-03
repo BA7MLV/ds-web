@@ -136,7 +136,7 @@ export default {
       /** On wide screens with a mouse the screenshot becomes a live, clickable desktop (DesktopDemo.vue) */
       live: {
         title: 'Live study desktop demo',
-        hint: 'This desktop is live: open apps from the Dock, drag and resize windows, start a flashcard review. Demo data stays on this page and resets when you reload.',
+        hint: 'This desktop is live: open apps from the Dock, drag and resize windows, start a flashcard review. The demo interface is in Chinese; its data stays on this page and resets when you reload.',
         narrow: 'Widen your browser window to at least 1024 pixels to try this desktop live, or tap the picture to see it full size.',
         touch: 'Tap the picture to see it full size and swipe across the desktop. Open this page on a computer to try it live, or scroll up to the demo at the top to try the app on your phone.',
         zoom: 'View full size',
