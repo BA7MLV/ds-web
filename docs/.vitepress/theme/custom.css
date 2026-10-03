@@ -1135,7 +1135,7 @@ a.lp-quote__handle:hover {
   text-decoration: underline;
 }
 
-/* ── 学习桌面：标题区下面一整屏截图（1440 × 900），像一块屏幕摆在页面上 ── */
+/* ── 学习桌面：标题区下面一整块桌面（DesktopDemo.vue，自己跳出 .lp-wrap 占页面宽度的 95%） ── */
 /* 手机上标题一行放不下时两行对半分，别把「开。」单独甩到第二行 */
 .lp-desk .lp-title {
   text-wrap: balance;
@@ -1143,21 +1143,6 @@ a.lp-quote__handle:hover {
 
 .lp-desk__link {
   margin-top: 1rem;
-}
-
-.lp-desk__shot {
-  max-width: 1120px;
-  margin: clamp(2rem, 4vw, 3rem) auto 0;
-  overflow: hidden;
-  border: 1px solid var(--lp-hair);
-  border-radius: 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 24px 60px rgba(0, 0, 0, 0.12);
-}
-
-@media (max-width: 520px) {
-  .lp-desk__shot {
-    border-radius: 10px;
-  }
 }
 
 /*

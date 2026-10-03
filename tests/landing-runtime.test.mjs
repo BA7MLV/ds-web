@@ -6,7 +6,7 @@ import { computed, effectScope, markRaw, nextTick, ref, watch } from 'vue'
 import { parse } from '@vue/compiler-sfc'
 
 /** Execute the actual setup script with Vue reactivity and controllable browser deliveries. */
-const component = (t, name, exports, { props = {}, demoUrl = '' } = {}) => {
+const component = (t, name, exports, { props = {}, demoUrl = '', media = false } = {}) => {
   const filename = new URL(`../docs/.vitepress/theme/components/${name}.vue`, import.meta.url)
   const { descriptor } = parse(readFileSync(filename, 'utf8'))
   const source = descriptor.scriptSetup.content
@@ -30,7 +30,7 @@ const component = (t, name, exports, { props = {}, demoUrl = '' } = {}) => {
       if (this.listeners.get(name) === callback) this.listeners.delete(name)
     },
   })
-  const motionQuery = events({ matches: false })
+  const motionQuery = events({ matches: media })
   const window = events({
     location: { protocol: 'https:', href: 'https://site.test/', origin: 'https://site.test' },
     innerHeight: 100,
@@ -44,6 +44,7 @@ const component = (t, name, exports, { props = {}, demoUrl = '' } = {}) => {
     console, URL, URLSearchParams, computed, ref, watch, nextTick,
     window, document, DEMO_URL: demoUrl,
     track: (event, props) => tracked.push([event, props]),
+    featureShot: (shot, dark) => `/features/${shot}-${dark ? 'dark' : 'light'}.webp`,
     performance: { now: () => now },
     defineProps: () => ({ src: '', anchor: null, blocker: null, ...props }),
     useData: () => ({ isDark }),
@@ -303,6 +304,67 @@ test('caption speaks only while the demo is not live, and never swallows a retry
     readFileSync(new URL('../docs/.vitepress/theme/components/AppShell.vue', import.meta.url), 'utf8')
   ).descriptor.template.content
   assert.match(template, /<p v-if="previewStatus" class="sh__caption-actions">/)
+})
+
+/** 学习桌面那一节：media 是 LIVE_QUERY（宽屏 + 鼠标）的结果 */
+const desktop = (t, options = {}) => component(t, 'DesktopDemo', [
+  'frameSrc', 'setFrame', 'startDemo', 'onMessage', 'loading', 'showFrame', 'status', 'stageSize', 'screenStyle',
+], { media: true, props: { art: 'workbench', alt: '' }, ...options })
+
+test('desktop demo opens the study desktop in the current theme', async (t) => {
+  const env = desktop(t)
+  env.mount()
+  for (const dark of [false, true]) {
+    env.isDark.value = dark
+    await nextTick()
+    const url = new URL(env.api.frameSrc.value, 'https://site.test')
+    assert.equal(url.pathname, '/demo/index.html')
+    assert.equal(url.searchParams.get('desktop'), '1')
+    assert.equal(url.searchParams.get('theme'), dark ? 'dark' : 'light')
+    assert.equal(url.searchParams.get('scene'), 'demo-anki-cards')
+  }
+})
+
+test('desktop demo stays a screenshot on touch and narrow screens', (t) => {
+  const env = desktop(t, { media: false })
+  env.mount()
+  env.afterLoad()
+  env.api.startDemo('button')
+  assert.equal(env.api.showFrame.value, false)
+  // 截图就是成品，图注不提载入
+  assert.equal(env.api.status.value, '')
+})
+
+test('desktop demo only trusts ready from the frame it is showing', async (t) => {
+  const env = desktop(t)
+  env.mount()
+  assert.equal(env.api.status.value, 'home.desktop.live.waiting')
+  env.api.startDemo()
+  assert.equal(env.api.status.value, 'home.desktop.live.loading')
+  const light = frame('light')
+  env.api.setFrame(light)
+  // 换主题就是换一份演示，旧 iframe 的 ready 不算
+  env.isDark.value = true
+  await nextTick()
+  env.api.onMessage(ready(light))
+  assert.equal(env.api.loading.value, true)
+
+  env.api.setFrame(null)
+  const dark = frame('dark')
+  env.api.setFrame(dark)
+  env.api.onMessage(ready(dark, 'https://unrelated.test'))
+  assert.equal(env.api.loading.value, true)
+  env.api.onMessage(ready(dark))
+  assert.equal(env.api.loading.value, false)
+  assert.equal(env.api.status.value, '')
+})
+
+test('desktop demo renders 1:1 on wide stages and scales narrow ones from 1280', (t) => {
+  const env = desktop(t)
+  env.api.stageSize.value = { width: 1500, height: 800 }
+  assert.deepEqual(plain(env.api.screenStyle.value), { width: '1500px', height: '800px', transform: 'none' })
+  env.api.stageSize.value = { width: 960, height: 600 }
+  assert.deepEqual(plain(env.api.screenStyle.value), { width: '1280px', height: '800px', transform: 'scale(0.75)' })
 })
 
 test('starfield pauses and resumes normally but late callbacks cannot restart it after unmount', async (t) => {

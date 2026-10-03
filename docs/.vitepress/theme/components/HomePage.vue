@@ -5,6 +5,7 @@ import { track } from '../lib/analytics.js'
 import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
 import { warmFeatureShots } from '../utils/feature-shot.js'
 import AppShell from './AppShell.vue'
+import DesktopDemo from './DesktopDemo.vue'
 import FeatureShot from './FeatureShot.vue'
 import HeroStarfield from './HeroStarfield.vue'
 import HomeDownload from './HomeDownload.vue'
@@ -243,7 +244,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ② 学习桌面：桌面端打开就是它，放一整屏真实截图（对话、闪卡两个窗口并排 + 小组件 + Dock） -->
+    <!-- ② 学习桌面：桌面端打开就是它。宽屏上是一张能直接操作的实时桌面（占页面 95% 宽），触屏和窄屏上是截图 -->
     <section id="desktop" class="lp-block lp-desk">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
@@ -260,8 +261,8 @@ onUnmounted(() => {
             </span>
           </a>
         </div>
-        <FeatureShot class="lp-desk__shot" :name="t('home.desktop.art')" :alt="t('home.desktop.alt')" />
       </div>
+      <DesktopDemo :art="t('home.desktop.art')" :alt="t('home.desktop.alt')" />
     </section>
 
     <!-- ③ 想明白 / 记得住：不对称双卡，点 + 打开整页浮层（见 StepFlow.vue） -->

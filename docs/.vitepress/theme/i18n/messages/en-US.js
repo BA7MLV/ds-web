@@ -132,7 +132,17 @@ export default {
       more: 'About the study desktop (Chinese)',
       link: '/user-guide/workbench',
       art: 'workbench',
-      alt: 'Screenshot of the study desktop: a chat window with freshly generated Anki cards, today’s flashcard review in the middle, agenda and AI study briefing widgets on the right, and the Dock below'
+      alt: 'Screenshot of the study desktop: a chat window with freshly generated Anki cards, today’s flashcard review in the middle, agenda and AI study briefing widgets on the right, and the Dock below',
+      /** On wide screens with a mouse the screenshot becomes a live, clickable desktop (DesktopDemo.vue) */
+      live: {
+        title: 'Live study desktop demo',
+        hint: 'This desktop is live: open apps from the Dock, drag and resize windows, start a flashcard review. Demo data stays on this page and resets when you reload.',
+        touch: 'Open this page on a computer to try the study desktop yourself.',
+        waiting: 'It loads when you scroll here. You can also start it now.',
+        loading: 'Opening the study desktop…',
+        delayed: 'The study desktop is not ready yet. You can retry.',
+        start: 'Load now'
+      }
     },
 
     /**

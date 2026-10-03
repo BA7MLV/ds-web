@@ -33,7 +33,8 @@
     - `theme/utils/`: 主题侧的无组件逻辑（图标标记串、下载数据整理、首页截图的地址与取景框尺寸等）。
   - `data/downloads.json`: 下载页数据，由 `scripts/sync-release-downloads.mjs` 在构建时从 GitHub Releases 同步。
 - `docs/public/`: 公共静态资源（图片、图标、`robots.txt`、`llms.txt`、favicon）。
-  - `demo/`: 首页 hero 实时演示的**同源镜像**（另一个工程的构建产物），由 `scripts/sync-demo.mjs` 同步，勿手改。
+  - `demo/`: 首页实时演示的**同源镜像**（主仓库 `src/demo` 的构建产物），由 `scripts/sync-demo.mjs` 同步，勿手改。
+    hero 用经典布局（`/demo/index.html?scene=…`），「学习桌面」一节（`theme/components/DesktopDemo.vue`）用同一份镜像带 `desktop=1`。
   - `features/`: 首页「使用流程」两张卡（`flow-*`）和功能区六扇窗的真实界面截图（`<名>-light|dark.webp`，取景框的 2 倍图），**由生成器产出，勿手改**（见下）。
 - `scripts/`: 构建辅助脚本。
   - `sync-release-downloads.mjs`、`sync-demo.mjs` + `lib/`：构建期同步数据与演示镜像。
@@ -43,9 +44,8 @@
     按取景框截深浅两张 2 倍图。取景框尺寸写在 `theme/utils/feature-shot.js`（生成器、`FeatureShot.vue`、测试共用一份），
     运行时 `theme/components/FeatureShot.vue` 两张都进 SSR、按 `<html>.dark` 只显示一张。（9 月底那版字符画已整个去掉。）
     闪卡复习不在聊天页，脚本会放开演示壳的视图守卫、在 mock IPC 外补几条 FSRS 命令。
-    首页「学习桌面」那一整屏（`workbench`）：演示壳写死经典布局，脚本在页面脚本前把开关钉回学习桌面、
-    手动启用窗口总线，再并排摆对话和闪卡两个窗口；壁纸和几枚 Dock 图标镜像里没有，要从主仓库补 ——
-    重出这一张得带 `DEEP_STUDENT_DIR=/path/to/deep-student`（读它的 `public/` 和 `dist-demo/`）。
+    首页「学习桌面」那一整屏（`workbench`）：演示入口带 `desktop=1` 自己开学习桌面、摆好对话和闪卡两扇窗，
+    这张图就是 `DesktopDemo.vue` 载入前的海报、也是触屏 / 窄屏上的成品，和实时桌面同一个画面（只把轮播后面露半截的卡藏了）。
     依赖 devDependency `playwright-core` + 本机 Chrome 与 cwebp。
     **取景框不许切开界面**：框边压到一行字、一张卡片 / 胶囊 / 图标，截出来就是半句话、少条边的残图。
     生成器会把压在上下两条边上的块（连同它下面 / 上面的内容）截图前藏掉、框里留白；压在左右两条边上的、
@@ -56,7 +56,11 @@
   - 注意：`npm run build` 会先跑 `sync-demo.mjs` / `sync-release-downloads.mjs`，按演示服务器把本地 `docs/public/demo`
     整个同步成服务器上的版本、并改写 `data/demo-mirror.json`、`data/downloads.json`。本地镜像比服务器新时（新演示还没部署），
     构建完要 `git checkout HEAD -- docs/public/demo docs/.vitepress/data/demo-mirror.json docs/.vitepress/data/downloads.json`
-    再 `git clean -fdq -- docs/public/demo` 恢复，别把旧镜像提交进去。
+    再 `git clean -fdq -- docs/public/demo` 恢复，别把旧镜像提交进去；
+    或者把新构建用静态服务供着、构建时带 `DEMO_SOURCE=<那个地址>`，指纹一致就不会重抓。
+  - 本地换演示镜像：主仓库 `NODE_OPTIONS=--max-old-space-size=8192 npm run build:demo`（默认 4 GB 堆会 OOM），
+    `dist-demo/` 用静态服务供着，`DEMO_SOURCE=http://127.0.0.1:<端口> node scripts/sync-demo.mjs --force --strict`，
+    再把 `data/demo-mirror.json` 的 `source` 写回演示服务器。上线顺序：同一份 `dist-demo/` 先部署到演示服务器，再合并官网。
 - `tests/`: Node 内置测试（`npm test`，即 `node --test` 自动发现），覆盖下载数据同步、演示镜像逻辑与 i18n 消息表结构校验。
 - 根目录：`package.json`（npm workspaces，命令代理到 `docs` workspace）、`vercel.json`（含 `/docs/*` → `/*` 301 重定向）。
   - `vercel.json` 的 `installCommand` 先把 Vercel 的浅克隆（深度 10、没配 remote）按仓库地址补全历史：
