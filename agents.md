@@ -48,6 +48,9 @@
     与 `2026-09-25-flow-dither-scifi-design.md`。
 - `tests/`: Node 内置测试（`npm test`，即 `node --test` 自动发现），覆盖下载数据同步、演示镜像逻辑与 i18n 消息表结构校验。
 - 根目录：`package.json`（npm workspaces，命令代理到 `docs` workspace）、`vercel.json`（含 `/docs/*` → `/*` 301 重定向）。
+  - `vercel.json` 的 `installCommand` 先把 Vercel 的浅克隆（深度 10、没配 remote）按仓库地址补全历史：
+    文档页的「最后更新时间」、编辑者和 sitemap 的 lastmod 都读 `git log`，浅克隆下会全部落在第 10 个提交上。
+    不用 `--filter=blob:none` 省流量：编辑者用的 `git log --follow` 要做改名检测，得读历史里的文件内容。
 
 ## 构建、测试与本地开发
 - `npm run dev`: 本地开发，热更新（VitePress，端口 5174）。

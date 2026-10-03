@@ -1,4 +1,5 @@
 {
+  "installCommand": "git fetch --unshallow --quiet https://github.com/BA7MLV/ds-web.git || echo '[vercel] unshallow skipped'; npm install",
   "buildCommand": "npm run build",
   "outputDirectory": "docs/.vitepress/dist",
   "cleanUrls": true,
