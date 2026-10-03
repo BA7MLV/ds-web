@@ -72,6 +72,7 @@ const setup = (
     addEventListener: (type, handler) => on.set(type, handler),
     removeEventListener: (type) => on.delete(type),
   }
+  const tracked = []
   const onWindow = new Map()
   const window = {
     innerHeight: viewport,
@@ -80,6 +81,8 @@ const setup = (
   }
   const context = vm.createContext({
     navigator, document, window, computed, nextTick, ref, detectPlatform, recommendedDownloadKey, primaryUrl,
+    release: { version: 'v9.9.9' },
+    track: (event, props) => tracked.push([event, props]),
     useI18n: () => ({ t: (key) => (key === 'links.download' ? '/download' : key), locale: { value: locale } }),
     buildRows: (group) => group === 'desktop'
       ? keys.map((key) => ({ key,
@@ -92,10 +95,10 @@ const setup = (
     onUnmounted: (callback) => { unmount = callback },
   })
   const api = vm.runInContext(
-    `(function () { ${source}; return { key, label, icon, iconFor, href, fileName, open, toggle, pick, placeMenu, menuStyle, rootEl, menuEl } })()`,
+    `(function () { ${source}; return { key, label, icon, iconFor, href, fileName, open, toggle, pick, onMainClick, placeMenu, menuStyle, rootEl, menuEl } })()`,
     context
   )
-  return { api, mount, unmount, on, onWindow }
+  return { api, mount, unmount, on, onWindow, tracked }
 }
 
 test('the version list is hand-written, not a native select', () => {
@@ -161,6 +164,29 @@ test('Chinese pages download from the mirror first, other languages from GitHub'
   const noMirror = setup(mac)
   await noMirror.mount()
   assert.equal(noMirror.api.href.value, 'https://files.test/mac-arm')
+})
+
+test('download clicks are tracked with package, channel and entry point', async () => {
+  const zh = setup(mac, undefined, 900, { mirror: true })
+  zh.api.onMainClick()
+  await zh.mount()
+  zh.api.onMainClick()
+  zh.api.pick({ key: 'win-x64' })
+  // 事件对象在 vm 里创建，原型不同于测试这边，先过一遍 JSON 再比
+  const plain = (value) => JSON.parse(JSON.stringify(value))
+  assert.deepEqual(plain(zh.tracked), [
+    // 挂载前（SSR 的兜底态）点下去只是去下载页
+    ['download_page', { from: 'hero', platform: 'other', locale: 'zh-CN' }],
+    ['download', { package: 'mac-arm', channel: 'mirror', from: 'hero', locale: 'zh-CN', version: 'v9.9.9' }],
+    ['download', { package: 'win-x64', channel: 'mirror', from: 'hero-menu', locale: 'zh-CN', version: 'v9.9.9' }],
+  ])
+
+  const en = setup(mac, undefined, 900, { locale: 'en-US', mirror: true })
+  await en.mount()
+  en.api.onMainClick()
+  assert.deepEqual(plain(en.tracked), [
+    ['download', { package: 'mac-arm', channel: 'github', from: 'hero', locale: 'en-US', version: 'v9.9.9' }],
+  ])
 })
 
 test('the backup channel is the other copy of the same file, never a duplicate', () => {

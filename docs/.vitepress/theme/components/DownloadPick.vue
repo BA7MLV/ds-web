@@ -20,6 +20,7 @@ import { computed, onMounted, ref } from 'vue'
 import CopyLine from './CopyLine.vue'
 import DlIcon from './DlIcon.vue'
 import { useI18n } from '../i18n/index.js'
+import { track } from '../lib/analytics.js'
 import { backupUrl, primaryUrl } from '../utils/download-channel.js'
 import { buildRecommendation, formatDate, release } from '../utils/downloads.js'
 
@@ -50,14 +51,24 @@ const backup = computed(() => {
 
 const labelFor = (item) => (active.value === item.key ? '开始下载…' : item.text)
 
+const trackDownload = (item, url, from) => track('download', {
+  package: item.key,
+  channel: url === item.url ? 'github' : 'mirror',
+  from,
+  locale: locale.value,
+  version: release?.version ?? ''
+})
+
 const onClick = (item) => {
   active.value = item.key
+  trackDownload(item, hrefOf(item), 'pick')
   window.setTimeout(() => {
     if (active.value === item.key) active.value = ''
   }, 1600)
 }
 
 const share = async () => {
+  track('send_to_computer', { method: 'share' })
   try {
     await navigator.share({
       title: 'DeepStudent 下载',
@@ -129,7 +140,10 @@ const meta = computed(() => {
 
     <p v-if="meta" class="dl-pick__meta">{{ meta }}</p>
     <p v-if="backup" class="dl-pick__alt">
-      下载慢或中断？<a :href="backup.url">{{ backup.github ? '改从 GitHub 下载' : '改用镜像下载' }}</a>
+      下载慢或中断？<a
+        :href="backup.url"
+        @click="trackDownload(primary, backup.url, 'pick-backup')"
+      >{{ backup.github ? '改从 GitHub 下载' : '改用镜像下载' }}</a>
     </p>
   </div>
 </template>

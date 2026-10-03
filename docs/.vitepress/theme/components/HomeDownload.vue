@@ -20,7 +20,8 @@
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import DlIcon from './DlIcon.vue'
 import { useI18n } from '../i18n/index.js'
-import { buildRows, formatSize } from '../utils/downloads.js'
+import { track } from '../lib/analytics.js'
+import { buildRows, formatSize, release } from '../utils/downloads.js'
 import { primaryUrl } from '../utils/download-channel.js'
 import { detectPlatform, recommendedDownloadKey } from '../utils/download-device.js'
 
@@ -148,11 +149,31 @@ const onKeydown = (event) => {
   }
 }
 
+/** 打点：哪个包、走哪条通道、从哪颗按钮点的（51.la 事件分析，见 lib/analytics.js） */
+const trackDownload = (packageKey, from) => {
+  const row = options.find((item) => item.key === packageKey)
+  if (!row) return
+  track('download', {
+    package: row.key,
+    channel: primaryUrl(row.asset, locale.value) === row.asset.url ? 'github' : 'mirror',
+    from,
+    locale: locale.value,
+    version: release?.version ?? ''
+  })
+}
+
+/** 主按钮：指着安装包就记一次下载；还在兜底（去下载页）就记一次「去下载页」，顺带看认不出的设备有多少 */
+const onMainClick = () => {
+  if (selected.value) trackDownload(selected.value.key, 'hero')
+  else track('download_page', { from: 'hero', platform: platform.value, locale: locale.value })
+}
+
 /** 点某一条：立刻开始下载（由链接自己完成），同时把选择留在按钮上 */
 const pick = (item) => {
   manual.value = true
   key.value = item.key
   open.value = false
+  trackDownload(item.key, 'hero-menu')
 }
 
 const applyDevice = (hints) => {
@@ -207,7 +228,7 @@ onUnmounted(() => {
 
 <template>
   <div ref="rootEl" class="home-download home-btn-primary" @focusout="onFocusOut">
-    <a class="home-download__link" :href="href" :download="fileName || undefined">
+    <a class="home-download__link" :href="href" :download="fileName || undefined" @click="onMainClick">
       <DlIcon class="home-download__icon" :name="icon" />
       <span>{{ label }}</span>
     </a>

@@ -39,9 +39,11 @@ const component = (t, name, exports, { props = {}, demoUrl = '' } = {}) => {
   })
   const document = events({ hidden: false })
   const scope = effectScope()
+  const tracked = []
   const context = vm.createContext({
     console, URL, URLSearchParams, computed, ref, watch, nextTick,
     window, document, DEMO_URL: demoUrl,
+    track: (event, props) => tracked.push([event, props]),
     performance: { now: () => now },
     defineProps: () => ({ src: '', anchor: null, blocker: null, ...props }),
     useData: () => ({ isDark }),
@@ -78,7 +80,7 @@ const component = (t, name, exports, { props = {}, demoUrl = '' } = {}) => {
   }
   t.after(unmount)
   return {
-    api, isDark, frames, timers, observers, window, document, motionQuery, unmount,
+    api, isDark, frames, timers, observers, window, document, motionQuery, unmount, tracked,
     mount: () => mounted.forEach((callback) => callback()),
     afterLoad: () => deferred.filter((task) => !task.cancelled).forEach(({ callback }) => callback()),
     frame: () => {
@@ -181,6 +183,26 @@ test('manual retry rejects the previous iframe and accepts current ready before 
   assert.equal(env.api.timedOut.value, false)
   assert.equal(env.api.loading.value, false)
   assert.equal(env.timers.size, 0)
+})
+
+test('demo start, retry and readiness are tracked once each', async (t) => {
+  const env = shell(t)
+  env.mount()
+  env.api.startDemo('pointer')
+  env.api.startDemo('focus')
+  env.timeout(15000)
+  env.api.startDemo('button')
+  await nextTick()
+  const current = frame('tracked')
+  env.api.setFrame(current)
+  env.api.onMessage(ready(current))
+  env.api.onMessage(ready(current))
+  assert.deepEqual(JSON.parse(JSON.stringify(env.tracked)), [
+    ['demo_start', { trigger: 'pointer' }],
+    // 超时后再点是重试，不再算一次新的开始
+    ['demo_start', { trigger: 'retry' }],
+    ['demo_ready', { seconds: '0' }],
+  ])
 })
 
 test('cross-origin load fallback ignores a retiring frame and safely handles access denial', (t) => {

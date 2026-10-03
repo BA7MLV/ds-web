@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useData } from 'vitepress'
 import { useI18n } from '../i18n/index.js'
+import { track } from '../lib/analytics.js'
 import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
 
 /**
@@ -139,6 +140,8 @@ let stopObserving = () => {}
 let nearViewport = false
 let pageReady = false
 let readyFrameWindow = null
+/** 本次载入从哪一刻开始算，用来给 demo_ready 打点报耗时 */
+let startedAt = 0
 
 /** 只接收本次挂载的 iframe 消息；重载到 DOM 更新之间保持关闭。 */
 const setFrame = (frame) => {
@@ -155,6 +158,9 @@ const clearHideTimer = () => {
 
 const hideLoading = () => {
   clearHideTimer()
+  if (loading.value && started.value) {
+    track('demo_ready', { seconds: String(Math.round((performance.now() - startedAt) / 1000)) })
+  }
   loading.value = false
   timedOut.value = false
 }
@@ -166,11 +172,14 @@ const armTimeout = () => {
   }, 15000)
 }
 
-const startDemo = () => {
+/** trigger：auto（滚到附近自动开）/ pointer / focus / button，只用于打点 */
+const startDemo = (trigger = 'button') => {
   if (!canEmbed.value || (started.value && !timedOut.value)) return
   cancelAutomaticStart()
   stopObserving()
   readyFrameWindow = null
+  track('demo_start', { trigger: started.value ? 'retry' : trigger })
+  startedAt = performance.now()
   if (started.value) frameKey.value += 1
   started.value = true
   timedOut.value = false
@@ -179,16 +188,16 @@ const startDemo = () => {
 }
 
 const maybeStartDemo = () => {
-  if (pageReady && nearViewport && !started.value && !document.hidden) startDemo()
+  if (pageReady && nearViewport && !started.value && !document.hidden) startDemo('auto')
 }
 
 /** 意图可以提前启动，但滚动时经过窗壳不算主动体验。 */
 const onPointerIntent = (event) => {
-  if (event.pointerType === 'mouse' && !timedOut.value) startDemo()
+  if (event.pointerType === 'mouse' && !timedOut.value) startDemo('pointer')
 }
 
 const onFocusIntent = () => {
-  if (!timedOut.value) startDemo()
+  if (!timedOut.value) startDemo('focus')
 }
 
 /**
@@ -406,7 +415,7 @@ onUnmounted(() => {
         <button
           v-if="canEmbed && (!started || timedOut)"
           type="button"
-          @click="startDemo"
+          @click="startDemo('button')"
         >{{ timedOut ? t('appShell.retry') : t('appShell.start') }}</button>
       </p>
     </figcaption>

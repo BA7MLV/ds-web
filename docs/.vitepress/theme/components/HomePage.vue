@@ -1,13 +1,14 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from '../i18n/index.js'
+import { track } from '../lib/analytics.js'
 import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
 import AppShell from './AppShell.vue'
 import HeroStarfield from './HeroStarfield.vue'
 import HomeDownload from './HomeDownload.vue'
 import StepFlow from './StepFlow.vue'
 
-const { t, tm } = useI18n()
+const { t, tm, locale } = useI18n()
 
 const GITHUB_REPO = 'helixnow/deep-student'
 const GITHUB_URL = `https://github.com/${GITHUB_REPO}`
@@ -231,7 +232,11 @@ onUnmounted(() => {
         <div class="t-stagger-line t-stagger-line--4 lp-hero__actions-line">
           <div class="lp-hero__actions">
             <HomeDownload />
-            <a href="/start" class="home-link lp-hero__more">
+            <a
+              href="/start"
+              class="home-link lp-hero__more"
+              @click="track('quickstart', { from: 'hero', locale })"
+            >
               {{ t('home.hero.quickStart') }}<span aria-hidden="true"> →</span>
             </a>
           </div>

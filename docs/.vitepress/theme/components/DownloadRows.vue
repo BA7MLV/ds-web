@@ -14,6 +14,7 @@
 import { computed, ref } from 'vue'
 import DlIcon from './DlIcon.vue'
 import { useI18n } from '../i18n/index.js'
+import { track } from '../lib/analytics.js'
 import { backupUrl, primaryUrl } from '../utils/download-channel.js'
 import { buildRows, formatSize, release } from '../utils/downloads.js'
 
@@ -37,8 +38,18 @@ const rows = computed(() => buildRows(props.group).map((item) => {
 /** 点过之后按钮文案变一下，给一个「确实点到了」的反馈 */
 const active = ref('')
 
-const onClick = (key) => {
+/** `backup` 为真表示点的是旁边那颗另一通道的按钮 */
+const onClick = (item, backup = false) => {
+  const key = backup ? `${item.key}-backup` : item.key
+  const url = backup ? item.backup : item.primary
   active.value = key
+  track('download', {
+    package: item.key,
+    channel: url === item.asset.url ? 'github' : 'mirror',
+    from: backup ? 'row-backup' : 'row',
+    locale: locale.value,
+    version: release?.version ?? ''
+  })
   window.setTimeout(() => {
     if (active.value === key) active.value = ''
   }, 1600)
@@ -67,7 +78,7 @@ const labelFor = (key, text) => (active.value === key ? '开始下载…' : text
         <a
           class="dl-btn"
           :href="item.primary"
-          @click="onClick(item.key)"
+          @click="onClick(item)"
         >
           <DlIcon name="download" />
           {{ labelFor(item.key, '下载') }}
@@ -76,7 +87,7 @@ const labelFor = (key, text) => (active.value === key ? '开始下载…' : text
           v-if="item.backup"
           class="dl-btn dl-btn--ghost"
           :href="item.backup"
-          @click="onClick(`${item.key}-backup`)"
+          @click="onClick(item, true)"
         >
           <DlIcon :name="item.backupIsGithub ? 'github' : 'cloudflare'" />
           {{ labelFor(`${item.key}-backup`, item.backupIsGithub ? 'GitHub' : '镜像下载') }}
