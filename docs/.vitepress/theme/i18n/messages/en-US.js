@@ -212,7 +212,7 @@ export default {
           title: 'Learning from your own material',
           lead: 'Learn around your own material, not just generic chat.',
           desc: 'Images, voice and files in; answers cite your sources down to the page; deep reasoning for hard questions.',
-          link: '/user-guide/01-chat-v2',
+          link: '/user-guide/chat',
           art: 'chat',
           alt: 'Character rendering of the chat view: an answer citing textbook pages 45, 47 and 52'
         },
@@ -221,7 +221,7 @@ export default {
           title: 'Mind maps',
           lead: 'Organise knowledge into structure.',
           desc: 'Generate a full knowledge structure from one sentence and edit it as you chat; recitation mode hides the key points so you can test yourself.',
-          link: '/user-guide/02-learning-hub-assets/05-mindmap',
+          link: '/user-guide/mindmap',
           art: 'mindmap',
           alt: 'Character rendering of a mind map: “Data-parallel training” branching into optimisation, the basic paradigm and the cost of synchronisation'
         },
@@ -230,7 +230,7 @@ export default {
           title: 'Question banks and practice',
           lead: 'Turn textbooks and exam papers into a drillable bank.',
           desc: 'Questions are generated per topic with answers and explanations, and the ones you tick go into a question set; practice is graded automatically and mastery is tracked per topic.',
-          link: '/user-guide/02-learning-hub-assets/03-question-bank',
+          link: '/user-guide/question-bank',
           art: 'quiz',
           alt: 'Character rendering of AI-generated questions: two tagged multiple-choice drafts with options and answers'
         },
@@ -239,7 +239,7 @@ export default {
           title: 'Anki card generation',
           lead: 'Turn understanding into cards.',
           desc: 'Say the word and cards get made, in bulk; flip to check, edit, then add them to your library or sync to Anki in one click.',
-          link: '/user-guide/03-chatanki',
+          link: '/user-guide/anki',
           art: 'anki',
           alt: 'Character rendering of card generation: a stack of Q&A cards above the “5 cards generated” progress'
         },
@@ -248,7 +248,7 @@ export default {
           title: 'Flashcard review',
           lead: 'Review without leaving the app.',
           desc: 'Built-in FSRS spaced repetition queues the cards due today; rate how well you remembered and the next review is rescheduled to match.',
-          link: '/user-guide/03-chatanki',
+          link: '/user-guide/flashcards',
           art: 'review',
           alt: 'Character rendering of a review session: the answer side of a card above Again, Hard, Good and Easy with their intervals'
         },
@@ -257,7 +257,7 @@ export default {
           title: 'Reading and translation',
           lead: 'Read the original, and understand it.',
           desc: 'Open PDF, Word and EPUB files; select text to explain, translate, save as a note or make a card; turn a passage into a sentence-by-sentence bilingual table.',
-          link: '/user-guide/02-learning-hub-assets/04-translation-essay',
+          link: '/user-guide/reading-translation',
           art: 'reading',
           alt: 'Character rendering of bilingual reading: an English source table aligned sentence by sentence with its Chinese translation'
         }

@@ -218,7 +218,7 @@ export default {
           title: '资料学习与智能对话',
           lead: '围绕你自己的材料学习，而不是通用聊天。',
           desc: '支持图片、语音和文件；回答带出处，标到原文页码；复杂问题切深度推理。',
-          link: '/user-guide/01-chat-v2',
+          link: '/user-guide/chat',
           art: 'chat',
           alt: '对话界面的字符画：按教材页码作答，段末标着第 45、47、52 页'
         },
@@ -227,7 +227,7 @@ export default {
           title: '知识导图',
           lead: '把知识整理成结构。',
           desc: '一句话生成完整知识体系，边聊边改；背诵模式一键遮住要点，自己默一遍。',
-          link: '/user-guide/02-learning-hub-assets/05-mindmap',
+          link: '/user-guide/mindmap',
           art: 'mindmap',
           alt: '知识导图的字符画：中心主题「数据并行训练」分出优化方向、基本范式和同步的代价'
         },
@@ -236,7 +236,7 @@ export default {
           title: '题目集与练习',
           lead: '把教材、试卷变成可练习的题库。',
           desc: '按知识点出题，带答案和解析，勾选后收进题目集；练习自动判分，掌握度按知识点追踪。',
-          link: '/user-guide/02-learning-hub-assets/03-question-bank',
+          link: '/user-guide/question-bank',
           art: 'quiz',
           alt: 'AI 出题结果的字符画：两道带知识点标签、选项和答案的单选题草稿'
         },
@@ -245,7 +245,7 @@ export default {
           title: 'Anki 智能制卡',
           lead: '把理解变成卡片。',
           desc: '说一句话就能制卡，批量生成；翻面检查、改好后加入卡片库，或一键同步到 Anki。',
-          link: '/user-guide/03-chatanki',
+          link: '/user-guide/anki',
           art: 'anki',
           alt: '制卡界面的字符画：一叠问答卡，下面是已生成 5 张卡片的进度'
         },
@@ -254,7 +254,7 @@ export default {
           title: '闪卡复习',
           lead: '复习也在同一个应用里。',
           desc: '内置 FSRS 间隔重复：到期的卡自动排进今日复习，按记得的程度评分，下一次复习时间随之调整。',
-          link: '/user-guide/03-chatanki',
+          link: '/user-guide/flashcards',
           art: 'review',
           alt: '复习界面的字符画：卡片背面的答案，下面是重来、困难、良好、简单四个评分和对应间隔'
         },
@@ -263,7 +263,7 @@ export default {
           title: '文档阅读与翻译',
           lead: '读原文，也读得懂原文。',
           desc: 'PDF、Word、EPUB 直接阅读，划词解释、翻译、存笔记或制卡；整段材料生成逐句双语对照。',
-          link: '/user-guide/02-learning-hub-assets/04-translation-essay',
+          link: '/user-guide/reading-translation',
           art: 'reading',
           alt: '双语阅读的字符画：英文原文与中文译文逐句对照的表格'
         }

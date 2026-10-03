@@ -1,0 +1,82 @@
+---
+description: "面向最终用户的完整使用手册，覆盖桌面端（Windows / macOS / Linux）与移动端（Android）。在线版：https://deepstudent.cn/user-guide/"
+editLink: false
+---
+
+# Deep Student 用户指南
+
+> 面向最终用户的完整使用手册，覆盖桌面端（Windows / macOS / Linux）与移动端（Android）。
+>
+> 在线版：https://deepstudent.cn/user-guide/
+
+## 新用户从这里开始
+
+- **[01 · 快速上手](/start)**：10 分钟跑通「配模型 → 导资料 → 带着资料提问 → 生成导图、卡片、题目」的核心流程。
+- **[学习桌面](/user-guide/workbench)**：桌面端的默认界面。Dock、窗口平铺、状态栏和快捷键都在这一章。
+
+## 章节目录
+
+### 对话与调研
+
+| 章节 | 内容 |
+|---|---|
+| [02 · AI对话与会话管理](/user-guide/chat) | 发消息、附件与引用、模型选择与多模型对比、推理模式、权限三档（问一问/想一想/做一做）、课题分组、会话搜索与导出 |
+| [03 · 深度调研与智能记忆](/user-guide/research-memory) | 多步骤联网调研模式、搜索引擎配置、AI 记忆的提取/管理/隐私控制 |
+
+### 资料与阅读
+
+| 章节 | 内容 |
+|---|---|
+| [04 · 学习资源中心](/user-guide/learning-hub) | 导入资料、文件夹与标签页管理、向量化索引、回收站 |
+| [05 · 文档阅读与翻译](/user-guide/reading-translation) | PDF/DOCX/EPUB 阅读、高亮批注、书签、选页问答、翻译工作台与领域预设 |
+| [06 · 论文搜索](/user-guide/paper-search) | arXiv/OpenAlex 检索、批量下载入库、引用格式、DOI 解析 |
+
+### 笔记与创作
+
+| 章节 | 内容 |
+|---|---|
+| [07 · 笔记](/user-guide/notes) | 富文本编辑、双链与引用、笔记模板、AI 画布编辑 |
+| [08 · 知识导图](/user-guide/mindmap) | 一句话生成导图、导图/大纲双视图、背诵模式、导入导出 |
+| [09 · 作文批改](/user-guide/essay) | 高考/雅思/托福等多场景批改、标注与评分、逐句润色 |
+| [10 · 效率工具](/user-guide/productivity) | 待办与定时任务、番茄钟与沉浸专注、命令面板、语音输入 |
+
+### 练习与记忆
+
+| 章节 | 内容 |
+|---|---|
+| [11 · 题库与练习](/user-guide/question-bank) | 建题库（手动/识别导入/CSV/AI 出题）、九种练习模式、自动判分、错题与掌握度 |
+| [12 · Anki制卡与模板](/user-guide/anki) | 对话制卡、任务看板、模板编辑器、导出 APKG 与 AnkiConnect 同步 |
+| [13 · 闪卡复习](/user-guide/flashcards) | FSRS 间隔重复、复习会话、卡片库与统计 |
+
+### 配置与数据
+
+| 章节 | 内容 |
+|---|---|
+| [14 · 模型与供应商配置](/user-guide/models) | 13 家预置供应商、自建接口与本地模型、API 密钥、模型分配与嵌入维度、硅基流动一键分配 |
+| [15 · 技能与MCP扩展](/user-guide/skills-mcp) | 技能激活与自定义、community skill marketplace 技能市场、MCP 服务器接入 |
+| [16 · 数据管理与云同步](/user-guide/data-sync) | 本地备份与恢复、云同步（实验性：桌面 WebDAV/S3/FTP，Android 仅 WebDAV）、隐私控制、审计 |
+
+### 移动端
+
+| 章节 | 内容 |
+|---|---|
+| [17 · 移动端指南](/user-guide/mobile) | 移动端导航结构、手势与返回键、桌面/移动功能可用性对照表 |
+
+## 阅读说明
+
+- 全书以桌面端为基准。桌面端默认是「学习桌面」（应用在底部 Dock 里，开成窗口）；在设置里关掉学习桌面后是经典布局（左侧导航 + 单个页面）。两种布局里功能一样，只是入口位置不同，正文按学习桌面描述，必要时注明经典布局的入口。
+- 每章末尾的「📱 移动端说明」小节介绍该功能在 Android 上的入口、手势和限制。移动端与桌面端最重要的差异（导航方式、MCP 限制、没有学习桌面等）汇总在 [17 · 移动端指南](/user-guide/mobile) 的功能对照表里。
+
+## 约定
+
+- 界面名称一律使用应用简体中文界面的原文，例如「资源库」「知识库索引」「问一问 / 想一想 / 做一做」。
+- 标注「（实验性）」的功能可能在后续版本中调整。
+- 快捷键写作 `⌘` 时，Windows / Linux 对应 `Ctrl`；写作 `Ctrl` 时，macOS 对应 `⌘`。学习桌面的窗口快捷键在 macOS 上 `Ctrl+Alt` 对应 `⌘⌥`。
+
+## 反馈
+
+发现文档与应用行为不符、或有想补充的内容？欢迎到 [GitHub Issues](https://github.com/helixnow/deep-student/issues) 反馈。
+
+---
+
+> 本页同步自主仓库 [`docs/user-guide/README.md`](https://github.com/helixnow/deep-student/blob/main/docs/user-guide/README.md)。发现文档和应用对不上，欢迎在 [GitHub Issues](https://github.com/helixnow/deep-student/issues) 反馈。

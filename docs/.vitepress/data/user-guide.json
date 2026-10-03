@@ -1,0 +1,202 @@
+{
+  "source": {
+    "repo": "helixnow/deep-student",
+    "path": "docs/user-guide",
+    "commit": "be188e1ff8f3ba46a14f3529aa36f29769df0349",
+    "dirty": false,
+    "syncedAt": "2026-10-03T07:26:29.839Z"
+  },
+  "pages": [
+    {
+      "file": "README.md",
+      "path": "/user-guide/",
+      "title": "用户指南总览"
+    },
+    {
+      "file": "01-快速上手.md",
+      "path": "/start",
+      "title": "快速上手"
+    },
+    {
+      "file": "18-学习桌面.md",
+      "path": "/user-guide/workbench",
+      "title": "学习桌面"
+    },
+    {
+      "file": "02-AI对话与会话管理.md",
+      "path": "/user-guide/chat",
+      "title": "AI 对话与会话管理"
+    },
+    {
+      "file": "03-深度调研与智能记忆.md",
+      "path": "/user-guide/research-memory",
+      "title": "深度调研与智能记忆"
+    },
+    {
+      "file": "04-学习资源中心.md",
+      "path": "/user-guide/learning-hub",
+      "title": "学习资源中心"
+    },
+    {
+      "file": "05-文档阅读与翻译.md",
+      "path": "/user-guide/reading-translation",
+      "title": "文档阅读与翻译"
+    },
+    {
+      "file": "06-论文搜索.md",
+      "path": "/user-guide/paper-search",
+      "title": "论文搜索"
+    },
+    {
+      "file": "07-笔记.md",
+      "path": "/user-guide/notes",
+      "title": "笔记"
+    },
+    {
+      "file": "08-知识导图.md",
+      "path": "/user-guide/mindmap",
+      "title": "知识导图"
+    },
+    {
+      "file": "09-作文批改.md",
+      "path": "/user-guide/essay",
+      "title": "作文批改"
+    },
+    {
+      "file": "10-效率工具.md",
+      "path": "/user-guide/productivity",
+      "title": "待办、番茄钟与命令面板"
+    },
+    {
+      "file": "11-题库与练习.md",
+      "path": "/user-guide/question-bank",
+      "title": "题库与练习"
+    },
+    {
+      "file": "12-Anki制卡与模板.md",
+      "path": "/user-guide/anki",
+      "title": "Anki 制卡与模板"
+    },
+    {
+      "file": "13-闪卡复习.md",
+      "path": "/user-guide/flashcards",
+      "title": "闪卡复习"
+    },
+    {
+      "file": "14-模型与供应商配置.md",
+      "path": "/user-guide/models",
+      "title": "模型与供应商配置"
+    },
+    {
+      "file": "15-技能与MCP扩展.md",
+      "path": "/user-guide/skills-mcp",
+      "title": "技能与 MCP 扩展"
+    },
+    {
+      "file": "16-数据管理与云同步.md",
+      "path": "/user-guide/data-sync",
+      "title": "数据管理与云同步"
+    },
+    {
+      "file": "17-移动端指南.md",
+      "path": "/user-guide/mobile",
+      "title": "移动端指南"
+    }
+  ],
+  "groups": [
+    {
+      "text": "对话与调研",
+      "items": [
+        {
+          "text": "AI 对话与会话管理",
+          "link": "/user-guide/chat"
+        },
+        {
+          "text": "深度调研与智能记忆",
+          "link": "/user-guide/research-memory"
+        }
+      ]
+    },
+    {
+      "text": "资料与阅读",
+      "items": [
+        {
+          "text": "学习资源中心",
+          "link": "/user-guide/learning-hub"
+        },
+        {
+          "text": "文档阅读与翻译",
+          "link": "/user-guide/reading-translation"
+        },
+        {
+          "text": "论文搜索",
+          "link": "/user-guide/paper-search"
+        }
+      ]
+    },
+    {
+      "text": "笔记与创作",
+      "items": [
+        {
+          "text": "笔记",
+          "link": "/user-guide/notes"
+        },
+        {
+          "text": "知识导图",
+          "link": "/user-guide/mindmap"
+        },
+        {
+          "text": "作文批改",
+          "link": "/user-guide/essay"
+        },
+        {
+          "text": "待办、番茄钟与命令面板",
+          "link": "/user-guide/productivity"
+        }
+      ]
+    },
+    {
+      "text": "练习与记忆",
+      "items": [
+        {
+          "text": "题库与练习",
+          "link": "/user-guide/question-bank"
+        },
+        {
+          "text": "Anki 制卡与模板",
+          "link": "/user-guide/anki"
+        },
+        {
+          "text": "闪卡复习",
+          "link": "/user-guide/flashcards"
+        }
+      ]
+    },
+    {
+      "text": "配置与数据",
+      "items": [
+        {
+          "text": "模型与供应商配置",
+          "link": "/user-guide/models"
+        },
+        {
+          "text": "技能与 MCP 扩展",
+          "link": "/user-guide/skills-mcp"
+        },
+        {
+          "text": "数据管理与云同步",
+          "link": "/user-guide/data-sync"
+        }
+      ]
+    },
+    {
+      "text": "移动端",
+      "items": [
+        {
+          "text": "移动端指南",
+          "link": "/user-guide/mobile"
+        }
+      ]
+    }
+  ]
+}

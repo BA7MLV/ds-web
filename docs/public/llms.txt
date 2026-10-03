@@ -7,18 +7,19 @@ DeepStudent is an open-source, local-first AI study workspace built with Tauri 2
 ## 产品与使用边界
 
 - 学习资料、笔记、聊天记录与索引默认存储在用户设备上。本地优先不等于所有功能离线：AI 请求会将所需内容发送给用户配置的模型服务；外部搜索、MCP 工具与主动开启的云同步也可能涉及外部服务。
-- 软件免费开源；AI 模型服务需自行配置 API 密钥，服务商可能单独收费。模型选择与配置见[快速上手](https://deepstudent.cn/start)和[系统设置](https://deepstudent.cn/user-guide/04-settings)。
+- 软件免费开源；AI 模型服务需自行配置 API 密钥，服务商可能单独收费。模型选择与配置见[快速上手](https://deepstudent.cn/start)和[模型与供应商配置](https://deepstudent.cn/user-guide/models)。
 - 项目支持 macOS、Windows、Linux 与 Android。各版本实际提供的安装包以[下载页](https://deepstudent.cn/download)及 [GitHub Releases](https://github.com/helixnow/deep-student/releases) 为准；iOS 需自行构建。
 - 资料问答需要导入资料并完成索引；扫描 PDF 还需要 OCR 配置。AI 回答和引用应与原始资料核对。
 - Anki 同步需运行本机 Anki 并安装 AnkiConnect，也可导出 APKG 手动导入。
-- WebDAV / S3 云同步为实验性能力，使用前应备份数据，详见[备份与同步](https://deepstudent.cn/user-guide/05-data-management)。
+- WebDAV / S3 云同步为实验性能力，使用前应备份数据，详见[数据管理与云同步](https://deepstudent.cn/user-guide/data-sync)。
 
 ## 入门与帮助
 
 - [产品介绍](https://deepstudent.cn/what-is-deepstudent)：DeepStudent 是什么、主要学习场景与使用前提。
 - [下载与安装](https://deepstudent.cn/download)：当前版本的安装包、下载渠道与系统要求。
 - [快速上手](https://deepstudent.cn/start)：首次启动、模型服务、API 密钥与第一次资料问答。
-- [用户指南目录](https://deepstudent.cn/user-guide/README)：全部功能指南与推荐阅读顺序。
+- [学习桌面](https://deepstudent.cn/user-guide/workbench)：桌面端默认的窗口化界面，Dock、窗口平铺、状态栏、快捷键与退回经典布局。
+- [用户指南总览](https://deepstudent.cn/user-guide/)：全部功能指南与推荐阅读顺序。
 - [常见问题](https://deepstudent.cn/A-Q)：安装、模型连接、资料检索、Anki 制卡与数据隐私。
 - [支持](https://deepstudent.cn/support)：社区、问题反馈与联系邮箱。
 - [关于 DeepStudent](https://deepstudent.cn/about)：项目定位、开源仓库与联系方式。
@@ -26,20 +27,22 @@ DeepStudent is an open-source, local-first AI study workspace built with Tauri 2
 
 ## 主要功能指南
 
-- [智能对话](https://deepstudent.cn/user-guide/01-chat-v2)：会话管理、资料引用、工具调用和技能。
-- [学习资源](https://deepstudent.cn/user-guide/02-learning-hub)：资料导入、文件管理、全文与向量检索。
-- [笔记](https://deepstudent.cn/user-guide/02-learning-hub-assets/01-notes)：Markdown 编辑与 AI 辅助写作。
-- [教材与阅读](https://deepstudent.cn/user-guide/02-learning-hub-assets/02-textbooks)：PDF 阅读、OCR 与索引。
-- [题目集与练习](https://deepstudent.cn/user-guide/02-learning-hub-assets/03-question-bank)：试卷识别、拆题、解析与复习。
-- [翻译与作文](https://deepstudent.cn/user-guide/02-learning-hub-assets/04-translation-essay)：术语表、逐段对照与作文批改。
-- [知识导图](https://deepstudent.cn/user-guide/02-learning-hub-assets/05-mindmap)：导图与大纲视图、导入导出及背诵模式。
-- [Anki 智能制卡](https://deepstudent.cn/user-guide/03-chatanki)：对话制卡、模板、AnkiConnect 与 APKG。
-- [待办与番茄钟](https://deepstudent.cn/user-guide/08-todo-pomodoro)：待办列表、专注计时与白噪声。
-- [命令面板与快捷键](https://deepstudent.cn/user-guide/06-command-palette)：功能检索与键盘操作。
-- [技能系统](https://deepstudent.cn/user-guide/07-skills)：技能激活、工具注入与自定义技能。
-- [智能记忆](https://deepstudent.cn/user-guide/09-memory)：个人记忆的配置、编辑、关闭与数据使用。
-- [系统设置](https://deepstudent.cn/user-guide/04-settings)：模型分配、MCP、外部搜索与界面配置。
-- [备份与同步](https://deepstudent.cn/user-guide/05-data-management)：本地目录、备份恢复、迁移与实验性云同步。
+- [AI 对话与会话管理](https://deepstudent.cn/user-guide/chat)：发消息、附件与引用、模型选择与多模型对比、推理模式、权限预设、课题分组、会话搜索与导出。
+- [深度调研与智能记忆](https://deepstudent.cn/user-guide/research-memory)：多步骤联网调研、搜索引擎配置，AI 记忆的提取、管理与隐私控制。
+- [学习资源中心](https://deepstudent.cn/user-guide/learning-hub)：导入资料、文件夹与标签页管理、向量化索引、回收站。
+- [文档阅读与翻译](https://deepstudent.cn/user-guide/reading-translation)：PDF / DOCX / EPUB 阅读、高亮批注、书签、选页问答、翻译工作台与领域预设。
+- [论文搜索](https://deepstudent.cn/user-guide/paper-search)：arXiv / OpenAlex 检索、批量下载入库、引用格式、DOI 解析。
+- [笔记](https://deepstudent.cn/user-guide/notes)：富文本编辑、双链与引用、笔记模板、AI 画布编辑。
+- [知识导图](https://deepstudent.cn/user-guide/mindmap)：一句话生成导图、导图 / 大纲双视图、背诵模式、导入导出。
+- [作文批改](https://deepstudent.cn/user-guide/essay)：高考 / 雅思 / 托福等多场景批改、标注与评分、逐句润色。
+- [待办、番茄钟与命令面板](https://deepstudent.cn/user-guide/productivity)：待办与定时任务、番茄钟与沉浸专注、命令面板、语音输入。
+- [题库与练习](https://deepstudent.cn/user-guide/question-bank)：建题库（手动 / 识别导入 / CSV / AI 出题）、多种练习模式、自动判分、错题与掌握度。
+- [Anki 制卡与模板](https://deepstudent.cn/user-guide/anki)：对话制卡、任务看板、模板编辑器、导出 APKG 与 AnkiConnect 同步。
+- [闪卡复习](https://deepstudent.cn/user-guide/flashcards)：应用内 FSRS 间隔重复、复习会话、卡片库与统计。
+- [模型与供应商配置](https://deepstudent.cn/user-guide/models)：13 家预置供应商、自建接口与本地模型（Ollama 等免 API 密钥）、模型分配与嵌入维度、硅基流动一键分配。
+- [技能与 MCP 扩展](https://deepstudent.cn/user-guide/skills-mcp)：技能激活与自定义、技能市场、MCP 服务器接入。
+- [数据管理与云同步](https://deepstudent.cn/user-guide/data-sync)：本地备份与恢复、实验性云同步（桌面 WebDAV / S3 / FTP，Android 仅 WebDAV）、隐私控制。
+- [移动端指南](https://deepstudent.cn/user-guide/mobile)：移动端导航、手势与返回键、桌面与移动功能对照。
 
 ## 规范来源与机器可读版本
 
