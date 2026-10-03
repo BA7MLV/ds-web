@@ -123,6 +123,19 @@ export default {
     },
 
     /**
+     * Study desktop: what the desktop app opens to (desktop.workbenchMode defaults to true in the app).
+     * art maps to docs/public/features/<art>-light|dark.webp, a 1440 × 900 full-screen shot
+     */
+    desktop: {
+      title: 'One study desktop, apps side by side.',
+      lede: 'The desktop app opens to a study desktop: launch Chat, Library and your study apps from the Dock, arrange or tile windows side by side, and keep your agenda and AI study briefing on the desktop.',
+      more: 'About the study desktop (Chinese)',
+      link: '/user-guide/workbench',
+      art: 'workbench',
+      alt: 'Screenshot of the study desktop: a chat window with freshly generated Anki cards, today’s flashcard review in the middle, agenda and AI study briefing widgets on the right, and the Dock below'
+    },
+
+    /**
      * How it works: the block has no heading at all — eyebrow, lede and `title`
      * are gone. The three `label`s on the segmented control are the step headings
      * (see StepFlow.vue), so `label` has no other consumer; don't render it again

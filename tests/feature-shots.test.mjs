@@ -11,8 +11,9 @@ const FEATURES = new URL('../docs/public/features/', import.meta.url)
  * 首页的真实界面截图都是 scripts/gen-features-live.mjs 从演示里截的：同一取景框深浅各一张。
  * 文案里点到的场景缺一张，那扇窗就是空白，或者切到深色主题时空白。
  */
-/** 功能区六扇窗 + 「使用流程」带画面的那几步（steps[].art） */
+/** 学习桌面那一整屏 + 功能区六扇窗 + 「使用流程」带画面的那几步（steps[].art） */
 const allShots = (words) => [
+  words.home.desktop.art,
   ...words.home.features.scenes.map((scene) => scene.art),
   ...words.home.flow.steps.filter((step) => 'art' in step).map((step) => step.art)
 ]

@@ -129,6 +129,19 @@ export default {
     },
 
     /**
+     * 学习桌面：桌面端打开就是它（主仓库 desktop.workbenchMode 缺省为 true）。
+     * art 对应 docs/public/features/<art>-light|dark.webp，是 1440 × 900 的整屏截图
+     */
+    desktop: {
+      title: '一张学习桌面，应用并排摆开。',
+      lede: '桌面端打开就是学习桌面：从 Dock 打开对话、资源库和各个学习应用，窗口自由摆放、平铺、并排对比，日程和 AI 学习简报留在桌面上。',
+      more: '了解学习桌面',
+      link: '/user-guide/workbench',
+      art: 'workbench',
+      alt: '学习桌面截图：左边的对话窗口里是刚生成的 Anki 卡片，中间是闪卡的今日复习，右边是日程和 AI 学习简报小组件，底部是 Dock'
+    },
+
+    /**
      * 使用流程：区块里没有任何标题 —— 眉标、导语、`title` 都已删掉。
      * 分段控件上的三个 `label` 就是每一步的标题（见 StepFlow.vue），
      * 所以 `label` 只有这一个用途，别再往面板里渲染一遍。

@@ -243,10 +243,31 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ② 想明白 / 记得住：不对称双卡，点 + 打开整页浮层（见 StepFlow.vue） -->
+    <!-- ② 学习桌面：桌面端打开就是它，放一整屏真实截图（对话、闪卡两个窗口并排 + 小组件 + Dock） -->
+    <section id="desktop" class="lp-block lp-desk">
+      <div class="lp-wrap">
+        <div class="lp-head lp-head--center">
+          <h2 class="lp-title">{{ t('home.desktop.title') }}</h2>
+          <p class="lp-lede">{{ t('home.desktop.lede') }}</p>
+          <a :href="t('home.desktop.link')" class="home-link lp-desk__link t-learn">
+            {{ t('home.desktop.more') }}
+            <span class="t-learn-chevron" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path class="t-learn-arm t-learn-arm-top" d="M6 4L10 8" />
+                <path class="t-learn-arm t-learn-arm-bot" d="M10 8L6 12" />
+              </svg>
+            </span>
+          </a>
+        </div>
+        <FeatureShot class="lp-desk__shot" :name="t('home.desktop.art')" :alt="t('home.desktop.alt')" />
+      </div>
+    </section>
+
+    <!-- ③ 想明白 / 记得住：不对称双卡，点 + 打开整页浮层（见 StepFlow.vue） -->
     <StepFlow />
 
-    <!-- ③ 功能展示：一张轮播卡（左文案 / 右真实界面截图），卡下圆点 + 左右箭头 -->
+    <!-- ④ 功能展示：一张轮播卡（左文案 / 右真实界面截图），卡下圆点 + 左右箭头 -->
     <section id="features" ref="featuresEl" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
@@ -332,7 +353,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ④ 隐私与数据：5fr / 7fr -->
+    <!-- ⑤ 隐私与数据：5fr / 7fr -->
     <section id="privacy" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-split">
@@ -350,7 +371,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ⑤ 用户评价：素材补齐前整块隐藏，开关见脚本里的 SHOW_VOICES -->
+    <!-- ⑥ 用户评价：素材补齐前整块隐藏，开关见脚本里的 SHOW_VOICES -->
     <section v-if="SHOW_VOICES" id="voices" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
@@ -368,7 +389,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ⑥ 常见问题：胶囊折叠条 -->
+    <!-- ⑦ 常见问题：胶囊折叠条 -->
     <section id="faq" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">

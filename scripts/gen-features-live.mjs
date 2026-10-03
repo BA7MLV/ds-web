@@ -33,6 +33,12 @@ const CHROME = process.env.CHROME || '/Applications/Google Chrome.app/Contents/M
 const CWEBP = process.env.CWEBP || 'cwebp'
 
 /**
+ * 学习桌面模式下才加载的资源（壁纸、应用图标、几枚 Dock 图标），镜像爬虫抓不到：
+ * 从主仓库的 public/ 和演示构建产物 dist-demo/ 里补。主仓库路径由 DEEP_STUDENT_DIR 给
+ */
+const WORKBENCH_ASSETS = /\/(wallpapers\/|app-icon\.png|demo\/assets\/(todo|notes|exam|essay)-)/
+
+/**
  * 每扇窗：在哪个剧本会话里、取景框怎么定位。
  * anchor 按文字或选择器找到一块界面（两者都给 = 选择器匹配里文字正好相同的那个）：
  * block 时再往上找到带边框的容器；取景框左上角 = 锚点左上角 + offset，
@@ -89,6 +95,19 @@ const SCENES = [
     // 正文栏 16–328，取景框 320 宽左右各让 4px：「AI 生成」那条框差不多和栏一样宽，偏一边就贴到框边
     offset: { x: -4, y: -12 }
   },
+  // 学习桌面（桌面端的默认界面）：演示壳把它写死成经典布局，这里在页面脚本跑之前把开关钉回学习桌面，
+  // 镜像没抓到的壁纸和 Dock 图标从主仓库补（见 WORKBENCH_ASSETS），再把对话、闪卡两个窗口并排摆好。
+  // 取景框就是整个窗口：桌面本来就是一整屏
+  {
+    name: 'workbench',
+    scene: 'demo-anki-cards',
+    ready: { text: '学习桌面' },
+    init: enableWorkbench,
+    assets: WORKBENCH_ASSETS,
+    prepare: prepareWorkbench,
+    viewport: { width: 1440, height: 900 },
+    anchor: { viewport: true }
+  },
   {
     name: 'flow-review',
     scene: 'demo-weekly-report',
@@ -120,6 +139,93 @@ const REVIEW_CARDS = [
     back: 'x = 0 对应 u = 1，x = π 对应 u = −1，du = −sin x dx。\n在 [0, π] 上 sin x ≥ 0，原式转为 ∫₋₁¹ √(1 − u²) du = π/2。'
   }
 ]
+
+/**
+ * 页面脚本执行前：放开演示壳的视图守卫，把 desktop.workbenchMode 钉成 true ——
+ * 演示入口会往 localStorage 写 'false'，mock IPC 的设置表里也是 'false'，两处都改。
+ * mock IPC 装上时会给 __TAURI_INTERNALS__.invoke 赋值，这里先占住那个对象，赋值时套一层。
+ * 深色截图换成壁纸预设里最暗的 alpine-lake：默认的 mountain-mist 是浅色雾山，
+ * 深色主题的小组件和菜单栏玻璃压在上面，字和底色几乎一样亮
+ */
+function enableWorkbench() {
+  const dark = new URLSearchParams(window.location.search).get('theme') === 'dark'
+  const settings = {
+    'desktop.workbenchMode': 'true',
+    ...(dark ? { 'desktop.workbenchWallpaper': JSON.stringify({ kind: 'theme', value: 'alpine-lake' }) } : {})
+  }
+  Object.defineProperty(window, '__DS_DEMO_SHELL__', { configurable: true, get: () => false, set: () => {} })
+  const setItem = window.Storage.prototype.setItem
+  window.Storage.prototype.setItem = function (key, value) {
+    return setItem.call(this, key, key === 'desktop.workbenchMode' ? 'true' : value)
+  }
+  const internals = window.__TAURI_INTERNALS__ || {}
+  let current = null
+  Object.defineProperty(internals, 'invoke', {
+    configurable: true,
+    enumerable: true,
+    get: () => current,
+    // 每次赋值只包一层、包住的是当次赋进来的那个函数：应用之后再自己套壳也不会互相递归
+    set: (fn) => {
+      current = (cmd, args, options) =>
+        cmd === 'get_setting' && args?.key in settings ? Promise.resolve(settings[args.key]) : fn(cmd, args, options)
+    }
+  })
+  window.__TAURI_INTERNALS__ = internals
+}
+
+/**
+ * 在页面里跑：对话窗口（剧本会话「高数错题 → Anki 卡片」）在左、闪卡「今日复习」在中，右边留出日程和学习简报小组件。
+ * 窗口总线和窗口仓库是应用模块里的单例，按已加载的 chunk 地址再 import 一次拿到同一份。
+ * 演示里总线没被启用（真机上由 AgentBridge 打开），这里手动打开，不然开窗会退回经典布局的导航
+ */
+async function arrangeWorkbench() {
+  const urls = window.performance.getEntriesByType('resource').map((e) => e.name).filter((u) => /\/(App|WorkbenchDesktop)-[\w-]+\.js$/.test(u))
+  let bus = null
+  let store = null
+  for (const url of urls) {
+    for (const value of Object.values(await import(url))) {
+      if (!bus && value && typeof value === 'object' && typeof value.launch === 'function' && typeof value.setEnabled === 'function') bus = value
+      if (!store && typeof value === 'function' && typeof value.getState === 'function' && typeof value.getState()?.moveWindow === 'function') store = value
+    }
+  }
+  if (!bus || !store) throw new Error('找不到学习桌面的窗口总线 / 窗口仓库')
+  const wait = (ms) => new Promise((done) => setTimeout(done, ms))
+  bus.setEnabled(true)
+  const cards = bus.launch({ typeId: 'flashcards', reason: 'api' })
+  await wait(2500)
+  const chat = bus.launch({ typeId: 'chat', instanceKey: 'demo-anki-cards', reason: 'api' })
+  await wait(3000)
+  const state = store.getState()
+  state.moveWindow(chat, { x: 24, y: 20, w: 596, h: 700 })
+  state.moveWindow(cards, { x: 636, y: 20, w: 436, h: 560 })
+  // 真机上窗口标题跟着会话名走，演示里会话元数据没回填，标题停在「新对话」
+  state.setTitle(chat, '高数错题 → Anki 卡片')
+  state.focusWindow(chat)
+  // 会话内容是窗口开出来之后才异步载入的，等卡片轮播出现再动它
+  let slides = []
+  for (const end = Date.now() + 30000; !slides.length; await wait(250)) {
+    if (Date.now() > end) throw new Error('学习桌面的对话窗口 30 秒内没载入卡片')
+    slides = [...document.querySelectorAll('.wb-window .card-3d')].filter((slide) => slide.getBoundingClientRect().height > 0)
+  }
+  await wait(1500)
+  // 卡片轮播和功能区 Anki 那扇一样只留正中那张：后面几张被它挡住半边，看着像截断的字
+  const z = (el) => Number(getComputedStyle(el).zIndex) || 0
+  const front = slides.reduce((top, slide) => (z(slide) > z(top) ? slide : top), slides[0])
+  for (const slide of slides) if (slide !== front) slide.style.visibility = 'hidden'
+  // 对话窗口停在会话末尾，卡片预览被顶出窗口：只滚对话自己的滚动区，让卡片离内容区上沿 44px ——
+  // 再往上，卡片下面那段回复的第一行就会被输入框拦腰挡住半截
+  for (let cur = front?.parentElement; cur; cur = cur.parentElement) {
+    if (/(auto|scroll)/.test(getComputedStyle(cur).overflowY) && cur.scrollHeight > cur.clientHeight) {
+      cur.scrollTop += front.getBoundingClientRect().top - cur.getBoundingClientRect().top - 44
+      break
+    }
+  }
+}
+
+async function prepareWorkbench(page) {
+  await page.evaluate(mockFsrs, REVIEW_CARDS)
+  await page.evaluate(arrangeWorkbench)
+}
 
 function unlockViews() {
   Object.defineProperty(window, '__DS_DEMO_SHELL__', { configurable: true, get: () => false, set: () => {} })
@@ -256,6 +362,7 @@ async function waitUntilSettled(page, anchor) {
  * 文字可能被拆成好几个文本节点，所以按元素找包含这段文字的最深那个。
  */
 function locateWindow({ anchor, offset = { x: 0, y: 0 }, size, probe, settled }) {
+  if (anchor.viewport) return probe ? document.readyState === 'complete' : { x: 0, y: 0, width: size.width, height: size.height }
   let els = []
   if (anchor.selector) {
     els = [...document.querySelectorAll(anchor.selector)]
@@ -649,6 +756,14 @@ async function main() {
           colorScheme: theme
         })
         if (spec.init) await context.addInitScript(spec.init)
+        if (spec.assets) {
+          const app = process.env.DEEP_STUDENT_DIR
+          if (!app) throw new Error(`${spec.name} 要用主仓库补演示镜像里缺的资源：DEEP_STUDENT_DIR=/path/to/deep-student node scripts/gen-features-live.mjs ${spec.name}`)
+          await context.route(spec.assets, (route) => {
+            const path = new URL(route.request().url()).pathname
+            return route.fulfill({ path: path.startsWith('/demo/') ? join(app, 'dist-demo', path.slice(6)) : join(app, 'public', path) })
+          })
+        }
         const page = await context.newPage()
         await page.goto(`${server.origin}/demo/index.html?theme=${theme}&scene=${spec.scene}`, { waitUntil: 'load' })
         await waitUntilSettled(page, spec.ready || spec.anchor)

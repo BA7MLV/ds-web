@@ -43,6 +43,9 @@
     按取景框截深浅两张 2 倍图。取景框尺寸写在 `theme/utils/feature-shot.js`（生成器、`FeatureShot.vue`、测试共用一份），
     运行时 `theme/components/FeatureShot.vue` 两张都进 SSR、按 `<html>.dark` 只显示一张。（9 月底那版字符画已整个去掉。）
     闪卡复习不在聊天页，脚本会放开演示壳的视图守卫、在 mock IPC 外补几条 FSRS 命令。
+    首页「学习桌面」那一整屏（`workbench`）：演示壳写死经典布局，脚本在页面脚本前把开关钉回学习桌面、
+    手动启用窗口总线，再并排摆对话和闪卡两个窗口；壁纸和几枚 Dock 图标镜像里没有，要从主仓库补 ——
+    重出这一张得带 `DEEP_STUDENT_DIR=/path/to/deep-student`（读它的 `public/` 和 `dist-demo/`）。
     依赖 devDependency `playwright-core` + 本机 Chrome 与 cwebp。
     **取景框不许切开界面**：框边压到一行字、一张卡片 / 胶囊 / 图标，截出来就是半句话、少条边的残图。
     生成器会把压在上下两条边上的块（连同它下面 / 上面的内容）截图前藏掉、框里留白；压在左右两条边上的、

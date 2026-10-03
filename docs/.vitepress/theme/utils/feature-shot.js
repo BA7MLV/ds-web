@@ -10,7 +10,9 @@ export const featureShot = (name, dark) => `/features/${name}-${dark ? 'dark' : 
  */
 const SIZES = {
   'flow-think': { width: 320, height: 336 },
-  'flow-review': { width: 592, height: 304 }
+  'flow-review': { width: 592, height: 304 },
+  /* 学习桌面是一整屏，取景框就是 1440 × 900 的整个窗口 */
+  workbench: { width: 1440, height: 900 }
 }
 export const shotSize = (name) => SIZES[name] || { width: 592, height: 416 }
 

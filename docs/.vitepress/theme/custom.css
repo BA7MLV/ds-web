@@ -1107,7 +1107,8 @@ a.lp-quote__handle:hover {
   margin-top: 1.3rem;
 }
 
-.lp-fcard__link {
+.lp-fcard__link,
+.lp-desk__link {
   display: inline-flex;
   align-items: center;
   gap: 2px;
@@ -1118,17 +1119,45 @@ a.lp-quote__handle:hover {
   text-decoration: none;
 }
 
-.dark .lp-fcard__link {
+.dark .lp-fcard__link,
+.dark .lp-desk__link {
   color: #2997ff;
 }
 
-.lp-fcard__link .t-learn-chevron svg {
+.lp-fcard__link .t-learn-chevron svg,
+.lp-desk__link .t-learn-chevron svg {
   width: 16px;
   height: 16px;
 }
 
-.lp-fcard__link:hover {
+.lp-fcard__link:hover,
+.lp-desk__link:hover {
   text-decoration: underline;
+}
+
+/* ── 学习桌面：标题区下面一整屏截图（1440 × 900），像一块屏幕摆在页面上 ── */
+/* 手机上标题一行放不下时两行对半分，别把「开。」单独甩到第二行 */
+.lp-desk .lp-title {
+  text-wrap: balance;
+}
+
+.lp-desk__link {
+  margin-top: 1rem;
+}
+
+.lp-desk__shot {
+  max-width: 1120px;
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+  overflow: hidden;
+  border: 1px solid var(--lp-hair);
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 24px 60px rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 520px) {
+  .lp-desk__shot {
+    border-radius: 10px;
+  }
 }
 
 /*
