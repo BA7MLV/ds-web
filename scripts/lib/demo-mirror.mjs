@@ -86,6 +86,10 @@ export function extractRefs(text, baseUrl) {
   // 其余字符串字面量里的相对路径：图片、字体、wasm 之类
   for (const m of text.matchAll(/["'`](\.{0,2}\/[^"'`\s]+)["'`]/g)) add(m[1])
 
+  // Vite（base './'）给 JS 里引用的静态资源写成 new URL("todo-RSpTCeB8.svg", import.meta.url)：
+  // 文件名前面没有 ./，上一条抓不到（学习桌面的 Dock 图标就是这样漏掉的）
+  for (const m of text.matchAll(/new URL\(\s*["'`]([^"'`\s]+)["'`]\s*,\s*import\.meta\.url\s*\)/g)) add(m[1])
+
   // css url()
   for (const m of text.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)/g)) add(m[1])
 

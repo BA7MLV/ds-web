@@ -45,6 +45,22 @@ test('extractRefs marks hashed chunks as critical but ignores loose node paths',
   assert.equal(refs.get('/assets/pdf.worker.mjs')?.strict, false)
 })
 
+test('extractRefs follows bare asset names that Vite resolves against import.meta.url', () => {
+  const base = 'http://demo.local/assets/App-BOsi5h8O.js'
+  const js = `
+    const icon = "" + new URL("todo-RSpTCeB8.svg", import.meta.url).href;
+    const wallpaper = new URL("../wallpapers/study-os/mountain-mist.webp", import.meta.url);
+    const later = new URL(name + ".svg", import.meta.url);
+  `
+
+  const refs = extractRefs(js, base)
+
+  assert.equal(refs.has('/assets/todo-RSpTCeB8.svg'), true)
+  assert.equal(refs.has('/wallpapers/study-os/mountain-mist.webp'), true)
+  // 运行期拼出来的名字没法预先抓
+  assert.equal([...refs.keys()].some((ref) => ref.includes('name')), false)
+})
+
 test('normalizeRef drops dynamic, foreign and non-asset paths', () => {
   assert.equal(normalizeRef('${name}.js', BASE), null)
   assert.equal(normalizeRef('/assets/list.json', BASE), '/assets/list.json')
