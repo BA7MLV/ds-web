@@ -5,6 +5,7 @@ import vm from 'node:vm'
 import { computed, nextTick, ref } from 'vue'
 import { parse } from '@vue/compiler-sfc'
 import { detectPlatform, recommendedDownloadKey } from '../docs/.vitepress/theme/utils/download-device.js'
+import { backupUrl, primaryUrl } from '../docs/.vitepress/theme/utils/download-channel.js'
 
 const mac = { userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', platform: 'MacIntel' }
 
@@ -40,7 +41,12 @@ const source = parse(readFileSync(
   new URL('../docs/.vitepress/theme/components/HomeDownload.vue', import.meta.url), 'utf8'
 )).descriptor.scriptSetup.content.replace(/^import .*\n/gm, '')
 
-const setup = (navigator, keys = ['mac-arm', 'mac-x64', 'win-x64', 'android-arm64'], viewport = 900) => {
+const setup = (
+  navigator,
+  keys = ['mac-arm', 'mac-x64', 'win-x64', 'android-arm64'],
+  viewport = 900,
+  { locale = 'zh-CN', mirror = false } = {}
+) => {
   let mount
   let unmount
   // 组件在挂载时往 document / window 上挂监听（点外面、按 Esc、窗口改尺寸），
@@ -57,10 +63,15 @@ const setup = (navigator, keys = ['mac-arm', 'mac-x64', 'win-x64', 'android-arm6
     removeEventListener: (type) => onWindow.delete(type),
   }
   const context = vm.createContext({
-    navigator, document, window, computed, nextTick, ref, detectPlatform, recommendedDownloadKey,
-    useI18n: () => ({ t: (key) => key }),
+    navigator, document, window, computed, nextTick, ref, detectPlatform, recommendedDownloadKey, primaryUrl,
+    useI18n: () => ({ t: (key) => key, locale: { value: locale } }),
     buildRows: (group) => group === 'desktop'
-      ? keys.map((key) => ({ key, asset: { name: `${key}.bin`, url: `https://files.test/${key}` } })) : [],
+      ? keys.map((key) => ({ key,
+        asset: {
+          name: `${key}.bin`,
+          url: `https://files.test/${key}`,
+          mirrorUrl: mirror ? `https://mirror.test/${key}` : null
+        } })) : [],
     onMounted: (callback) => { mount = callback },
     onUnmounted: (callback) => { unmount = callback },
   })
@@ -119,6 +130,36 @@ test('Windows and Android get their own wording without any architecture on the 
     [android.api.label.value, android.api.icon.value, android.api.href.value],
     ['home.hero.downloadAndroid', 'android', 'https://files.test/android-arm64']
   )
+})
+
+test('Chinese pages download from the mirror first, other languages from GitHub', async () => {
+  const zh = setup(mac, undefined, 900, { mirror: true })
+  await zh.mount()
+  assert.equal(zh.api.href.value, 'https://mirror.test/mac-arm')
+
+  const en = setup(mac, undefined, 900, { locale: 'en-US', mirror: true })
+  await en.mount()
+  assert.equal(en.api.href.value, 'https://files.test/mac-arm')
+
+  // 这一版没传镜像：中文页也只能走 GitHub，不能给出空链接
+  const noMirror = setup(mac)
+  await noMirror.mount()
+  assert.equal(noMirror.api.href.value, 'https://files.test/mac-arm')
+})
+
+test('the backup channel is the other copy of the same file, never a duplicate', () => {
+  const asset = { url: 'https://github.test/a.dmg', mirrorUrl: 'https://mirror.test/a.dmg' }
+  assert.deepEqual(
+    [primaryUrl(asset, 'zh-CN'), backupUrl(asset, 'zh-CN')],
+    ['https://mirror.test/a.dmg', 'https://github.test/a.dmg']
+  )
+  assert.deepEqual(
+    [primaryUrl(asset, 'en-US'), backupUrl(asset, 'en-US')],
+    ['https://github.test/a.dmg', 'https://mirror.test/a.dmg']
+  )
+  const githubOnly = { url: 'https://github.test/a.dmg', mirrorUrl: '' }
+  assert.deepEqual([primaryUrl(githubOnly, 'zh-CN'), backupUrl(githubOnly, 'zh-CN')], [githubOnly.url, ''])
+  assert.equal(primaryUrl(null, 'zh-CN'), '')
 })
 
 test('Linux gets the AppImage by default and keeps deb / rpm in the list', async () => {

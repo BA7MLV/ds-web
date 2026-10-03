@@ -8,11 +8,17 @@
  * 设备判定放在 onMounted —— SSR 里没有 navigator，若在 setup 顶层直接算，
  * 服务端会渲染成「认不出设备，去发布页」、客户端再变成 macOS 的两个 DMG，水合时两边对不上。
  * 所以整块按钮与元信息都等挂载后再出，宁可晚一行也不要报错。
+ *
+ * 按钮走当前语言的主通道（中文页是国内镜像），另一条通道放在元信息下面一行，
+ * 主通道下不动时一眼就能找到，见 download-channel.js。
  */
 import { computed, onMounted, ref } from 'vue'
 import DlIcon from './DlIcon.vue'
+import { useI18n } from '../i18n/index.js'
+import { backupUrl, primaryUrl } from '../utils/download-channel.js'
 import { buildRecommendation, formatDate, release } from '../utils/downloads.js'
 
+const { locale } = useI18n()
 const pick = ref(null)
 
 /** 点过之后按钮文案变一下，给一个「确实点到了」的反馈 */
@@ -24,6 +30,13 @@ onMounted(() => {
 
 const primary = computed(() => pick.value?.primary ?? null)
 const secondary = computed(() => pick.value?.secondary ?? null)
+const hrefOf = (item) => primaryUrl(item, locale.value)
+
+/** 主按钮那个包的另一条通道；认不出设备（只给发布页）时没有 */
+const backup = computed(() => {
+  const url = primary.value ? backupUrl(primary.value, locale.value) : ''
+  return url ? { url, github: url === primary.value.url } : null
+})
 
 const labelFor = (item) => (active.value === item.key ? '开始下载…' : item.text)
 
@@ -60,7 +73,7 @@ const meta = computed(() => {
       <a
         v-if="primary"
         class="dl-btn"
-        :href="primary.url"
+        :href="hrefOf(primary)"
         @click="onClick(primary)"
       >
         <DlIcon name="download" />
@@ -70,7 +83,7 @@ const meta = computed(() => {
       <a
         v-if="secondary"
         class="dl-btn dl-btn--ghost"
-        :href="secondary.url"
+        :href="hrefOf(secondary)"
         @click="onClick(secondary)"
       >
         <DlIcon name="download" />
@@ -79,5 +92,8 @@ const meta = computed(() => {
     </div>
 
     <p v-if="meta" class="dl-pick__meta">{{ meta }}</p>
+    <p v-if="backup" class="dl-pick__alt">
+      下载慢或中断？<a :href="backup.url">{{ backup.github ? '改从 GitHub 下载' : '改用镜像下载' }}</a>
+    </p>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <script setup>
 /**
- * 下载按钮上的小图标：下载箭头 / Cloudflare 云标 / Apple 标 / Windows 标 / Linux 标 / Android 标。
+ * 下载按钮上的小图标：下载箭头 / Cloudflare 云标 / GitHub 标 / Apple 标 / Windows 标 / Linux 标 / Android 标。
  *
  * 抽成组件是因为同一个箭头要出现在三处（推荐位主按钮、推荐位次按钮、平台行的「下载」），
  * 内联三份迟早会漂移；平台标与 Cloudflare 的路径数据也收在这一处，出处写在下面。
@@ -13,7 +13,7 @@
  * 云形本身够认人，旁边还有「镜像下载」四个字兜着。
  */
 defineProps({
-  /** 'download' | 'cloudflare' | 'apple' | 'windows' | 'linux' | 'android' */
+  /** 'download' | 'cloudflare' | 'github' | 'apple' | 'windows' | 'linux' | 'android' */
   name: { type: String, required: true }
 })
 </script>
@@ -96,6 +96,19 @@ defineProps({
     />
   </svg>
 
+  <!-- GitHub：章鱼猫，与页脚同一条 simple-icons 路径（utils/social-icons.js） -->
+  <svg
+    v-else-if="name === 'github'"
+    class="dl-icon dl-icon--github"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path
+      d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+    />
+  </svg>
+
   <!-- Linux：企鹅 Tux，simple-icons 13.21.0 的 linux.svg 原路径 -->
   <svg
     v-else-if="name === 'linux'"
@@ -129,6 +142,12 @@ defineProps({
 .dl-icon--cloudflare {
   width: 18px;
   height: 18px;
+}
+
+/* GitHub 章鱼猫是实心圆，墨铺满整框，比箭头显重；收一号到 15px */
+.dl-icon--github {
+  width: 15px;
+  height: 15px;
 }
 
 /*

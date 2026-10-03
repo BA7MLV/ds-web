@@ -1631,6 +1631,14 @@ a.lp-quote__handle:hover {
   color: var(--lp-text-2);
 }
 
+/* 备用通道那一行是句话，不是文件名，不跟上一行用等宽字 */
+.vp-doc .dl-pick__alt {
+  margin: 0.35rem 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--lp-text-2);
+}
+
 /* ── 按钮 ──
  * 不用 border：外沿走 inset 环，pill 的拐角才不会有硬边（与顶栏胶囊同款处理）。
  */

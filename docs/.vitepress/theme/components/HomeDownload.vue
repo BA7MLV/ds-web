@@ -20,9 +20,10 @@ import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import DlIcon from './DlIcon.vue'
 import { useI18n } from '../i18n/index.js'
 import { buildRows, formatSize } from '../utils/downloads.js'
+import { primaryUrl } from '../utils/download-channel.js'
 import { detectPlatform, recommendedDownloadKey } from '../utils/download-device.js'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const options = [...buildRows('desktop'), ...buildRows('mobile')]
 
@@ -62,7 +63,8 @@ const label = computed(() =>
 )
 
 const selected = computed(() => options.find((item) => item.key === key.value) ?? null)
-const href = computed(() => selected.value?.asset?.url ?? '/download')
+// 中文页走国内镜像、英文页走 GitHub，见 download-channel.js
+const href = computed(() => (selected.value ? primaryUrl(selected.value.asset, locale.value) : '/download'))
 const fileName = computed(() => selected.value?.asset?.name ?? '')
 
 /* ── 清单的开合与键盘操作 ───────────────────────────────────── */
@@ -232,7 +234,7 @@ onUnmounted(() => {
             :class="{ 'is-current': item.key === key }"
             role="menuitem"
             :aria-current="item.key === key ? 'true' : undefined"
-            :href="item.asset.url"
+            :href="primaryUrl(item.asset, locale)"
             :download="item.asset.name || undefined"
             @click="pick(item)"
           >
