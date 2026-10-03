@@ -3,9 +3,9 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from '../i18n/index.js'
 import { track } from '../lib/analytics.js'
 import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
-import { warmFeatureArt } from '../utils/feature-art.js'
+import { warmFeatureShots } from '../utils/feature-shot.js'
 import AppShell from './AppShell.vue'
-import FeatureAscii from './FeatureAscii.vue'
+import FeatureShot from './FeatureShot.vue'
 import HeroStarfield from './HeroStarfield.vue'
 import HomeDownload from './HomeDownload.vue'
 import StepFlow from './StepFlow.vue'
@@ -23,7 +23,7 @@ const heroEl = ref(null)
 const demoEl = ref(null)
 const featuresEl = ref(null)
 let cancelStars = () => {}
-let cancelArtWarmup = () => {}
+let cancelShotWarmup = () => {}
 let stopFeatureObserver = () => {}
 let starsController = null
 let starsTimeout = 0
@@ -94,15 +94,15 @@ const fetchStars = async () => {
 const scenes = computed(() => tm('home.features.scenes'))
 
 /*
- * 每个场景的字符画是一份小 JSON（scripts/gen-features-live.mjs 产出），切过去才取的话会先空一下。
- * 功能区接近视口后，再等主页面加载完成、空闲时预取其余场景；省流量和慢速网络下仅按需加载。
- * 真实截图只在悬停时才要，不预取。
+ * 每个场景是一张真实截图（scripts/gen-features-live.mjs 产出，20–60 KB），切过去才取的话会先空一下。
+ * 功能区接近视口后，再等主页面加载完成、空闲时预取其余场景当前主题那一套；省流量和慢速网络下仅按需加载。
  */
-const warmSceneArt = () => {
+const warmSceneShots = () => {
   const connection = navigator.connection
   if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '')) return
-  cancelArtWarmup = afterPageLoad(() => {
-    warmFeatureArt(scenes.value.map((scene) => scene.art).filter((art) => art !== currentScene.value.art))
+  cancelShotWarmup = afterPageLoad(() => {
+    const others = scenes.value.map((scene) => scene.art).filter((art) => art !== currentScene.value.art)
+    warmFeatureShots(others, document.documentElement.classList.contains('dark'))
   })
 }
 
@@ -167,13 +167,13 @@ onMounted(() => {
   stopFeatureObserver = observeNearViewport(featuresEl.value, (near) => {
     if (!near) return
     stopFeatureObserver()
-    warmSceneArt()
+    warmSceneShots()
   }, 360)
 })
 
 onUnmounted(() => {
   cancelStars()
-  cancelArtWarmup()
+  cancelShotWarmup()
   stopFeatureObserver()
   starsController?.abort()
   clearTimeout(starsTimeout)
@@ -246,7 +246,7 @@ onUnmounted(() => {
     <!-- ② 想明白 / 记得住：不对称双卡，点 + 打开整页浮层（见 StepFlow.vue） -->
     <StepFlow />
 
-    <!-- ③ 功能展示：一张轮播卡（左文案 / 右字符画），卡下圆点 + 左右箭头 -->
+    <!-- ③ 功能展示：一张轮播卡（左文案 / 右真实界面截图），卡下圆点 + 左右箭头 -->
     <section id="features" ref="featuresEl" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
@@ -281,13 +281,9 @@ onUnmounted(() => {
                 </a>
               </div>
 
-              <!-- 右半：真实界面读出来的字符画，悬停 / 轻点换成同一取景框的截图 -->
+              <!-- 右半：真实界面截图 -->
               <div class="lp-fcard__stage">
-                <FeatureAscii :name="currentScene.art" :alt="currentScene.alt" />
-                <p class="lp-fcard__hint" aria-hidden="true">
-                  <span class="lp-fcard__hint-hover">{{ t('home.features.revealHover') }}</span>
-                  <span class="lp-fcard__hint-touch">{{ t('home.features.revealTouch') }}</span>
-                </p>
+                <FeatureShot class="lp-fcard__shot" :name="currentScene.art" :alt="currentScene.alt" />
               </div>
             </div>
           </Transition>

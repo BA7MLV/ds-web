@@ -146,20 +146,12 @@ html.flow-locked {
   --ds-accent: #1d1d1f;
 
   /* ── 功能区轮播卡（.lp-fcard）──
-   * 一张圆角卡：左半是卡面，右半的字符画直接落在卡面上。
+   * 一张圆角卡：左半是卡面，右半是一张真实界面截图。
    * 卡不描边也不投影 —— 区分靠的是卡面与页面的**底色差**（+ 圆角）。
    * 所以卡面取 --lp-tile：和使用流程那两张卡、页脚卡片是同一个面，
    * 亮暗两套自动跟随，不必各写一份。
    */
   --fc-face: var(--lp-tile);
-  /*
-   * 右半字符画的四档墨（FeatureAscii.vue 画 canvas 时读）：淡 = 框线与次要字，
-   * 正文、重 = 粗体与标题。整站只有一套灰阶，「强调」也落在最重那档，不引入彩色。
-   */
-  --fa-dim: rgba(29, 29, 31, 0.3);
-  --fa-ink: rgba(29, 29, 31, 0.68);
-  --fa-strong: #1d1d1f;
-  --fa-accent: #1d1d1f;
   /*
    * 整卡「推挤」切换（用在 .fcard-* 过渡类上）。
    * 新卡从一侧滑进来、把旧卡顶出去 —— 两张卡是**贴着一起走**的，
@@ -249,10 +241,6 @@ html.flow-locked {
    * 暗部人眼对这点差异不敏感，卡就糊回背景里去了（实测截图确认）。
    */
   --fc-face: #2e2e33;
-  --fa-dim: rgba(245, 245, 247, 0.28);
-  --fa-ink: rgba(245, 245, 247, 0.7);
-  --fa-strong: #f5f5f7;
-  --fa-accent: #f5f5f7;
   --fc-dot: rgba(255, 255, 255, 0.24);
   --fc-dot-hover: rgba(255, 255, 255, 0.5);
   --fc-dot-on: #f5f5f7;
@@ -1019,11 +1007,11 @@ a.lp-quote__handle:hover {
 }
 
 /* ── 功能区轮播卡（.lp-fcard）──
- * 一张圆角卡：左半是卡面，右半直接展示字符画。
+ * 一张圆角卡：左半是卡面，右半是一张真实界面截图。
  * 切场景 = **整卡飞出飞入**：外包一层 .lp-fstage 做出场/入场的裁剪与位移，
- * 卡片自己不动内部动效（文字、字符画都跟着整卡走）。
+ * 卡片自己不动内部动效（文字、截图都跟着整卡走）。
  *
- * 两列等宽（1fr 1fr），卡高由内容决定：右列字符画按百分比定宽、按自身比例定高，
+ * 两列等宽（1fr 1fr），卡高由内容决定：右列截图按百分比定宽、按自身比例定高，
  * 网格行高自动取左右两者的较大值，所以不会出现「文字短了图案就顶出去」。
  */
 /*
@@ -1143,37 +1131,23 @@ a.lp-quote__handle:hover {
   text-decoration: underline;
 }
 
-/* 右半：字符画直接落在轮播卡自己的主题底色上，下面一行小字提示能看真实界面 */
+/*
+ * 右半：截图像一扇浮在卡面上的窗 —— 圆角、一道发丝边和很淡的投影。
+ * 截图自己的底色跟着主题（浅色白、深色深灰），描边让它在同色的卡面上也有边界
+ */
 .lp-fcard__stage {
   display: grid;
   place-items: center;
   align-content: center;
-  gap: 0.75rem;
   padding: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-.lp-fcard__hint {
-  margin: 0;
-  font-size: 0.75rem;
-  color: var(--lp-text-2);
-}
-
-/* 有悬停的设备说「悬停」，触屏说「轻点」，两句都在 SSR 里，只靠媒体查询选一句 */
-.lp-fcard__hint-touch,
-.lp-fcard__hint-hover {
-  display: none;
-}
-
-@media (hover: hover) {
-  .lp-fcard__hint-hover {
-    display: inline;
-  }
-}
-
-@media (hover: none) {
-  .lp-fcard__hint-touch {
-    display: inline;
-  }
+.lp-fcard__shot {
+  width: min(100%, 520px);
+  overflow: hidden;
+  border: 1px solid var(--lp-hair);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 10px 28px rgba(0, 0, 0, 0.08);
 }
 
 /* ── 卡片下的圆点 + 左右箭头 ──
@@ -1551,7 +1525,7 @@ a.lp-quote__handle:hover {
     padding-right: 1rem;
   }
 
-  /* 轮播卡塌成单列：文案在上、字符画展示区在下。 */
+  /* 轮播卡塌成单列：文案在上、截图在下。 */
   .lp-fcard {
     grid-template-columns: minmax(0, 1fr);
   }

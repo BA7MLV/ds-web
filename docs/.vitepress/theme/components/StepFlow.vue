@@ -1,7 +1,7 @@
 <script setup>
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from '../i18n/index.js'
-import FeatureAscii from './FeatureAscii.vue'
+import FeatureShot from './FeatureShot.vue'
 
 /**
  * 「想明白 / 记得住」—— Apple 产品页式的不对称双卡。
@@ -24,10 +24,8 @@ import FeatureAscii from './FeatureAscii.vue'
  *    内容全程可见：整段藏起来会在中间露出一块空壳，那才是上一版最「怪」的地方。
  *    关闭沿原路缩回卡片中心 —— 所以 fromRect 只在打开时量一次。
  *
- * 3. **画面是真实界面读出来的字符画**（FeatureAscii，和功能区同一套）：
- *    scripts/gen-features-live.mjs 在演示里打开对应界面，取景框里的框线和文字落进等宽网格；
- *    卡片滚进视口时解码，悬停整张卡时淡入同一取景框的真实截图。
- *    整张卡被 .pair__hit 的伪元素盖住，指针事件到不了画面，所以「悬停」由卡片自己报给它。
+ * 3. **画面是真实界面截图**（FeatureShot，和功能区同一套）：
+ *    scripts/gen-features-live.mjs 在演示里打开对应界面截下取景框，深浅色各一张，跟着主题换。
  */
 const { t, tm } = useI18n()
 
@@ -73,27 +71,14 @@ const current = computed(() => (openIndex.value < 0 ? null : steps.value[openInd
  * 加号和底图的墨色都交给 CSS，脚本这边不再管颜色。
  *
  * 早先这里是**采图**：把底图右下角裁一块扔进 canvas 量亮度 —— 那时底图是两张
- * 深色 UI 截图，卡面浅、图深，不看图就不知道 + 该按哪一档做。现在底图是字符画，
- * 笔画取的是主题正文色，+ 压着的右下角本来就几乎没墨，它底下真正的颜色就是卡面底色，
- * 而卡面底色只由主题决定 —— 也就是 `<html>` 上那个 `.dark` 类。
+ * 深色 UI 截图，卡面浅、图深，不看图就不知道 + 该按哪一档做。现在截图跟着主题换
+ * （浅色主题配浅色界面、深色配深色），+ 压着的右下角不是界面底色就是卡面底色，
+ * 两者都只由主题决定 —— 也就是 `<html>` 上那个 `.dark` 类。
  *
  * 所以既没有 `data-tone`，也没有 `isDark` 参与：这条链上少一个「状态与样式可能不同步」
  * 的环节（实测过：手动切类时 VitePress 的 isDark 还没跟上，+ 就会留在上一档），
  * 顺带省掉一次 canvas 往返和一次 getImageData。
  */
-
-/**
- * 每张卡的取景框尺寸，和 gen-features-live.mjs 里 flow-think / flow-review 的 grid 一致：
- * 窄卡 40 列、宽卡 74 列，行数按标题下面剩的高度定。只用来让 SSR 首帧就占好宽高比。
- */
-const FLOW_GRID = {
-  'flow-think': { cols: 40, rows: 21 },
-  'flow-review': { cols: 74, rows: 19 }
-}
-const gridOf = (name) => FLOW_GRID[name] || { cols: 74, rows: 19 }
-
-/** 鼠标停在哪张卡上（-1 = 都没有）：那张卡的画面淡入真实截图 */
-const hoverIndex = ref(-1)
 
 /* ── 从卡片长出来 ── */
 const motionOff = () =>
@@ -286,8 +271,6 @@ onUnmounted(() => {
           v-for="(step, index) in steps"
           :key="step.label"
           class="pair__card"
-          @pointerenter="(e) => e.pointerType === 'mouse' && (hoverIndex = index)"
-          @pointerleave="hoverIndex = -1"
         >
           <p class="pair__label">{{ step.label }}</p>
           <h3 class="pair__title">
@@ -302,18 +285,9 @@ onUnmounted(() => {
             >{{ step.statement }}</button>
           </h3>
 
-          <!--
-            一扇「窗」：真实界面读出来的字符画，从卡片底边裁进来。
-            role/aria-label 在 FeatureAscii 自己那一层。
-          -->
+          <!-- 一扇「窗」：真实界面截图，从卡片底边升上来 -->
           <span :class="['pair__shot', `pair__shot--${index}`]">
-            <FeatureAscii
-              :name="step.art"
-              :alt="step.alt"
-              :cols="gridOf(step.art).cols"
-              :rows="gridOf(step.art).rows"
-              :reveal="hoverIndex === index"
-            />
+            <FeatureShot :name="step.art" :alt="step.alt" />
           </span>
 
           <span class="pair__plus" aria-hidden="true">
@@ -355,13 +329,7 @@ onUnmounted(() => {
 
           <div class="sheet__stage">
             <div :class="['sheet__shot', `sheet__shot--${openIndex}`]">
-              <FeatureAscii
-                :key="current.art"
-                :name="current.art"
-                :alt="current.alt"
-                :cols="gridOf(current.art).cols"
-                :rows="gridOf(current.art).rows"
-              />
+              <FeatureShot :key="current.art" :name="current.art" :alt="current.alt" />
             </div>
           </div>
 
@@ -473,10 +441,10 @@ onUnmounted(() => {
 }
 
 /*
- * 画面是一扇「窗」：左边对齐卡片内边距，从卡片底边裁进来（底下不留边，像窗口往下还有内容），
- * 右下角的 + 压在窗上。窗里是透明底的字符画（FeatureAscii），窗本身只有一层很淡的描边
- * 和比卡面亮一档的底色，深浅两套都读 --lp-* 变量。
- * 宽度给窗，字符画铺满窗内的内容区；高度由字符画的宽高比决定，卡片的 min-height 留够了。
+ * 画面是一扇「窗」：左边对齐卡片内边距，从卡片底边升上来（窗的底边压在卡片底边下面），
+ * 右下角的 + 压在窗上。窗里整张铺满真实截图，窗本身只有一层很淡的描边和投影，
+ * 深浅两套都读 --lp-* 变量。宽度给窗，高度由截图的宽高比决定，卡片的 min-height 留够了。
+ * 截图的取景框本身是完整的（生成器保证框边不切开界面），这里不再裁它。
  */
 .pair__shot {
   position: absolute;
@@ -484,7 +452,7 @@ onUnmounted(() => {
   left: 28px;
   bottom: -1px;
   box-sizing: border-box;
-  padding: 16px 16px 0;
+  overflow: hidden;
   border: 1px solid var(--lp-hair);
   border-bottom: 0;
   border-radius: 14px 14px 0 0;
@@ -493,17 +461,6 @@ onUnmounted(() => {
   pointer-events: none;
   user-select: none;
   transition: transform 420ms var(--lp-ease);
-}
-
-.pair__shot :deep(.fa) {
-  --fa-max-width: none;
-  width: 100%;
-}
-
-/* 截图本身也在窗里，不再自带圆角和投影 */
-.pair__shot :deep(.fa__shot) {
-  border-radius: 0;
-  box-shadow: none;
 }
 
 /* 窄卡：窗占满内边距之间的宽度 */
@@ -733,12 +690,22 @@ onUnmounted(() => {
   min-height: 0;
 }
 
-/* 展开态的窗按舞台高度收：字符画按宽高比缩到装得下、居中（object-fit: contain 的语义） */
-.sheet__shot :deep(.fa) {
-  --fa-max-width: 100%;
+/*
+ * 展开态的截图按舞台收：宽高都不超出、按比例缩到装得下、居中（object-fit: contain 的语义）。
+ * 截图是 2 倍图（srcset 2x），自然尺寸就是取景框的 CSS 尺寸，舞台再大也不会放糊
+ */
+.sheet__shot :deep(.fs) {
+  display: contents;
+}
+
+.sheet__shot :deep(.fs__img) {
   width: auto;
-  height: 100%;
+  height: auto;
   max-width: 100%;
+  max-height: 100%;
+  border: 1px solid var(--lp-hair);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 10px 28px rgba(0, 0, 0, 0.08);
 }
 
 .sheet__copy {
@@ -800,8 +767,7 @@ onUnmounted(() => {
 
   /*
    * 单列时卡片高度跟着内容走：窗回到文档流里，接在标题下面、贴住卡片底边，
-   * 不再靠 min-height 撑出一块空白。宽卡那扇窗（74 列）在手机上太挤，放宽到卡片的 1.5 倍、
-   * 从右边裁出去 —— 左半边的进度环和数字照样看得清。
+   * 不再靠 min-height 撑出一块空白。宽卡那张截图整张缩进卡宽，不放宽、不裁边。
    */
   .pair__card {
     min-height: 0;
@@ -818,13 +784,6 @@ onUnmounted(() => {
     display: block;
     width: auto;
     margin: 28px 0 -1px;
-  }
-
-  /* 裁出去的那半边淡出到卡面：卡片右缘落在窗宽的 69%–73%（随屏宽变），渐隐在 69% 前收完 */
-  .pair__shot--1 {
-    width: 150%;
-    -webkit-mask-image: linear-gradient(90deg, #000 50%, transparent 69%);
-    mask-image: linear-gradient(90deg, #000 50%, transparent 69%);
   }
 
   .sheet {

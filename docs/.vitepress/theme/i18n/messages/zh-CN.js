@@ -162,7 +162,7 @@ export default {
           label: '想明白',
           statement: '围绕你的材料对话。',
           art: 'flow-think',
-          alt: '回答界面的字符画：小标题「怎样接到自己的学习中」，正文引用学习档案里的两条记忆 [忆1] [忆2]，末尾是一条「AI 生成」标记',
+          alt: '回答界面截图：小标题「怎样接到自己的学习中」，正文引用学习档案里的两条记忆 [忆1] [忆2]，末尾是一条「AI 生成」标记',
           items: [
             {
               title: '答案带出处',
@@ -182,7 +182,7 @@ export default {
           label: '记得住',
           statement: '变成能复习的东西。',
           art: 'flow-review',
-          alt: '闪卡今日复习页的字符画：今日进度环 90%，待复习 2、新卡 12、学习中 4，下面是开始复习按钮',
+          alt: '闪卡今日复习页截图：今日进度环 90%，待复习 2、新卡 12、学习中 4，下面是开始复习按钮',
           items: [
             {
               title: '知识导图',
@@ -209,9 +209,7 @@ export default {
       prev: '上一个场景',
       next: '下一个场景',
       dot: '第 {index} 个场景：{name}',
-      revealHover: '悬停查看真实界面',
-      revealTouch: '轻点查看真实界面',
-      /* art 对应 docs/public/features/<art>.json，由 scripts/gen-features-live.mjs 从演示界面生成 */
+      /* art 对应 docs/public/features/<art>-light|dark.webp，由 scripts/gen-features-live.mjs 从演示界面截取 */
       scenes: [
         {
           tab: '资料对话',
@@ -220,7 +218,7 @@ export default {
           desc: '支持图片、语音和文件；回答带出处，标到原文页码；复杂问题切深度推理。',
           link: '/user-guide/chat',
           art: 'chat',
-          alt: '对话界面的字符画：按教材页码作答，段末标着第 45、47、52 页'
+          alt: '对话界面截图：按教材页码作答，段末标着第 45、47、52 页'
         },
         {
           tab: '知识导图',
@@ -229,7 +227,7 @@ export default {
           desc: '一句话生成完整知识体系，边聊边改；背诵模式一键遮住要点，自己默一遍。',
           link: '/user-guide/mindmap',
           art: 'mindmap',
-          alt: '知识导图的字符画：中心主题「数据并行训练」分出优化方向、基本范式和同步的代价'
+          alt: '知识导图截图：中心主题「数据并行训练」分出优化方向、基本范式和同步的代价'
         },
         {
           tab: '题目练习',
@@ -238,7 +236,7 @@ export default {
           desc: '按知识点出题，带答案和解析，勾选后收进题目集；练习自动判分，掌握度按知识点追踪。',
           link: '/user-guide/question-bank',
           art: 'quiz',
-          alt: 'AI 出题结果的字符画：两道带知识点标签、选项和答案的单选题草稿'
+          alt: 'AI 出题结果截图：两道带知识点标签、选项和答案的单选题草稿'
         },
         {
           tab: 'Anki 制卡',
@@ -247,7 +245,7 @@ export default {
           desc: '说一句话就能制卡，批量生成；翻面检查、改好后加入卡片库，或一键同步到 Anki。',
           link: '/user-guide/anki',
           art: 'anki',
-          alt: '制卡界面的字符画：一张问答卡和翻页圆点，下面是已生成 5 张卡片，以及路由、生成、完成三步的进度'
+          alt: '制卡界面截图：一张问答卡和翻页圆点，下面是已生成 5 张卡片，以及路由、生成、完成三步的进度'
         },
         {
           tab: '闪卡复习',
@@ -256,7 +254,7 @@ export default {
           desc: '内置 FSRS 间隔重复：到期的卡自动排进今日复习，按记得的程度评分，下一次复习时间随之调整。',
           link: '/user-guide/flashcards',
           art: 'review',
-          alt: '复习界面的字符画：卡片背面的答案，下面是重来、困难、良好、简单四个评分和对应间隔'
+          alt: '复习界面截图：卡片背面的答案，下面是重来、困难、良好、简单四个评分和对应间隔'
         },
         {
           tab: '文档阅读',
@@ -265,7 +263,7 @@ export default {
           desc: 'PDF、Word、EPUB 直接阅读，划词解释、翻译、存笔记或制卡；整段材料生成逐句双语对照。',
           link: '/user-guide/reading-translation',
           art: 'reading',
-          alt: '双语阅读的字符画：英文原文与中文译文逐句对照的表格'
+          alt: '双语阅读截图：英文原文与中文译文逐句对照的表格'
         }
       ]
     },

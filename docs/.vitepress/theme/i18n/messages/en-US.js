@@ -157,7 +157,7 @@ export default {
           label: 'Think it through',
           statement: 'Converse around your own material.',
           art: 'flow-think',
-          alt: 'ASCII art of an answer: a short heading, a paragraph citing two entries from your learning profile, and an “AI generated” tag at the end',
+          alt: 'Screenshot of an answer: a short heading, a paragraph citing two entries from your learning profile, and an “AI generated” tag at the end',
           items: [
             {
               title: 'Answers with sources',
@@ -177,7 +177,7 @@ export default {
           label: 'Make it stick',
           statement: 'Turn it into something you can review.',
           art: 'flow-review',
-          alt: "ASCII art of today's flashcard review: a 90% progress ring, 2 due, 12 new, 4 learning, and a Start review button",
+          alt: "Screenshot of today's flashcard review: a 90% progress ring, 2 due, 12 new, 4 learning, and a Start review button",
           items: [
             {
               title: 'Mind maps',
@@ -204,8 +204,6 @@ export default {
       prev: 'Previous scene',
       next: 'Next scene',
       dot: 'Scene {index}: {name}',
-      revealHover: 'Hover to see the real screen',
-      revealTouch: 'Tap to see the real screen',
       scenes: [
         {
           tab: 'Material chat',
@@ -214,7 +212,7 @@ export default {
           desc: 'Images, voice and files in; answers cite your sources down to the page; deep reasoning for hard questions.',
           link: '/user-guide/chat',
           art: 'chat',
-          alt: 'Character rendering of the chat view: an answer citing textbook pages 45, 47 and 52'
+          alt: 'Screenshot of the chat view: an answer citing textbook pages 45, 47 and 52'
         },
         {
           tab: 'Mind maps',
@@ -223,7 +221,7 @@ export default {
           desc: 'Generate a full knowledge structure from one sentence and edit it as you chat; recitation mode hides the key points so you can test yourself.',
           link: '/user-guide/mindmap',
           art: 'mindmap',
-          alt: 'Character rendering of a mind map: “Data-parallel training” branching into optimisation, the basic paradigm and the cost of synchronisation'
+          alt: 'Screenshot of a mind map: “Data-parallel training” branching into optimisation, the basic paradigm and the cost of synchronisation'
         },
         {
           tab: 'Practice',
@@ -232,7 +230,7 @@ export default {
           desc: 'Questions are generated per topic with answers and explanations, and the ones you tick go into a question set; practice is graded automatically and mastery is tracked per topic.',
           link: '/user-guide/question-bank',
           art: 'quiz',
-          alt: 'Character rendering of AI-generated questions: two tagged multiple-choice drafts with options and answers'
+          alt: 'Screenshot of AI-generated questions: two tagged multiple-choice drafts with options and answers'
         },
         {
           tab: 'Anki cards',
@@ -241,7 +239,7 @@ export default {
           desc: 'Say the word and cards get made, in bulk; flip to check, edit, then add them to your library or sync to Anki in one click.',
           link: '/user-guide/anki',
           art: 'anki',
-          alt: 'Character rendering of card generation: a Q&A card with page dots, above “5 cards generated” and the route, generate and done steps'
+          alt: 'Screenshot of card generation: a Q&A card with page dots, above “5 cards generated” and the route, generate and done steps'
         },
         {
           tab: 'Flashcard review',
@@ -250,7 +248,7 @@ export default {
           desc: 'Built-in FSRS spaced repetition queues the cards due today; rate how well you remembered and the next review is rescheduled to match.',
           link: '/user-guide/flashcards',
           art: 'review',
-          alt: 'Character rendering of a review session: the answer side of a card above Again, Hard, Good and Easy with their intervals'
+          alt: 'Screenshot of a review session: the answer side of a card above Again, Hard, Good and Easy with their intervals'
         },
         {
           tab: 'Reading',
@@ -259,7 +257,7 @@ export default {
           desc: 'Open PDF, Word and EPUB files; select text to explain, translate, save as a note or make a card; turn a passage into a sentence-by-sentence bilingual table.',
           link: '/user-guide/reading-translation',
           art: 'reading',
-          alt: 'Character rendering of bilingual reading: an English source table aligned sentence by sentence with its Chinese translation'
+          alt: 'Screenshot of bilingual reading: an English source table aligned sentence by sentence with its Chinese translation'
         }
       ]
     },
