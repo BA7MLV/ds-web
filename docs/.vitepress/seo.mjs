@@ -4,7 +4,8 @@ export const SITE_NAME = 'DeepStudent'
 export const TITLE_TEMPLATE = ':title｜DeepStudent'
 
 const REPOSITORY_URL = 'https://github.com/helixnow/deep-student'
-const OG_IMAGE = `${SITE_ORIGIN}/img/index.png`
+/** 由 scripts/gen-share-images.mjs 生成；换图必须换文件名，各平台按 URL 缓存分享图 */
+const OG_IMAGE = `${SITE_ORIGIN}/img/og-2026-10.png`
 const SCHEMA_ID = 'deepstudent-schema'
 const DEFAULT_DESCRIPTION = {
   'zh-CN':
@@ -205,6 +206,8 @@ export function applyPageSeo(pageData) {
     ['meta', { property: 'og:description', content: description }],
     ['meta', { property: 'og:url', content: pageUrl }],
     ['meta', { property: 'og:image', content: OG_IMAGE }],
+    ['meta', { property: 'og:image:width', content: '1200' }],
+    ['meta', { property: 'og:image:height', content: '630' }],
     ['meta', { property: 'og:image:alt', content: SITE_NAME }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:title', content: pageTitle }],

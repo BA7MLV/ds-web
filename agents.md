@@ -38,6 +38,8 @@
   - `feature-*-ascii.svg`: 首页功能区四扇窗口屏的字符画，**由生成器产出，勿手改**（见下）。
 - `scripts/`: 构建辅助脚本。
   - `sync-release-downloads.mjs`、`sync-demo.mjs` + `lib/`：构建期同步数据与演示镜像。
+  - `gen-share-images.mjs`：分享卡（og:image）与「什么是 DeepStudent」主图，都从演示海报 `demo-poster.webp` 出，
+    文案读 i18n 的首屏标题与副标。重拍海报或改首屏文案后跑一次；分享卡换图要换文件名（平台按 URL 缓存）。
   - `gen-flow-ascii.mjs`、`gen-features-ascii.mjs`：把首页的「使用流程」两张卡与功能区四扇窗口屏
     烘焙成 SVG。两者都是**字符画** —— 形状仍是 `lib/dither.mjs` 的解析几何，
     每个格子按墨量挑一个字符（`.:-=+*#@`），量化与字形在 `lib/ascii.mjs`。
