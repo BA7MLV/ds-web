@@ -101,7 +101,7 @@ export default {
     hero: {
       title: 'An open-source space for lifelong learning',
       /* 第二行前面靠这个尾随空格和第一行断开；移动端 <br> 生效时它会被折叠掉 */
-      lede: ['Import your textbooks, get AI answers with citations, ', 'then turn them into mind maps, quizzes and Anki cards'],
+      lede: ['Open source and local-first — ', 'your material and data stay with you'],
       download: 'Download',
       downloadMac: 'Download for macOS',
       downloadWin: 'Download for Windows',

@@ -520,7 +520,6 @@ onUnmounted(() => {
   max-width: 32em;
   font-size: 1.0625rem;
   line-height: 1.7;
-  text-wrap: balance;
   color: var(--lp-text-2);
 }
 
