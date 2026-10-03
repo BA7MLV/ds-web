@@ -1,1 +1,0 @@
-import{d0 as r,b as a}from"./App-BEBs6c5u.js";import"./vendor-react-tHTFg3V7.js";import"./DsButton-K49nexlR.js";import"./UnifiedNotification-DtQKDnmY.js";function p(e){const o=e.text.trim();if(!o)return!1;const t={content:o,autoSend:!1};return typeof e.page=="number"&&(t.page=e.page),e.sourceName&&(t.sourceName=e.sourceName),r(a.PREFILL_CHAT_INPUT,t),!0}export{p as s};
