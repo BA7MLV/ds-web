@@ -1,0 +1,1 @@
+function s(e,o){if(typeof e=="string"){const n=e.trim();return n.length>0?n:o}if(e&&typeof e=="object"){const n=e;for(const i of["title","name","label"]){const t=n[i];if(typeof t=="string"){const r=t.trim();if(r.length>0)return r}}}return o}export{s as g};

@@ -1,0 +1,1 @@
+import{g as a}from"./window-C92GmZZV.js";const e=()=>({startDragging:async r=>{try{r?.preventDefault?.()}catch{}try{await a().startDragging()}catch(t){console.error("Failed to start dragging:",t)}}});export{e as u};

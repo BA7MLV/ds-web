@@ -1,9 +1,9 @@
 {
   "source": "http://47.88.78.106:8010",
   "entry": "/demo.html",
-  "signature": "6eb52375c5acfd1073c724997e9439cb1c039b2620a582d081bad38d102f4d2e",
-  "syncedAt": "2026-10-03T12:09:30.582Z",
-  "files": 1155,
-  "bytes": 39058161,
+  "signature": "74eb725266c8088f9e017cb216f926c64bfdd5131767208be757054e1747c006",
+  "syncedAt": "2026-10-03T12:53:00.066Z",
+  "files": 1282,
+  "bytes": 39135628,
   "skipped": 150
 }

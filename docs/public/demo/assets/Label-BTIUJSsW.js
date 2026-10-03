@@ -1,0 +1,1 @@
+import{f as r,j as s}from"./vendor-react-C80K2e6c.js";import{d as t}from"./DsButton-CQYjv_Uv.js";const d=r.forwardRef(({className:e,...a},o)=>s.jsx("label",{ref:o,className:t("text-sm font-medium text-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",e),...a}));d.displayName="Label";export{d as L};
