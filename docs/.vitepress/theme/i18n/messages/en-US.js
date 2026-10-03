@@ -137,6 +137,7 @@ export default {
       live: {
         title: 'Live study desktop demo',
         hint: 'This desktop is live: open apps from the Dock, drag and resize windows, start a flashcard review. Demo data stays on this page and resets when you reload.',
+        narrow: 'Widen your browser window to at least 1024 pixels to try this desktop live.',
         touch: 'Open this page on a computer to try the study desktop yourself.',
         waiting: 'It loads when you scroll here. You can also start it now.',
         loading: 'Opening the study desktop…',

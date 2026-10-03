@@ -359,12 +359,20 @@ test('desktop demo only trusts ready from the frame it is showing', async (t) =>
   assert.equal(env.api.status.value, '')
 })
 
-test('desktop demo renders 1:1 on wide stages and scales narrow ones from 1280', (t) => {
+test('desktop demo renders 1:1 on common stages, shrinks narrow or short ones and enlarges ultrawide ones', (t) => {
   const env = desktop(t)
-  env.api.stageSize.value = { width: 1500, height: 800 }
-  assert.deepEqual(plain(env.api.screenStyle.value), { width: '1500px', height: '800px', transform: 'none' })
-  env.api.stageSize.value = { width: 960, height: 600 }
-  assert.deepEqual(plain(env.api.screenStyle.value), { width: '1280px', height: '800px', transform: 'scale(0.75)' })
+  const style = (width, height) => {
+    env.api.stageSize.value = { width, height }
+    return plain(env.api.screenStyle.value)
+  }
+  // 笔记本到 1080p：舞台多大就开多大
+  assert.deepEqual(style(1500, 800), { width: '1500px', height: '800px', transform: 'none' })
+  // 窄舞台按 1440 宽渲染再缩小：两扇窗加小组件放得下
+  assert.deepEqual(style(960, 600), { width: '1440px', height: '900px', transform: 'scale(0.6667)' })
+  // 矮舞台按 720 高渲染：窗口不伸进 Dock 带
+  assert.deepEqual(style(1300, 560), { width: '1671px', height: '720px', transform: 'scale(0.7778)' })
+  // 超宽舞台按 1920 宽渲染再放大：不会只占左边一角
+  assert.deepEqual(style(2400, 1200), { width: '1920px', height: '960px', transform: 'scale(1.25)' })
 })
 
 test('starfield pauses and resumes normally but late callbacks cannot restart it after unmount', async (t) => {

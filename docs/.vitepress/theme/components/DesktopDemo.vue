@@ -14,8 +14,9 @@ import FeatureShot from './FeatureShot.vue'
  * 菜单栏、日程和 AI 学习简报小组件、Dock，对话和闪卡两扇窗并排摆好（主仓库 src/demo/desktop.tsx）。
  *
  * 尺寸：宽度 95%，高度最多到「一屏减去顶栏」、也不超过 16:10（见下方 .dd__stage）。
- * 应用按舞台的实际像素 1:1 渲染，窗口拿到的就是看得见的空间；舞台窄于 MIN_NATIVE_WIDTH 时
- * 按这个宽度渲染再整体缩小，桌面不会被挤成窄窗布局。
+ * 应用的渲染尺寸跟着舞台走，宽夹在 NATIVE_WIDTH 之间、高不低于 NATIVE_MIN_HEIGHT（见 screenStyle）：
+ * 常见笔记本到 1080p 屏幕上基本 1:1；窄或矮的舞台按下限渲染再整体缩小，两扇窗和小组件不会挤成一团、
+ * 窗口也不会伸进 Dock 带；超宽屏按上限渲染再放大，不会只占左边一角、右边大片空着。
  *
  * 只在宽屏 + 鼠标 / 触控板上载入（LIVE_QUERY）：学习桌面是桌面端的界面，触屏上拖窗、点 Dock 都别扭，
  * 那些设备上就是一张截图。截图（scripts/gen-features-live.mjs 的 workbench 场景）同时是载入前的海报，
@@ -23,7 +24,8 @@ import FeatureShot from './FeatureShot.vue'
  */
 const MIRROR_SRC = '/demo/index.html'
 const SCENE = 'demo-anki-cards'
-const MIN_NATIVE_WIDTH = 1280
+const NATIVE_WIDTH = { min: 1440, max: 1920 }
+const NATIVE_MIN_HEIGHT = 720
 const LIVE_QUERY = '(min-width: 1024px) and (pointer: fine)'
 const READY_TIMEOUT_MS = 20000
 
@@ -91,15 +93,19 @@ const stageSize = ref({ width: 0, height: 0 })
 const canEmbed = computed(() => mounted.value && liveCapable.value && embeddable())
 const showFrame = computed(() => canEmbed.value && started.value)
 
-/** 应用的渲染尺寸：舞台多大就开多大，窄于 MIN_NATIVE_WIDTH 才按比例缩 */
+/**
+ * 应用的渲染尺寸：宽取舞台宽夹在 NATIVE_WIDTH 里，高不足 NATIVE_MIN_HEIGHT 时再按高缩，
+ * 渲染框和舞台同比例，整体缩放进舞台
+ */
 const screenStyle = computed(() => {
   const { width, height } = stageSize.value
   if (!width || !height) return {}
-  const scale = Math.min(1, width / MIN_NATIVE_WIDTH)
+  const nativeWidth = Math.min(Math.max(width, NATIVE_WIDTH.min), NATIVE_WIDTH.max)
+  const scale = Math.min(width / nativeWidth, height / NATIVE_MIN_HEIGHT)
   return {
-    width: `${width / scale}px`,
-    height: `${height / scale}px`,
-    transform: scale < 1 ? `scale(${scale})` : 'none'
+    width: `${Math.round(width / scale)}px`,
+    height: `${Math.round(height / scale)}px`,
+    transform: scale === 1 ? 'none' : `scale(${Number(scale.toFixed(4))})`
   }
 })
 
@@ -297,8 +303,9 @@ onUnmounted(() => {
     </div>
 
     <figcaption class="dd__caption">
-      <!-- 两句都进 SSR，按设备只显示一句（CSS 媒体查询与 LIVE_QUERY 同一条件），首帧不跳 -->
+      <!-- 三句都进 SSR，按设备只显示一句（CSS 媒体查询与 LIVE_QUERY 同一条件），首帧不跳 -->
       <p class="dd__hint dd__hint--live">{{ t('home.desktop.live.hint') }}</p>
+      <p class="dd__hint dd__hint--narrow">{{ t('home.desktop.live.narrow') }}</p>
       <p class="dd__hint dd__hint--touch">{{ t('home.desktop.live.touch') }}</p>
       <p v-if="status" class="dd__actions">
         <span role="status">{{ status }}</span>
@@ -427,17 +434,29 @@ onUnmounted(() => {
   line-height: 1.6;
 }
 
-.dd__hint--live {
+/* 触屏：去电脑上看；鼠标但窗口太窄：把窗口拉宽；宽屏 + 鼠标：怎么玩 */
+.dd__hint--live,
+.dd__hint--narrow {
   display: none;
 }
 
-@media (min-width: 1024px) and (pointer: fine) {
-  .dd__hint--live {
-    display: block;
-  }
-
+@media (pointer: fine) {
   .dd__hint--touch {
     display: none;
+  }
+
+  .dd__hint--narrow {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .dd__hint--narrow {
+    display: none;
+  }
+
+  .dd__hint--live {
+    display: block;
   }
 }
 
