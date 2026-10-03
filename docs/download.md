@@ -42,9 +42,9 @@ const publishedAt = formatDate(release?.publishedAt)
 2. 双击打开，把 DeepStudent 拖进「应用程序」文件夹
 3. 如果首次打开提示「已损坏」或「无法验证开发者」，在「终端」里执行下面这行，输入开机密码后重新打开：
 
-<CopyLine command="sudo xattr -r -d com.apple.quarantine /Applications/DeepStudent.app" />
+<CopyLine command='sudo xattr -r -d com.apple.quarantine "/Applications/Deep Student.app"' />
 
-如果你的安装路径不是 `/Applications/DeepStudent.app`，把命令末尾换成真实路径。
+应用名中间有空格，路径两边的引号不能省。如果你没装在 `/Applications/Deep Student.app`，把引号里的路径换成真实路径。
 
 ### Windows
 

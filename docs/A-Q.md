@@ -14,10 +14,10 @@ description: DeepStudent 常见问题：macOS「已损坏」修复、安装与�
 这是 macOS 对未从 App Store 下载应用的隔离机制，在终端执行以下命令即可：
 
 ```bash
-sudo xattr -r -d com.apple.quarantine /Applications/DeepStudent.app
+sudo xattr -r -d com.apple.quarantine "/Applications/Deep Student.app"
 ```
 
-如果你的安装路径不是 `/Applications/DeepStudent.app`，请替换成真实路径。
+应用名中间有空格，路径两边的引号不能省。如果你没装在 `/Applications/Deep Student.app`，请把引号里的路径换成真实路径。
 
 ### 应用如何更新？
 

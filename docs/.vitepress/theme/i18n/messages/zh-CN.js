@@ -287,7 +287,7 @@ export default {
         },
         {
           q: 'macOS 提示「已损坏，无法打开」怎么办？',
-          a: '这是 macOS 对非 App Store 应用的隔离机制。在终端执行 sudo xattr -r -d com.apple.quarantine /Applications/DeepStudent.app 即可，安装路径不同就换成真实路径。'
+          a: '这是 macOS 对非 App Store 应用的隔离机制。在终端执行 sudo xattr -r -d com.apple.quarantine "/Applications/Deep Student.app" 即可。应用名带空格，引号不能省；安装路径不同就换成真实路径。'
         }
       ]
     }

@@ -282,7 +282,7 @@ export default {
         },
         {
           q: 'macOS says the app is damaged and cannot be opened. What now?',
-          a: "That is macOS quarantining an app that didn't come from the App Store. Run sudo xattr -r -d com.apple.quarantine /Applications/DeepStudent.app in Terminal, replacing the path with your real install location."
+          a: "That is macOS quarantining an app that didn't come from the App Store. Run sudo xattr -r -d com.apple.quarantine \"/Applications/Deep Student.app\" in Terminal. The app name contains a space, so keep the quotes; replace the path if you installed it elsewhere."
         }
       ]
     }
