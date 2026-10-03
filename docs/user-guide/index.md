@@ -1,5 +1,5 @@
 ---
-description: "面向最终用户的完整使用手册，覆盖桌面端（Windows / macOS / Linux）与移动端（Android）。在线版：https://deepstudent.cn/user-guide/"
+description: "面向最终用户的完整使用手册，覆盖桌面端（Windows / macOS / Linux）与移动端（Android）。在线版：https://deepstudent.cn/user-guide/ · 按 2026 年 10 月的版本编写，个别新功能需要升级到最新版才能看到。"
 editLink: false
 ---
 
@@ -7,7 +7,7 @@ editLink: false
 
 > 面向最终用户的完整使用手册，覆盖桌面端（Windows / macOS / Linux）与移动端（Android）。
 >
-> 在线版：https://deepstudent.cn/user-guide/
+> 在线版：https://deepstudent.cn/user-guide/ · 按 2026 年 10 月的版本编写，个别新功能需要升级到最新版才能看到。
 
 ## 新用户从这里开始
 
@@ -20,33 +20,33 @@ editLink: false
 
 | 章节 | 内容 |
 |---|---|
-| [02 · AI对话与会话管理](/user-guide/chat) | 发消息、附件与引用、模型选择与多模型对比、推理模式、权限三档（问一问/想一想/做一做）、课题分组、会话搜索与导出 |
+| [02 · AI对话与会话管理](/user-guide/chat) | 发消息、附件与引用、点引用跳回原文、模型选择与多模型对比、推理模式、权限三档（问一问/想一想/做一做）、课题分组、会话搜索与导出 |
 | [03 · 深度调研与智能记忆](/user-guide/research-memory) | 多步骤联网调研模式、搜索引擎配置、AI 记忆的提取/管理/隐私控制 |
 
 ### 资料与阅读
 
 | 章节 | 内容 |
 |---|---|
-| [04 · 学习资源中心](/user-guide/learning-hub) | 导入资料、文件夹与标签页管理、向量化索引、回收站 |
-| [05 · 文档阅读与翻译](/user-guide/reading-translation) | PDF/DOCX/EPUB 阅读、高亮批注、书签、选页问答、翻译工作台与领域预设 |
+| [04 · 学习资源中心](/user-guide/learning-hub) | 导入资料、文件夹与标签页管理、知识库索引、回收站 |
+| [05 · 文档阅读与翻译](/user-guide/reading-translation) | PDF/Word/EPUB 阅读、高亮批注、书签、勾选页面问 AI、划词解释/翻译/存笔记/制卡、翻译工作台与领域预设 |
 | [06 · 论文搜索](/user-guide/paper-search) | arXiv/OpenAlex 检索、批量下载入库、引用格式、DOI 解析 |
 
 ### 笔记与创作
 
 | 章节 | 内容 |
 |---|---|
-| [07 · 笔记](/user-guide/notes) | 富文本编辑、双链与引用、笔记模板、AI 画布编辑 |
-| [08 · 知识导图](/user-guide/mindmap) | 一句话生成导图、导图/大纲双视图、背诵模式、导入导出 |
-| [09 · 作文批改](/user-guide/essay) | 高考/雅思/托福等多场景批改、标注与评分、逐句润色 |
-| [10 · 效率工具](/user-guide/productivity) | 待办与定时任务、番茄钟与沉浸专注、命令面板、语音输入 |
+| [07 · 笔记](/user-guide/notes) | 富文本编辑、双链与引用、笔记模板、生成卡片与思维导图、学习属性与近期复习、AI 画布编辑 |
+| [08 · 知识导图](/user-guide/mindmap) | 一句话或从笔记生成导图、导图/大纲双视图、背诵模式（一键遮住要点、难点优先）、导入导出 |
+| [09 · 作文批改](/user-guide/essay) | 高考/雅思/托福等多场景批改、标注与评分、逐句润色、错误点入错题本与生成卡片 |
+| [10 · 效率工具](/user-guide/productivity) | 待办与定时任务、番茄钟与沉浸专注、今日与学习周报、命令面板、语音输入 |
 
 ### 练习与记忆
 
 | 章节 | 内容 |
 |---|---|
 | [11 · 题库与练习](/user-guide/question-bank) | 建题库（手动/识别导入/CSV/AI 出题）、九种练习模式、自动判分、错题与掌握度 |
-| [12 · Anki制卡与模板](/user-guide/anki) | 对话制卡、任务看板、模板编辑器、导出 APKG 与 AnkiConnect 同步 |
-| [13 · 闪卡复习](/user-guide/flashcards) | FSRS 间隔重复、复习会话、卡片库与统计 |
+| [12 · Anki制卡与模板](/user-guide/anki) | 对话制卡与一步制卡入口、任务看板、模板编辑器、导出 APKG 与 AnkiConnect 同步 |
+| [13 · 闪卡复习](/user-guide/flashcards) | FSRS 间隔重复、复习会话、卡片库（新建、导入导出 .apkg）与统计 |
 
 ### 配置与数据
 
@@ -60,7 +60,7 @@ editLink: false
 
 | 章节 | 内容 |
 |---|---|
-| [17 · 移动端指南](/user-guide/mobile) | 移动端导航结构、手势与返回键、桌面/移动功能可用性对照表 |
+| [17 · 移动端指南](/user-guide/mobile) | 移动端抽屉与应用启动器、手势与返回键、桌面/移动功能可用性对照表 |
 
 ## 阅读说明
 
