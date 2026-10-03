@@ -19,6 +19,7 @@ const component = (t, name, exports, { props = {}, demoUrl = '', media = false }
   const deferred = []
   const observers = []
   const isDark = ref(false)
+  const locale = ref('zh-CN')
   let id = 0
   let now = 0
   let disposed = false
@@ -48,7 +49,7 @@ const component = (t, name, exports, { props = {}, demoUrl = '', media = false }
     performance: { now: () => now },
     defineProps: () => ({ src: '', anchor: null, blocker: null, ...props }),
     useData: () => ({ isDark }),
-    useI18n: () => ({ t: (key) => key }),
+    useI18n: () => ({ t: (key) => key, locale }),
     onMounted: (callback) => mounted.push(callback),
     onUnmounted: (callback) => unmounted.push(callback),
     afterPageLoad: (callback) => {
@@ -81,7 +82,7 @@ const component = (t, name, exports, { props = {}, demoUrl = '', media = false }
   }
   t.after(unmount)
   return {
-    api, isDark, frames, timers, observers, window, document, motionQuery, unmount, tracked,
+    api, isDark, locale, frames, timers, observers, window, document, motionQuery, unmount, tracked,
     mount: () => mounted.forEach((callback) => callback()),
     afterLoad: () => deferred.filter((task) => !task.cancelled).forEach(({ callback }) => callback()),
     frame: () => {
@@ -143,6 +144,15 @@ test('demo opens the poster scene unless the override already names one', (t) =>
   const pinned = shell(t, { demoUrl: 'https://demo.test/demo.html?scene=demo-pdf-deepread' })
   pinned.mount()
   assert.deepEqual(new URL(pinned.api.frameSrc.value).searchParams.getAll('scene'), ['demo-pdf-deepread'])
+})
+
+test('demo interface follows the page language', async (t) => {
+  const env = shell(t, { demoUrl: 'https://demo.test/demo.html?lang=en' })
+  env.mount()
+  assert.equal(new URL(env.api.frameSrc.value).searchParams.get('lang'), null)
+  env.locale.value = 'en-US'
+  await nextTick()
+  assert.deepEqual(new URL(env.api.frameSrc.value).searchParams.getAll('lang'), ['en'])
 })
 
 test('ready starts playback only in the frame that reported it', async (t) => {
@@ -323,6 +333,15 @@ test('desktop demo opens the study desktop in the current theme', async (t) => {
     assert.equal(url.searchParams.get('theme'), dark ? 'dark' : 'light')
     assert.equal(url.searchParams.get('scene'), 'demo-anki-cards')
   }
+})
+
+test('desktop demo opens the English interface on English pages', async (t) => {
+  const env = desktop(t)
+  env.mount()
+  assert.equal(new URL(env.api.frameSrc.value, 'https://site.test').searchParams.get('lang'), null)
+  env.locale.value = 'en-US'
+  await nextTick()
+  assert.equal(new URL(env.api.frameSrc.value, 'https://site.test').searchParams.get('lang'), 'en')
 })
 
 test('desktop demo stays a screenshot on touch and narrow screens', (t) => {

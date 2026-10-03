@@ -1,1 +1,0 @@
-const t="冲突检测",c="冲突",e="解决",n="忽略",o={create_failed:"创建笔记「{{title}}」失败"},i={title:t,conflict:"冲突",resolve:"解决",ignore:"忽略",wikilink:o};export{c as conflict,i as default,n as ignore,e as resolve,t as title,o as wikilink};

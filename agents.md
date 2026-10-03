@@ -35,6 +35,7 @@
 - `docs/public/`: 公共静态资源（图片、图标、`robots.txt`、`llms.txt`、favicon）。
   - `demo/`: 首页实时演示的**同源镜像**（主仓库 `src/demo` 的构建产物），由 `scripts/sync-demo.mjs` 同步，勿手改。
     hero 用经典布局（`/demo/index.html?scene=…`），「学习桌面」一节（`theme/components/DesktopDemo.vue`）用同一份镜像带 `desktop=1`。
+    英文页两处都多带 `lang=en`：演示界面换成英文（文案按语言整包打在 `zh-CN-*.js` / `en-US-*.js` 里，运行时不下语言包），剧本内容仍是中文。
   - `features/`: 首页「使用流程」两张卡（`flow-*`）和功能区六扇窗的真实界面截图（`<名>-light|dark.webp`，取景框的 2 倍图），**由生成器产出，勿手改**（见下）。
   - `apps/`: 首页「全部应用」一节（`theme/components/HomeApps.vue`）用的应用图标，原样拷自主仓库 `src/features/workbench/icons/app-icons/`；
     应用列表和一句话说明在 i18n 的 `home.apps`，`tests/home-apps.test.mjs` 核对图标在、链接落到真实的用户指南页、中英一致。
