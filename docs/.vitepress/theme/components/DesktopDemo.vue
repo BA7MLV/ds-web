@@ -19,8 +19,9 @@ import FeatureShot from './FeatureShot.vue'
  * 窗口也不会伸进 Dock 带；超宽屏按上限渲染再放大，不会只占左边一角、右边大片空着。
  *
  * 只在宽屏 + 鼠标 / 触控板上载入（LIVE_QUERY）：学习桌面是桌面端的界面，触屏上拖窗、点 Dock 都别扭，
- * 那些设备上就是一张截图。截图（scripts/gen-features-live.mjs 的 workbench 场景）同时是载入前的海报，
- * 演示发 demo-shell-ready（窗口摆好、对话首答落定）后淡出。
+ * 那些设备上就是一张截图（scripts/gen-features-live.mjs 的 workbench 场景，16:10 正好铺满舞台）。
+ * 宽屏上舞台比 16:10 宽，清晰截图放进去两边会空出来，看着像桌面没铺满：载入中只铺同一张图的模糊放大、
+ * 中间一枚状态，演示发 demo-shell-ready（窗口摆好、对话首答落定）后淡出；载入也提前到离视口还有一屏多就开始。
  */
 const MIRROR_SRC = '/demo/index.html'
 const SCENE = 'demo-anki-cards'
@@ -258,11 +259,12 @@ onMounted(() => {
   stopObserving = observeNearViewport(stageEl.value, (near) => {
     nearViewport = near
     maybeStartDemo()
-  }, 400)
+  }, 900)
+  // 首屏演示先载（访客第一眼看的是它），这一节晚一拍再开始
   cancelAutomaticStart = afterPageLoad(() => {
     pageReady = true
     maybeStartDemo()
-  }, { delay: 1200 })
+  }, { delay: 2500 })
 })
 
 onUnmounted(() => {
@@ -294,10 +296,18 @@ onUnmounted(() => {
         />
       </div>
 
-      <!-- 截图随 HTML 一起到达：载入前、载入中都是成品画面；演示 ready 后才淡出 -->
+      <!-- 截图随 HTML 一起到达（alt 给爬虫和读屏）；宽屏上它藏起来，只留铺满舞台的模糊底，演示 ready 后淡出 -->
       <Transition name="dd-poster">
         <div v-if="!showFrame || loading" class="dd__poster" :style="posterVars">
           <FeatureShot class="dd__shot" :name="art" :alt="alt" />
+          <p v-if="status" class="dd__status">
+            <span role="status">{{ status }}</span>
+            <button
+              v-if="!started || timedOut"
+              type="button"
+              @click="startDemo('button')"
+            >{{ timedOut ? t('appShell.retry') : t('home.desktop.live.start') }}</button>
+          </p>
         </div>
       </Transition>
     </div>
@@ -307,14 +317,6 @@ onUnmounted(() => {
       <p class="dd__hint dd__hint--live">{{ t('home.desktop.live.hint') }}</p>
       <p class="dd__hint dd__hint--narrow">{{ t('home.desktop.live.narrow') }}</p>
       <p class="dd__hint dd__hint--touch">{{ t('home.desktop.live.touch') }}</p>
-      <p v-if="status" class="dd__actions">
-        <span role="status">{{ status }}</span>
-        <button
-          v-if="!started || timedOut"
-          type="button"
-          @click="startDemo('button')"
-        >{{ timedOut ? t('appShell.retry') : t('home.desktop.live.start') }}</button>
-      </p>
     </figcaption>
   </figure>
 </template>
@@ -374,12 +376,13 @@ onUnmounted(() => {
   border: 0;
 }
 
-/* 截图按比例完整放进舞台（object-fit: contain），两边空出来的地方铺同一张图的模糊放大版 */
+/* 触屏 / 窄屏：舞台 16:10，截图正好铺满；宽屏：只留铺满舞台的模糊底和中间那枚状态 */
 .dd__poster {
   position: absolute;
   inset: 0;
   z-index: 1;
   display: flex;
+  align-items: center;
   justify-content: center;
   overflow: hidden;
 }
@@ -398,15 +401,53 @@ onUnmounted(() => {
 
 .dd__shot {
   position: relative;
-  height: 100%;
+  width: 100%;
 }
 
 .dd__shot :deep(.fs__img) {
-  width: auto;
-  max-width: 100%;
-  height: 100%;
-  object-fit: contain;
   user-select: none;
+}
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .dd__shot {
+    display: none;
+  }
+}
+
+.dd__status {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  color: rgba(0, 0, 0, 0.72);
+  font-size: 13px;
+  line-height: 1.5;
+  backdrop-filter: blur(12px);
+}
+
+.dark .dd__status {
+  background: rgba(20, 24, 28, 0.72);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.dd__status button {
+  padding: 2px 10px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.dd__status button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
 }
 
 .dd-poster-leave-active {
@@ -458,37 +499,6 @@ onUnmounted(() => {
   .dd__hint--live {
     display: block;
   }
-}
-
-.dd__actions {
-  display: flex;
-  flex: 0 0 auto;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 12px;
-  margin: 0;
-  color: var(--vp-c-text-3);
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.dd__actions button {
-  padding: 3px 10px;
-  border: 1px solid var(--lp-hair);
-  border-radius: 999px;
-  background: transparent;
-  color: #0066cc;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.dark .dd__actions button {
-  color: #2997ff;
-}
-
-.dd__actions button:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
