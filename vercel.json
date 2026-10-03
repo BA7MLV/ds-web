@@ -3,6 +3,16 @@
   "buildCommand": "npm run build",
   "outputDirectory": "docs/.vitepress/dist",
   "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/demo/assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    }
+  ],
   "redirects": [
     {
       "source": "/docs/:path*",

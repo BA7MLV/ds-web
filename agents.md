@@ -70,6 +70,9 @@
   - `vercel.json` 的 `installCommand` 先把 Vercel 的浅克隆（深度 10、没配 remote）按仓库地址补全历史：
     文档页的「最后更新时间」、编辑者和 sitemap 的 lastmod 都读 `git log`，浅克隆下会全部落在第 10 个提交上。
     不用 `--filter=blob:none` 省流量：编辑者用的 `git log --follow` 要做改名检测，得读历史里的文件内容。
+  - `headers`：`/assets/*`、`/demo/assets/*` 回 `public, max-age=31536000, immutable`。国内访客落在 Cloudflare 西雅图节点，
+    不设的话 Vercel 默认 `max-age=0, must-revalidate`，节点每个请求都回源确认（`cf-cache-status: REVALIDATED`），一轮 0.4–2 秒，
+    首屏演示要串行好几轮。这两个目录只能放文件名带内容哈希的文件，`tests/cache-headers.test.mjs` 守着。
 
 ## 构建、测试与本地开发
 - `npm run dev`: 本地开发，热更新（VitePress，端口 5174）。
