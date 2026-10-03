@@ -29,7 +29,7 @@ const fixture = (version = 'v2.3.4') => `<!DOCTYPE html><html><head>
       <a class="dl-btn dl-btn--ghost" href="https://download.example/${version}/app.dmg">镜像下载</a></div>
   </li></ul>
   <h2>安装说明</h2><ol><li>下载 <code>.dmg</code> 文件</li><li>安装到应用程序目录</li></ol>
-  <div class="dl-copy"><code>sudo xattr -r -d com.apple.quarantine /Applications/DeepStudent.app</code>
+  <div class="dl-copy"><code>sudo xattr -r -d com.apple.quarantine &quot;/Applications/Deep Student.app&quot;</code>
     <button class="dl-copy__btn">复制</button></div>
   <h2>系统要求</h2><ul class="dl-notes">
     <li><strong>macOS</strong> —— macOS 13 或更高</li><li><strong>Android</strong> —— ARM64 设备</li></ul>
@@ -75,7 +75,7 @@ test('SSR download components become complete Markdown using the actual rendered
   assert.match(markdown, /79.0 MB/)
   assert.match(markdown, /\[下载\]\(https:\/\/github.com\/example\/releases\/download\/v9.8.7\/app.dmg\)/)
   assert.match(markdown, /\[镜像下载\]\(https:\/\/download.example\/v9.8.7\/app.dmg\)/)
-  assert.match(markdown, /```bash\nsudo xattr -r -d com.apple.quarantine \/Applications\/DeepStudent.app\n```/)
+  assert.match(markdown, /```bash\nsudo xattr -r -d com.apple.quarantine "\/Applications\/Deep Student.app"\n```/)
   assert.match(markdown, /macOS 13 或更高/)
   assert.match(markdown, /ARM64 设备/)
   assert.match(markdown, /### 下载很慢怎么办？/)

@@ -14,10 +14,10 @@ description: DeepStudent 常见问题：macOS「已损坏」修复、安装与�
 这是 macOS 对未从 App Store 下载应用的隔离机制，在终端执行以下命令即可：
 
 ```bash
-sudo xattr -r -d com.apple.quarantine /Applications/DeepStudent.app
+sudo xattr -r -d com.apple.quarantine "/Applications/Deep Student.app"
 ```
 
-如果你的安装路径不是 `/Applications/DeepStudent.app`，请替换成真实路径。
+应用名中间有空格，路径两边的引号不能省。如果你没装在 `/Applications/Deep Student.app`，请把引号里的路径换成真实路径。
 
 ### 应用如何更新？
 
@@ -104,7 +104,7 @@ DeepStudent 本地优先，资料、笔记和聊天记录默认保存在本机�
 
 多端同时修改同一数据时会出现冲突，属正常现象。点击「解决冲突」后通常选
 「**保留最新**」即可；确定某台设备的修改更重要时，选「保留本地」或「使用云端」。
-详见 [备份与同步](user-guide/05-data-management.md)。
+详见 [备份与同步](/user-guide/data-sync)。
 
 ### 如何关闭 AI 记忆？
 

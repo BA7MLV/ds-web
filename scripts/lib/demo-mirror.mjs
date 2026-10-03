@@ -86,6 +86,10 @@ export function extractRefs(text, baseUrl) {
   // 其余字符串字面量里的相对路径：图片、字体、wasm 之类
   for (const m of text.matchAll(/["'`](\.{0,2}\/[^"'`\s]+)["'`]/g)) add(m[1])
 
+  // Vite（base './'）给 JS 里引用的静态资源写成 new URL("todo-RSpTCeB8.svg", import.meta.url)：
+  // 文件名前面没有 ./，上一条抓不到（学习桌面的 Dock 图标就是这样漏掉的）
+  for (const m of text.matchAll(/new URL\(\s*["'`]([^"'`\s]+)["'`]\s*,\s*import\.meta\.url\s*\)/g)) add(m[1])
+
   // css url()
   for (const m of text.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)/g)) add(m[1])
 
@@ -124,6 +128,14 @@ export function pinEntryRefs(html, baseUrl, mountPath) {
     if (url.origin !== origin || !MIRROR_EXT.test(url.pathname)) return match
     return `${attr}=${quote}${mount}${url.pathname}${url.search}${quote}`
   })
+}
+
+/**
+ * 镜像钉在一份本地构建上时（manifest.pinned，演示服务器还没部署这一版），构建期的自动同步要跳过：
+ * 否则会按服务器入口把新镜像抓回旧版。显式同步（--force 或指定 DEMO_SOURCE）照常进行
+ */
+export function isPinnedAgainstSync(manifest, { force = false, explicitSource = false } = {}) {
+  return Boolean(manifest?.pinned) && !force && !explicitSource
 }
 
 /** 入口 HTML 引用的那组资源名就是整站的版本指纹（Vite 文件名带内容 hash） */

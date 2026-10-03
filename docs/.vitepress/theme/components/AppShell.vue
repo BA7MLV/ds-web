@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useData } from 'vitepress'
 import { useI18n } from '../i18n/index.js'
+import { track } from '../lib/analytics.js'
 import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
 
 /**
@@ -54,6 +55,12 @@ const NATIVE_H = 773
  */
 const MIRROR_SRC = '/demo/index.html'
 
+/**
+ * 海报拍的是这条剧本会话（高数错题 → Anki 卡片）播完的样子，
+ * 演示要直接打开它，海报淡出后才接得上。覆盖地址里自带 scene 时以覆盖为准。
+ */
+const POSTER_SCENE = 'demo-anki-cards'
+
 const props = defineProps({
   /** 覆盖演示地址；不传则用 VITE_DEMO_URL / 同源镜像 */
   src: { type: String, default: '' }
@@ -81,7 +88,7 @@ const embeddable = () => {
   }
 }
 
-/** 显式覆盖演示的深浅色参数，同时保留覆盖地址的其他 query 和 hash。 */
+/** 显式覆盖演示的深浅色参数、补上海报那条会话，同时保留覆盖地址的其他 query 和 hash。 */
 const frameSrc = computed(() => {
   const url = resolvedSrc.value
   if (!url) return url
@@ -92,6 +99,7 @@ const frameSrc = computed(() => {
   const path = queryAt < 0 ? pathAndQuery : pathAndQuery.slice(0, queryAt)
   const query = new URLSearchParams(queryAt < 0 ? '' : pathAndQuery.slice(queryAt + 1))
   query.set('theme', isDark.value ? 'dark' : 'light')
+  if (!query.has('scene')) query.set('scene', POSTER_SCENE)
   return `${path}?${query}${hash}`
 })
 
@@ -139,6 +147,8 @@ let stopObserving = () => {}
 let nearViewport = false
 let pageReady = false
 let readyFrameWindow = null
+/** 本次载入从哪一刻开始算，用来给 demo_ready 打点报耗时 */
+let startedAt = 0
 
 /** 只接收本次挂载的 iframe 消息；重载到 DOM 更新之间保持关闭。 */
 const setFrame = (frame) => {
@@ -155,6 +165,9 @@ const clearHideTimer = () => {
 
 const hideLoading = () => {
   clearHideTimer()
+  if (loading.value && started.value) {
+    track('demo_ready', { seconds: String(Math.round((performance.now() - startedAt) / 1000)) })
+  }
   loading.value = false
   timedOut.value = false
 }
@@ -166,11 +179,14 @@ const armTimeout = () => {
   }, 15000)
 }
 
-const startDemo = () => {
+/** trigger：auto（滚到附近自动开）/ pointer / focus / button，只用于打点 */
+const startDemo = (trigger = 'button') => {
   if (!canEmbed.value || (started.value && !timedOut.value)) return
   cancelAutomaticStart()
   stopObserving()
   readyFrameWindow = null
+  track('demo_start', { trigger: started.value ? 'retry' : trigger })
+  startedAt = performance.now()
   if (started.value) frameKey.value += 1
   started.value = true
   timedOut.value = false
@@ -179,16 +195,16 @@ const startDemo = () => {
 }
 
 const maybeStartDemo = () => {
-  if (pageReady && nearViewport && !started.value && !document.hidden) startDemo()
+  if (pageReady && nearViewport && !started.value && !document.hidden) startDemo('auto')
 }
 
 /** 意图可以提前启动，但滚动时经过窗壳不算主动体验。 */
 const onPointerIntent = (event) => {
-  if (event.pointerType === 'mouse' && !timedOut.value) startDemo()
+  if (event.pointerType === 'mouse' && !timedOut.value) startDemo('pointer')
 }
 
 const onFocusIntent = () => {
-  if (!timedOut.value) startDemo()
+  if (!timedOut.value) startDemo('focus')
 }
 
 /**
@@ -232,10 +248,17 @@ const onFrameLoad = (event) => {
   }
 }
 
+/**
+ * ready = 海报那条会话已经上屏，可以撤海报了。
+ * 演示被嵌入时不会自己开播（防止访客还没看到就播完），要父页发 demo:activate；
+ * iframe 本来就是滚到附近才开始载入的，所以就绪即开播。
+ */
 const onMessage = (event) => {
   if (!demoOrigin.value || event.origin !== demoOrigin.value) return
   if (!readyFrameWindow || event.source !== readyFrameWindow) return
-  if (event.data?.type === 'demo-shell-ready') hideLoading()
+  if (event.data?.type !== 'demo-shell-ready') return
+  hideLoading()
+  readyFrameWindow.postMessage({ type: 'demo:activate' }, demoOrigin.value)
 }
 
 /*
@@ -406,7 +429,7 @@ onUnmounted(() => {
         <button
           v-if="canEmbed && (!started || timedOut)"
           type="button"
-          @click="startDemo"
+          @click="startDemo('button')"
         >{{ timedOut ? t('appShell.retry') : t('appShell.start') }}</button>
       </p>
     </figcaption>

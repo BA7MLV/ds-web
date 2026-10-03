@@ -1,13 +1,18 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from '../i18n/index.js'
+import { track } from '../lib/analytics.js'
 import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
+import { warmFeatureShots } from '../utils/feature-shot.js'
 import AppShell from './AppShell.vue'
+import DesktopDemo from './DesktopDemo.vue'
+import FeatureShot from './FeatureShot.vue'
+import HomeApps from './HomeApps.vue'
 import HeroStarfield from './HeroStarfield.vue'
 import HomeDownload from './HomeDownload.vue'
 import StepFlow from './StepFlow.vue'
 
-const { t, tm } = useI18n()
+const { t, tm, locale } = useI18n()
 
 const GITHUB_REPO = 'helixnow/deep-student'
 const GITHUB_URL = `https://github.com/${GITHUB_REPO}`
@@ -20,11 +25,10 @@ const heroEl = ref(null)
 const demoEl = ref(null)
 const featuresEl = ref(null)
 let cancelStars = () => {}
-let cancelImageWarmup = () => {}
+let cancelShotWarmup = () => {}
 let stopFeatureObserver = () => {}
 let starsController = null
 let starsTimeout = 0
-const warmedImages = []
 
 /* ── GitHub Star 数（带会话缓存，避免触发限流） ── */
 const stars = ref(null)
@@ -92,22 +96,15 @@ const fetchStars = async () => {
 const scenes = computed(() => tm('home.features.scenes'))
 
 /*
- * 四个场景共用同一个屏幕，切 tab 时只是换 src —— 没预热的话会先看到一块空屏。
- * 场景资源是生成器产出的 SVG，首屏只允许当前图片原生懒加载。
- * 功能区接近视口后，再等主页面加载完成、空闲时低优先级预热其余图；
- * 省流量和慢速网络下仅按需加载。
+ * 每个场景是一张真实截图（scripts/gen-features-live.mjs 产出，20–60 KB），切过去才取的话会先空一下。
+ * 功能区接近视口后，再等主页面加载完成、空闲时预取其余场景当前主题那一套；省流量和慢速网络下仅按需加载。
  */
-const warmSceneImages = () => {
+const warmSceneShots = () => {
   const connection = navigator.connection
   if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '')) return
-  cancelImageWarmup = afterPageLoad(() => {
-    scenes.value.filter((scene) => scene.img !== currentScene.value.img).forEach((scene) => {
-      const img = new Image()
-      img.decoding = 'async'
-      img.fetchPriority = 'low'
-      img.src = scene.img
-      warmedImages.push(img)
-    })
+  cancelShotWarmup = afterPageLoad(() => {
+    const others = scenes.value.map((scene) => scene.art).filter((art) => art !== currentScene.value.art)
+    warmFeatureShots(others, document.documentElement.classList.contains('dark'))
   })
 }
 
@@ -172,18 +169,16 @@ onMounted(() => {
   stopFeatureObserver = observeNearViewport(featuresEl.value, (near) => {
     if (!near) return
     stopFeatureObserver()
-    warmSceneImages()
+    warmSceneShots()
   }, 360)
 })
 
 onUnmounted(() => {
   cancelStars()
-  cancelImageWarmup()
+  cancelShotWarmup()
   stopFeatureObserver()
   starsController?.abort()
   clearTimeout(starsTimeout)
-  warmedImages.forEach((img) => img.removeAttribute('src'))
-  warmedImages.length = 0
 })
 </script>
 
@@ -231,7 +226,11 @@ onUnmounted(() => {
         <div class="t-stagger-line t-stagger-line--4 lp-hero__actions-line">
           <div class="lp-hero__actions">
             <HomeDownload />
-            <a href="/start" class="home-link lp-hero__more">
+            <a
+              href="/start"
+              class="home-link lp-hero__more"
+              @click="track('quickstart', { from: 'hero', locale })"
+            >
               {{ t('home.hero.quickStart') }}<span aria-hidden="true"> →</span>
             </a>
           </div>
@@ -246,10 +245,31 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ② 想明白 / 记得住：不对称双卡，点 + 打开整页浮层（见 StepFlow.vue） -->
+    <!-- ② 学习桌面：桌面端打开就是它。宽屏上是一张能直接操作的实时桌面（占页面 95% 宽），触屏和窄屏上是截图 -->
+    <section id="desktop" class="lp-block lp-desk">
+      <div class="lp-wrap">
+        <div class="lp-head lp-head--center">
+          <h2 class="lp-title">{{ t('home.desktop.title') }}</h2>
+          <p class="lp-lede">{{ t('home.desktop.lede') }}</p>
+          <a :href="t('home.desktop.link')" class="home-link lp-desk__link t-learn">
+            {{ t('home.desktop.more') }}
+            <span class="t-learn-chevron" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path class="t-learn-arm t-learn-arm-top" d="M6 4L10 8" />
+                <path class="t-learn-arm t-learn-arm-bot" d="M10 8L6 12" />
+              </svg>
+            </span>
+          </a>
+        </div>
+      </div>
+      <DesktopDemo :art="t('home.desktop.art')" :alt="t('home.desktop.alt')" />
+    </section>
+
+    <!-- ③ 想明白 / 记得住：不对称双卡，点 + 打开整页浮层（见 StepFlow.vue） -->
     <StepFlow />
 
-    <!-- ③ 功能展示：一张轮播卡（左文案 / 右字符画），卡下圆点 + 左右箭头 -->
+    <!-- ④ 功能展示：一张轮播卡（左文案 / 右真实界面截图），卡下圆点 + 左右箭头 -->
     <section id="features" ref="featuresEl" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
@@ -284,15 +304,9 @@ onUnmounted(() => {
                 </a>
               </div>
 
-              <!-- 右半：直接展示字符画，墨色随站点主题切换 -->
+              <!-- 右半：真实界面截图 -->
               <div class="lp-fcard__stage">
-                <img
-                  :src="currentScene.img"
-                  :alt="currentScene.alt"
-                  loading="lazy"
-                  decoding="async"
-                  class="lp-shot"
-                />
+                <FeatureShot class="lp-fcard__shot" :name="currentScene.art" :alt="currentScene.alt" />
               </div>
             </div>
           </Transition>
@@ -341,7 +355,10 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ④ 隐私与数据：5fr / 7fr -->
+    <!-- ⑤ 全部应用：Dock 和「全部应用」面板里的应用一屏摆全，每个链到用户指南（见 HomeApps.vue） -->
+    <HomeApps />
+
+    <!-- ⑥ 隐私与数据：5fr / 7fr -->
     <section id="privacy" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-split">
@@ -359,7 +376,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ⑤ 用户评价：素材补齐前整块隐藏，开关见脚本里的 SHOW_VOICES -->
+    <!-- ⑦ 用户评价：素材补齐前整块隐藏，开关见脚本里的 SHOW_VOICES -->
     <section v-if="SHOW_VOICES" id="voices" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
@@ -377,7 +394,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ⑥ 常见问题：胶囊折叠条 -->
+    <!-- ⑧ 常见问题：胶囊折叠条 -->
     <section id="faq" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
@@ -418,7 +435,7 @@ onUnmounted(() => {
           </div>
         </div>
         <p class="lp-faq__more">
-          {{ t('home.faq.more') }}<a href="/support" class="home-link">{{ t('home.faq.moreLink') }}</a>
+          {{ t('home.faq.more') }}<a :href="t('links.support')" class="home-link">{{ t('home.faq.moreLink') }}</a>
         </p>
       </div>
     </section>

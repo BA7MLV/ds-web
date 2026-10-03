@@ -102,7 +102,7 @@ for (const [locale, words] of Object.entries(messages)) {
         pick: () => {},
       }),
     })
-    for (const component of ['HeroStarfield', 'StepFlow', 'DlIcon']) {
+    for (const component of ['HeroStarfield', 'StepFlow', 'DlIcon', 'FeatureAscii']) {
       app.component(component, emptyDecoration)
     }
 

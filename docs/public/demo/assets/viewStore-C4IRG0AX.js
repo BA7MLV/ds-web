@@ -1,0 +1,1 @@
+import{d as u}from"./index-BK77rGlj.js";const s=u()((t,i)=>({currentView:"chat-v2",previousView:null,setCurrentView:e=>{const r=i().currentView;r!==e&&t({currentView:e,previousView:r})}}));export{s as u};

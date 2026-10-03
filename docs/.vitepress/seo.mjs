@@ -1,10 +1,13 @@
+import messages from './theme/i18n/messages/index.js'
+
 export const SITE_ORIGIN = 'https://deepstudent.cn'
 export const SITE_URL = `${SITE_ORIGIN}/`
 export const SITE_NAME = 'DeepStudent'
 export const TITLE_TEMPLATE = ':title｜DeepStudent'
 
 const REPOSITORY_URL = 'https://github.com/helixnow/deep-student'
-const OG_IMAGE = `${SITE_ORIGIN}/img/index.png`
+/** 由 scripts/gen-share-images.mjs 生成；换图必须换文件名，各平台按 URL 缓存分享图 */
+const OG_IMAGE = `${SITE_ORIGIN}/img/og-2026-10.png`
 const SCHEMA_ID = 'deepstudent-schema'
 const DEFAULT_DESCRIPTION = {
   'zh-CN':
@@ -13,8 +16,7 @@ const DEFAULT_DESCRIPTION = {
     'DeepStudent is an open-source, local-first AI study workspace for material chat, notes, mind maps, practice questions and Anki cards.'
 }
 const LANDING_PATHS = new Set(['index.md', 'en/index.md'])
-const GUIDE_INDEX = 'user-guide/README.md'
-const RESOURCE_GUIDE = 'user-guide/02-learning-hub.md'
+const GUIDE_INDEX = 'user-guide/index.md'
 
 /** Keep canonical URLs aligned with VitePress cleanUrls and directory index routes. */
 export function getPageUrl(relativePath) {
@@ -76,9 +78,6 @@ function getBreadcrumbs(pageData, pageUrl, locale) {
   if (relativePath.startsWith('user-guide/') && relativePath !== GUIDE_INDEX) {
     paths.push({ name: '用户指南', item: getPageUrl(GUIDE_INDEX) })
   }
-  if (relativePath.startsWith('user-guide/02-learning-hub-assets/')) {
-    paths.push({ name: '学习资源', item: getPageUrl(RESOURCE_GUIDE) })
-  }
   paths.push({ name: pageData.title || SITE_NAME, item: pageUrl })
   return {
     '@type': 'BreadcrumbList',
@@ -122,6 +121,8 @@ function createGraph(pageData, { pageUrl, pageTitle, description, locale, isLand
       url: SITE_URL,
       applicationCategory: 'EducationalApplication',
       operatingSystem: 'macOS, Windows, Linux, Android',
+      // 和首页「全部应用」同一份清单，搜索引擎和 AI 摘要能直接读到有哪些模块
+      featureList: messages[locale].home.apps.items.map((app) => app.name),
       license: `${REPOSITORY_URL}/blob/main/LICENSE`,
       downloadUrl: getPageUrl('download.md'),
       sameAs: [REPOSITORY_URL],
@@ -205,6 +206,8 @@ export function applyPageSeo(pageData) {
     ['meta', { property: 'og:description', content: description }],
     ['meta', { property: 'og:url', content: pageUrl }],
     ['meta', { property: 'og:image', content: OG_IMAGE }],
+    ['meta', { property: 'og:image:width', content: '1200' }],
+    ['meta', { property: 'og:image:height', content: '630' }],
     ['meta', { property: 'og:image:alt', content: SITE_NAME }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:title', content: pageTitle }],

@@ -253,7 +253,8 @@ test('analytics loads once after the page and only initializes after SDK load', 
   assert.equal(calls.length, 0)
 
   scripts[0].onload()
-  assert.deepEqual(calls, [{ ...config, hashMode: true }])
+  // autoTrack 打开 51.la 的事件分析；不开时 SDK 只装一个打警告的 LA.track 空壳
+  assert.deepEqual(calls, [{ ...config, hashMode: true, autoTrack: true }])
   scheduleAnalytics(config)
   env.paint()
   env.timer()

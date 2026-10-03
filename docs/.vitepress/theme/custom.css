@@ -146,13 +146,12 @@ html.flow-locked {
   --ds-accent: #1d1d1f;
 
   /* ── 功能区轮播卡（.lp-fcard）──
-   * 一张圆角卡：左半是卡面，右半的字符画直接落在卡面上。
+   * 一张圆角卡：左半是卡面，右半是一张真实界面截图。
    * 卡不描边也不投影 —— 区分靠的是卡面与页面的**底色差**（+ 圆角）。
    * 所以卡面取 --lp-tile：和使用流程那两张卡、页脚卡片是同一个面，
    * 亮暗两套自动跟随，不必各写一份。
    */
   --fc-face: var(--lp-tile);
-  --fc-art-filter: invert(1);
   /*
    * 整卡「推挤」切换（用在 .fcard-* 过渡类上）。
    * 新卡从一侧滑进来、把旧卡顶出去 —— 两张卡是**贴着一起走**的，
@@ -242,7 +241,6 @@ html.flow-locked {
    * 暗部人眼对这点差异不敏感，卡就糊回背景里去了（实测截图确认）。
    */
   --fc-face: #2e2e33;
-  --fc-art-filter: none;
   --fc-dot: rgba(255, 255, 255, 0.24);
   --fc-dot-hover: rgba(255, 255, 255, 0.5);
   --fc-dot-on: #f5f5f7;
@@ -1009,11 +1007,11 @@ a.lp-quote__handle:hover {
 }
 
 /* ── 功能区轮播卡（.lp-fcard）──
- * 一张圆角卡：左半是卡面，右半直接展示字符画。
+ * 一张圆角卡：左半是卡面，右半是一张真实界面截图。
  * 切场景 = **整卡飞出飞入**：外包一层 .lp-fstage 做出场/入场的裁剪与位移，
- * 卡片自己不动内部动效（文字、字符画都跟着整卡走）。
+ * 卡片自己不动内部动效（文字、截图都跟着整卡走）。
  *
- * 两列等宽（1fr 1fr），卡高由内容决定：右列字符画按百分比定宽、按自身比例定高，
+ * 两列等宽（1fr 1fr），卡高由内容决定：右列截图按百分比定宽、按自身比例定高，
  * 网格行高自动取左右两者的较大值，所以不会出现「文字短了图案就顶出去」。
  */
 /*
@@ -1109,7 +1107,8 @@ a.lp-quote__handle:hover {
   margin-top: 1.3rem;
 }
 
-.lp-fcard__link {
+.lp-fcard__link,
+.lp-desk__link {
   display: inline-flex;
   align-items: center;
   gap: 2px;
@@ -1120,32 +1119,49 @@ a.lp-quote__handle:hover {
   text-decoration: none;
 }
 
-.dark .lp-fcard__link {
+.dark .lp-fcard__link,
+.dark .lp-desk__link {
   color: #2997ff;
 }
 
-.lp-fcard__link .t-learn-chevron svg {
+.lp-fcard__link .t-learn-chevron svg,
+.lp-desk__link .t-learn-chevron svg {
   width: 16px;
   height: 16px;
 }
 
-.lp-fcard__link:hover {
+.lp-fcard__link:hover,
+.lp-desk__link:hover {
   text-decoration: underline;
 }
 
-/* 右半：字符画直接落在轮播卡自己的主题底色上 */
+/* ── 学习桌面：标题区下面一整块桌面（DesktopDemo.vue，自己跳出 .lp-wrap 占页面宽度的 95%） ── */
+/* 手机上标题一行放不下时两行对半分，别把「开。」单独甩到第二行 */
+.lp-desk .lp-title {
+  text-wrap: balance;
+}
+
+.lp-desk__link {
+  margin-top: 1rem;
+}
+
+/*
+ * 右半：截图像一扇浮在卡面上的窗 —— 圆角、一道发丝边和很淡的投影。
+ * 截图自己的底色跟着主题（浅色白、深色深灰），描边让它在同色的卡面上也有边界
+ */
 .lp-fcard__stage {
   display: grid;
   place-items: center;
-  padding: clamp(1.75rem, 3.4vw, 2.75rem);
+  align-content: center;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-/* 四张 SVG 存浅色墨；浅色主题反相成深墨，深色主题保留浅墨。 */
-.lp-shot {
-  display: block;
-  width: min(100%, 460px);
-  height: auto;
-  filter: var(--fc-art-filter);
+.lp-fcard__shot {
+  width: min(100%, 520px);
+  overflow: hidden;
+  border: 1px solid var(--lp-hair);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 10px 28px rgba(0, 0, 0, 0.08);
 }
 
 /* ── 卡片下的圆点 + 左右箭头 ──
@@ -1523,7 +1539,7 @@ a.lp-quote__handle:hover {
     padding-right: 1rem;
   }
 
-  /* 轮播卡塌成单列：文案在上、字符画展示区在下。 */
+  /* 轮播卡塌成单列：文案在上、截图在下。 */
   .lp-fcard {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1631,6 +1647,14 @@ a.lp-quote__handle:hover {
   color: var(--lp-text-2);
 }
 
+/* 备用通道那一行是句话，不是文件名，不跟上一行用等宽字 */
+.vp-doc .dl-pick__alt {
+  margin: 0.35rem 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--lp-text-2);
+}
+
 /* ── 按钮 ──
  * 不用 border：外沿走 inset 环，pill 的拐角才不会有硬边（与顶栏胶囊同款处理）。
  */
@@ -1671,6 +1695,14 @@ a.lp-quote__handle:hover {
 .vp-doc a.dl-btn,
 .vp-doc a.dl-btn:hover {
   color: var(--dl-solid-fg);
+}
+
+/* 推荐位里 iPhone 的「发送到电脑」是 <button>（调起系统分享面板），边框与颜色得单独给 */
+.vp-doc button.dl-btn {
+  border: 0;
+  color: var(--dl-solid-fg);
+  font-family: inherit;
+  cursor: pointer;
 }
 
 .vp-doc .dl-btn:hover {

@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 import llmstxt from 'vitepress-plugin-llms'
 import { loadEnv } from 'vite'
 import { execFileSync } from 'node:child_process'
+import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
@@ -11,6 +12,12 @@ import {
   SITE_ORIGIN, SITE_URL, TITLE_TEMPLATE, applyPageSeo, getNotFoundHead, isNotFoundPage
 } from './seo.mjs'
 
+/**
+ * 用户指南的章节、分组和网址都来自主仓库同步（scripts/sync-user-guide.mjs 写的 data/user-guide.json），
+ * 这里只补官网自己的页面：「开始」里的介绍和下载，以及「帮助」。
+ */
+const userGuide = JSON.parse(readFileSync(new URL('./data/user-guide.json', import.meta.url), 'utf-8'))
+
 const guideSidebar = [
   {
     text: '开始',
@@ -19,46 +26,11 @@ const guideSidebar = [
       { text: '什么是 DeepStudent', link: '/what-is-deepstudent.md' },
       { text: '下载与安装', link: '/download.md' },
       { text: '快速上手', link: '/start.md' },
+      { text: '学习桌面', link: '/user-guide/workbench' },
+      { text: '用户指南总览', link: '/user-guide/' },
     ]
   },
-  {
-    text: '日常使用',
-    collapsed: false,
-    items: [
-      { text: '智能对话', link: '/user-guide/01-chat-v2.md' },
-      {
-        text: '学习资源',
-        link: '/user-guide/02-learning-hub.md',
-        collapsed: true,
-        items: [
-          { text: '笔记', link: '/user-guide/02-learning-hub-assets/01-notes.md' },
-          { text: '教材与阅读', link: '/user-guide/02-learning-hub-assets/02-textbooks.md' },
-          { text: '题目集与练习', link: '/user-guide/02-learning-hub-assets/03-question-bank.md' },
-          { text: '翻译与作文', link: '/user-guide/02-learning-hub-assets/04-translation-essay.md' },
-          { text: '知识导图', link: '/user-guide/02-learning-hub-assets/05-mindmap.md' },
-        ]
-      },
-      { text: 'Anki智能制卡', link: '/user-guide/03-chatanki.md' },
-      { text: '待办与番茄钟', link: '/user-guide/08-todo-pomodoro.md' },
-      { text: '命令面板与快捷键', link: '/user-guide/06-command-palette.md' },
-    ]
-  },
-  {
-    text: '进阶能力',
-    collapsed: false,
-    items: [
-      { text: '技能系统', link: '/user-guide/07-skills.md' },
-      { text: '智能记忆', link: '/user-guide/09-memory.md' },
-    ]
-  },
-  {
-    text: '设置与数据',
-    collapsed: false,
-    items: [
-      { text: '系统设置', link: '/user-guide/04-settings.md' },
-      { text: '备份与同步', link: '/user-guide/05-data-management.md' },
-    ]
-  },
+  ...userGuide.groups.map((group) => ({ ...group, collapsed: false })),
   {
     text: '帮助',
     collapsed: false,

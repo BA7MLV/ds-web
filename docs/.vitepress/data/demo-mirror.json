@@ -1,9 +1,10 @@
 {
   "source": "http://47.88.78.106:8010",
   "entry": "/demo.html",
-  "signature": "6695f78476c8d8e80c9ca9b4dc42f52bb4c9d4bb3c125042fa9a44d13dea556e",
-  "syncedAt": "2026-09-28T03:07:46.416Z",
-  "files": 1067,
-  "bytes": 35004175,
-  "skipped": 126
+  "signature": "8d4029026e1dbcc89550e0ced19bb227b331c693c1827f7eac8001f370fbc268",
+  "syncedAt": "2026-10-03T13:08:15.594Z",
+  "files": 1282,
+  "bytes": 39136420,
+  "skipped": 150,
+  "pinned": "主仓库 536238582 的本地构建（学习桌面模式；演示服务器还是旧版）"
 }

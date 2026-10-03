@@ -1,0 +1,1 @@
+function a(t){const e=t;if(!e||typeof e.getAttribute!="function")return!1;const r=e.tagName;return r==="BUTTON"||r==="INPUT"||r==="SELECT"||r==="TEXTAREA"||e.getAttribute("role")==="slider"}function i(t){return t.metaKey||t.ctrlKey||t.altKey}const o=10;export{o as S,i as h,a as i};

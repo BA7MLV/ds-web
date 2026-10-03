@@ -30,9 +30,8 @@ test('canonical URLs match clean document paths while preserving directory index
   assert.equal(getPageUrl('en/index.md'), `${SITE_URL}en/`)
   assert.equal(getPageUrl('start.md'), `${SITE_URL}start`)
   assert.equal(getPageUrl('A-Q.md'), `${SITE_URL}A-Q`)
-  assert.equal(getPageUrl('user-guide/README.md'), `${SITE_URL}user-guide/README`)
-  assert.equal(getPageUrl('user-guide/02-learning-hub-assets/01-notes.md'),
-    `${SITE_URL}user-guide/02-learning-hub-assets/01-notes`)
+  assert.equal(getPageUrl('user-guide/index.md'), `${SITE_URL}user-guide/`)
+  assert.equal(getPageUrl('user-guide/notes.md'), `${SITE_URL}user-guide/notes`)
 })
 
 test('browser and social titles share the same page title and VitePress template rules', () => {
@@ -67,7 +66,7 @@ test('only the translated landing pages advertise reciprocal hreflang links', ()
 
 test('article graph connects real entities, dates and guide breadcrumbs without invented ratings', () => {
   const page = makePage({
-    relativePath: 'user-guide/02-learning-hub-assets/01-notes.md',
+    relativePath: 'user-guide/notes.md',
     title: '笔记 (Notes)',
     lastUpdated: Date.UTC(2026, 8, 25)
   })
@@ -88,9 +87,8 @@ test('article graph connects real entities, dates and guide breadcrumbs without 
   const breadcrumb = graph.find((entity) => entity['@type'] === 'BreadcrumbList')
   assert.deepEqual(breadcrumb.itemListElement.map(({ name, position, item }) => [name, position, item]), [
     ['首页', 1, SITE_URL],
-    ['用户指南', 2, `${SITE_URL}user-guide/README`],
-    ['学习资源', 3, `${SITE_URL}user-guide/02-learning-hub`],
-    ['笔记 (Notes)', 4, getPageUrl(page.relativePath)]
+    ['用户指南', 2, `${SITE_URL}user-guide/`],
+    ['笔记 (Notes)', 3, getPageUrl(page.relativePath)]
   ])
   assert.doesNotMatch(JSON.stringify(graph), /aggregateRating|reviewCount|offers|priceCurrency/)
   const invalidDateGraph = getGraph(head(makePage({ lastUpdated: 'not-a-date' })))
@@ -100,7 +98,7 @@ test('article graph connects real entities, dates and guide breadcrumbs without 
 test('non-article pages retain their semantic role instead of becoming technical articles', () => {
   for (const [relativePath, type] of [
     ['about.md', 'AboutPage'], ['support.md', 'ContactPage'],
-    ['download.md', 'WebPage'], ['user-guide/README.md', 'CollectionPage']
+    ['download.md', 'WebPage'], ['user-guide/index.md', 'CollectionPage']
   ]) {
     const graph = getGraph(head(makePage({ relativePath })))
     assert.ok(graph.some((entity) => entity['@type'] === type))

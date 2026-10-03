@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 
-import { extractRefs, normalizeRef, pinEntryRefs, signatureOf } from '../scripts/lib/demo-mirror.mjs'
+import { extractRefs, isPinnedAgainstSync, normalizeRef, pinEntryRefs, signatureOf } from '../scripts/lib/demo-mirror.mjs'
 
 const BASE = 'http://demo.local/demo.html'
 const MIRROR_ENTRY = fileURLToPath(new URL('../docs/public/demo/index.html', import.meta.url))
@@ -43,6 +43,22 @@ test('extractRefs marks hashed chunks as critical but ignores loose node paths',
   // 依赖里残留的 Node 路径、pdf.worker 源站本来就没有，只做尽力抓取
   assert.equal(refs.get('/assets/v1.js')?.strict, false)
   assert.equal(refs.get('/assets/pdf.worker.mjs')?.strict, false)
+})
+
+test('extractRefs follows bare asset names that Vite resolves against import.meta.url', () => {
+  const base = 'http://demo.local/assets/App-BOsi5h8O.js'
+  const js = `
+    const icon = "" + new URL("todo-RSpTCeB8.svg", import.meta.url).href;
+    const wallpaper = new URL("../wallpapers/study-os/mountain-mist.webp", import.meta.url);
+    const later = new URL(name + ".svg", import.meta.url);
+  `
+
+  const refs = extractRefs(js, base)
+
+  assert.equal(refs.has('/assets/todo-RSpTCeB8.svg'), true)
+  assert.equal(refs.has('/wallpapers/study-os/mountain-mist.webp'), true)
+  // 运行期拼出来的名字没法预先抓
+  assert.equal([...refs.keys()].some((ref) => ref.includes('name')), false)
 })
 
 test('normalizeRef drops dynamic, foreign and non-asset paths', () => {
@@ -107,6 +123,15 @@ test('pinEntryRefs preserves query strings and normalizes the mount path', () =>
     pinEntryRefs('<img src="./app-icon.png?v=2" />', BASE, '/demo/'),
     /src="\/demo\/app-icon\.png\?v=2"/
   )
+})
+
+test('a pinned mirror survives the build-time sync unless a sync is asked for explicitly', () => {
+  const pinned = { pinned: '主仓库 536238582 的本地构建' }
+  assert.equal(isPinnedAgainstSync(pinned), true)
+  assert.equal(isPinnedAgainstSync(pinned, { force: true }), false)
+  assert.equal(isPinnedAgainstSync(pinned, { explicitSource: true }), false)
+  assert.equal(isPinnedAgainstSync({ source: 'http://47.88.78.106:8010' }), false)
+  assert.equal(isPinnedAgainstSync(null), false)
 })
 
 test('committed mirror entry pins its own assets, so any URL resolves them', async () => {

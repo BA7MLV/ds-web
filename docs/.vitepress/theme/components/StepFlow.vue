@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from '../i18n/index.js'
+import FeatureShot from './FeatureShot.vue'
 
 /**
  * 「想明白 / 记得住」—— Apple 产品页式的不对称双卡。
@@ -23,8 +24,8 @@ import { useI18n } from '../i18n/index.js'
  *    内容全程可见：整段藏起来会在中间露出一块空壳，那才是上一版最「怪」的地方。
  *    关闭沿原路缩回卡片中心 —— 所以 fromRect 只在打开时量一次。
  *
- * 3. **底图是内联 SVG，不是 `<img>`**。墨色由 `currentColor` 从页面继承，
- *    深浅两套自动跟上；出处与取舍见 `theme/utils/flow-art.js`。
+ * 3. **画面是真实界面截图**（FeatureShot，和功能区同一套）：
+ *    scripts/gen-features-live.mjs 在演示里打开对应界面截下取景框，深浅色各一张，跟着主题换。
  */
 const { t, tm } = useI18n()
 
@@ -70,29 +71,14 @@ const current = computed(() => (openIndex.value < 0 ? null : steps.value[openInd
  * 加号和底图的墨色都交给 CSS，脚本这边不再管颜色。
  *
  * 早先这里是**采图**：把底图右下角裁一块扔进 canvas 量亮度 —— 那时底图是两张
- * 深色 UI 截图，卡面浅、图深，不看图就不知道 + 该按哪一档做。现在底图是字符画，
- * 笔画取的是主题正文色，+ 压着的右下角本来就几乎没墨，它底下真正的颜色就是卡面底色，
- * 而卡面底色只由主题决定 —— 也就是 `<html>` 上那个 `.dark` 类。
+ * 深色 UI 截图，卡面浅、图深，不看图就不知道 + 该按哪一档做。现在截图跟着主题换
+ * （浅色主题配浅色界面、深色配深色），+ 压着的右下角不是界面底色就是卡面底色，
+ * 两者都只由主题决定 —— 也就是 `<html>` 上那个 `.dark` 类。
  *
  * 所以既没有 `data-tone`，也没有 `isDark` 参与：这条链上少一个「状态与样式可能不同步」
  * 的环节（实测过：手动切类时 VitePress 的 isDark 还没跟上，+ 就会留在上一档），
  * 顺带省掉一次 canvas 往返和一次 getImageData。
  */
-
-/**
- * 底图的标记串，**挂载之后才动态 import**。
- *
- * 不跟组件一起静态引入：那几十 kB 的路径数据只有首页这一处用得上，
- * 而 theme chunk 是**每个页面都会 modulepreload** 的那一个
- * （实测：`start.html` 与 `index.html` 引的是同一个 `theme.*.js`）——
- * 静态引入等于让所有文档页都替首页的一张装饰多下几 kB。
- * 分开之后这笔钱只有首页付，一次请求，和换掉的那两张 `<img>` 大致持平。
- *
- * 代价是首屏 HTML 里没有图案：卡片在脚本到位前只有文字。
- * 可以接受 —— 这一段在首屏之外，而图案是绝对定位的装饰，尺寸不参与任何布局，
- * 晚到也不会引起位移。
- */
-const art = ref({})
 
 /* ── 从卡片长出来 ── */
 const motionOff = () =>
@@ -266,10 +252,8 @@ const closeSheet = async () => {
   closeTimer = setTimeout(finishClose, motionOff() ? 0 : readMs('--morph-close-dur', 220))
 }
 
-onMounted(async () => {
+onMounted(() => {
   window.addEventListener('keydown', onKey)
-  // 图案晚一步到；失败也只是没有图案，卡片本身照常可点
-  art.value = (await import('../utils/flow-art.js')).FLOW_ART
 })
 
 onUnmounted(() => {
@@ -283,7 +267,11 @@ onUnmounted(() => {
   <section id="flow" class="flow">
     <div class="lp-wrap flow__inner">
       <ul class="pair">
-        <li v-for="(step, index) in steps" :key="step.label" class="pair__card">
+        <li
+          v-for="(step, index) in steps"
+          :key="step.label"
+          class="pair__card"
+        >
           <p class="pair__label">{{ step.label }}</p>
           <h3 class="pair__title">
             <!-- 卡片的唯一交互元素：伪元素铺满整张卡，见 .pair__hit::after -->
@@ -297,18 +285,10 @@ onUnmounted(() => {
             >{{ step.statement }}</button>
           </h3>
 
-          <!--
-            底图是内联 SVG（标记串来自 theme/utils/flow-art.js，见上面 art 的说明），
-            currentColor 于是解析在页面里、跟着主题走。
-            role/aria-label 挂在这一层 —— 内联 SVG 没有 alt，读屏要靠这个拿到名字；
-            图案没到位时读屏拿到的仍然是这句完整描述。
-          -->
-          <span
-            :class="['pair__shot', `pair__shot--${index}`]"
-            role="img"
-            :aria-label="step.alt"
-            v-html="art[step.art] || ''"
-          />
+          <!-- 一扇「窗」：真实界面截图，从卡片底边升上来 -->
+          <span :class="['pair__shot', `pair__shot--${index}`]">
+            <FeatureShot :name="step.art" :alt="step.alt" />
+          </span>
 
           <span class="pair__plus" aria-hidden="true">
             <svg viewBox="0 0 16 16">
@@ -348,12 +328,9 @@ onUnmounted(() => {
           </button>
 
           <div class="sheet__stage">
-            <span
-              :class="['sheet__shot', `sheet__shot--${openIndex}`]"
-              role="img"
-              :aria-label="current.alt"
-              v-html="art[current.art] || ''"
-            />
+            <div :class="['sheet__shot', `sheet__shot--${openIndex}`]">
+              <FeatureShot :key="current.art" :name="current.art" :alt="current.alt" />
+            </div>
           </div>
 
           <div class="sheet__copy">
@@ -464,60 +441,36 @@ onUnmounted(() => {
 }
 
 /*
- * 两张底图现在都是单主体符号，不能再沿用旧拼贴图的右下越界裁切。
- * 基础样式只负责绝对定位；各自的宽度与位置在 --0 / --1 中按视觉重心单独校准。
- *
- * 这一层是**内联 SVG 的容器**，不是 `<img>`：尺寸由外面这层定，里面的 svg 铺满它。
- * 这也正是墨色的开关 —— `color` 写在这儿，SVG 里的 `stroke="currentColor"` 就取它，
- * 深浅两套自动跟上，不需要给深色再存一份资产、也不需要 `filter: invert(1)`
- * 把近黑反成一片和正文对不上的灰。
+ * 画面是一扇「窗」：左边对齐卡片内边距，从卡片底边升上来（窗的底边压在卡片底边下面），
+ * 右下角的 + 压在窗上。窗里整张铺满真实截图，窗本身只有一层很淡的描边和投影，
+ * 深浅两套都读 --lp-* 变量。宽度给窗，高度由截图的宽高比决定，卡片的 min-height 留够了。
+ * 截图的取景框本身是完整的（生成器保证框边不切开界面），这里不再裁它。
  */
 .pair__shot {
   position: absolute;
   z-index: -1;
-  max-width: none;
-  color: var(--lp-text);
+  left: 28px;
+  bottom: -1px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid var(--lp-hair);
+  border-bottom: 0;
+  border-radius: 14px 14px 0 0;
+  background: var(--lp-surface);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 32px rgba(0, 0, 0, 0.05);
   pointer-events: none;
   user-select: none;
   transition: transform 420ms var(--lp-ease);
 }
 
-/*
- * 里面的 svg 铺满容器，宽高比由 viewBox 给：`width: 100%` + `height: auto`
- * 按比例收 —— 不用把画布尺寸再抄进 CSS 一遍。
- *
- * **必须走 `:deep()`**：这两个 svg 是 `v-html` 注入的，注入的节点上**不带**
- * 作用域 id，`.pair__shot > svg` 这种写法编译出来会要求 svg 自己带 `data-v-xxx`，
- * 于是整条规则静默失效 —— svg 退回它的固有尺寸（`width` / `height` 属性），
- * 图案在卡片里既不缩放也不居中。`MermaidDiagram.vue` 里那条 `.ds-diagram :deep(svg)`
- * 是同一件事：凡 `v-html` 进去的标记，样式都得从外面用 `:deep()` 穿进去。
- */
-.pair__shot :deep(svg) {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/*
- * 底图的 viewBox 是**按墨迹裁出来的**（墨迹四边各留 12 个单位，见
- * `scripts/lib/ascii.mjs` 的 wrapAscii），也就是说这个元素框 ≈ 那张画本身。
- * 所以下面的 `width` / `right` / `bottom` 描述的就是**图案自己的大小与位置**，
- * 不再是「一张带透明边的画布，图案在里面的某个角落」——
- * 这几个百分比是拿改前卡片上墨迹的实际矩形反解出来的，改完之后逐像素一致。
- */
-
-/* 问答气泡：完整露出，放在窄卡下半区，尾巴与右下角 + 保持间隔。 */
+/* 窄卡：窗占满内边距之间的宽度 */
 .pair__shot--0 {
-  right: 11.8%;
-  bottom: 4.4%;
-  width: 76.6%;
+  right: 28px;
 }
 
-/* 循环复习：宽卡里略向内收，让符号落在标题右下方而不是贴着卡边。 */
+/* 宽卡：窗不贴到右边，给右下角的 + 留出位置 */
 .pair__shot--1 {
-  right: 22.8%;
-  bottom: 7%;
-  width: 41.4%;
+  width: min(calc(100% - 96px), 640px);
 }
 
 /*
@@ -729,29 +682,30 @@ onUnmounted(() => {
 }
 
 .sheet__shot {
-  display: block;
+  display: grid;
+  place-items: center;
   width: 100%;
   max-width: 720px;
   height: 100%;
   min-height: 0;
-  color: var(--lp-text);
 }
 
 /*
- * 同样要走 `:deep()`（见 .pair__shot 那一段）。这里给的是 `height: 100%` 而不是
- * `auto`：这一层是定死的盒子，svg 铺满它，剩下的交给 `preserveAspectRatio`
- * 按比例缩到装得下、居中 —— 也就是 `object-fit: contain` 的语义。
+ * 展开态的截图按舞台收：宽高都不超出、按比例缩到装得下、居中（object-fit: contain 的语义）。
+ * 截图是 2 倍图（srcset 2x），自然尺寸就是取景框的 CSS 尺寸，舞台再大也不会放糊
  */
-.sheet__shot :deep(svg) {
-  display: block;
-  width: 100%;
-  height: 100%;
+.sheet__shot :deep(.fs) {
+  display: contents;
 }
 
-/* 图形的几何中心略低于视觉中心，展开态统一轻抬一点。 */
-.sheet__shot--0,
-.sheet__shot--1 {
-  transform: translateY(-6px);
+.sheet__shot :deep(.fs__img) {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  border: 1px solid var(--lp-hair);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 10px 28px rgba(0, 0, 0, 0.08);
 }
 
 .sheet__copy {
@@ -811,21 +765,25 @@ onUnmounted(() => {
     min-height: 360px;
   }
 
-  /* 窄画布里的气泡占比更小，移动端放大一点，主体仍完整 */
-  .pair__shot--0 {
-    right: 12.6%;
-    bottom: 2.8%;
-    width: 74.9%;
+  /*
+   * 单列时卡片高度跟着内容走：窗回到文档流里，接在标题下面、贴住卡片底边，
+   * 不再靠 min-height 撑出一块空白。宽卡那张截图整张缩进卡宽，不放宽、不裁边。
+   */
+  .pair__card {
+    min-height: 0;
+    padding-bottom: 0;
   }
 
-  /*
-   * 宽画布那张到移动端要放大。上一版靠 `right: -6%` 让图案的透明边出画、
-   * 把主体顶出来 —— viewBox 按墨迹裁过之后没有透明边了，直接给尺寸就行。
-   */
+  .pair__shot,
+  .pair__shot--0,
   .pair__shot--1 {
-    right: 17.8%;
-    bottom: 4.2%;
-    width: 61.8%;
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    display: block;
+    width: auto;
+    margin: 28px 0 -1px;
   }
 
   .sheet {
@@ -836,11 +794,6 @@ onUnmounted(() => {
   .sheet__stage {
     height: clamp(160px, 34dvh, 240px);
     padding: 40px 16px 24px;
-  }
-
-  .sheet__shot--0,
-  .sheet__shot--1 {
-    transform: translateY(-2px);
   }
 
   .sheet__copy {

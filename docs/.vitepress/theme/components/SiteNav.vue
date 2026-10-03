@@ -50,16 +50,23 @@ const NAV_DOCS = [
   { key: 'support', href: '/support', match: ['/support'] },
 ]
 
-/** 落地页导航：只留两个出口（不出现页内锚点、路线图、QA） */
+/**
+ * 落地页导航：只留两个出口（不出现页内锚点、路线图、QA）。
+ * 支持页只有中文，地址跟着语言走（i18n 的 links.support），英文页去 GitHub Discussions。
+ */
 const NAV_LANDING = [
   { key: 'docs', href: '/what-is-deepstudent' },
-  { key: 'support', href: '/support' },
+  { key: 'support', hrefKey: 'links.support' },
 ]
 
 const links = computed(() => {
   const variant = isLanding.value ? 'landing' : 'docPage'
   const table = isLanding.value ? NAV_LANDING : NAV_DOCS
-  return table.map((link) => ({ ...link, text: t(`nav.${variant}.${link.key}`) }))
+  return table.map((link) => ({
+    ...link,
+    href: link.hrefKey ? t(link.hrefKey) : link.href,
+    text: t(`nav.${variant}.${link.key}`)
+  }))
 })
 
 const norm = (p) => (p || '/').replace(/\.html$/, '').replace(/(.)\/$/, '$1')
@@ -243,7 +250,7 @@ onUnmounted(() => {
             hreflang / sitemap 进入。将来文档有了英文版，把这个 v-if 去掉即可。
           -->
           <LanguageSwitch v-if="isLanding" bare />
-          <a class="SNav__cta" href="/download">{{ t('nav.download') }}</a>
+          <a class="SNav__cta" :href="t('links.download')">{{ t('nav.download') }}</a>
         </div>
 
         <button
@@ -298,7 +305,7 @@ onUnmounted(() => {
               </svg>
             </span>
           </button>
-          <a class="SNav__cta" href="/download" @click="closeMenu">{{ t('nav.download') }}</a>
+          <a class="SNav__cta" :href="t('links.download')" @click="closeMenu">{{ t('nav.download') }}</a>
         </div>
       </div>
     </Transition>

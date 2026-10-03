@@ -11,18 +11,21 @@
  * 能自己判的（Client Hints 给了架构）直接判，判不出来的按 aarch64 默认，
  * 想换的人拉开清单自己挑 —— 挑过之后按钮就报挑中的那一个（这时必须带上架构，否则两项重名）。
  *
- * 首屏（含 SSR）不猜设备，一律退回「立即下载 → /download」：服务端没有 navigator，
+ * 首屏（含 SSR）不猜设备，一律退回「立即下载 → 下载页」（英文页去 GitHub Releases）：服务端没有 navigator，
  * 若在 setup 顶层就按设备算，服务端会渲染成兜底、客户端再变成 Mac 包，水合时两边对不上。
- * 所以整颗按钮等挂载后再收窄；认不出的设备（Linux、iPad 的桌面 UA）就一直留着兜底。
+ * 所以整颗按钮等挂载后再收窄；认不出的设备（ARM 版 Linux 等）就一直留着兜底，
+ * iPhone / iPad 没有安装包，按钮改说「在电脑上下载」、仍去下载页。
  * 清单同理默认收起 —— 展开态也属于「客户端才知道的事」。
  */
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import DlIcon from './DlIcon.vue'
 import { useI18n } from '../i18n/index.js'
-import { buildRows, formatSize } from '../utils/downloads.js'
+import { track } from '../lib/analytics.js'
+import { buildRows, formatSize, release } from '../utils/downloads.js'
+import { primaryUrl } from '../utils/download-channel.js'
 import { detectPlatform, recommendedDownloadKey } from '../utils/download-device.js'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const options = [...buildRows('desktop'), ...buildRows('mobile')]
 
@@ -30,7 +33,9 @@ const options = [...buildRows('desktop'), ...buildRows('mobile')]
 const PLATFORMS = {
   mac: { label: 'home.hero.downloadMac', icon: 'apple' },
   win: { label: 'home.hero.downloadWin', icon: 'windows' },
-  android: { label: 'home.hero.downloadAndroid', icon: 'android' }
+  linux: { label: 'home.hero.downloadLinux', icon: 'linux' },
+  android: { label: 'home.hero.downloadAndroid', icon: 'android' },
+  ios: { label: 'home.hero.downloadOnComputer', icon: 'download' }
 }
 
 /** 安装包的 key 都是 `系统-架构`；认不出平台就退回通用箭头 */
@@ -61,7 +66,10 @@ const label = computed(() =>
 )
 
 const selected = computed(() => options.find((item) => item.key === key.value) ?? null)
-const href = computed(() => selected.value?.asset?.url ?? '/download')
+// 中文页走国内镜像、英文页走 GitHub，见 download-channel.js；兜底去处也跟着语言走（links.download）
+const href = computed(() =>
+  selected.value ? primaryUrl(selected.value.asset, locale.value) : t('links.download')
+)
 const fileName = computed(() => selected.value?.asset?.name ?? '')
 
 /* ── 清单的开合与键盘操作 ───────────────────────────────────── */
@@ -141,11 +149,31 @@ const onKeydown = (event) => {
   }
 }
 
+/** 打点：哪个包、走哪条通道、从哪颗按钮点的（51.la 事件分析，见 lib/analytics.js） */
+const trackDownload = (packageKey, from) => {
+  const row = options.find((item) => item.key === packageKey)
+  if (!row) return
+  track('download', {
+    package: row.key,
+    channel: primaryUrl(row.asset, locale.value) === row.asset.url ? 'github' : 'mirror',
+    from,
+    locale: locale.value,
+    version: release?.version ?? ''
+  })
+}
+
+/** 主按钮：指着安装包就记一次下载；还在兜底（去下载页）就记一次「去下载页」，顺带看认不出的设备有多少 */
+const onMainClick = () => {
+  if (selected.value) trackDownload(selected.value.key, 'hero')
+  else track('download_page', { from: 'hero', platform: platform.value, locale: locale.value })
+}
+
 /** 点某一条：立刻开始下载（由链接自己完成），同时把选择留在按钮上 */
 const pick = (item) => {
   manual.value = true
   key.value = item.key
   open.value = false
+  trackDownload(item.key, 'hero-menu')
 }
 
 const applyDevice = (hints) => {
@@ -154,9 +182,22 @@ const applyDevice = (hints) => {
   const detected = detectPlatform(navigator)
   if (detected === 'other') return
 
+  // iPhone / iPad 没有安装包：按钮改说「在电脑上下载」，仍去下载页（那里给分享 / 复制链接）
+  if (detected === 'ios') {
+    platform.value = 'ios'
+    return
+  }
+
   // 该平台的包没上传成功时同样留兜底 —— 宁可少给一次直下，也不要一个点了必然 404 的按钮
   const row = options.find((item) => item.key === recommendedDownloadKey(navigator, hints))
-  if (!row?.asset?.url) return
+  if (!row?.asset?.url) {
+    // 迟到的架构信息也可能否掉上一步的结果：ARM 版 Linux 上 Chrome 的 UA 照样写 x86_64
+    if (hints) {
+      platform.value = 'other'
+      key.value = ''
+    }
+    return
+  }
 
   platform.value = detected
   key.value = row.key
@@ -187,7 +228,7 @@ onUnmounted(() => {
 
 <template>
   <div ref="rootEl" class="home-download home-btn-primary" @focusout="onFocusOut">
-    <a class="home-download__link" :href="href" :download="fileName || undefined">
+    <a class="home-download__link" :href="href" :download="fileName || undefined" @click="onMainClick">
       <DlIcon class="home-download__icon" :name="icon" />
       <span>{{ label }}</span>
     </a>
@@ -224,7 +265,7 @@ onUnmounted(() => {
             :class="{ 'is-current': item.key === key }"
             role="menuitem"
             :aria-current="item.key === key ? 'true' : undefined"
-            :href="item.asset.url"
+            :href="primaryUrl(item.asset, locale)"
             :download="item.asset.name || undefined"
             @click="pick(item)"
           >

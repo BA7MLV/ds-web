@@ -9,7 +9,7 @@
  */
 
 import data from '../../data/downloads.json'
-import { detectPlatform } from './download-device.js'
+import { detectPlatform, recommendedDownloadKey } from './download-device.js'
 
 export { detectPlatform } from './download-device.js'
 
@@ -56,7 +56,10 @@ const row = (key, os, arch, note, asset) => ({ key, os, arch, note, asset })
 const DESKTOP_ROWS = [
   row('mac-arm', 'macOS', 'Apple Silicon', 'M 系列芯片的 Mac', platforms.macArm64),
   row('mac-x64', 'macOS', 'Intel', 'Intel 芯片的 Mac', platforms.macX64),
-  row('win-x64', 'Windows', 'x64', 'Windows 11，或 Windows 10 22H2 及以上', platforms.windowsX64)
+  row('win-x64', 'Windows', 'x64', 'Windows 11，或 Windows 10 22H2 及以上', platforms.windowsX64),
+  row('linux-appimage', 'Linux', 'AppImage', '各发行版通用，加上执行权限即可运行', platforms.linuxAppImage),
+  row('linux-deb', 'Linux', 'deb', 'Debian、Ubuntu 及其衍生版', platforms.linuxDeb),
+  row('linux-rpm', 'Linux', 'rpm', 'Fedora、openSUSE 等', platforms.linuxRpm)
 ]
 
 const MOBILE_ROWS = [
@@ -92,6 +95,8 @@ export const buildRecommendation = () => {
   const macArm = platforms.macArm64
   const macX64 = platforms.macX64
   const win = platforms.windowsX64
+  const appImage = platforms.linuxAppImage
+  const deb = platforms.linuxDeb
   const android = platforms.androidArm64
 
   if (platform === 'mac' && (macArm || macX64)) {
@@ -108,6 +113,20 @@ export const buildRecommendation = () => {
       primary: action('win-x64', '下载 EXE 安装程序', win),
       secondary: null
     }
+  }
+
+  // ARM / 32 位 Linux 没有对应的包，recommendedDownloadKey 会给空值，落到下面的兜底
+  if (platform === 'linux' && recommendedDownloadKey(globalThis.navigator) && (appImage || deb)) {
+    return {
+      key: 'linux',
+      primary: appImage ? action('linux-appimage', '下载 AppImage', appImage) : null,
+      secondary: deb ? action('linux-deb', 'deb 安装包', deb) : null
+    }
+  }
+
+  // 没有 iOS 安装包：推荐位改成「在电脑上下载」，由 DownloadPick 给分享 / 复制链接
+  if (platform === 'ios') {
+    return { key: 'ios', primary: null, secondary: null }
   }
 
   if (platform === 'android' && android) {
