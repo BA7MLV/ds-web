@@ -3,7 +3,9 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from '../i18n/index.js'
 import { track } from '../lib/analytics.js'
 import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
+import { warmFeatureArt } from '../utils/feature-art.js'
 import AppShell from './AppShell.vue'
+import FeatureAscii from './FeatureAscii.vue'
 import HeroStarfield from './HeroStarfield.vue'
 import HomeDownload from './HomeDownload.vue'
 import StepFlow from './StepFlow.vue'
@@ -21,11 +23,10 @@ const heroEl = ref(null)
 const demoEl = ref(null)
 const featuresEl = ref(null)
 let cancelStars = () => {}
-let cancelImageWarmup = () => {}
+let cancelArtWarmup = () => {}
 let stopFeatureObserver = () => {}
 let starsController = null
 let starsTimeout = 0
-const warmedImages = []
 
 /* ── GitHub Star 数（带会话缓存，避免触发限流） ── */
 const stars = ref(null)
@@ -93,22 +94,15 @@ const fetchStars = async () => {
 const scenes = computed(() => tm('home.features.scenes'))
 
 /*
- * 四个场景共用同一个屏幕，切 tab 时只是换 src —— 没预热的话会先看到一块空屏。
- * 场景资源是生成器产出的 SVG，首屏只允许当前图片原生懒加载。
- * 功能区接近视口后，再等主页面加载完成、空闲时低优先级预热其余图；
- * 省流量和慢速网络下仅按需加载。
+ * 每个场景的字符画是一份小 JSON（scripts/gen-features-live.mjs 产出），切过去才取的话会先空一下。
+ * 功能区接近视口后，再等主页面加载完成、空闲时预取其余场景；省流量和慢速网络下仅按需加载。
+ * 真实截图只在悬停时才要，不预取。
  */
-const warmSceneImages = () => {
+const warmSceneArt = () => {
   const connection = navigator.connection
   if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '')) return
-  cancelImageWarmup = afterPageLoad(() => {
-    scenes.value.filter((scene) => scene.img !== currentScene.value.img).forEach((scene) => {
-      const img = new Image()
-      img.decoding = 'async'
-      img.fetchPriority = 'low'
-      img.src = scene.img
-      warmedImages.push(img)
-    })
+  cancelArtWarmup = afterPageLoad(() => {
+    warmFeatureArt(scenes.value.map((scene) => scene.art).filter((art) => art !== currentScene.value.art))
   })
 }
 
@@ -173,18 +167,16 @@ onMounted(() => {
   stopFeatureObserver = observeNearViewport(featuresEl.value, (near) => {
     if (!near) return
     stopFeatureObserver()
-    warmSceneImages()
+    warmSceneArt()
   }, 360)
 })
 
 onUnmounted(() => {
   cancelStars()
-  cancelImageWarmup()
+  cancelArtWarmup()
   stopFeatureObserver()
   starsController?.abort()
   clearTimeout(starsTimeout)
-  warmedImages.forEach((img) => img.removeAttribute('src'))
-  warmedImages.length = 0
 })
 </script>
 
@@ -289,15 +281,13 @@ onUnmounted(() => {
                 </a>
               </div>
 
-              <!-- 右半：直接展示字符画，墨色随站点主题切换 -->
+              <!-- 右半：真实界面读出来的字符画，悬停 / 轻点换成同一取景框的截图 -->
               <div class="lp-fcard__stage">
-                <img
-                  :src="currentScene.img"
-                  :alt="currentScene.alt"
-                  loading="lazy"
-                  decoding="async"
-                  class="lp-shot"
-                />
+                <FeatureAscii :name="currentScene.art" :alt="currentScene.alt" />
+                <p class="lp-fcard__hint" aria-hidden="true">
+                  <span class="lp-fcard__hint-hover">{{ t('home.features.revealHover') }}</span>
+                  <span class="lp-fcard__hint-touch">{{ t('home.features.revealTouch') }}</span>
+                </p>
               </div>
             </div>
           </Transition>

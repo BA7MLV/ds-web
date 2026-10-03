@@ -197,49 +197,69 @@ export default {
     },
 
     features: {
-      title: 'Four tools, one window.',
-      lede: 'Material chat, mind maps, practice questions and Anki cards share a single dataset — no shuttling between apps.',
+      title: 'From reading to remembering, in one window.',
+      lede: 'Material chat, mind maps, practice, cards, review and reading share a single dataset — no shuttling between apps.',
       tabsLabel: 'Feature scenes',
       more: 'Learn more (Chinese)',
       prev: 'Previous scene',
       next: 'Next scene',
       dot: 'Scene {index}: {name}',
+      revealHover: 'Hover to see the real screen',
+      revealTouch: 'Tap to see the real screen',
       scenes: [
         {
           tab: 'Material chat',
           title: 'Learning from your own material',
           lead: 'Learn around your own material, not just generic chat.',
-          desc: 'Images, voice and files in; a citation panel that pulls from your sources; deep reasoning for hard questions.',
+          desc: 'Images, voice and files in; answers cite your sources down to the page; deep reasoning for hard questions.',
           link: '/user-guide/01-chat-v2',
-          img: '/feature-chat-ascii.svg',
-          alt: 'Character art of a material page linked to a chat bubble'
+          art: 'chat',
+          alt: 'Character rendering of the chat view: an answer citing textbook pages 45, 47 and 52'
         },
         {
           tab: 'Mind maps',
           title: 'Mind maps',
           lead: 'Organise knowledge into structure.',
-          desc: 'Generate a full knowledge structure from one sentence, edit it as you chat, and hide nodes to test yourself.',
+          desc: 'Generate a full knowledge structure from one sentence and edit it as you chat; recitation mode hides the key points so you can test yourself.',
           link: '/user-guide/02-learning-hub-assets/05-mindmap',
-          img: '/feature-mindmap-ascii.svg',
-          alt: 'Character art of a mind map with node levels'
+          art: 'mindmap',
+          alt: 'Character rendering of a mind map: “Data-parallel training” branching into optimisation, the basic paradigm and the cost of synchronisation'
         },
         {
           tab: 'Practice',
           title: 'Question banks and practice',
           lead: 'Turn textbooks and exam papers into a drillable bank.',
-          desc: 'Questions are pulled from your material or generated, graded automatically, and tracked per topic.',
+          desc: 'Questions are generated per topic with answers and explanations, and the ones you tick go into a question set; practice is graded automatically and mastery is tracked per topic.',
           link: '/user-guide/02-learning-hub-assets/03-question-bank',
-          img: '/feature-quiz-ascii.svg',
-          alt: 'Character art of a quiz sheet with a grading badge'
+          art: 'quiz',
+          alt: 'Character rendering of AI-generated questions: two tagged multiple-choice drafts with options and answers'
         },
         {
           tab: 'Anki cards',
           title: 'Anki card generation',
-          lead: 'Turn understanding into long-term memory.',
-          desc: 'Say the word and cards get made — in bulk, and synced to Anki in one click.',
+          lead: 'Turn understanding into cards.',
+          desc: 'Say the word and cards get made, in bulk; flip to check, edit, then add them to your library or sync to Anki in one click.',
           link: '/user-guide/03-chatanki',
-          img: '/feature-anki-ascii.svg',
-          alt: 'Character art of a card stack with a forgetting curve'
+          art: 'anki',
+          alt: 'Character rendering of card generation: a stack of Q&A cards above the “5 cards generated” progress'
+        },
+        {
+          tab: 'Flashcard review',
+          title: 'Flashcard review',
+          lead: 'Review without leaving the app.',
+          desc: 'Built-in FSRS spaced repetition queues the cards due today; rate how well you remembered and the next review is rescheduled to match.',
+          link: '/user-guide/03-chatanki',
+          art: 'review',
+          alt: 'Character rendering of a review session: the answer side of a card above Again, Hard, Good and Easy with their intervals'
+        },
+        {
+          tab: 'Reading',
+          title: 'Reading and translation',
+          lead: 'Read the original, and understand it.',
+          desc: 'Open PDF, Word and EPUB files; select text to explain, translate, save as a note or make a card; turn a passage into a sentence-by-sentence bilingual table.',
+          link: '/user-guide/02-learning-hub-assets/04-translation-essay',
+          art: 'reading',
+          alt: 'Character rendering of bilingual reading: an English source table aligned sentence by sentence with its Chinese translation'
         }
       ]
     },

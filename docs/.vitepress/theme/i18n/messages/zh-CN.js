@@ -202,49 +202,70 @@ export default {
     },
 
     features: {
-      title: '四件事，装进同一个窗口。',
-      lede: '资料对话、知识导图、题目练习、Anki 制卡共用同一份数据，不用在几个软件之间来回搬。',
+      title: '从读到记，装进同一个窗口。',
+      lede: '资料对话、知识导图、题目练习、制卡复习和文档阅读共用同一份数据，不用在几个软件之间来回搬。',
       tabsLabel: '功能场景',
       more: '了解更多',
       prev: '上一个场景',
       next: '下一个场景',
       dot: '第 {index} 个场景：{name}',
+      revealHover: '悬停查看真实界面',
+      revealTouch: '轻点查看真实界面',
+      /* art 对应 docs/public/features/<art>.json，由 scripts/gen-features-live.mjs 从演示界面生成 */
       scenes: [
         {
           tab: '资料对话',
           title: '资料学习与智能对话',
           lead: '围绕你自己的材料学习，而不是通用聊天。',
-          desc: '支持图片、语音和文件；引用面板直接调取你的资料；复杂问题切深度推理。',
+          desc: '支持图片、语音和文件；回答带出处，标到原文页码；复杂问题切深度推理。',
           link: '/user-guide/01-chat-v2',
-          img: '/feature-chat-ascii.svg',
-          alt: '材料与对话引线的字符画'
+          art: 'chat',
+          alt: '对话界面的字符画：按教材页码作答，段末标着第 45、47、52 页'
         },
         {
           tab: '知识导图',
           title: '知识导图',
           lead: '把知识整理成结构。',
-          desc: '一句话生成完整知识体系，边聊边改，遮住节点就能自测。',
+          desc: '一句话生成完整知识体系，边聊边改；背诵模式一键遮住要点，自己默一遍。',
           link: '/user-guide/02-learning-hub-assets/05-mindmap',
-          img: '/feature-mindmap-ascii.svg',
-          alt: '知识导图节点层级的字符画'
+          art: 'mindmap',
+          alt: '知识导图的字符画：中心主题「数据并行训练」分出优化方向、基本范式和同步的代价'
         },
         {
           tab: '题目练习',
           title: '题目集与练习',
           lead: '把教材、试卷变成可练习的题库。',
-          desc: '自动从教材里提取或生成题目，自动判分，掌握度按知识点追踪。',
+          desc: '按知识点出题，带答案和解析，勾选后收进题目集；练习自动判分，掌握度按知识点追踪。',
           link: '/user-guide/02-learning-hub-assets/03-question-bank',
-          img: '/feature-quiz-ascii.svg',
-          alt: '试卷与判分徽章的字符画'
+          art: 'quiz',
+          alt: 'AI 出题结果的字符画：两道带知识点标签、选项和答案的单选题草稿'
         },
         {
           tab: 'Anki 制卡',
           title: 'Anki 智能制卡',
-          lead: '把理解变成长期记忆。',
-          desc: '说一句话就能制卡，批量生成，一键同步到 Anki。',
+          lead: '把理解变成卡片。',
+          desc: '说一句话就能制卡，批量生成；翻面检查、改好后加入卡片库，或一键同步到 Anki。',
           link: '/user-guide/03-chatanki',
-          img: '/feature-anki-ascii.svg',
-          alt: '卡片堆与遗忘曲线的字符画'
+          art: 'anki',
+          alt: '制卡界面的字符画：一叠问答卡，下面是已生成 5 张卡片的进度'
+        },
+        {
+          tab: '闪卡复习',
+          title: '闪卡复习',
+          lead: '复习也在同一个应用里。',
+          desc: '内置 FSRS 间隔重复：到期的卡自动排进今日复习，按记得的程度评分，下一次复习时间随之调整。',
+          link: '/user-guide/03-chatanki',
+          art: 'review',
+          alt: '复习界面的字符画：卡片背面的答案，下面是重来、困难、良好、简单四个评分和对应间隔'
+        },
+        {
+          tab: '文档阅读',
+          title: '文档阅读与翻译',
+          lead: '读原文，也读得懂原文。',
+          desc: 'PDF、Word、EPUB 直接阅读，划词解释、翻译、存笔记或制卡；整段材料生成逐句双语对照。',
+          link: '/user-guide/02-learning-hub-assets/04-translation-essay',
+          art: 'reading',
+          alt: '双语阅读的字符画：英文原文与中文译文逐句对照的表格'
         }
       ]
     },

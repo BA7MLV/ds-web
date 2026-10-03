@@ -14,9 +14,9 @@
  * 坐标系：**形状一律写 CSS px**，只有采样那一刻才折算成格（CELL）。
  * 画布尺寸 = 这张图在页面里的实际显示宽度，所以 1px 就是 1px，网点不会被二次缩放。
  *
- * 消费者（各自只管构图与写盘）：
+ * 消费者（只管构图与写盘）：
  *   scripts/gen-flow-ascii.mjs      「使用流程」两张卡：字符画，量化与字形在 lib/ascii.mjs
- *   scripts/gen-features-ascii.mjs 功能区四扇窗口屏：450×286，字符画，同上
+ * 功能区的六扇窗不用这套：scripts/gen-features-live.mjs 直接从演示里的真实界面读字符。
  */
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
@@ -53,8 +53,7 @@ export const smoothstep = (a, b, x) => {
  * 只给包围盒是为了别对整张画布逐形状扫描：图案里最贵的几个形状
  * （旋转的卡片、胶囊）铺满画面，少了这层裁剪就是白白多算十几倍。
  *
- * 导出来是因为字符画那边要整体平移一个形状（`gen-features-ascii.mjs` 的 `shift`），
- * 造一个平移过的形状得能自己 new 一个 `{ bbox, hit }`。
+ * 导出来是为了让消费者能自己 new 一个 `{ bbox, hit }`（比如整体平移一个已有形状）。
  */
 export const shape = (bbox, hit) => ({ bbox, hit })
 
