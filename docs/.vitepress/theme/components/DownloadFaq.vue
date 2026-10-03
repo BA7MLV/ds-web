@@ -18,6 +18,10 @@ const items = [
     a: '打开「关于本机」看「芯片」那一行：写着 Apple 芯片或 M1 / M2 / M3 这类型号就下 Apple Silicon，写着 Intel 就下 Intel 版。下错了装不上，但两个包都在这里，换一个重下就行。'
   },
   {
+    q: 'Linux 该下 AppImage、deb 还是 rpm？',
+    a: 'Debian、Ubuntu 及其衍生版选 deb，Fedora、openSUSE 选 rpm，装好后会出现在应用菜单里、卸载也走包管理器。其它发行版，或者只想先试试，就用 AppImage：一个文件，加上执行权限就能运行。三个包都只支持 x86_64。'
+  },
+  {
     q: '下载很慢，或者中途断了。',
     a: '每个按钮旁边都有「镜像下载」入口，是同一版本的同名文件，走 Cloudflare，与 GitHub 直链互为备份。两个都点一次，哪个快用哪个。断流大多是网络到 GitHub 那一段不稳，换成镜像通常就能续上。'
   },

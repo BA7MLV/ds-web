@@ -100,6 +100,7 @@ export default {
       download: '立即下载',
       downloadMac: '下载 macOS 版',
       downloadWin: '下载 Windows 版',
+      downloadLinux: '下载 Linux 版',
       downloadAndroid: '下载 Android 版',
       chooseDownload: '选择下载版本',
       switchDownload: '切换下载版本',
@@ -108,6 +109,9 @@ export default {
         'mac-arm': 'macOS · Apple Silicon',
         'mac-x64': 'macOS · Intel',
         'win-x64': 'Windows · x64',
+        'linux-appimage': 'Linux · AppImage',
+        'linux-deb': 'Linux · deb',
+        'linux-rpm': 'Linux · rpm',
         'android-arm64': 'Android · ARM64'
       },
       quickStart: '快速上手'

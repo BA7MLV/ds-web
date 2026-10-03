@@ -8,15 +8,20 @@ import { detectPlatform, recommendedDownloadKey } from '../docs/.vitepress/theme
 
 const mac = { userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', platform: 'MacIntel' }
 
-test('download defaults match supported devices without treating iOS or Linux as Mac', () => {
+const linux = { userAgent: 'Mozilla/5.0 (X11; Linux x86_64)', platform: 'Linux x86_64' }
+
+test('download defaults match supported devices without treating iOS as Mac or ARM Linux as x86', () => {
   const cases = [
     [mac, 'mac-arm'],
     [{ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }, 'win-x64'],
     [{ userAgent: 'Mozilla/5.0 (Linux; Android 15; Pixel 9)' }, 'android-arm64'],
+    [linux, 'linux-appimage'],
+    [{ userAgent: 'Mozilla/5.0 (X11; Linux aarch64)' }, ''],
+    [{ userAgent: 'Mozilla/5.0 (X11; Linux i686; rv:128.0)' }, ''],
+    [{ userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0)' }, ''],
     [{ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)' }, ''],
     [{ userAgent: 'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X)' }, ''],
     [{ ...mac, maxTouchPoints: 5 }, ''],
-    [{ userAgent: 'Mozilla/5.0 (X11; Linux x86_64)' }, ''],
     [{}, ''],
   ]
   for (const [device, expected] of cases) {
@@ -24,6 +29,9 @@ test('download defaults match supported devices without treating iOS or Linux as
   }
   assert.equal(recommendedDownloadKey(mac, { architecture: 'x86' }), 'mac-x64')
   assert.equal(recommendedDownloadKey(mac, { architecture: 'arm' }), 'mac-arm')
+  // Chrome 的 UA 在 ARM Linux 上也写 x86_64，只有 Client Hints 说得准
+  assert.equal(recommendedDownloadKey(linux, { architecture: 'arm' }), '')
+  assert.equal(detectPlatform(linux), 'linux')
   assert.equal(detectPlatform({}), 'other')
 })
 
@@ -78,8 +86,8 @@ test('each row carries the icon of the system its package belongs to', async () 
   const env = setup(mac)
   // 每行最左边那格按安装包的 key 认系统；认不出的 key 才退回通用箭头
   assert.deepEqual(
-    ['mac-arm', 'mac-x64', 'win-x64', 'android-arm64', '', 'linux-x64'].map(env.api.iconFor),
-    ['apple', 'apple', 'windows', 'android', 'download', 'download']
+    ['mac-arm', 'mac-x64', 'win-x64', 'linux-deb', 'android-arm64', '', 'ios-arm64'].map(env.api.iconFor),
+    ['apple', 'apple', 'windows', 'linux', 'android', 'download', 'download']
   )
 })
 
@@ -110,6 +118,30 @@ test('Windows and Android get their own wording without any architecture on the 
   assert.deepEqual(
     [android.api.label.value, android.api.icon.value, android.api.href.value],
     ['home.hero.downloadAndroid', 'android', 'https://files.test/android-arm64']
+  )
+})
+
+test('Linux gets the AppImage by default and keeps deb / rpm in the list', async () => {
+  const keys = ['mac-arm', 'win-x64', 'linux-appimage', 'linux-deb', 'linux-rpm']
+  const env = setup(linux, keys)
+  await env.mount()
+  assert.deepEqual(
+    [env.api.label.value, env.api.icon.value, env.api.href.value, env.api.fileName.value],
+    ['home.hero.downloadLinux', 'linux', 'https://files.test/linux-appimage', 'linux-appimage.bin']
+  )
+
+  env.api.pick({ key: 'linux-rpm' })
+  assert.deepEqual(
+    [env.api.label.value, env.api.icon.value, env.api.href.value],
+    ['home.hero.downloadOptions.linux-rpm', 'linux', 'https://files.test/linux-rpm']
+  )
+
+  // UA 写着 x86_64、架构信息却报 arm：撤回 AppImage，退回下载页
+  const arm = setup({ ...linux, userAgentData: { getHighEntropyValues: async () => ({ architecture: 'arm' }) } }, keys)
+  await arm.mount()
+  assert.deepEqual(
+    [arm.api.href.value, arm.api.label.value, arm.api.icon.value],
+    ['/download', 'home.hero.download', 'download']
   )
 })
 
@@ -232,10 +264,18 @@ test('denied hints, a missing package or an unknown system all keep the download
     ['/download', 'home.hero.download', '']
   )
 
-  const unknown = setup({ userAgent: 'Mozilla/5.0 (X11; Linux x86_64)' })
+  const unknown = setup({ userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0)' })
   await unknown.mount()
   assert.deepEqual(
     [unknown.api.href.value, unknown.api.label.value],
+    ['/download', 'home.hero.download']
+  )
+
+  // 认得出是 Linux，但这一版没传 Linux 包：同样留在下载页，不能派发别的系统的包
+  const linuxWithoutPackage = setup(linux)
+  await linuxWithoutPackage.mount()
+  assert.deepEqual(
+    [linuxWithoutPackage.api.href.value, linuxWithoutPackage.api.label.value],
     ['/download', 'home.hero.download']
   )
 })

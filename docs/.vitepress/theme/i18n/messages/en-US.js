@@ -95,6 +95,7 @@ export default {
       download: 'Download',
       downloadMac: 'Download for macOS',
       downloadWin: 'Download for Windows',
+      downloadLinux: 'Download for Linux',
       downloadAndroid: 'Download for Android',
       chooseDownload: 'Choose a download',
       switchDownload: 'Switch download version',
@@ -102,6 +103,9 @@ export default {
         'mac-arm': 'macOS · Apple Silicon',
         'mac-x64': 'macOS · Intel',
         'win-x64': 'Windows · x64',
+        'linux-appimage': 'Linux · AppImage',
+        'linux-deb': 'Linux · deb',
+        'linux-rpm': 'Linux · rpm',
         'android-arm64': 'Android · ARM64'
       },
       quickStart: 'Quick start'

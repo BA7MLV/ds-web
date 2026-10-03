@@ -12,6 +12,10 @@ test('buildDownloadsData maps release assets and metadata', () => {
       { name: 'Deep.Student_0.9.2_aarch64.dmg', browser_download_url: 'https://example.com/mac-arm.dmg', size: 11 },
       { name: 'Deep.Student_0.9.2_x64.dmg', browser_download_url: 'https://example.com/mac-x64.dmg', size: 22 },
       { name: 'Deep.Student_0.9.2_x64-setup.exe', browser_download_url: 'https://example.com/win.exe', size: 33 },
+      { name: 'Deep.Student_0.9.2_amd64_x86_64.AppImage.sig', browser_download_url: 'https://example.com/a.sig', size: 1 },
+      { name: 'Deep.Student_0.9.2_amd64_x86_64.AppImage', browser_download_url: 'https://example.com/linux.AppImage', size: 55 },
+      { name: 'Deep.Student_0.9.2_amd64.deb', browser_download_url: 'https://example.com/linux.deb', size: 66 },
+      { name: 'Deep.Student-0.9.2-1.x86_64.rpm', browser_download_url: 'https://example.com/linux.rpm', size: 77 },
       { name: 'Deep.Student_0.9.2_arm64.apk', browser_download_url: 'https://example.com/android.apk', size: 44 }
     ]
   }
@@ -33,6 +37,19 @@ test('buildDownloadsData maps release assets and metadata', () => {
     mirrorUrl: 'https://download.deepstudent.cn/releases/v0.9.2/Deep.Student_0.9.2_x64-setup.exe',
     sizeBytes: 33
   })
+  // 签名文件 .AppImage.sig 排在前面也不能被当成安装包
+  assert.deepEqual(result.platforms.linuxAppImage, {
+    name: 'Deep.Student_0.9.2_amd64_x86_64.AppImage',
+    url: 'https://example.com/linux.AppImage',
+    mirrorUrl: 'https://download.deepstudent.cn/releases/v0.9.2/Deep.Student_0.9.2_amd64_x86_64.AppImage',
+    sizeBytes: 55
+  })
+  assert.equal(result.platforms.linuxDeb.name, 'Deep.Student_0.9.2_amd64.deb')
+  assert.equal(result.platforms.linuxRpm.name, 'Deep.Student-0.9.2-1.x86_64.rpm')
+  assert.equal(
+    result.platforms.linuxRpm.mirrorUrl,
+    'https://download.deepstudent.cn/releases/v0.9.2/Deep.Student-0.9.2-1.x86_64.rpm'
+  )
 })
 
 test('buildDownloadsData returns null platform entries when assets are missing', () => {
@@ -49,5 +66,8 @@ test('buildDownloadsData returns null platform entries when assets are missing',
   assert.equal(result.platforms.macArm64, null)
   assert.equal(result.platforms.macX64, null)
   assert.equal(result.platforms.windowsX64, null)
+  assert.equal(result.platforms.linuxAppImage, null)
+  assert.equal(result.platforms.linuxDeb, null)
+  assert.equal(result.platforms.linuxRpm, null)
   assert.equal(result.platforms.androidArm64, null)
 })

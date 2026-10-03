@@ -5,6 +5,9 @@ const ASSET_MATCHERS = {
   macArm64: [/(aarch64|arm64)\.dmg$/i],
   macX64: [/(x64|x86_64)\.dmg$/i],
   windowsX64: [/(x64|x86_64).*setup\.exe$/i, /setup\.exe$/i],
+  linuxAppImage: [/(amd64|x86_64).*\.AppImage$/i, /\.AppImage$/i],
+  linuxDeb: [/(amd64|x86_64)\.deb$/i, /\.deb$/i],
+  linuxRpm: [/(amd64|x86_64)\.rpm$/i, /\.rpm$/i],
   androidArm64: [/arm64\.apk$/i, /\.apk$/i]
 }
 
@@ -41,6 +44,9 @@ export function buildDownloadsData(release) {
       macArm64: findAsset(assets, ASSET_MATCHERS.macArm64, tagName),
       macX64: findAsset(assets, ASSET_MATCHERS.macX64, tagName),
       windowsX64: findAsset(assets, ASSET_MATCHERS.windowsX64, tagName),
+      linuxAppImage: findAsset(assets, ASSET_MATCHERS.linuxAppImage, tagName),
+      linuxDeb: findAsset(assets, ASSET_MATCHERS.linuxDeb, tagName),
+      linuxRpm: findAsset(assets, ASSET_MATCHERS.linuxRpm, tagName),
       androidArm64: findAsset(assets, ASSET_MATCHERS.androidArm64, tagName)
     }
   }

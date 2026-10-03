@@ -2,7 +2,7 @@
 prev: false
 next: false
 editLink: false
-description: 下载 DeepStudent：macOS（Apple Silicon / Intel）、Windows 与 Android 安装包，提供 GitHub Releases 与 Cloudflare 镜像双通道。
+description: 下载 DeepStudent：macOS（Apple Silicon / Intel）、Windows、Linux（AppImage / deb / rpm）与 Android 安装包，提供 GitHub Releases 与 Cloudflare 镜像双通道。
 ---
 
 <script setup>
@@ -52,6 +52,22 @@ const publishedAt = formatDate(release?.publishedAt)
 2. 双击运行，按向导完成安装
 3. 安装完成后从开始菜单或桌面快捷方式启动
 
+### Linux
+
+三种格式装的是同一个应用，任选其一（都是 x86_64）：
+
+- **AppImage**：不用安装，加上执行权限直接运行；运行时报 FUSE 相关错误，先装 `libfuse2`（Ubuntu 24.04 起叫 `libfuse2t64`）
+
+<CopyLine command="chmod +x Deep.Student_*.AppImage && ./Deep.Student_*.AppImage" />
+
+- **deb**（Debian、Ubuntu 及其衍生版）：在下载目录执行
+
+<CopyLine command="sudo apt install ./Deep.Student_*_amd64.deb" />
+
+- **rpm**（Fedora 等；openSUSE 把 `dnf` 换成 `zypper`）：在下载目录执行
+
+<CopyLine command="sudo dnf install ./Deep.Student-*.x86_64.rpm" />
+
 ### 安装之后
 
 1. 先完成[准备工作](./start.md)的模型服务配置
@@ -63,6 +79,7 @@ const publishedAt = formatDate(release?.publishedAt)
 <ul class="dl-notes">
   <li class="dl-notes__item"><strong>macOS</strong> —— macOS 13 或更高，Apple Silicon 与 Intel 均可。</li>
   <li class="dl-notes__item"><strong>Windows</strong> —— Windows 11，或 Windows 10 22H2 及以上。</li>
+  <li class="dl-notes__item"><strong>Linux</strong> —— x86_64，需要 WebKitGTK 4.1（Ubuntu 22.04、Debian 12 及以上自带）。</li>
   <li class="dl-notes__item"><strong>Android</strong> —— ARM64 设备。</li>
 </ul>
 

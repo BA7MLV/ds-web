@@ -13,7 +13,7 @@
  *
  * 首屏（含 SSR）不猜设备，一律退回「立即下载 → /download」：服务端没有 navigator，
  * 若在 setup 顶层就按设备算，服务端会渲染成兜底、客户端再变成 Mac 包，水合时两边对不上。
- * 所以整颗按钮等挂载后再收窄；认不出的设备（Linux、iPad 的桌面 UA）就一直留着兜底。
+ * 所以整颗按钮等挂载后再收窄；认不出的设备（iPad 的桌面 UA、ARM 版 Linux）就一直留着兜底。
  * 清单同理默认收起 —— 展开态也属于「客户端才知道的事」。
  */
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
@@ -30,6 +30,7 @@ const options = [...buildRows('desktop'), ...buildRows('mobile')]
 const PLATFORMS = {
   mac: { label: 'home.hero.downloadMac', icon: 'apple' },
   win: { label: 'home.hero.downloadWin', icon: 'windows' },
+  linux: { label: 'home.hero.downloadLinux', icon: 'linux' },
   android: { label: 'home.hero.downloadAndroid', icon: 'android' }
 }
 
@@ -156,7 +157,14 @@ const applyDevice = (hints) => {
 
   // 该平台的包没上传成功时同样留兜底 —— 宁可少给一次直下，也不要一个点了必然 404 的按钮
   const row = options.find((item) => item.key === recommendedDownloadKey(navigator, hints))
-  if (!row?.asset?.url) return
+  if (!row?.asset?.url) {
+    // 迟到的架构信息也可能否掉上一步的结果：ARM 版 Linux 上 Chrome 的 UA 照样写 x86_64
+    if (hints) {
+      platform.value = 'other'
+      key.value = ''
+    }
+    return
+  }
 
   platform.value = detected
   key.value = row.key
