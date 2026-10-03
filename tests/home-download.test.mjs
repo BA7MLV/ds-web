@@ -64,7 +64,7 @@ const setup = (
   }
   const context = vm.createContext({
     navigator, document, window, computed, nextTick, ref, detectPlatform, recommendedDownloadKey, primaryUrl,
-    useI18n: () => ({ t: (key) => key, locale: { value: locale } }),
+    useI18n: () => ({ t: (key) => (key === 'links.download' ? '/download' : key), locale: { value: locale } }),
     buildRows: (group) => group === 'desktop'
       ? keys.map((key) => ({ key,
         asset: {

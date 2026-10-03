@@ -4,8 +4,8 @@
  * Keys mirror zh-CN.js one-to-one; anything missing here falls back to Chinese.
  * Entries carrying href / match / link / img are routing and asset data — when
  * translating, only text / title / desc / alt normally need to change.
- * Docs pages are still Chinese-only, so links out of this landing page point at
- * the Chinese documentation on purpose.
+ * Docs pages are still Chinese-only, so links into the docs point at the Chinese
+ * documentation and say "(Chinese)"; download and support go to GitHub (see `links`).
  *
  * House style for this page: one idea per sentence, main clause first, keep each
  * block to about two lines so it can be skimmed.
@@ -13,7 +13,7 @@
 export default {
   nav: {
     landing: {
-      docs: 'Docs',
+      docs: 'Docs (Chinese)',
       support: 'Support'
     },
     docPage: {
@@ -28,6 +28,16 @@ export default {
     menu: 'Menu',
     switchLanguage: 'Switch language',
     primary: 'Primary navigation'
+  },
+
+  /**
+   * The download and support pages are Chinese-only, so English visitors go to places
+   * with an English UI instead: GitHub Releases lists every installer, Discussions takes
+   * questions. Docs have no English counterpart; those links say "(Chinese)" in their label.
+   */
+  links: {
+    download: 'https://github.com/helixnow/deep-student/releases/latest',
+    support: 'https://github.com/helixnow/deep-student/discussions'
   },
 
   copyLine: {
@@ -108,7 +118,7 @@ export default {
         'linux-rpm': 'Linux · rpm',
         'android-arm64': 'Android · ARM64'
       },
-      quickStart: 'Quick start'
+      quickStart: 'Quick start (Chinese)'
     },
 
     /**
@@ -189,7 +199,7 @@ export default {
       title: 'Four tools, one window.',
       lede: 'Material chat, mind maps, practice questions and Anki cards share a single dataset — no shuttling between apps.',
       tabsLabel: 'Feature scenes',
-      more: 'Learn more',
+      more: 'Learn more (Chinese)',
       prev: 'Previous scene',
       next: 'Next scene',
       dot: 'Scene {index}: {name}',
@@ -266,7 +276,7 @@ export default {
     faq: {
       title: 'Frequently asked questions',
       more: 'Still have questions?',
-      moreLink: 'Go to the support centre',
+      moreLink: 'Ask on GitHub Discussions',
       items: [
         {
           q: 'Is DeepStudent free?',

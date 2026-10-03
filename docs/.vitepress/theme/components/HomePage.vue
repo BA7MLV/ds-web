@@ -418,7 +418,7 @@ onUnmounted(() => {
           </div>
         </div>
         <p class="lp-faq__more">
-          {{ t('home.faq.more') }}<a href="/support" class="home-link">{{ t('home.faq.moreLink') }}</a>
+          {{ t('home.faq.more') }}<a :href="t('links.support')" class="home-link">{{ t('home.faq.moreLink') }}</a>
         </p>
       </div>
     </section>
@@ -515,6 +515,7 @@ onUnmounted(() => {
   max-width: 32em;
   font-size: 1.0625rem;
   line-height: 1.7;
+  text-wrap: balance;
   color: var(--lp-text-2);
 }
 

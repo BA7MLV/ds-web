@@ -11,7 +11,7 @@
  * 能自己判的（Client Hints 给了架构）直接判，判不出来的按 aarch64 默认，
  * 想换的人拉开清单自己挑 —— 挑过之后按钮就报挑中的那一个（这时必须带上架构，否则两项重名）。
  *
- * 首屏（含 SSR）不猜设备，一律退回「立即下载 → /download」：服务端没有 navigator，
+ * 首屏（含 SSR）不猜设备，一律退回「立即下载 → 下载页」（英文页去 GitHub Releases）：服务端没有 navigator，
  * 若在 setup 顶层就按设备算，服务端会渲染成兜底、客户端再变成 Mac 包，水合时两边对不上。
  * 所以整颗按钮等挂载后再收窄；认不出的设备（iPad 的桌面 UA、ARM 版 Linux）就一直留着兜底。
  * 清单同理默认收起 —— 展开态也属于「客户端才知道的事」。
@@ -63,8 +63,10 @@ const label = computed(() =>
 )
 
 const selected = computed(() => options.find((item) => item.key === key.value) ?? null)
-// 中文页走国内镜像、英文页走 GitHub，见 download-channel.js
-const href = computed(() => (selected.value ? primaryUrl(selected.value.asset, locale.value) : '/download'))
+// 中文页走国内镜像、英文页走 GitHub，见 download-channel.js；兜底去处也跟着语言走（links.download）
+const href = computed(() =>
+  selected.value ? primaryUrl(selected.value.asset, locale.value) : t('links.download')
+)
 const fileName = computed(() => selected.value?.asset?.name ?? '')
 
 /* ── 清单的开合与键盘操作 ───────────────────────────────────── */

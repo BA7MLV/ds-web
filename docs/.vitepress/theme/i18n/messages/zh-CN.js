@@ -31,6 +31,15 @@ export default {
     primary: '主导航'
   },
 
+  /**
+   * 下载与求助的去处。中文页都进站内页面；英文页换成有英文界面的地方（见 en-US.js）——
+   * 下载页和支持页只有中文，英文访客点进去就是死胡同。
+   */
+  links: {
+    download: '/download',
+    support: '/support'
+  },
+
   copyLine: {
     copy: '复制',
     copied: '已复制',
