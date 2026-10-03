@@ -96,7 +96,8 @@ export default {
 
     hero: {
       title: '开源的终身学习空间',
-      lede: ['开源、本地优先的学习工作台，', '资料和数据都在你自己手里'],
+      /* 副标说「它做什么」：标题已经说了开源，本地优先交给下面的隐私区块 */
+      lede: ['导入教材和试卷，AI 带出处作答，', '再整理成导图、练习题和 Anki 卡片'],
       download: '立即下载',
       downloadMac: '下载 macOS 版',
       downloadWin: '下载 Windows 版',
