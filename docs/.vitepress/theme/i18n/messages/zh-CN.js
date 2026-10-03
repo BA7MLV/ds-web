@@ -161,8 +161,8 @@ export default {
         {
           label: '想明白',
           statement: '围绕你的材料对话。',
-          art: 'think',
-          alt: '单个问答气泡的字符画',
+          art: 'flow-think',
+          alt: '回答界面的字符画：小标题「怎样接到自己的学习中」，正文引用学习档案里的两条记忆 [忆1] [忆2]，末尾是一条「AI 生成」标记',
           items: [
             {
               title: '答案带出处',
@@ -181,8 +181,8 @@ export default {
         {
           label: '记得住',
           statement: '变成能复习的东西。',
-          art: 'review',
-          alt: '单个循环复习符号的字符画',
+          art: 'flow-review',
+          alt: '闪卡今日复习页的字符画：今日进度环 90%，待复习 2、新卡 12、学习中 4，下面是开始复习按钮',
           items: [
             {
               title: '知识导图',
@@ -247,7 +247,7 @@ export default {
           desc: '说一句话就能制卡，批量生成；翻面检查、改好后加入卡片库，或一键同步到 Anki。',
           link: '/user-guide/anki',
           art: 'anki',
-          alt: '制卡界面的字符画：一叠问答卡，下面是已生成 5 张卡片的进度'
+          alt: '制卡界面的字符画：一张问答卡和翻页圆点，下面是已生成 5 张卡片，以及路由、生成、完成三步的进度'
         },
         {
           tab: '闪卡复习',

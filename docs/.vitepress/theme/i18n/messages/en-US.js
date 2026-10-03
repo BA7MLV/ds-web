@@ -156,8 +156,8 @@ export default {
         {
           label: 'Think it through',
           statement: 'Converse around your own material.',
-          art: 'think',
-          alt: 'A single ASCII-art question bubble',
+          art: 'flow-think',
+          alt: 'ASCII art of an answer: a short heading, a paragraph citing two entries from your learning profile, and an “AI generated” tag at the end',
           items: [
             {
               title: 'Answers with sources',
@@ -176,8 +176,8 @@ export default {
         {
           label: 'Make it stick',
           statement: 'Turn it into something you can review.',
-          art: 'review',
-          alt: 'A single ASCII-art review loop symbol',
+          art: 'flow-review',
+          alt: "ASCII art of today's flashcard review: a 90% progress ring, 2 due, 12 new, 4 learning, and a Start review button",
           items: [
             {
               title: 'Mind maps',
@@ -241,7 +241,7 @@ export default {
           desc: 'Say the word and cards get made, in bulk; flip to check, edit, then add them to your library or sync to Anki in one click.',
           link: '/user-guide/anki',
           art: 'anki',
-          alt: 'Character rendering of card generation: a stack of Q&A cards above the “5 cards generated” progress'
+          alt: 'Character rendering of card generation: a Q&A card with page dots, above “5 cards generated” and the route, generate and done steps'
         },
         {
           tab: 'Flashcard review',

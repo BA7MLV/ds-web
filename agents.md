@@ -30,26 +30,27 @@
   - `config.js`: 标题、导航、侧边栏、本地搜索、编辑链接、SEO/GEO（canonical/OG/JSON-LD/sitemap）与 llms.txt 等。
   - `theme/`: 自定义主题（`index.js` 挂载 medium-zoom、暗色偏好；`custom.css` 已引入 Tailwind）。
     - `theme/i18n/`: 主题文案的多语言表。`index.js` 提供 `useI18n()`（`t()` 取字符串并支持 `{param}` 插值，`tm()` 取列表），当前语言取自 `useData().lang`；`messages/<lang>.js` 一份语言一个文件。**组件里不要再写 `isEn ? ... : ...` 或硬编码文案**，新增语言只需在 `config.js` 的 `locales` 加一项（带 `lang`）+ 补一份消息表，`tests/i18n-messages.test.mjs` 会校验各语言 key 与列表结构是否对齐。
-    - `theme/assets/`: **被组件读进内存再内联进 DOM** 的图形（`?raw` 引入），不放 `docs/public` —— 那边是「按 URL 取用」的静态资源，放这儿会被复制一份到产物里、谁也不引用。墨色由 `currentColor` 从页面继承，深浅两套自动跟随。
-    - `theme/utils/`: 主题侧的无组件逻辑（图标标记串、下载数据整理等）。`flow-art.js` 把 `theme/assets/` 里那两张字符画读成标记串。
+    - `theme/utils/`: 主题侧的无组件逻辑（图标标记串、下载数据整理、字符画网格加载等）。
   - `data/downloads.json`: 下载页数据，由 `scripts/sync-release-downloads.mjs` 在构建时从 GitHub Releases 同步。
 - `docs/public/`: 公共静态资源（图片、图标、`robots.txt`、`llms.txt`、favicon）。
   - `demo/`: 首页 hero 实时演示的**同源镜像**（另一个工程的构建产物），由 `scripts/sync-demo.mjs` 同步，勿手改。
-  - `features/`: 首页功能区六扇窗的字符画网格（`<名>.json`）与同一取景框的真实截图（`<名>-light|dark.webp`），**由生成器产出，勿手改**（见下）。
+  - `features/`: 首页「使用流程」两张卡（`flow-*`）和功能区六扇窗的字符画网格（`<名>.json`）与同一取景框的真实截图（`<名>-light|dark.webp`），**由生成器产出，勿手改**（见下）。
 - `scripts/`: 构建辅助脚本。
   - `sync-release-downloads.mjs`、`sync-demo.mjs` + `lib/`：构建期同步数据与演示镜像。
   - `gen-share-images.mjs`：分享卡（og:image）与「什么是 DeepStudent」主图，都从演示海报 `demo-poster.webp` 出，
     文案读 i18n 的首屏标题与副标。重拍海报或改首屏文案后跑一次；分享卡换图要换文件名（平台按 URL 缓存）。
-  - `gen-flow-ascii.mjs`：把首页「使用流程」两张卡烘焙成**字符画** SVG —— 形状是 `lib/dither.mjs`
-    的解析几何，每个格子按墨量挑一个字符（`.:-=+*#@`），量化与字形在 `lib/ascii.mjs`；
-    产物进 `theme/assets/`（`?raw` 内联，墨色由 `currentColor` 跟着主题走）。
-    口径与取舍见 `docs/plans/2026-09-28-flow-ascii-design.md`、`2026-09-25-flow-dither-scifi-design.md`。
-  - `gen-features-live.mjs`：功能区六扇窗的字符画**直接读演示里的真实界面**：在同源演示镜像里打开
-    剧本会话，把取景框里的框线、文字和图标落进 74 × 26 的等宽网格（一格 = 界面 8 × 16 px），
+  - `gen-features-live.mjs`：功能区六扇窗、「使用流程」两张卡的字符画**直接读演示里的真实界面**：在同源演示镜像里打开
+    剧本会话，把取景框里的框线、文字和图标落进等宽网格（功能区 74 × 26，流程卡按卡片尺寸另设；一格 = 界面 8 × 16 px），
+    进度环、导图连线不进网格、记成形状（运行时画成一串点），每行字另记竖向偏移让行距和界面一致，
     同时截一张同框的真实截图。运行时由 `theme/components/FeatureAscii.vue` 画到 canvas 上
     （乱码扫过定格的解码动画，悬停 / 轻点淡入截图）。闪卡复习不在聊天页，脚本会放开演示壳的视图守卫、
     在 mock IPC 外补几条 FSRS 命令。依赖 devDependency `playwright-core` + 本机 Chrome 与 cwebp。
-    **演示镜像更新后、或调了取景框，跑一次 `node scripts/gen-features-live.mjs`**（加 `--preview` 出目检图）。
+    **取景框不许切开界面**：框边压到一行字、一张卡片 / 胶囊 / 图标，截出来就是半句话、少条边的残图。
+    生成器会把压在上下两条边上的块（连同它下面 / 上面的内容）截图前藏掉、框里留白；压在左右两条边上的、
+    藏掉超过四成框高的、深浅两色藏得不一样的、取景框越出窗口的，直接报错不出图 —— 这时调窗口宽度
+    （对话栏要比取景框窄）或取景位置，别放宽检查。
+    **演示镜像更新后、或调了取景框，跑一次 `node scripts/gen-features-live.mjs`**（加 `--preview` 出目检图；
+    `--check` 只查切边，把框四周的上下文图放到系统临时目录，不写产物）。
 - `tests/`: Node 内置测试（`npm test`，即 `node --test` 自动发现），覆盖下载数据同步、演示镜像逻辑与 i18n 消息表结构校验。
 - 根目录：`package.json`（npm workspaces，命令代理到 `docs` workspace）、`vercel.json`（含 `/docs/*` → `/*` 301 重定向）。
   - `vercel.json` 的 `installCommand` 先把 Vercel 的浅克隆（深度 10、没配 remote）按仓库地址补全历史：
