@@ -16,12 +16,14 @@
  *   node scripts/sync-demo.mjs --strict   # 抓不到直接失败（用于人工确认发布内容）
  *   node scripts/sync-demo.mjs --force    # 忽略指纹，强制重抓
  *   DEMO_SOURCE=https://... node scripts/sync-demo.mjs
+ *   DEMO_SOURCE=http://127.0.0.1:8011 DEMO_PIN="主仓库 <提交> 的本地构建" node scripts/sync-demo.mjs --force --strict
+ *       # 从本地构建换镜像并钉住：之后的构建不再按演示服务器同步（服务器部署了同一版后删掉 manifest 的 pinned）
  */
 import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { extractRefs, pinEntryRefs, signatureOf, TEXT_EXT } from './lib/demo-mirror.mjs'
+import { extractRefs, isPinnedAgainstSync, pinEntryRefs, signatureOf, TEXT_EXT } from './lib/demo-mirror.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DEST_DIR = resolve(__dirname, '../docs/public/demo')
@@ -225,7 +227,8 @@ async function installMirror(stats, signature) {
         syncedAt: new Date().toISOString(),
         files: stats.files,
         bytes: stats.bytes,
-        skipped: stats.missing
+        skipped: stats.missing,
+        ...(process.env.DEMO_PIN ? { pinned: process.env.DEMO_PIN } : {})
       },
       null,
       2
@@ -236,6 +239,12 @@ async function installMirror(stats, signature) {
 
 async function main() {
   const manifest = await readManifest()
+
+  if (isPinnedAgainstSync(manifest, { force: FORCE, explicitSource: Boolean(process.env.DEMO_SOURCE) })) {
+    const size = ((manifest.bytes || 0) / 1024 / 1024).toFixed(1)
+    log(`镜像钉在「${manifest.pinned}」，不按演示服务器同步：${manifest.files} 个文件 / ${size} MiB`)
+    return
+  }
 
   let entryHtml
   try {

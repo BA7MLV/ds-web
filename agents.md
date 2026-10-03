@@ -61,8 +61,10 @@
     再 `git clean -fdq -- docs/public/demo` 恢复，别把旧镜像提交进去；
     或者把新构建用静态服务供着、构建时带 `DEMO_SOURCE=<那个地址>`，指纹一致就不会重抓。
   - 本地换演示镜像：主仓库 `NODE_OPTIONS=--max-old-space-size=8192 npm run build:demo`（默认 4 GB 堆会 OOM），
-    `dist-demo/` 用静态服务供着，`DEMO_SOURCE=http://127.0.0.1:<端口> node scripts/sync-demo.mjs --force --strict`，
-    再把 `data/demo-mirror.json` 的 `source` 写回演示服务器。上线顺序：同一份 `dist-demo/` 先部署到演示服务器，再合并官网。
+    `dist-demo/` 用静态服务供着，`DEMO_SOURCE=http://127.0.0.1:<端口> DEMO_PIN="主仓库 <提交> 的本地构建" node scripts/sync-demo.mjs --force --strict`，
+    再把 `data/demo-mirror.json` 的 `source` 写回演示服务器。
+  - **镜像钉住**（`demo-mirror.json` 的 `pinned`）：现在的镜像是主仓库本地构建（带学习桌面模式），演示服务器还是旧版。
+    钉住时构建期的 `sync-demo.mjs` 直接跳过，不会把镜像抓回旧版；演示服务器部署了同一份 `dist-demo/` 之后删掉 `pinned`，恢复按服务器同步。
 - `tests/`: Node 内置测试（`npm test`，即 `node --test` 自动发现），覆盖下载数据同步、演示镜像逻辑与 i18n 消息表结构校验。
 - 根目录：`package.json`（npm workspaces，命令代理到 `docs` workspace）、`vercel.json`（含 `/docs/*` → `/*` 301 重定向）。
   - `vercel.json` 的 `installCommand` 先把 Vercel 的浅克隆（深度 10、没配 remote）按仓库地址补全历史：

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 
-import { extractRefs, normalizeRef, pinEntryRefs, signatureOf } from '../scripts/lib/demo-mirror.mjs'
+import { extractRefs, isPinnedAgainstSync, normalizeRef, pinEntryRefs, signatureOf } from '../scripts/lib/demo-mirror.mjs'
 
 const BASE = 'http://demo.local/demo.html'
 const MIRROR_ENTRY = fileURLToPath(new URL('../docs/public/demo/index.html', import.meta.url))
@@ -123,6 +123,15 @@ test('pinEntryRefs preserves query strings and normalizes the mount path', () =>
     pinEntryRefs('<img src="./app-icon.png?v=2" />', BASE, '/demo/'),
     /src="\/demo\/app-icon\.png\?v=2"/
   )
+})
+
+test('a pinned mirror survives the build-time sync unless a sync is asked for explicitly', () => {
+  const pinned = { pinned: '主仓库 536238582 的本地构建' }
+  assert.equal(isPinnedAgainstSync(pinned), true)
+  assert.equal(isPinnedAgainstSync(pinned, { force: true }), false)
+  assert.equal(isPinnedAgainstSync(pinned, { explicitSource: true }), false)
+  assert.equal(isPinnedAgainstSync({ source: 'http://47.88.78.106:8010' }), false)
+  assert.equal(isPinnedAgainstSync(null), false)
 })
 
 test('committed mirror entry pins its own assets, so any URL resolves them', async () => {

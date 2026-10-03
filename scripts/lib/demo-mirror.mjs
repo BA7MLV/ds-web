@@ -130,6 +130,14 @@ export function pinEntryRefs(html, baseUrl, mountPath) {
   })
 }
 
+/**
+ * 镜像钉在一份本地构建上时（manifest.pinned，演示服务器还没部署这一版），构建期的自动同步要跳过：
+ * 否则会按服务器入口把新镜像抓回旧版。显式同步（--force 或指定 DEMO_SOURCE）照常进行
+ */
+export function isPinnedAgainstSync(manifest, { force = false, explicitSource = false } = {}) {
+  return Boolean(manifest?.pinned) && !force && !explicitSource
+}
+
 /** 入口 HTML 引用的那组资源名就是整站的版本指纹（Vite 文件名带内容 hash） */
 export function signatureOf(paths) {
   return createHash('sha256').update([...paths].sort().join('\n')).digest('hex')
