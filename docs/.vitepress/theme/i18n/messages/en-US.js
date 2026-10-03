@@ -137,8 +137,11 @@ export default {
       live: {
         title: 'Live study desktop demo',
         hint: 'This desktop is live: open apps from the Dock, drag and resize windows, start a flashcard review. Demo data stays on this page and resets when you reload.',
-        narrow: 'Widen your browser window to at least 1024 pixels to try this desktop live.',
-        touch: 'Open this page on a computer to try the study desktop yourself.',
+        narrow: 'Widen your browser window to at least 1024 pixels to try this desktop live, or tap the picture to see it full size.',
+        touch: 'Tap the picture to see it full size and swipe across the desktop. Open this page on a computer to try it live, or scroll up to the demo at the top to try the app on your phone.',
+        zoom: 'View full size',
+        pan: 'Swipe to see the whole desktop',
+        close: 'Close',
         waiting: 'It loads when you scroll here. You can also start it now.',
         loading: 'Opening the study desktop…',
         delayed: 'The study desktop is not ready yet. You can retry.',
@@ -283,6 +286,42 @@ export default {
           art: 'reading',
           alt: 'Screenshot of bilingual reading: an English source table aligned sentence by sentence with its Chinese translation'
         }
+      ]
+    },
+
+    /**
+     * All apps (HomeApps.vue): the apps in the desktop Dock and All Apps panel, in the order you collect, read, ask, organise,
+     * practise, remember, plan and extend. icon maps to docs/public/apps/<icon>.svg (the app's own illustrations),
+     * link is its guide chapter (in Chinese). extras are capabilities without an app of their own
+     */
+    apps: {
+      title: 'An app for every step, from collecting to reviewing.',
+      lede: 'All of these live in the desktop app’s Dock and All Apps panel. Open one on its own or side by side on the study desktop. Each links to its guide (in Chinese).',
+      items: [
+        { icon: 'files', name: 'Library', desc: 'Keep textbooks, notes, question sets and documents in one place, indexed for AI search.', link: '/user-guide/learning-hub' },
+        { icon: 'textbook', name: 'Reader', desc: 'Read PDF, Word and EPUB in a two-page view, highlight and annotate, and ask AI about the pages you tick.', link: '/user-guide/reading-translation' },
+        { icon: 'translation', name: 'Translation', desc: 'Full-text translation with side-by-side paragraphs, 7 domain presets, and quick translation of any selection.', link: '/user-guide/reading-translation' },
+        { icon: 'chat', name: 'Chat', desc: 'Ask follow-up questions about your materials and get cited answers; group, search and export chats.', link: '/user-guide/chat' },
+        { icon: 'notes', name: 'Notes', desc: 'Markdown notes with backlinks, tags and math; edit with AI and turn them into cards or mind maps.', link: '/user-guide/notes' },
+        { icon: 'mindmap', name: 'Mind Maps', desc: 'Generate a mind map from one sentence, refine it as an outline or canvas, and quiz yourself in recite mode.', link: '/user-guide/mindmap' },
+        { icon: 'exam', name: 'Question Sets', desc: 'Turn textbooks, exams and mistakes into a question bank with AI entry, nine practice modes and auto grading.', link: '/user-guide/question-bank' },
+        { icon: 'essay', name: 'Essay Review', desc: 'Scores across several criteria, inline marks, sentence-by-sentence polishing and model essays.', link: '/user-guide/essay' },
+        { icon: 'taskDashboard', name: 'Anki Cards', desc: 'Turn PDFs, images and notes into cards with one request; export APKG or sync to Anki.', link: '/user-guide/anki' },
+        { icon: 'flashcards', name: 'Flashcards', desc: 'Built-in FSRS spaced repetition with a card library, so you can review daily without installing Anki.', link: '/user-guide/flashcards' },
+        { icon: 'templates', name: 'Card Templates', desc: 'Edit Anki card templates visually and reuse them when you generate cards.', link: '/user-guide/anki' },
+        { icon: 'todo', name: 'To-do', desc: 'Add tasks in plain words; quadrants, subtasks, reminders and scheduled automations.', link: '/user-guide/productivity' },
+        { icon: 'pomodoro', name: 'Pomodoro', desc: 'Strict mode, ambient sounds, a floating mini timer, and your focus time and trends at a glance.', link: '/user-guide/productivity' },
+        { icon: 'skills', name: 'Skills & MCP', desc: 'Let the AI load skills on demand and reach external tools over MCP. Install them or write your own.', link: '/user-guide/skills-mcp' },
+        { icon: 'settings', name: 'Settings', desc: 'Connect 13 model providers or local models, and pick which model each feature uses.', link: '/user-guide/models' }
+      ],
+      more: 'Also:',
+      extras: [
+        { name: 'Paper search', link: '/user-guide/paper-search' },
+        { name: 'Deep research & memory', link: '/user-guide/research-memory' },
+        { name: 'Today & weekly report', link: '/user-guide/productivity' },
+        { name: 'Study desktop', link: '/user-guide/workbench' },
+        { name: 'Backup & sync', link: '/user-guide/data-sync' },
+        { name: 'Android app', link: '/user-guide/mobile' }
       ]
     },
 

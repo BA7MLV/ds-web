@@ -36,6 +36,8 @@
   - `demo/`: 首页实时演示的**同源镜像**（主仓库 `src/demo` 的构建产物），由 `scripts/sync-demo.mjs` 同步，勿手改。
     hero 用经典布局（`/demo/index.html?scene=…`），「学习桌面」一节（`theme/components/DesktopDemo.vue`）用同一份镜像带 `desktop=1`。
   - `features/`: 首页「使用流程」两张卡（`flow-*`）和功能区六扇窗的真实界面截图（`<名>-light|dark.webp`，取景框的 2 倍图），**由生成器产出，勿手改**（见下）。
+  - `apps/`: 首页「全部应用」一节（`theme/components/HomeApps.vue`）用的应用图标，原样拷自主仓库 `src/features/workbench/icons/app-icons/`；
+    应用列表和一句话说明在 i18n 的 `home.apps`，`tests/home-apps.test.mjs` 核对图标在、链接落到真实的用户指南页、中英一致。
 - `scripts/`: 构建辅助脚本。
   - `sync-release-downloads.mjs`、`sync-demo.mjs` + `lib/`：构建期同步数据与演示镜像。
   - `gen-share-images.mjs`：分享卡（og:image）与「什么是 DeepStudent」主图，都从演示海报 `demo-poster.webp` 出，

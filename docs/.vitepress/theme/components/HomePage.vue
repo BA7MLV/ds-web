@@ -7,6 +7,7 @@ import { warmFeatureShots } from '../utils/feature-shot.js'
 import AppShell from './AppShell.vue'
 import DesktopDemo from './DesktopDemo.vue'
 import FeatureShot from './FeatureShot.vue'
+import HomeApps from './HomeApps.vue'
 import HeroStarfield from './HeroStarfield.vue'
 import HomeDownload from './HomeDownload.vue'
 import StepFlow from './StepFlow.vue'
@@ -354,7 +355,10 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ⑤ 隐私与数据：5fr / 7fr -->
+    <!-- ⑤ 全部应用：Dock 和「全部应用」面板里的应用一屏摆全，每个链到用户指南（见 HomeApps.vue） -->
+    <HomeApps />
+
+    <!-- ⑥ 隐私与数据：5fr / 7fr -->
     <section id="privacy" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-split">
@@ -372,7 +376,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ⑥ 用户评价：素材补齐前整块隐藏，开关见脚本里的 SHOW_VOICES -->
+    <!-- ⑦ 用户评价：素材补齐前整块隐藏，开关见脚本里的 SHOW_VOICES -->
     <section v-if="SHOW_VOICES" id="voices" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
@@ -390,7 +394,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ⑦ 常见问题：胶囊折叠条 -->
+    <!-- ⑧ 常见问题：胶囊折叠条 -->
     <section id="faq" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">

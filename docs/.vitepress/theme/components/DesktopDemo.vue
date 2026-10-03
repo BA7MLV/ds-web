@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useData } from 'vitepress'
 import { useI18n } from '../i18n/index.js'
 import { track } from '../lib/analytics.js'
@@ -107,6 +107,42 @@ const screenStyle = computed(() => {
     width: `${Math.round(width / scale)}px`,
     height: `${Math.round(height / scale)}px`,
     transform: scale === 1 ? 'none' : `scale(${Number(scale.toFixed(4))})`
+  }
+})
+
+/**
+ * 触屏 / 窄窗口上那张截图缩到屏幕宽，字只有两三像素：点开全屏看大图，
+ * 图按视口高度铺（竖着拿手机时差不多是原尺寸），左右滑看整张桌面
+ */
+const viewerOpen = ref(false)
+const viewerClose = ref(null)
+const viewerSrc = computed(() => featureShot(props.art, isDark.value))
+let viewerOpener = null
+
+const openViewer = () => {
+  if (canEmbed.value) return
+  viewerOpener = document.activeElement
+  viewerOpen.value = true
+}
+
+const closeViewer = () => {
+  viewerOpen.value = false
+}
+
+const onViewerKey = (event) => {
+  if (event.key === 'Escape') closeViewer()
+}
+
+watch(viewerOpen, async (open) => {
+  document.documentElement.style.overflow = open ? 'hidden' : ''
+  if (open) {
+    document.addEventListener('keydown', onViewerKey)
+    await nextTick()
+    viewerClose.value?.focus()
+  } else {
+    document.removeEventListener('keydown', onViewerKey)
+    viewerOpener?.focus?.()
+    viewerOpener = null
   }
 })
 
@@ -268,6 +304,8 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  viewerOpen.value = false
+  document.removeEventListener('keydown', onViewerKey)
   readyFrameWindow = null
   liveQuery?.removeEventListener('change', onLiveQueryChange)
   window.removeEventListener('message', onMessage)
@@ -300,6 +338,10 @@ onUnmounted(() => {
       <Transition name="dd-poster">
         <div v-if="!showFrame || loading" class="dd__poster" :style="posterVars">
           <FeatureShot class="dd__shot" :name="art" :alt="alt" />
+          <!-- 只在截图版（触屏 / 窄窗口）出现：整张图都是这个按钮的点击区 -->
+          <button type="button" class="dd__zoom" @click="openViewer">
+            <span class="dd__zoom-chip">{{ t('home.desktop.live.zoom') }}</span>
+          </button>
           <p v-if="status" class="dd__status">
             <span role="status">{{ status }}</span>
             <button
@@ -318,6 +360,27 @@ onUnmounted(() => {
       <p class="dd__hint dd__hint--narrow">{{ t('home.desktop.live.narrow') }}</p>
       <p class="dd__hint dd__hint--touch">{{ t('home.desktop.live.touch') }}</p>
     </figcaption>
+
+    <Teleport to="body">
+      <div
+        v-if="viewerOpen"
+        class="dd-viewer"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="t('home.desktop.live.zoom')"
+        @click.self="closeViewer"
+      >
+        <div class="dd-viewer__scroll">
+          <img class="dd-viewer__img" :src="viewerSrc" :alt="alt" width="1440" height="900" />
+        </div>
+        <p class="dd-viewer__hint" aria-hidden="true">{{ t('home.desktop.live.pan') }}</p>
+        <button ref="viewerClose" type="button" class="dd-viewer__close" :aria-label="t('home.desktop.live.close')" @click="closeViewer">
+          <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+            <path d="M4 4l8 8M12 4l-8 8" />
+          </svg>
+        </button>
+      </div>
+    </Teleport>
   </figure>
 </template>
 
@@ -448,6 +511,109 @@ onUnmounted(() => {
 .dd__status button:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 3px;
+}
+
+/* 截图版（触屏 / 窄窗口）：整张图都能点开大图；宽屏 + 鼠标是实时桌面，用不着 */
+.dd__zoom {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 10px;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.dd__zoom-chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.5;
+  backdrop-filter: blur(8px);
+}
+
+.dd__zoom:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: -2px;
+}
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .dd__zoom {
+    display: none;
+  }
+}
+
+/* 大图：按视口高度铺开，竖着拿手机时接近原尺寸，左右滑动看整张；比视口窄（横屏）时居中 */
+.dd-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(10, 12, 14, 0.94);
+}
+
+.dd-viewer__scroll {
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior: contain;
+}
+
+.dd-viewer__img {
+  display: block;
+  width: auto;
+  max-width: none;
+  height: 100%;
+  margin-inline: auto;
+}
+
+.dd-viewer__hint {
+  position: absolute;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  left: 50%;
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 13px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  animation: dd-hint 3.2s ease forwards;
+}
+
+@keyframes dd-hint {
+  0%,
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.dd-viewer__close {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top));
+  right: calc(12px + env(safe-area-inset-right));
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  cursor: pointer;
+}
+
+.dd-viewer__close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 .dd-poster-leave-active {

@@ -143,8 +143,11 @@ export default {
       live: {
         title: '学习桌面实时演示',
         hint: '这张桌面可以直接上手：从 Dock 打开应用，拖动、缩放窗口，在闪卡里开始复习。演示数据只留在这个页面，刷新就复原。',
-        narrow: '把浏览器窗口拉宽到 1024 像素以上，这张学习桌面就能直接操作。',
-        touch: '在电脑上打开这一页，就能直接操作这张学习桌面。',
+        narrow: '把浏览器窗口拉宽到 1024 像素以上，这张学习桌面就能直接操作；也可以点图看大图。',
+        touch: '点图看大图，左右滑动看整张桌面。在电脑上打开这一页能直接操作；想在手机上试试，翻到首屏的演示。',
+        zoom: '看大图',
+        pan: '左右滑动看整张桌面',
+        close: '关闭大图',
         waiting: '滚到这里会自动载入，也可以马上开始。',
         loading: '正在打开学习桌面…',
         delayed: '学习桌面暂未就绪，可以重试。',
@@ -289,6 +292,41 @@ export default {
           art: 'reading',
           alt: '双语阅读截图：英文原文与中文译文逐句对照的表格'
         }
+      ]
+    },
+
+    /**
+     * 全部应用（HomeApps.vue）：桌面端 Dock 和「全部应用」面板里的应用（教材阅读另列；AI 仪表盘在产品里和对话共用一枚图标，不单列），按「收、读、问、整理、练、记、计划、扩展」排；
+     * icon 对应 docs/public/apps/<icon>.svg（产品插画图标），link 是用户指南那一章。extras 是没有独立应用的能力
+     */
+    apps: {
+      title: '从收资料到复习，每一步都有对应的应用。',
+      lede: '这些应用都在桌面端的 Dock 和「全部应用」里，可以单独打开，也能在学习桌面上并排摆。点一个，看它的使用说明。',
+      items: [
+        { icon: 'files', name: '资源库', desc: '教材、笔记、题目、文档统一入库，自动建好 AI 检索索引。', link: '/user-guide/learning-hub' },
+        { icon: 'textbook', name: '教材阅读', desc: 'PDF、Word、EPUB 双页阅读、高亮批注，勾选页面直接问 AI。', link: '/user-guide/reading-translation' },
+        { icon: 'translation', name: '翻译', desc: '全文翻译和逐段双语对照，7 种领域预设，选中文字随手就译。', link: '/user-guide/reading-translation' },
+        { icon: 'chat', name: '对话', desc: '围绕你的资料多轮提问，回答标出处；课题分组、搜索、导出都有。', link: '/user-guide/chat' },
+        { icon: 'notes', name: '笔记', desc: '双链、标签、公式的 Markdown 笔记，和 AI 一起改，还能生成卡片和导图。', link: '/user-guide/notes' },
+        { icon: 'mindmap', name: '知识导图', desc: '一句话生成知识体系导图，大纲和画布两种视图，背诵模式自测。', link: '/user-guide/mindmap' },
+        { icon: 'exam', name: '题目集', desc: '教材、试卷、错题变成题库：AI 录题、九种练习、自动判分和解析。', link: '/user-guide/question-bank' },
+        { icon: 'essay', name: '作文批改', desc: '高考、雅思、考研等作文多维评分，原文标注、逐句润色、参考范文。', link: '/user-guide/essay' },
+        { icon: 'taskDashboard', name: 'Anki 制卡', desc: '一句话把 PDF、图片、笔记做成卡片，导出 APKG 或同步到 Anki。', link: '/user-guide/anki' },
+        { icon: 'flashcards', name: '闪卡', desc: '内置 FSRS 间隔重复，卡片库统一管理，不装 Anki 也能天天复习。', link: '/user-guide/flashcards' },
+        { icon: 'templates', name: '模板管理', desc: '可视化编辑 Anki 卡片模板，制卡时直接套用。', link: '/user-guide/anki' },
+        { icon: 'todo', name: '待办', desc: '一句话添加任务，四象限、子任务、提醒，还能设定时自动化。', link: '/user-guide/productivity' },
+        { icon: 'pomodoro', name: '番茄钟', desc: '严格模式、环境音、置顶小窗，专注时长和趋势一目了然。', link: '/user-guide/productivity' },
+        { icon: 'skills', name: '技能管理', desc: '让 AI 按需加载技能、用 MCP 连上外部工具，可以自己装、自己写。', link: '/user-guide/skills-mcp' },
+        { icon: 'settings', name: '设置', desc: '接入 13 家模型服务或本地模型，按功能分别指定用哪个模型。', link: '/user-guide/models' }
+      ],
+      more: '还有：',
+      extras: [
+        { name: '论文搜索', link: '/user-guide/paper-search' },
+        { name: '深度调研与智能记忆', link: '/user-guide/research-memory' },
+        { name: '今日与学习周报', link: '/user-guide/productivity' },
+        { name: '学习桌面', link: '/user-guide/workbench' },
+        { name: '数据备份与同步', link: '/user-guide/data-sync' },
+        { name: '安卓端', link: '/user-guide/mobile' }
       ]
     },
 
