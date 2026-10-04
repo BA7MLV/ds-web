@@ -2,9 +2,9 @@
   "source": {
     "repo": "helixnow/deep-student",
     "path": "docs/user-guide",
-    "commit": "87a82e990aa53373c332958f075a14faf6459d87",
+    "commit": "8ec65cd21c70a20ecaa440369fd5e7d563851c7f",
     "dirty": false,
-    "syncedAt": "2026-10-03T07:49:53.191Z"
+    "syncedAt": "2026-10-04T14:36:42.554Z"
   },
   "pages": [
     {
@@ -53,9 +53,9 @@
       "title": "笔记"
     },
     {
-      "file": "08-知识导图.md",
+      "file": "08-思维导图.md",
       "path": "/user-guide/mindmap",
-      "title": "知识导图"
+      "title": "思维导图"
     },
     {
       "file": "09-作文批改.md",
@@ -142,7 +142,7 @@
           "link": "/user-guide/notes"
         },
         {
-          "text": "知识导图",
+          "text": "思维导图",
           "link": "/user-guide/mindmap"
         },
         {

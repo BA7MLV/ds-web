@@ -101,7 +101,7 @@ Deep Student 本身不内置 AI 模型，要先接入一家模型服务。打开
 
 用一句话让 AI 把资料整理成学习材料：
 
-- **知识导图**：说「帮我生成 ×× 的知识导图」，点回复里的导图卡片就能打开编辑。详见 [知识导图](/user-guide/mindmap)。
+- **思维导图**：说「帮我生成 ×× 的思维导图」，点回复里的导图卡片就能打开编辑。详见 [思维导图](/user-guide/mindmap)。
 - **Anki 卡片**：说「把这份 PDF 的重点做成 Anki 卡片」，逐张检查后「加入卡片库」，到期时在「闪卡」里复习。详见 [Anki 制卡与模板](/user-guide/anki)、[闪卡复习](/user-guide/flashcards)。
 - **题目集**：说「根据这份资料出 10 道选择题」，AI 会建好题目集，随后就能开始练习。详见 [题库与练习](/user-guide/question-bank)。
 
@@ -156,7 +156,7 @@ Android 版的上手流程相同，入口有些差别：
 | 管理资料、文件夹与索引 | [学习资源中心](/user-guide/learning-hub) |
 | 阅读 PDF / Word / EPUB、翻译文献 | [文档阅读与翻译](/user-guide/reading-translation) |
 | 搜索并下载学术论文 | [论文搜索](/user-guide/paper-search) |
-| 记笔记、建知识导图 | [笔记](/user-guide/notes) · [知识导图](/user-guide/mindmap) |
+| 记笔记、建思维导图 | [笔记](/user-guide/notes) · [思维导图](/user-guide/mindmap) |
 | 批改作文 | [作文批改](/user-guide/essay) |
 | 待办、番茄钟、命令面板 | [效率工具](/user-guide/productivity) |
 | 刷题与复习 | [题库与练习](/user-guide/question-bank) · [闪卡复习](/user-guide/flashcards) |

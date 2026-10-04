@@ -42,7 +42,7 @@ export const CHAPTERS = [
   { file: '05-文档阅读与翻译.md', slug: 'reading-translation', title: '文档阅读与翻译', group: '资料与阅读' },
   { file: '06-论文搜索.md', slug: 'paper-search', title: '论文搜索', group: '资料与阅读' },
   { file: '07-笔记.md', slug: 'notes', title: '笔记', group: '笔记与创作' },
-  { file: '08-知识导图.md', slug: 'mindmap', title: '知识导图', group: '笔记与创作' },
+  { file: '08-思维导图.md', slug: 'mindmap', title: '思维导图', group: '笔记与创作' },
   { file: '09-作文批改.md', slug: 'essay', title: '作文批改', group: '笔记与创作' },
   { file: '10-效率工具.md', slug: 'productivity', title: '待办、番茄钟与命令面板', group: '笔记与创作' },
   { file: '11-题库与练习.md', slug: 'question-bank', title: '题库与练习', group: '练习与记忆' },
