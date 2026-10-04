@@ -1,0 +1,1 @@
+import{D as r,A as a}from"./uiLabToggle-XsOm5HbC.js";import"./vendor-react-C80K2e6c.js";import"./DsButton-CQYjv_Uv.js";import"./UnifiedNotification-CSIYahfm.js";function p(e){const o=e.text.trim();if(!o)return!1;const t={content:o,autoSend:!1};return typeof e.page=="number"&&(t.page=e.page),e.sourceName&&(t.sourceName=e.sourceName),r(a.PREFILL_CHAT_INPUT,t),!0}export{p as s};

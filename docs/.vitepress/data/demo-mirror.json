@@ -1,10 +1,10 @@
 {
-  "source": "http://47.88.78.106:8010",
+  "source": "http://127.0.0.1:8011",
   "entry": "/demo.html",
-  "signature": "bee2f0b678e1d58e4a2f64fdcacebfbabe67fa7c68a5abae965c821cc7284923",
-  "syncedAt": "2026-10-03T14:06:56.554Z",
-  "files": 1282,
-  "bytes": 39136587,
+  "signature": "fbb674984aebd46d2153c6de6e7d15ff90b5bb92e4edbef2c8882ee7bac8df49",
+  "syncedAt": "2026-10-04T15:29:23.549Z",
+  "files": 1289,
+  "bytes": 37948712,
   "skipped": 150,
-  "pinned": "主仓库 536238582 + 4eee8fd8f 的本地构建（学习桌面模式、演示不要通知权限；演示服务器还是旧版）"
+  "pinned": "主仓库 cd6b5ebbf 的本地构建"
 }

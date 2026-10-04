@@ -7,7 +7,7 @@ export const TITLE_TEMPLATE = ':title｜DeepStudent'
 
 const REPOSITORY_URL = 'https://github.com/helixnow/deep-student'
 /** 由 scripts/gen-share-images.mjs 生成；换图必须换文件名，各平台按 URL 缓存分享图 */
-const OG_IMAGE = `${SITE_ORIGIN}/img/og-2026-10.png`
+const OG_IMAGE = `${SITE_ORIGIN}/img/og-2026-10-agent.png`
 const SCHEMA_ID = 'deepstudent-schema'
 const DEFAULT_DESCRIPTION = {
   'zh-CN':
