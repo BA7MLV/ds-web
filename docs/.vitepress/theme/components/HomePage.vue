@@ -143,6 +143,7 @@ const stepScene = (delta) => {
 }
 
 /* ── 隐私与数据：发丝线堆叠 ── */
+const agent = computed(() => tm('home.agent.items'))
 const privacy = computed(() => tm('home.privacy.items'))
 
 /*
@@ -219,7 +220,7 @@ onUnmounted(() => {
 
         <p class="t-stagger-line t-stagger-line--3 lp-hero__lede">
           <template v-for="(line, index) in tm('home.hero.lede')" :key="index">
-            <br v-if="index" class="sm:hidden" /><span>{{ line }}</span>
+            <br v-if="index" /><span>{{ line }}</span>
           </template>
         </p>
 
@@ -264,6 +265,24 @@ onUnmounted(() => {
         </div>
       </div>
       <DesktopDemo :art="t('home.desktop.art')" :alt="t('home.desktop.alt')" />
+    </section>
+
+    <!-- ②½ 学习 Agent：首屏之后第一个讲的能力（口径见主仓库 docs/brand/messaging.md） -->
+    <section id="agent" class="lp-block">
+      <div class="lp-wrap">
+        <div class="lp-split">
+          <div>
+            <h2 class="lp-title">{{ t('home.agent.title') }}</h2>
+            <p class="lp-lede">{{ t('home.agent.lede') }}</p>
+          </div>
+          <ul class="lp-stack">
+            <li v-for="item in agent" :key="item.title" class="lp-stack__item">
+              <h3 class="lp-col__title">{{ item.title }}</h3>
+              <p class="lp-col__desc">{{ item.desc }}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <!-- ③ 想明白 / 记得住：不对称双卡，点 + 打开整页浮层（见 StepFlow.vue） -->
@@ -515,11 +534,13 @@ onUnmounted(() => {
 .lp-hero__title {
   margin: 28px 0 0;
   /*
-   * 标题从「两行短句」变成「一行十言」，改用一个随视口缩放的单一字号：
-   * min(4.5rem, 8.5vw) 让 10 个字在 320px 以上都刚好落在
-   * min(100% - 3rem, 1080px) 的容器里，不需要再手写断点。
+   * 标题是两行口号，断行写在文案里（\n + pre-line），不交给 text-wrap 去猜：
+   * 中文可在任意字间断开，balance 会把「就够了」拆到两行。
+   * 最长一行 11 个字（含逗号）：min(4.5rem, 7.4vw) 让它在 320px 以上都落在
+   * min(100% - 3rem, 1080px) 的容器里。
    */
-  font-size: min(4.5rem, 8.5vw);
+  font-size: min(4.5rem, 7.4vw);
+  white-space: pre-line;
   font-weight: 600;
   line-height: 1.12;
   letter-spacing: -0.03em;

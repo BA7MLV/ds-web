@@ -99,9 +99,9 @@ export default {
     },
 
     hero: {
-      title: 'An open-source space for lifelong learning',
+      title: 'Just focus on learning.\nLeave the rest to me.',
       /* 第二行前面靠这个尾随空格和第一行断开；移动端 <br> 生效时它会被折叠掉 */
-      lede: ['Open source and local-first — ', 'your material and data stay with you'],
+      lede: ['An open-source, local-first AI learning workbench. ', 'Its study agent works directly in every app.'],
       download: 'Download',
       downloadMac: 'Download for macOS',
       downloadWin: 'Download for Windows',
@@ -147,6 +147,29 @@ export default {
         delayed: 'The study desktop is not ready yet. You can retry.',
         start: 'Load now'
       }
+    },
+
+    agent: {
+      title: 'A study agent that works in every app.',
+      lede: 'One sentence is enough: it opens the right app and produces the notes, mind maps, questions, cards and review plan. Longer tasks it can carry through on its own.',
+      items: [
+        {
+          title: 'It does the work',
+          desc: 'Notes, mind maps, exam sets, flashcards, todos, essays and translation all have agent tools, so results land directly in the app.'
+        },
+        {
+          title: 'Long tasks, handed off',
+          desc: 'Research, organizing and question writing keep moving: goal mode continues across turns, sub-agents work in parallel, scheduled tasks run on time.'
+        },
+        {
+          title: 'Every step under control',
+          desc: 'Actions are approved by risk level, with Ask / Plan / Craft permission modes; edits to notes and the Study Desktop can be undone.'
+        },
+        {
+          title: 'Knows you, grows with you',
+          desc: 'Remembers your weak spots and study habits; 55 built-in skills, MCP support and 13 model providers.'
+        }
+      ]
     },
 
     /**

@@ -1,8 +1,8 @@
 ---
 layout: home
-title: DeepStudent｜An open-source space for lifelong learning
+title: DeepStudent｜An open-source, local-first AI learning workbench
 titleTemplate: false
-description: DeepStudent is a free, open-source AI study workspace — material chat with citations (RAG), notes, mind maps, practice questions, translation, essay grading and Anki card generation, with your data stored locally by default.
+description: DeepStudent is an open-source, local-first AI learning workbench. Its study agent works directly in notes, mind maps, exam sets, flashcards and todos; answers cite your own material, and data stays local by default.
 markdownStyles: false
 footer: false
 ---

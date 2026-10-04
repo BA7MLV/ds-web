@@ -11,7 +11,7 @@ const OG_IMAGE = `${SITE_ORIGIN}/img/og-2026-10.png`
 const SCHEMA_ID = 'deepstudent-schema'
 const DEFAULT_DESCRIPTION = {
   'zh-CN':
-    'DeepStudent 官方文档：了解本地优先的开源 AI 学习工作台，配置模型服务，使用资料问答、笔记、知识导图、题目练习与 Anki 制卡。',
+    'DeepStudent 官方文档：了解本地优先的开源 AI 学习工作台，配置模型服务，使用资料问答、笔记、思维导图、题目练习与 Anki 制卡。',
   'en-US':
     'DeepStudent is an open-source, local-first AI study workspace for material chat, notes, mind maps, practice questions and Anki cards.'
 }

@@ -96,7 +96,7 @@ const ogHtml = (posterUrl, logoSvg) => `<!doctype html><meta charset="utf-8">
 </style>
 <div class="copy">
   <div class="brand">${logoSvg}DeepStudent</div>
-  <h1>${escape(zh.home.hero.title)}</h1>
+  <h1>${escape(zh.home.hero.title).replace('\n', '<br>')}</h1>
   <p>${zh.home.hero.lede.map(escape).join('<br>')}</p>
   <div class="foot">deepstudent.cn · macOS / Windows / Linux / Android</div>
 </div>

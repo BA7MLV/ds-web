@@ -1,6 +1,6 @@
 # DeepStudent
 
-> DeepStudent（深学助手）是免费开源、以本地存储为默认方式的 AI 学习工作台。它把资料问答、笔记、知识导图、题目练习、翻译、作文批改与 Anki 制卡放在同一个应用中。以下是官方说明与使用指南的规范链接。
+> DeepStudent（深学助手）是免费开源、以本地存储为默认方式的 AI 学习工作台。它把资料问答、笔记、思维导图、题目练习、翻译、作文批改与 Anki 制卡放在同一个应用中。以下是官方说明与使用指南的规范链接。
 
 DeepStudent is an open-source, local-first AI study workspace built with Tauri 2 and licensed under AGPL-3.0. The homepage is available in Simplified Chinese and English; the user guides are currently in Simplified Chinese.
 
@@ -33,7 +33,7 @@ DeepStudent is an open-source, local-first AI study workspace built with Tauri 2
 - [文档阅读与翻译](https://deepstudent.cn/user-guide/reading-translation)：PDF / Word / EPUB 阅读、高亮批注、书签、勾选页面问 AI、划词解释 / 翻译 / 存笔记 / 制卡、翻译工作台与领域预设。
 - [论文搜索](https://deepstudent.cn/user-guide/paper-search)：arXiv / OpenAlex 检索、批量下载入库、引用格式、DOI 解析。
 - [笔记](https://deepstudent.cn/user-guide/notes)：富文本编辑、双链与引用、笔记模板、一键生成卡片与思维导图、学习属性与近期复习、AI 画布编辑。
-- [知识导图](https://deepstudent.cn/user-guide/mindmap)：一句话或从笔记生成导图、导图 / 大纲双视图、背诵模式（一键遮住要点、难点优先）、导入导出。
+- [思维导图](https://deepstudent.cn/user-guide/mindmap)：一句话或从笔记生成导图、导图 / 大纲双视图、背诵模式（一键遮住要点、难点优先）、导入导出。
 - [作文批改](https://deepstudent.cn/user-guide/essay)：高考 / 雅思 / 托福等多场景批改、标注与评分、逐句润色。
 - [待办、番茄钟与命令面板](https://deepstudent.cn/user-guide/productivity)：待办与定时任务、番茄钟与沉浸专注、今日与学习周报、命令面板、语音输入。
 - [题库与练习](https://deepstudent.cn/user-guide/question-bank)：建题库（手动 / 识别导入 / CSV / AI 出题）、多种练习模式、自动判分、错题与掌握度。

@@ -66,6 +66,7 @@ for (const [locale, words] of Object.entries(messages)) {
         activeScene: 0,
         scenes: words.home.features.scenes,
         currentScene: words.home.features.scenes[0],
+        agent: words.home.agent.items,
         privacy: words.home.privacy.items,
         SHOW_VOICES: false,
         faqs: words.home.faq.items,

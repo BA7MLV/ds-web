@@ -85,7 +85,7 @@ export default {
   appShell: {
     title: 'DeepStudent 实时演示',
     previewTitle: 'DeepStudent 界面预览',
-    previewDescription: '围绕学习资料展开对话，再把理解整理成知识导图、练习题和 Anki 卡片。',
+    previewDescription: '围绕学习资料展开对话，再把理解整理成思维导图、练习题和 Anki 卡片。',
     /** 壳内那张真实界面截图的替代文字；截图与实时演示是同一个界面 */
     posterAlt:
       'DeepStudent 应用界面：左侧是学习资源与对话列表，右侧是围绕资料的问答，回答带引用出处，并已整理成 5 张 Anki 卡片。',
@@ -104,8 +104,9 @@ export default {
     },
 
     hero: {
-      title: '开源的终身学习空间',
-      lede: ['开源、本地优先的学习工作台，', '资料和数据都在你自己手里'],
+      /** 口号，见主仓库 docs/brand/messaging.md §1；\n 是固定断行（标题 white-space: pre-line） */
+      title: '只专注学习本身就够了，\n剩下的都交给我。',
+      lede: ['开源、本地优先的 AI 学习工作台。', '它的学习 Agent，可直接操作每一个学习应用。'],
       download: '立即下载',
       downloadMac: '下载 macOS 版',
       downloadWin: '下载 Windows 版',
@@ -153,6 +154,33 @@ export default {
         delayed: '学习桌面暂未就绪，可以重试。',
         start: '立即载入'
       }
+    },
+
+    /**
+     * 学习 Agent：首屏之后第一个讲的能力（口径见主仓库 docs/brand/messaging.md §2 三条支撑）。
+     * 版式同「数据默认存在本机」一节：左标题 + 导语，右侧条目栈
+     */
+    agent: {
+      title: '一个学习 Agent，直接操作每一个应用。',
+      lede: '只需一句话，它即可打开对应的应用，完成笔记、思维导图、题目、卡片与复习计划；更长的任务，也能独立推进。',
+      items: [
+        {
+          title: '直接动手',
+          desc: '笔记、思维导图、题目集、闪卡、待办、作文与翻译都有对应的 Agent 工具，结果直接写进应用。'
+        },
+        {
+          title: '长任务可托付',
+          desc: '调研、整理、出题可交给它连续推进：目标模式跨轮续跑，子代理并行处理，定时任务按时执行。'
+        },
+        {
+          title: '每一步可控',
+          desc: '操作按风险分级审批，Ask / Plan / Craft 三种权限模式可选；笔记与学习桌面上的改动可撤销。'
+        },
+        {
+          title: '懂你，可扩展',
+          desc: '记住你的薄弱点与学习习惯；内置 55 个技能，支持 MCP 与 13 家模型服务。'
+        }
+      ]
     },
 
     /**
@@ -212,7 +240,7 @@ export default {
           alt: '闪卡今日复习页截图：今日进度环 90%，待复习 2、新卡 12、学习中 4，下面是开始复习按钮',
           items: [
             {
-              title: '知识导图',
+              title: '思维导图',
               desc: '一句话生成完整知识体系，边聊边改，还能遮住节点自测。'
             },
             {
@@ -230,7 +258,7 @@ export default {
 
     features: {
       title: '从读到记，装进同一个窗口。',
-      lede: '资料对话、知识导图、题目练习、制卡复习和文档阅读共用同一份数据，不用在几个软件之间来回搬。',
+      lede: '资料对话、思维导图、题目练习、制卡复习和文档阅读共用同一份数据，不用在几个软件之间来回搬。',
       tabsLabel: '功能场景',
       more: '了解更多',
       prev: '上一个场景',
@@ -248,13 +276,13 @@ export default {
           alt: '对话界面截图：按教材页码作答，段末标着第 45、47、52 页'
         },
         {
-          tab: '知识导图',
-          title: '知识导图',
+          tab: '思维导图',
+          title: '思维导图',
           lead: '把知识整理成结构。',
           desc: '一句话生成完整知识体系，边聊边改；背诵模式一键遮住要点，自己默一遍。',
           link: '/user-guide/mindmap',
           art: 'mindmap',
-          alt: '知识导图截图：中心主题「数据并行训练」分出优化方向、基本范式和同步的代价'
+          alt: '思维导图截图：中心主题「数据并行训练」分出优化方向、基本范式和同步的代价'
         },
         {
           tab: '题目练习',
@@ -308,7 +336,7 @@ export default {
         { icon: 'translation', name: '翻译', desc: '全文翻译和逐段双语对照，7 种领域预设，选中文字随手就译。', link: '/user-guide/reading-translation' },
         { icon: 'chat', name: '对话', desc: '围绕你的资料多轮提问，回答标出处；课题分组、搜索、导出都有。', link: '/user-guide/chat' },
         { icon: 'notes', name: '笔记', desc: '双链、标签、公式的 Markdown 笔记，和 AI 一起改，还能生成卡片和导图。', link: '/user-guide/notes' },
-        { icon: 'mindmap', name: '知识导图', desc: '一句话生成知识体系导图，大纲和画布两种视图，背诵模式自测。', link: '/user-guide/mindmap' },
+        { icon: 'mindmap', name: '思维导图', desc: '一句话生成知识体系导图，大纲和画布两种视图，背诵模式自测。', link: '/user-guide/mindmap' },
         { icon: 'exam', name: '题目集', desc: '教材、试卷、错题变成题库：AI 录题、九种练习、自动判分和解析。', link: '/user-guide/question-bank' },
         { icon: 'essay', name: '作文批改', desc: '高考、雅思、考研等作文多维评分，原文标注、逐句润色、参考范文。', link: '/user-guide/essay' },
         { icon: 'taskDashboard', name: 'Anki 制卡', desc: '一句话把 PDF、图片、笔记做成卡片，导出 APKG 或同步到 Anki。', link: '/user-guide/anki' },
