@@ -42,6 +42,7 @@ const { t, tm } = useI18n()
 /* 标题一行放不下时两行对半分，别把「用。」单独甩到第二行 */
 .ha .lp-title {
   text-wrap: balance;
+  white-space: pre-line;
 }
 
 /* 15 个应用：宽屏 5 列正好三行，平板 3 列，手机 2 列 */

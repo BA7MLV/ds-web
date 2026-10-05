@@ -80,10 +80,10 @@ export default {
   appShell: {
     title: 'DeepStudent live demo',
     previewTitle: 'DeepStudent interface preview',
-    previewDescription: 'Discuss your study materials, then turn your understanding into mind maps, practice questions and Anki cards.',
+    previewDescription: 'The study agent reads your materials in chat and produces mind maps, practice questions and Anki cards directly.',
     /** Alt text for the real-UI screenshot in the shell; it is the same interface the demo shows */
     posterAlt:
-      'The DeepStudent app: resources and conversations on the left, a material-grounded Q&A with citations on the right, already turned into 5 Anki cards.',
+      'The DeepStudent app: navigation and conversations on the left, and on the right the chat “高数错题 → Anki 卡片”, where the agent has generated 5 cards.',
     waiting: 'The live demo loads automatically. Start it here instead.',
     loading: 'Loading the interactive live demo…',
     delayed: 'The live demo is not ready yet. Retry or explore the features below.',
@@ -191,7 +191,7 @@ export default {
           items: [
             {
               title: 'One place for everything',
-              desc: 'Textbooks, exam papers, PDFs and notes all land in one library — no more digging through cloud drives.'
+              desc: 'Textbooks, exam papers, PDFs and notes are kept together in Files, instead of scattered across cloud drives and folders.'
             },
             {
               title: 'Scans work too',
@@ -215,11 +215,11 @@ export default {
             },
             {
               title: 'Skills and memory',
-              desc: 'Save recurring workflows as skills and let long-term preferences go into memory — it fits your habits the more you use it.'
+              desc: 'Save recurring workflows as skills and keep long-term preferences in memory; later answers take them into account.'
             },
             {
               title: 'Reasoning mode',
-              desc: 'Switch to deep reasoning for hard derivations and watch the process, not just the conclusion.'
+              desc: 'Switch to deep reasoning for hard derivations; the reasoning is shown alongside the conclusion.'
             }
           ]
         },
@@ -239,7 +239,7 @@ export default {
             },
             {
               title: 'Anki cards',
-              desc: 'Say the word and cards get made — in bulk, and synced to Anki in one click.'
+              desc: 'One request makes cards in bulk, and they sync to Anki in one click.'
             }
           ]
         }
@@ -286,7 +286,7 @@ export default {
           tab: 'Anki cards',
           title: 'Anki card generation',
           lead: 'Turn understanding into cards.',
-          desc: 'Say the word and cards get made, in bulk; flip to check, edit, then add them to your library or sync to Anki in one click.',
+          desc: 'One request makes cards in bulk; flip to check and edit them, then add them to your card library or sync to Anki in one click.',
           link: '/user-guide/anki',
           art: 'anki',
           alt: 'Screenshot of card generation: a Q&A card with page dots, above “5 cards generated” and the route, generate and done steps'
@@ -294,7 +294,7 @@ export default {
         {
           tab: 'Flashcard review',
           title: 'Flashcard review',
-          lead: 'Review without leaving the app.',
+          lead: 'Reviews happen in the same app.',
           desc: 'Built-in FSRS spaced repetition queues the cards due today; rate how well you remembered and the next review is rescheduled to match.',
           link: '/user-guide/flashcards',
           art: 'review',
@@ -303,7 +303,7 @@ export default {
         {
           tab: 'Reading',
           title: 'Reading and translation',
-          lead: 'Read the original, and understand it.',
+          lead: 'Read the original, translate as you go.',
           desc: 'Open PDF, Word and EPUB files; select text to explain, translate, save as a note or make a card; turn a passage into a sentence-by-sentence bilingual table.',
           link: '/user-guide/reading-translation',
           art: 'reading',
@@ -333,7 +333,7 @@ export default {
         { icon: 'flashcards', name: 'Flashcards', desc: 'Review, card making and templates in one place, with built-in FSRS so you can review daily without installing Anki.', link: '/user-guide/flashcards' },
         { icon: 'templates', name: 'Templates', desc: 'Edit Anki card templates visually and reuse them when you generate cards.', link: '/user-guide/anki' },
         { icon: 'todo', name: 'Todo', desc: 'Add tasks in plain words; quadrants, subtasks, reminders and scheduled automations.', link: '/user-guide/productivity' },
-        { icon: 'pomodoro', name: 'Pomodoro', desc: 'Strict mode, ambient sounds, a floating mini timer, and your focus time and trends at a glance.', link: '/user-guide/productivity' },
+        { icon: 'pomodoro', name: 'Pomodoro', desc: 'Strict mode, ambient sounds, a floating mini timer, and charts of your focus time and trends.', link: '/user-guide/productivity' },
         { icon: 'skills', name: 'Skills', desc: 'Let the AI load skills on demand and reach external tools over MCP. Install them or write your own.', link: '/user-guide/skills-mcp' },
         { icon: 'settings', name: 'Settings', desc: 'Connect 13 model providers or local models, and pick which model each feature uses.', link: '/user-guide/models' }
       ],
