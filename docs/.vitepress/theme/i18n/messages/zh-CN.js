@@ -106,7 +106,7 @@ export default {
     hero: {
       /** 口号，见主仓库 docs/brand/messaging.md §1；\n 是固定断行（标题 white-space: pre-line） */
       title: '只专注学习本身就够了，\n剩下的都交给我。',
-      lede: ['开源、本地优先的 AI 学习工作台。', '它的学习 Agent，可直接操作每一个学习应用。'],
+      lede: ['开源、本地优先的 AI 学习工作台。', '它的学习 Agent，可直接操作学习桌面上的每一个应用。'],
       download: '立即下载',
       downloadMac: '下载 macOS 版',
       downloadWin: '下载 Windows 版',
@@ -245,7 +245,7 @@ export default {
             },
             {
               title: '题目练习',
-              desc: '把教材变成可练习的题库，自动判分，掌握度看得见。'
+              desc: '把教材变成可练习的题目集，自动判分，掌握度按知识点追踪。'
             },
             {
               title: 'Anki 制卡',
@@ -258,7 +258,7 @@ export default {
 
     features: {
       title: '从读到记，装进同一个窗口。',
-      lede: '资料对话、思维导图、题目练习、制卡复习和文档阅读共用同一份数据，不用在几个软件之间来回搬。',
+      lede: '对话、思维导图、题目练习、制卡复习与文档阅读都在同一个应用里完成，Agent 生成的导图、题目和卡片直接存入对应的应用。',
       tabsLabel: '功能场景',
       more: '了解更多',
       prev: '上一个场景',
@@ -269,7 +269,7 @@ export default {
         {
           tab: '资料对话',
           title: '资料学习与智能对话',
-          lead: '围绕你自己的材料学习，而不是通用聊天。',
+          lead: '回答以你自己的资料为依据。',
           desc: '支持图片、语音和文件；回答带出处，标到原文页码；复杂问题切深度推理。',
           link: '/user-guide/chat',
           art: 'chat',
@@ -287,7 +287,7 @@ export default {
         {
           tab: '题目练习',
           title: '题目集与练习',
-          lead: '把教材、试卷变成可练习的题库。',
+          lead: '把教材、试卷变成可练习的题目集。',
           desc: '按知识点出题，带答案和解析，勾选后收进题目集；练习自动判分，掌握度按知识点追踪。',
           link: '/user-guide/question-bank',
           art: 'quiz',
@@ -337,7 +337,7 @@ export default {
         { icon: 'chat', name: '对话', desc: '围绕你的资料多轮提问，回答标出处；课题分组、搜索、导出都有。', link: '/user-guide/chat' },
         { icon: 'notes', name: '笔记', desc: '双链、标签、公式的 Markdown 笔记，和 AI 一起改，还能生成卡片和导图。', link: '/user-guide/notes' },
         { icon: 'mindmap', name: '思维导图', desc: '一句话生成知识体系导图，大纲和画布两种视图，背诵模式自测。', link: '/user-guide/mindmap' },
-        { icon: 'exam', name: '题目集', desc: '教材、试卷、错题变成题库：AI 录题、九种练习、自动判分和解析。', link: '/user-guide/question-bank' },
+        { icon: 'exam', name: '题目集', desc: '教材、试卷、错题变成题目集：AI 录题、九种练习、自动判分和解析。', link: '/user-guide/question-bank' },
         { icon: 'essay', name: '作文批改', desc: '高考、雅思、考研等作文多维评分，原文标注、逐句润色、参考范文。', link: '/user-guide/essay' },
         { icon: 'taskDashboard', name: 'Anki 制卡', desc: '一句话把 PDF、图片、笔记做成卡片，导出 APKG 或同步到 Anki。', link: '/user-guide/anki' },
         { icon: 'flashcards', name: '闪卡', desc: '复习、制卡、模板集中在一处，内置 FSRS 间隔重复，不装 Anki 也能天天复习。', link: '/user-guide/flashcards' },
