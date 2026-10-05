@@ -1,10 +1,10 @@
 {
   "source": "http://127.0.0.1:8011",
   "entry": "/demo.html",
-  "signature": "fbb674984aebd46d2153c6de6e7d15ff90b5bb92e4edbef2c8882ee7bac8df49",
-  "syncedAt": "2026-10-04T15:29:23.549Z",
-  "files": 1289,
-  "bytes": 37948712,
+  "signature": "c27b367f86792103a8e1ffa3d53d3295d2a1e7d4dd3cc7cf27b85813a3efcc46",
+  "syncedAt": "2026-10-05T00:58:21.385Z",
+  "files": 1292,
+  "bytes": 38080738,
   "skipped": 150,
-  "pinned": "主仓库 cd6b5ebbf 的本地构建"
+  "pinned": "主仓库 8f9f164c0 的本地构建"
 }
