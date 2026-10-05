@@ -37,7 +37,7 @@ const props = defineProps({
 })
 
 const { isDark } = useData()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const resolvedSrc = computed(() => import.meta.env.VITE_DEMO_URL || MIRROR_SRC)
 
@@ -52,7 +52,7 @@ const embeddable = () => {
   }
 }
 
-/** 学习桌面 + 跟随主题 + 开场那条剧本会话；覆盖地址里的其他 query 和 hash 原样保留 */
+/** 学习桌面 + 跟随主题和页面语言 + 开场那条剧本会话；覆盖地址里的其他 query 和 hash 原样保留 */
 const frameSrc = computed(() => {
   const url = resolvedSrc.value
   const hashAt = url.indexOf('#')
@@ -63,6 +63,8 @@ const frameSrc = computed(() => {
   const query = new URLSearchParams(queryAt < 0 ? '' : pathAndQuery.slice(queryAt + 1))
   query.set('desktop', '1')
   query.set('theme', isDark.value ? 'dark' : 'light')
+  if (locale.value === 'en-US') query.set('lang', 'en')
+  else query.delete('lang')
   if (!query.has('scene')) query.set('scene', SCENE)
   return `${path}?${query}${hash}`
 })

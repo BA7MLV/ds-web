@@ -67,7 +67,7 @@ const props = defineProps({
 })
 
 const { isDark } = useData()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const resolvedSrc = computed(
   () => props.src || import.meta.env.VITE_DEMO_URL || MIRROR_SRC
@@ -88,7 +88,7 @@ const embeddable = () => {
   }
 }
 
-/** 显式覆盖演示的深浅色参数、补上海报那条会话，同时保留覆盖地址的其他 query 和 hash。 */
+/** 显式覆盖演示的深浅色和界面语言、补上海报那条会话，同时保留覆盖地址的其他 query 和 hash。 */
 const frameSrc = computed(() => {
   const url = resolvedSrc.value
   if (!url) return url
@@ -99,6 +99,8 @@ const frameSrc = computed(() => {
   const path = queryAt < 0 ? pathAndQuery : pathAndQuery.slice(0, queryAt)
   const query = new URLSearchParams(queryAt < 0 ? '' : pathAndQuery.slice(queryAt + 1))
   query.set('theme', isDark.value ? 'dark' : 'light')
+  if (locale.value === 'en-US') query.set('lang', 'en')
+  else query.delete('lang')
   if (!query.has('scene')) query.set('scene', POSTER_SCENE)
   return `${path}?${query}${hash}`
 })
