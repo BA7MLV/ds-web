@@ -27,7 +27,7 @@ editLink: false
 
 | 章节 | 内容 |
 |---|---|
-| [04 · 学习资源中心](/user-guide/learning-hub) | 导入资料、文件夹与标签页管理、知识库索引、回收站 |
+| [04 · 资源库](/user-guide/learning-hub) | 导入资料、文件夹与标签页管理、知识库索引、回收站 |
 | [05 · 文档阅读与翻译](/user-guide/reading-translation) | PDF/Word/EPUB 阅读、高亮批注、书签、勾选页面问 AI、划词解释/翻译/存笔记/制卡、翻译工作台与领域预设 |
 | [06 · 论文搜索](/user-guide/paper-search) | arXiv/OpenAlex 检索、批量下载入库、引用格式、DOI 解析 |
 
@@ -44,7 +44,7 @@ editLink: false
 
 | 章节 | 内容 |
 |---|---|
-| [11 · 题库与练习](/user-guide/question-bank) | 建题库（手动/识别导入/CSV/AI 出题）、九种练习模式、自动判分、错题与掌握度 |
+| [11 · 题目集与练习](/user-guide/question-bank) | 建题目集（手动/识别导入/CSV/AI 出题）、九种练习模式、自动判分、错题与掌握度 |
 | [12 · Anki制卡与模板](/user-guide/anki) | 对话制卡与一步制卡入口、任务看板、模板编辑器、导出 APKG 与 AnkiConnect 同步 |
 | [13 · 闪卡复习](/user-guide/flashcards) | FSRS 间隔重复、复习会话、卡片库（新建、导入导出 .apkg）与统计 |
 

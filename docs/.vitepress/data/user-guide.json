@@ -35,7 +35,7 @@
     {
       "file": "04-学习资源中心.md",
       "path": "/user-guide/learning-hub",
-      "title": "学习资源中心"
+      "title": "资源库"
     },
     {
       "file": "05-文档阅读与翻译.md",
@@ -70,7 +70,7 @@
     {
       "file": "11-题库与练习.md",
       "path": "/user-guide/question-bank",
-      "title": "题库与练习"
+      "title": "题目集与练习"
     },
     {
       "file": "12-Anki制卡与模板.md",
@@ -121,7 +121,7 @@
       "text": "资料与阅读",
       "items": [
         {
-          "text": "学习资源中心",
+          "text": "资源库",
           "link": "/user-guide/learning-hub"
         },
         {
@@ -159,7 +159,7 @@
       "text": "练习与记忆",
       "items": [
         {
-          "text": "题库与练习",
+          "text": "题目集与练习",
           "link": "/user-guide/question-bank"
         },
         {
