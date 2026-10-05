@@ -1,1 +1,0 @@
-const e=["notes-editor","wikilink","mention"];function o(n){return typeof n=="string"&&e.includes(n)}function t(n){return!!n?.noteId&&typeof n?.source=="string"&&!o(n.source)}function r(n){return!!n?.noteId&&(n?.source==null||o(n.source))}export{r as a,t as s};

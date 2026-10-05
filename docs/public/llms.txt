@@ -1,6 +1,6 @@
 # DeepStudent
 
-> DeepStudent（深学助手）是免费开源、以本地存储为默认方式的 AI 学习工作台。它把资料问答、笔记、知识导图、题目练习、翻译、作文批改与 Anki 制卡放在同一个应用中。以下是官方说明与使用指南的规范链接。
+> DeepStudent（深学助手）是免费开源、以本地存储为默认方式的 AI 学习工作台。它把资料问答、笔记、思维导图、题目练习、翻译、作文批改与 Anki 制卡放在同一个应用中。以下是官方说明与使用指南的规范链接。
 
 DeepStudent is an open-source, local-first AI study workspace built with Tauri 2 and licensed under AGPL-3.0. The homepage is available in Simplified Chinese and English; the user guides are currently in Simplified Chinese.
 
@@ -29,14 +29,14 @@ DeepStudent is an open-source, local-first AI study workspace built with Tauri 2
 
 - [AI 对话与会话管理](https://deepstudent.cn/user-guide/chat)：发消息、附件与引用、模型选择与多模型对比、推理模式、权限预设、课题分组、会话搜索与导出。
 - [深度调研与智能记忆](https://deepstudent.cn/user-guide/research-memory)：多步骤联网调研、搜索引擎配置，AI 记忆的提取、管理与隐私控制。
-- [学习资源中心](https://deepstudent.cn/user-guide/learning-hub)：导入资料、文件夹与标签页管理、知识库索引、回收站。
+- [资源库](https://deepstudent.cn/user-guide/learning-hub)：导入资料、文件夹与标签页管理、知识库索引、回收站。
 - [文档阅读与翻译](https://deepstudent.cn/user-guide/reading-translation)：PDF / Word / EPUB 阅读、高亮批注、书签、勾选页面问 AI、划词解释 / 翻译 / 存笔记 / 制卡、翻译工作台与领域预设。
 - [论文搜索](https://deepstudent.cn/user-guide/paper-search)：arXiv / OpenAlex 检索、批量下载入库、引用格式、DOI 解析。
 - [笔记](https://deepstudent.cn/user-guide/notes)：富文本编辑、双链与引用、笔记模板、一键生成卡片与思维导图、学习属性与近期复习、AI 画布编辑。
-- [知识导图](https://deepstudent.cn/user-guide/mindmap)：一句话或从笔记生成导图、导图 / 大纲双视图、背诵模式（一键遮住要点、难点优先）、导入导出。
+- [思维导图](https://deepstudent.cn/user-guide/mindmap)：一句话或从笔记生成导图、导图 / 大纲双视图、背诵模式（一键遮住要点、难点优先）、导入导出。
 - [作文批改](https://deepstudent.cn/user-guide/essay)：高考 / 雅思 / 托福等多场景批改、标注与评分、逐句润色。
 - [待办、番茄钟与命令面板](https://deepstudent.cn/user-guide/productivity)：待办与定时任务、番茄钟与沉浸专注、今日与学习周报、命令面板、语音输入。
-- [题库与练习](https://deepstudent.cn/user-guide/question-bank)：建题库（手动 / 识别导入 / CSV / AI 出题）、多种练习模式、自动判分、错题与掌握度。
+- [题目集与练习](https://deepstudent.cn/user-guide/question-bank)：建题目集（手动 / 识别导入 / CSV / AI 出题）、多种练习模式、自动判分、错题与掌握度。
 - [Anki 制卡与模板](https://deepstudent.cn/user-guide/anki)：对话制卡、任务看板、模板编辑器、导出 APKG 与 AnkiConnect 同步。
 - [闪卡复习](https://deepstudent.cn/user-guide/flashcards)：应用内 FSRS 间隔重复、复习会话、卡片库（新建、导入导出 .apkg）与统计。
 - [模型与供应商配置](https://deepstudent.cn/user-guide/models)：13 家预置供应商、自建接口与本地模型（Ollama 等免 API 密钥）、模型分配与嵌入维度、硅基流动一键分配。

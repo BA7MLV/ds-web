@@ -7,13 +7,13 @@ export const TITLE_TEMPLATE = ':title｜DeepStudent'
 
 const REPOSITORY_URL = 'https://github.com/helixnow/deep-student'
 /** 由 scripts/gen-share-images.mjs 生成；换图必须换文件名，各平台按 URL 缓存分享图 */
-const OG_IMAGE = `${SITE_ORIGIN}/img/og-2026-10.png`
+const OG_IMAGE = `${SITE_ORIGIN}/img/og-2026-10-agent.png`
 const SCHEMA_ID = 'deepstudent-schema'
 const DEFAULT_DESCRIPTION = {
   'zh-CN':
-    'DeepStudent 官方文档：了解本地优先的开源 AI 学习工作台，配置模型服务，使用资料问答、笔记、知识导图、题目练习与 Anki 制卡。',
+    'DeepStudent 官方文档：了解开源、本地优先的 AI 学习工作台，配置模型服务，使用学习 Agent、笔记、思维导图、题目集与闪卡。',
   'en-US':
-    'DeepStudent is an open-source, local-first AI study workspace for material chat, notes, mind maps, practice questions and Anki cards.'
+    'DeepStudent is an open-source, local-first AI learning workbench whose study agent works in notes, mind maps, exam sets and flashcards.'
 }
 const LANDING_PATHS = new Set(['index.md', 'en/index.md'])
 const GUIDE_INDEX = 'user-guide/index.md'

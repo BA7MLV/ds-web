@@ -2,9 +2,9 @@
   "source": {
     "repo": "helixnow/deep-student",
     "path": "docs/user-guide",
-    "commit": "87a82e990aa53373c332958f075a14faf6459d87",
+    "commit": "44b223ea055b18401aaa20b254bf5496fd2d5f5f",
     "dirty": false,
-    "syncedAt": "2026-10-03T07:49:53.191Z"
+    "syncedAt": "2026-10-05T00:20:21.408Z"
   },
   "pages": [
     {
@@ -35,7 +35,7 @@
     {
       "file": "04-学习资源中心.md",
       "path": "/user-guide/learning-hub",
-      "title": "学习资源中心"
+      "title": "资源库"
     },
     {
       "file": "05-文档阅读与翻译.md",
@@ -53,9 +53,9 @@
       "title": "笔记"
     },
     {
-      "file": "08-知识导图.md",
+      "file": "08-思维导图.md",
       "path": "/user-guide/mindmap",
-      "title": "知识导图"
+      "title": "思维导图"
     },
     {
       "file": "09-作文批改.md",
@@ -70,7 +70,7 @@
     {
       "file": "11-题库与练习.md",
       "path": "/user-guide/question-bank",
-      "title": "题库与练习"
+      "title": "题目集与练习"
     },
     {
       "file": "12-Anki制卡与模板.md",
@@ -121,7 +121,7 @@
       "text": "资料与阅读",
       "items": [
         {
-          "text": "学习资源中心",
+          "text": "资源库",
           "link": "/user-guide/learning-hub"
         },
         {
@@ -142,7 +142,7 @@
           "link": "/user-guide/notes"
         },
         {
-          "text": "知识导图",
+          "text": "思维导图",
           "link": "/user-guide/mindmap"
         },
         {
@@ -159,7 +159,7 @@
       "text": "练习与记忆",
       "items": [
         {
-          "text": "题库与练习",
+          "text": "题目集与练习",
           "link": "/user-guide/question-bank"
         },
         {

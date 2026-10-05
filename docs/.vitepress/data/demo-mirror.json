@@ -1,10 +1,10 @@
 {
   "source": "http://47.88.78.106:8010",
   "entry": "/demo.html",
-  "signature": "2329cdfafe410a435f0b5c6437e581ec56fc6310b246052c6e034e5f741ede19",
-  "syncedAt": "2026-10-03T14:51:49.152Z",
-  "files": 1199,
-  "bytes": 39039066,
+  "signature": "5938def6b852fdf6adb617edae3b836fdf6142abf2f76131dae5c15445965c1d",
+  "syncedAt": "2026-10-05T08:16:50.865Z",
+  "files": 1209,
+  "bytes": 37982170,
   "skipped": 150,
-  "pinned": "主仓库 demo/site-i18n-hide 分支 1ddb9a55c 的本地构建（536238582 + 演示不要通知权限 + 文案按语言整包、藏未发布功能；演示服务器还是旧版）"
+  "pinned": "主仓库 demo/site-1005 分支 f6689351b 的本地构建（8f9f164c0 + 演示文案按语言整包、英文界面 ?lang=en；今日待复习与知识库检索范围已随 v0.10.x 发布，不再藏；演示服务器还是旧版）"
 }

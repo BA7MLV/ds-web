@@ -85,13 +85,13 @@ export default {
   appShell: {
     title: 'DeepStudent 实时演示',
     previewTitle: 'DeepStudent 界面预览',
-    previewDescription: '围绕学习资料展开对话，再把理解整理成知识导图、练习题和 Anki 卡片。',
+    previewDescription: '学习 Agent 在对话中读取资料，直接生成思维导图、练习题与 Anki 卡片。',
     /** 壳内那张真实界面截图的替代文字；截图与实时演示是同一个界面 */
     posterAlt:
-      'DeepStudent 应用界面：左侧是学习资源与对话列表，右侧是围绕资料的问答，回答带引用出处，并已整理成 5 张 Anki 卡片。',
-    waiting: '实时演示将自动载入，点这里也可以马上开始。',
+      'DeepStudent 应用界面：左侧是导航与对话列表，右侧是对话「高数错题 → Anki 卡片」，Agent 已生成 5 张卡片。',
+    waiting: '实时演示将自动载入，也可点击此处立即开始。',
     loading: '正在载入可交互的实时演示…',
-    delayed: '实时演示暂未就绪，你可以重试或先看下方功能。',
+    delayed: '实时演示暂未就绪，可重试或先浏览下方功能。',
     unavailable: '当前无法嵌入实时演示，下方是界面截图。',
     start: '立即体验',
     retry: '重新载入'
@@ -104,8 +104,9 @@ export default {
     },
 
     hero: {
-      title: '开源的终身学习空间',
-      lede: ['开源、本地优先的学习工作台，', '资料和数据都在你自己手里'],
+      /** 口号，见主仓库 docs/brand/messaging.md §1；\n 是固定断行（标题 white-space: pre-line） */
+      title: '只专注学习本身就够了，\n剩下的都交给我。',
+      lede: ['开源、本地优先的 AI 学习工作台。', '它的学习 Agent，可直接操作学习桌面上的每一个应用。'],
       download: '立即下载',
       downloadMac: '下载 macOS 版',
       downloadWin: '下载 Windows 版',
@@ -134,7 +135,7 @@ export default {
      */
     desktop: {
       title: '一张学习桌面，应用并排摆开。',
-      lede: '桌面端打开就是学习桌面：从 Dock 打开对话、资源库和各个学习应用，窗口自由摆放、平铺、并排对比，日程和 AI 学习简报留在桌面上。',
+      lede: '桌面端启动后即进入学习桌面：从 Dock 打开对话、资源库与各个学习应用，窗口可自由摆放、平铺或并排对比，日程与 AI 学习简报常驻桌面。',
       more: '了解学习桌面',
       link: '/user-guide/workbench',
       art: 'workbench',
@@ -142,17 +143,44 @@ export default {
       /** 宽屏 + 鼠标时那张截图会换成能直接操作的实时桌面（DesktopDemo.vue） */
       live: {
         title: '学习桌面实时演示',
-        hint: '这张桌面可以直接上手：从 Dock 打开应用，拖动、缩放窗口，在闪卡里开始复习。演示数据只留在这个页面，刷新就复原。',
-        narrow: '把浏览器窗口拉宽到 1024 像素以上，这张学习桌面就能直接操作；也可以点图看大图。',
-        touch: '点图看大图，左右滑动看整张桌面。在电脑上打开这一页能直接操作；想在手机上试试，翻到首屏的演示。',
+        hint: '这张桌面可直接操作：从 Dock 打开应用，拖动或缩放窗口，在闪卡中开始复习。演示数据仅保存在本页，刷新后即复原。',
+        narrow: '浏览器窗口宽度达到 1024 像素以上时，可直接操作这张学习桌面；也可点击图片查看大图。',
+        touch: '点击图片查看大图，左右滑动可浏览整张桌面。在电脑上打开本页即可直接操作；如需在手机上体验，请使用首屏的演示。',
         zoom: '看大图',
         pan: '左右滑动看整张桌面',
         close: '关闭大图',
-        waiting: '滚到这里会自动载入，也可以马上开始。',
+        waiting: '滚动到此处时自动载入，也可立即开始。',
         loading: '正在打开学习桌面…',
         delayed: '学习桌面暂未就绪，可以重试。',
         start: '立即载入'
       }
+    },
+
+    /**
+     * 学习 Agent：首屏之后第一个讲的能力（口径见主仓库 docs/brand/messaging.md §2 三条支撑）。
+     * 版式同「数据默认存在本机」一节：左标题 + 导语，右侧条目栈
+     */
+    agent: {
+      title: '一个学习 Agent，直接操作每一个应用。',
+      lede: '只需一句话，它即可打开对应的应用，完成笔记、思维导图、题目、卡片与复习计划；更长的任务可交由它独立推进。',
+      items: [
+        {
+          title: '直接动手',
+          desc: '笔记、思维导图、题目集、闪卡、待办、作文与翻译都有对应的 Agent 工具，结果直接写进应用。'
+        },
+        {
+          title: '长任务可托付',
+          desc: '调研、整理、出题可交给它连续推进：目标模式跨轮续跑，子代理并行处理，定时任务按时执行。'
+        },
+        {
+          title: '每一步可控',
+          desc: '操作按风险分级审批，Ask / Plan / Craft 三种权限模式可选；笔记与学习桌面上的改动可撤销。'
+        },
+        {
+          title: '懂你，可扩展',
+          desc: '记住你的薄弱点与学习习惯；内置 56 个技能，支持 MCP 与 13 家模型服务。'
+        }
+      ]
     },
 
     /**
@@ -173,15 +201,15 @@ export default {
           items: [
             {
               title: '统一入库',
-              desc: '教材、试卷、PDF、笔记都收进同一个库，不用再翻网盘和文件夹。'
+              desc: '教材、试卷、PDF 与笔记统一收入资源库，无需在网盘和文件夹之间来回查找。'
             },
             {
-              title: '扫描件也能用',
-              desc: '扫描版 PDF 自动识别文字，之后照样能检索、引用、出题。'
+              title: '扫描件同样可用',
+              desc: '扫描版 PDF 自动识别文字，识别后同样可检索、引用和出题。'
             },
             {
               title: '索引在本地',
-              desc: '检索索引建在你自己机器上，随时能重建或删掉。'
+              desc: '检索索引建立在本机，可随时重建或删除。'
             }
           ]
         },
@@ -193,15 +221,15 @@ export default {
           items: [
             {
               title: '答案带出处',
-              desc: '每个回答都标出引用了哪一段，点一下就能回到原文核对。'
+              desc: '每个回答均标注引用的段落，点击即可回到原文核对。'
             },
             {
               title: '技能与记忆',
-              desc: '常用流程存成技能，长期偏好写进记忆，越用越顺手。'
+              desc: '常用流程可存为技能，长期偏好写入记忆，后续回答会参考这些偏好。'
             },
             {
               title: '推理模式',
-              desc: '复杂推导切到深度推理，能看到过程，不只有结论。'
+              desc: '复杂推导可切换到深度推理，过程与结论一并呈现。'
             }
           ]
         },
@@ -212,16 +240,16 @@ export default {
           alt: '闪卡今日复习页截图：今日进度环 90%，待复习 2、新卡 12、学习中 4，下面是开始复习按钮',
           items: [
             {
-              title: '知识导图',
-              desc: '一句话生成完整知识体系，边聊边改，还能遮住节点自测。'
+              title: '思维导图',
+              desc: '一句话生成完整知识体系，可在对话中继续修改，并可遮住节点自测。'
             },
             {
               title: '题目练习',
-              desc: '把教材变成可练习的题库，自动判分，掌握度看得见。'
+              desc: '把教材变成可练习的题目集，自动判分，掌握度按知识点追踪。'
             },
             {
               title: 'Anki 制卡',
-              desc: '说一句话就能制卡，批量生成，一键同步到 Anki。'
+              desc: '一句话即可批量制卡，并可一键同步到 Anki。'
             }
           ]
         }
@@ -230,7 +258,7 @@ export default {
 
     features: {
       title: '从读到记，装进同一个窗口。',
-      lede: '资料对话、知识导图、题目练习、制卡复习和文档阅读共用同一份数据，不用在几个软件之间来回搬。',
+      lede: '对话、思维导图、题目练习、制卡复习与文档阅读都在同一个应用里完成，Agent 生成的导图、题目和卡片直接存入对应的应用。',
       tabsLabel: '功能场景',
       more: '了解更多',
       prev: '上一个场景',
@@ -241,25 +269,25 @@ export default {
         {
           tab: '资料对话',
           title: '资料学习与智能对话',
-          lead: '围绕你自己的材料学习，而不是通用聊天。',
-          desc: '支持图片、语音和文件；回答带出处，标到原文页码；复杂问题切深度推理。',
+          lead: '回答以你自己的资料为依据。',
+          desc: '支持图片、语音与文件输入；回答标注原文页码；复杂问题可切换深度推理。',
           link: '/user-guide/chat',
           art: 'chat',
           alt: '对话界面截图：按教材页码作答，段末标着第 45、47、52 页'
         },
         {
-          tab: '知识导图',
-          title: '知识导图',
+          tab: '思维导图',
+          title: '思维导图',
           lead: '把知识整理成结构。',
-          desc: '一句话生成完整知识体系，边聊边改；背诵模式一键遮住要点，自己默一遍。',
+          desc: '一句话生成完整知识体系，可在对话中继续修改；背诵模式一键遮住要点，用于自测。',
           link: '/user-guide/mindmap',
           art: 'mindmap',
-          alt: '知识导图截图：中心主题「数据并行训练」分出优化方向、基本范式和同步的代价'
+          alt: '思维导图截图：中心主题「数据并行训练」分出优化方向、基本范式和同步的代价'
         },
         {
           tab: '题目练习',
           title: '题目集与练习',
-          lead: '把教材、试卷变成可练习的题库。',
+          lead: '把教材、试卷变成可练习的题目集。',
           desc: '按知识点出题，带答案和解析，勾选后收进题目集；练习自动判分，掌握度按知识点追踪。',
           link: '/user-guide/question-bank',
           art: 'quiz',
@@ -269,7 +297,7 @@ export default {
           tab: 'Anki 制卡',
           title: 'Anki 智能制卡',
           lead: '把理解变成卡片。',
-          desc: '说一句话就能制卡，批量生成；翻面检查、改好后加入卡片库，或一键同步到 Anki。',
+          desc: '一句话即可批量制卡；翻面检查并修改后加入卡片库，或一键同步到 Anki。',
           link: '/user-guide/anki',
           art: 'anki',
           alt: '制卡界面截图：一张问答卡和翻页圆点，下面是已生成 5 张卡片，以及路由、生成、完成三步的进度'
@@ -277,8 +305,8 @@ export default {
         {
           tab: '闪卡复习',
           title: '闪卡复习',
-          lead: '复习也在同一个应用里。',
-          desc: '内置 FSRS 间隔重复：到期的卡自动排进今日复习，按记得的程度评分，下一次复习时间随之调整。',
+          lead: '复习在同一个应用内完成。',
+          desc: '内置 FSRS 间隔重复：到期卡片自动进入今日复习，按记忆程度评分，下一次复习时间随之调整。',
           link: '/user-guide/flashcards',
           art: 'review',
           alt: '复习界面截图：卡片背面的答案，下面是重来、困难、良好、简单四个评分和对应间隔'
@@ -286,8 +314,8 @@ export default {
         {
           tab: '文档阅读',
           title: '文档阅读与翻译',
-          lead: '读原文，也读得懂原文。',
-          desc: 'PDF、Word、EPUB 直接阅读，划词解释、翻译、存笔记或制卡；整段材料生成逐句双语对照。',
+          lead: '原文阅读，随读随译。',
+          desc: 'PDF、Word、EPUB 直接阅读，划词即可解释、翻译、存为笔记或制卡；整段材料可生成逐句双语对照。',
           link: '/user-guide/reading-translation',
           art: 'reading',
           alt: '双语阅读截图：英文原文与中文译文逐句对照的表格'
@@ -300,27 +328,29 @@ export default {
      * icon 对应 docs/public/apps/<icon>.svg（产品插画图标），link 是用户指南那一章。extras 是没有独立应用的能力
      */
     apps: {
-      title: '从收资料到复习，每一步都有对应的应用。',
-      lede: '这些应用都在桌面端的 Dock 和「全部应用」里，可以单独打开，也能在学习桌面上并排摆。点一个，看它的使用说明。',
+      /** \n 是固定断行（HomeApps 标题 white-space: pre-line），否则 balance 会断在「每 / 一步」之间 */
+      title: '从收资料到复习，\n每一步都有对应的应用。',
+      lede: '以下应用均位于桌面端的 Dock 与「全部应用」中，可单独打开，也可在学习桌面上并排使用。点击任一应用可查看使用说明。',
       items: [
-        { icon: 'files', name: '资源库', desc: '教材、笔记、题目、文档统一入库，自动建好 AI 检索索引。', link: '/user-guide/learning-hub' },
-        { icon: 'textbook', name: '教材阅读', desc: 'PDF、Word、EPUB 双页阅读、高亮批注，勾选页面直接问 AI。', link: '/user-guide/reading-translation' },
-        { icon: 'translation', name: '翻译', desc: '全文翻译和逐段双语对照，7 种领域预设，选中文字随手就译。', link: '/user-guide/reading-translation' },
-        { icon: 'chat', name: '对话', desc: '围绕你的资料多轮提问，回答标出处；课题分组、搜索、导出都有。', link: '/user-guide/chat' },
-        { icon: 'notes', name: '笔记', desc: '双链、标签、公式的 Markdown 笔记，和 AI 一起改，还能生成卡片和导图。', link: '/user-guide/notes' },
-        { icon: 'mindmap', name: '知识导图', desc: '一句话生成知识体系导图，大纲和画布两种视图，背诵模式自测。', link: '/user-guide/mindmap' },
-        { icon: 'exam', name: '题目集', desc: '教材、试卷、错题变成题库：AI 录题、九种练习、自动判分和解析。', link: '/user-guide/question-bank' },
+        { icon: 'files', name: '资源库', desc: '教材、笔记、题目、文档与音视频统一入库，自动建立 AI 检索索引。', link: '/user-guide/learning-hub' },
+        { icon: 'textbook', name: '教材阅读', desc: 'PDF、Word、EPUB 双页阅读与高亮批注，可勾选页面直接向 AI 提问。', link: '/user-guide/reading-translation' },
+        { icon: 'translation', name: '翻译', desc: '全文翻译与逐段双语对照，7 种领域预设，选中文字即可翻译。', link: '/user-guide/reading-translation' },
+        { icon: 'chat', name: '对话', desc: '围绕你的资料多轮提问，回答标注出处；支持课题分组、搜索与导出。', link: '/user-guide/chat' },
+        { icon: 'notes', name: '笔记', desc: '支持双链、标签与公式的 Markdown 笔记，可与 AI 协同修改，并可生成卡片与导图。', link: '/user-guide/notes' },
+        { icon: 'mindmap', name: '思维导图', desc: '一句话生成知识体系导图，提供大纲与画布两种视图，背诵模式可用于自测。', link: '/user-guide/mindmap' },
+        { icon: 'exam', name: '题目集', desc: '教材、试卷与错题可转为题目集：AI 录题、九种练习模式、自动判分与解析。', link: '/user-guide/question-bank' },
         { icon: 'essay', name: '作文批改', desc: '高考、雅思、考研等作文多维评分，原文标注、逐句润色、参考范文。', link: '/user-guide/essay' },
-        { icon: 'taskDashboard', name: 'Anki 制卡', desc: '一句话把 PDF、图片、笔记做成卡片，导出 APKG 或同步到 Anki。', link: '/user-guide/anki' },
-        { icon: 'flashcards', name: '闪卡', desc: '内置 FSRS 间隔重复，卡片库统一管理，不装 Anki 也能天天复习。', link: '/user-guide/flashcards' },
+        { icon: 'taskDashboard', name: 'Anki 制卡', desc: '一句话将 PDF、图片与笔记制成卡片，可导出 APKG 或同步到 Anki。', link: '/user-guide/anki' },
+        { icon: 'flashcards', name: '闪卡', desc: '复习、制卡与模板集中在一处，内置 FSRS 间隔重复，无需安装 Anki 即可每日复习。', link: '/user-guide/flashcards' },
         { icon: 'templates', name: '模板管理', desc: '可视化编辑 Anki 卡片模板，制卡时直接套用。', link: '/user-guide/anki' },
-        { icon: 'todo', name: '待办', desc: '一句话添加任务，四象限、子任务、提醒，还能设定时自动化。', link: '/user-guide/productivity' },
-        { icon: 'pomodoro', name: '番茄钟', desc: '严格模式、环境音、置顶小窗，专注时长和趋势一目了然。', link: '/user-guide/productivity' },
-        { icon: 'skills', name: '技能管理', desc: '让 AI 按需加载技能、用 MCP 连上外部工具，可以自己装、自己写。', link: '/user-guide/skills-mcp' },
-        { icon: 'settings', name: '设置', desc: '接入 13 家模型服务或本地模型，按功能分别指定用哪个模型。', link: '/user-guide/models' }
+        { icon: 'todo', name: '待办', desc: '一句话添加任务，支持四象限、子任务、提醒与定时自动化。', link: '/user-guide/productivity' },
+        { icon: 'pomodoro', name: '番茄钟', desc: '提供严格模式、环境音与置顶小窗，专注时长与趋势以图表呈现。', link: '/user-guide/productivity' },
+        { icon: 'skills', name: '技能管理', desc: 'AI 按需加载技能，经 MCP 接入外部工具；技能可安装，也可自行编写。', link: '/user-guide/skills-mcp' },
+        { icon: 'settings', name: '设置', desc: '接入 13 家模型服务或本地模型，可按功能分别指定模型。', link: '/user-guide/models' }
       ],
       more: '还有：',
       extras: [
+        { name: '音视频学习', link: '/user-guide/learning-hub' },
         { name: '论文搜索', link: '/user-guide/paper-search' },
         { name: '深度调研与智能记忆', link: '/user-guide/research-memory' },
         { name: '今日与学习周报', link: '/user-guide/productivity' },
@@ -367,7 +397,7 @@ export default {
       items: [
         {
           q: 'DeepStudent 收费吗？',
-          a: '软件免费开源（AGPL-3.0）。AI 用你自己配置的密钥，费用直接付给模型服务商；也可以接本地模型，完全不花钱。'
+          a: '软件免费开源（AGPL-3.0）。AI 功能使用你自行配置的密钥，费用直接支付给模型服务商；接入本地模型则无需额外费用。'
         },
         {
           q: '数据会上传到云端吗？',
@@ -379,11 +409,11 @@ export default {
         },
         {
           q: '支持哪些平台？',
-          a: 'macOS（Apple Silicon / Intel）、Windows、Linux 和 Android 都有安装包。iOS 需要自己用 Xcode 构建。'
+          a: 'macOS（Apple Silicon / Intel）、Windows、Linux 与 Android 均提供安装包；iOS 需自行使用 Xcode 从源码构建。'
         },
         {
           q: 'macOS 提示「已损坏，无法打开」怎么办？',
-          a: '这是 macOS 对非 App Store 应用的隔离机制。在终端执行 sudo xattr -r -d com.apple.quarantine "/Applications/Deep Student.app" 即可。应用名带空格，引号不能省；安装路径不同就换成真实路径。'
+          a: '这是 macOS 对非 App Store 应用的隔离机制。在终端执行 sudo xattr -r -d com.apple.quarantine "/Applications/Deep Student.app" 即可。应用名包含空格，引号不可省略；若安装路径不同，请替换为实际路径。'
         }
       ]
     }

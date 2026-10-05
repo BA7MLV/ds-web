@@ -1,1 +1,0 @@
-import"./demo-BionXkNN.js";import{a as n}from"./vendor-i18n-BpK6uTJl.js";const r=["快速学习","Quick Learning"];function e(i){return i?r.includes(i.trim()):!1}function u(i){return e(i)?n.t("quickAssistant:service.group_name",{defaultValue:n.language?.toLowerCase().startsWith("zh")?"快速学习":"Quick Learning"}):i}export{u as d};

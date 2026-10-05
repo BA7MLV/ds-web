@@ -4,7 +4,7 @@
  * 为什么留脚本：两张图都该跟着真界面走。演示镜像一重拍海报（见 AppShell.vue 顶部注释），
  * 或者首屏标题 / 副标改了，照着跑一遍即可，不用回忆当初的排版和尺寸。
  *
- *   docs/public/img/og-2026-10.png                 1200×630 分享卡（og:image / twitter:image）
+ *   docs/public/img/og-2026-10-agent.png                 1200×630 分享卡（og:image / twitter:image）
  *   docs/public/img/example/软件主页图-<宽>.webp    带窗壳的界面图，640 / 960 / 1280 / 1600 四档
  *
  * 取值的理由：
@@ -30,7 +30,7 @@ import zh from '../docs/.vitepress/theme/i18n/messages/zh-CN.js'
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const PUBLIC = join(ROOT, 'docs/public')
 const POSTER = join(PUBLIC, 'demo-poster.webp')
-const OG_OUT = join(PUBLIC, 'img/og-2026-10.png')
+const OG_OUT = join(PUBLIC, 'img/og-2026-10-agent.png')
 const MAIN_OUT = (width) => join(PUBLIC, `img/example/软件主页图-${width}.webp`)
 const MAIN_WIDTHS = [640, 960, 1280, 1600]
 
@@ -88,7 +88,7 @@ const ogHtml = (posterUrl, logoSvg) => `<!doctype html><meta charset="utf-8">
     display: flex; flex-direction: column; justify-content: center; gap: 22px; }
   .brand { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 600; }
   .brand svg { width: 40px; height: 40px; }
-  h1 { margin: 0; font-size: 56px; line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; }
+  h1 { margin: 0; font-size: 44px; line-height: 1.2; white-space: nowrap; font-weight: 600; letter-spacing: -0.02em; }
   p { margin: 0; font-size: 24px; line-height: 1.6; color: #55555a; }
   .foot { margin-top: 10px; font-size: 18px; color: #86868b; }
   .shot { position: absolute; left: 640px; top: 96px; }
@@ -96,7 +96,7 @@ const ogHtml = (posterUrl, logoSvg) => `<!doctype html><meta charset="utf-8">
 </style>
 <div class="copy">
   <div class="brand">${logoSvg}DeepStudent</div>
-  <h1>${escape(zh.home.hero.title)}</h1>
+  <h1>${escape(zh.home.hero.title).replace('\n', '<br>')}</h1>
   <p>${zh.home.hero.lede.map(escape).join('<br>')}</p>
   <div class="foot">deepstudent.cn · macOS / Windows / Linux / Android</div>
 </div>

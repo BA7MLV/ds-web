@@ -98,7 +98,7 @@ export default defineConfig({
   },
   title: 'DeepStudent',
   titleTemplate: TITLE_TEMPLATE,
-  description: 'AI 原生、本地优先的开源学习系统',
+  description: '开源、本地优先的 AI 学习工作台',
   base: '/',
   cleanUrls: true,
   // 内部工程计划与仓库规范不进入站点与搜索
@@ -123,7 +123,7 @@ export default defineConfig({
         injectLLMHint: false,
         title: 'DeepStudent Documentation',
         description:
-          'DeepStudent is an AI-native, local-first, open-source learning system (AGPL-3.0). Official documentation in Simplified Chinese.',
+          'DeepStudent is an open-source, local-first AI learning workbench (AGPL-3.0) with a study agent that works directly in its apps. Official documentation in Simplified Chinese.',
         details:
           'Chat with your study materials (RAG with citations), notes, mind maps, question banks, translation & essay grading, and one-click Anki card generation — all data stored locally by default.'
       })
