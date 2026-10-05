@@ -1,10 +1,10 @@
 {
-  "source": "http://127.0.0.1:8011",
+  "source": "http://47.88.78.106:8010",
   "entry": "/demo.html",
-  "signature": "c27b367f86792103a8e1ffa3d53d3295d2a1e7d4dd3cc7cf27b85813a3efcc46",
-  "syncedAt": "2026-10-05T00:58:21.385Z",
-  "files": 1292,
-  "bytes": 38080738,
+  "signature": "5938def6b852fdf6adb617edae3b836fdf6142abf2f76131dae5c15445965c1d",
+  "syncedAt": "2026-10-05T08:16:50.865Z",
+  "files": 1209,
+  "bytes": 37982170,
   "skipped": 150,
-  "pinned": "主仓库 8f9f164c0 的本地构建"
+  "pinned": "主仓库 demo/site-1005 分支 f6689351b 的本地构建（8f9f164c0 + 演示文案按语言整包、英文界面 ?lang=en；今日待复习与知识库检索范围已随 v0.10.x 发布，不再藏；演示服务器还是旧版）"
 }
