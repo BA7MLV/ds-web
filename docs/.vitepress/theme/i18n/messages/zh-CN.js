@@ -178,7 +178,7 @@ export default {
         },
         {
           title: '懂你，可扩展',
-          desc: '记住你的薄弱点与学习习惯；内置 55 个技能，支持 MCP 与 13 家模型服务。'
+          desc: '记住你的薄弱点与学习习惯；内置 56 个技能，支持 MCP 与 13 家模型服务。'
         }
       ]
     },
@@ -331,7 +331,7 @@ export default {
       title: '从收资料到复习，每一步都有对应的应用。',
       lede: '这些应用都在桌面端的 Dock 和「全部应用」里，可以单独打开，也能在学习桌面上并排摆。点一个，看它的使用说明。',
       items: [
-        { icon: 'files', name: '资源库', desc: '教材、笔记、题目、文档统一入库，自动建好 AI 检索索引。', link: '/user-guide/learning-hub' },
+        { icon: 'files', name: '资源库', desc: '教材、笔记、题目、文档与音视频统一入库，自动建好 AI 检索索引。', link: '/user-guide/learning-hub' },
         { icon: 'textbook', name: '教材阅读', desc: 'PDF、Word、EPUB 双页阅读、高亮批注，勾选页面直接问 AI。', link: '/user-guide/reading-translation' },
         { icon: 'translation', name: '翻译', desc: '全文翻译和逐段双语对照，7 种领域预设，选中文字随手就译。', link: '/user-guide/reading-translation' },
         { icon: 'chat', name: '对话', desc: '围绕你的资料多轮提问，回答标出处；课题分组、搜索、导出都有。', link: '/user-guide/chat' },
@@ -340,7 +340,7 @@ export default {
         { icon: 'exam', name: '题目集', desc: '教材、试卷、错题变成题库：AI 录题、九种练习、自动判分和解析。', link: '/user-guide/question-bank' },
         { icon: 'essay', name: '作文批改', desc: '高考、雅思、考研等作文多维评分，原文标注、逐句润色、参考范文。', link: '/user-guide/essay' },
         { icon: 'taskDashboard', name: 'Anki 制卡', desc: '一句话把 PDF、图片、笔记做成卡片，导出 APKG 或同步到 Anki。', link: '/user-guide/anki' },
-        { icon: 'flashcards', name: '闪卡', desc: '内置 FSRS 间隔重复，卡片库统一管理，不装 Anki 也能天天复习。', link: '/user-guide/flashcards' },
+        { icon: 'flashcards', name: '闪卡', desc: '复习、制卡、模板集中在一处，内置 FSRS 间隔重复，不装 Anki 也能天天复习。', link: '/user-guide/flashcards' },
         { icon: 'templates', name: '模板管理', desc: '可视化编辑 Anki 卡片模板，制卡时直接套用。', link: '/user-guide/anki' },
         { icon: 'todo', name: '待办', desc: '一句话添加任务，四象限、子任务、提醒，还能设定时自动化。', link: '/user-guide/productivity' },
         { icon: 'pomodoro', name: '番茄钟', desc: '严格模式、环境音、置顶小窗，专注时长和趋势一目了然。', link: '/user-guide/productivity' },
@@ -349,6 +349,7 @@ export default {
       ],
       more: '还有：',
       extras: [
+        { name: '音视频学习', link: '/user-guide/learning-hub' },
         { name: '论文搜索', link: '/user-guide/paper-search' },
         { name: '深度调研与智能记忆', link: '/user-guide/research-memory' },
         { name: '今日与学习周报', link: '/user-guide/productivity' },

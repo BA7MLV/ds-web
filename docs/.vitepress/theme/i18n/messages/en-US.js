@@ -167,7 +167,7 @@ export default {
         },
         {
           title: 'Knows you, grows with you',
-          desc: 'Remembers your weak spots and study habits; 55 built-in skills, MCP support and 13 model providers.'
+          desc: 'Remembers your weak spots and study habits; 56 built-in skills, MCP support and 13 model providers.'
         }
       ]
     },
@@ -321,7 +321,7 @@ export default {
       title: 'An app for every step, from collecting to reviewing.',
       lede: 'All of these live in the desktop app’s Dock and All Apps panel. Open one on its own or side by side on the study desktop. Each links to its guide (in Chinese).',
       items: [
-        { icon: 'files', name: 'Files', desc: 'Keep textbooks, notes, question sets and documents in one place, indexed for AI search.', link: '/user-guide/learning-hub' },
+        { icon: 'files', name: 'Files', desc: 'Keep textbooks, notes, question sets, documents, audio and video in one place, indexed for AI search.', link: '/user-guide/learning-hub' },
         { icon: 'textbook', name: 'Textbook', desc: 'Read PDF, Word and EPUB in a two-page view, highlight and annotate, and ask AI about the pages you tick.', link: '/user-guide/reading-translation' },
         { icon: 'translation', name: 'Translation', desc: 'Full-text translation with side-by-side paragraphs, 7 domain presets, and quick translation of any selection.', link: '/user-guide/reading-translation' },
         { icon: 'chat', name: 'Chat', desc: 'Ask follow-up questions about your materials and get cited answers; group, search and export chats.', link: '/user-guide/chat' },
@@ -330,7 +330,7 @@ export default {
         { icon: 'exam', name: 'Exam Sets', desc: 'Turn textbooks, exams and mistakes into a question bank with AI entry, nine practice modes and auto grading.', link: '/user-guide/question-bank' },
         { icon: 'essay', name: 'Essay Review', desc: 'Scores across several criteria, inline marks, sentence-by-sentence polishing and model essays.', link: '/user-guide/essay' },
         { icon: 'taskDashboard', name: 'Anki Cards', desc: 'Turn PDFs, images and notes into cards with one request; export APKG or sync to Anki.', link: '/user-guide/anki' },
-        { icon: 'flashcards', name: 'Flashcards', desc: 'Built-in FSRS spaced repetition with a card library, so you can review daily without installing Anki.', link: '/user-guide/flashcards' },
+        { icon: 'flashcards', name: 'Flashcards', desc: 'Review, card making and templates in one place, with built-in FSRS so you can review daily without installing Anki.', link: '/user-guide/flashcards' },
         { icon: 'templates', name: 'Templates', desc: 'Edit Anki card templates visually and reuse them when you generate cards.', link: '/user-guide/anki' },
         { icon: 'todo', name: 'Todo', desc: 'Add tasks in plain words; quadrants, subtasks, reminders and scheduled automations.', link: '/user-guide/productivity' },
         { icon: 'pomodoro', name: 'Pomodoro', desc: 'Strict mode, ambient sounds, a floating mini timer, and your focus time and trends at a glance.', link: '/user-guide/productivity' },
@@ -339,6 +339,7 @@ export default {
       ],
       more: 'Also:',
       extras: [
+        { name: 'Audio & video learning', link: '/user-guide/learning-hub' },
         { name: 'Paper search', link: '/user-guide/paper-search' },
         { name: 'Deep research & memory', link: '/user-guide/research-memory' },
         { name: 'Today & weekly report', link: '/user-guide/productivity' },
