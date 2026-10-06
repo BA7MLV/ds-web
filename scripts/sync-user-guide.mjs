@@ -40,6 +40,7 @@ export const CHAPTERS = [
   { file: '03-深度调研与智能记忆.md', slug: 'research-memory', title: '深度调研与智能记忆', group: '对话与调研' },
   { file: '04-学习资源中心.md', slug: 'learning-hub', title: '资源库', group: '资料与阅读' },
   { file: '05-文档阅读与翻译.md', slug: 'reading-translation', title: '文档阅读与翻译', group: '资料与阅读' },
+  { file: '19-音视频.md', slug: 'media', title: '音视频', group: '资料与阅读' },
   { file: '06-论文搜索.md', slug: 'paper-search', title: '论文搜索', group: '资料与阅读' },
   { file: '07-笔记.md', slug: 'notes', title: '笔记', group: '笔记与创作' },
   { file: '08-思维导图.md', slug: 'mindmap', title: '思维导图', group: '笔记与创作' },

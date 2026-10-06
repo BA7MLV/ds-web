@@ -2,9 +2,9 @@
   "source": {
     "repo": "helixnow/deep-student",
     "path": "docs/user-guide",
-    "commit": "44b223ea055b18401aaa20b254bf5496fd2d5f5f",
+    "commit": "d66f9511c34f454e92d9661f9a585fcef4e0e728",
     "dirty": false,
-    "syncedAt": "2026-10-05T00:20:21.408Z"
+    "syncedAt": "2026-10-06T16:40:30.190Z"
   },
   "pages": [
     {
@@ -41,6 +41,11 @@
       "file": "05-文档阅读与翻译.md",
       "path": "/user-guide/reading-translation",
       "title": "文档阅读与翻译"
+    },
+    {
+      "file": "19-音视频.md",
+      "path": "/user-guide/media",
+      "title": "音视频"
     },
     {
       "file": "06-论文搜索.md",
@@ -127,6 +132,10 @@
         {
           "text": "文档阅读与翻译",
           "link": "/user-guide/reading-translation"
+        },
+        {
+          "text": "音视频",
+          "link": "/user-guide/media"
         },
         {
           "text": "论文搜索",
