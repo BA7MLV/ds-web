@@ -45,7 +45,10 @@ const { t, tm } = useI18n()
   white-space: pre-line;
 }
 
-/* 15 个应用：宽屏 5 列正好三行，平板 3 列，手机 2 列 */
+/*
+ * 16 个应用：宽屏 4 列正好四行，手机和平板 2 列八行 —— 列数取 16 的约数，最后一行不留单个孤格。
+ * 改应用数量时一并看列数（例如 15 个是 5 列三行）。
+ */
 .ha__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -57,14 +60,13 @@ const { t, tm } = useI18n()
 
 @media (min-width: 640px) {
   .ha__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
   }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 900px) {
   .ha__grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -118,8 +120,8 @@ const { t, tm } = useI18n()
   line-height: 1.6;
 }
 
-/* 手机和 5 列宽屏的格子都窄：图标在上、名字和一句话在下 */
-@media (max-width: 639px), (min-width: 1100px) {
+/* 手机和 900–1099px 的 4 列格子都窄：图标在上、名字和一句话在下；其余宽度图标在左 */
+@media (max-width: 639px), (min-width: 900px) and (max-width: 1099px) {
   .ha__app {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto;

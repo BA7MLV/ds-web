@@ -145,6 +145,7 @@ const stepScene = (delta) => {
 /* ── 隐私与数据：发丝线堆叠 ── */
 const agent = computed(() => tm('home.agent.items'))
 const privacy = computed(() => tm('home.privacy.items'))
+const media = computed(() => tm('home.media.items'))
 
 /*
  * 用户评价：真实素材还没补齐，先整块隐藏 —— 把 SHOW_VOICES 改回 true 即可恢复。
@@ -374,6 +375,34 @@ onUnmounted(() => {
       </div>
     </section>
 
+    <!-- ④½ 音视频：功能区轮播之外单独一节（演示镜像里还没有音视频剧本，没有真实界面截图），版式同 Agent 一节 -->
+    <section id="media" class="lp-block">
+      <div class="lp-wrap">
+        <div class="lp-split">
+          <div>
+            <h2 class="lp-title">{{ t('home.media.title') }}</h2>
+            <p class="lp-lede">{{ t('home.media.lede') }}</p>
+            <a :href="t('home.media.link')" class="home-link lp-desk__link t-learn">
+              {{ t('home.media.more') }}
+              <span class="t-learn-chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path class="t-learn-arm t-learn-arm-top" d="M6 4L10 8" />
+                  <path class="t-learn-arm t-learn-arm-bot" d="M10 8L6 12" />
+                </svg>
+              </span>
+            </a>
+          </div>
+          <ul class="lp-stack">
+            <li v-for="item in media" :key="item.title" class="lp-stack__item">
+              <h3 class="lp-col__title">{{ item.title }}</h3>
+              <p class="lp-col__desc">{{ item.desc }}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <!-- ⑤ 全部应用：Dock 和「全部应用」面板里的应用一屏摆全，每个链到用户指南（见 HomeApps.vue） -->
     <HomeApps />
 
@@ -462,6 +491,11 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+/* 音视频一节的标题固定在逗号处换行（文案里的 \n），否则宽屏上会把「一起学」拆成两半 */
+#media .lp-title {
+  white-space: pre-line;
+}
+
 /*
  * 首页内容整体抬到星空层（.sf，fixed + z-index: 1）之上，否则定位元素会盖住
  * 后续 section 的静态文本；顶栏（z-index: 30）仍在两者之上。

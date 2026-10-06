@@ -324,6 +324,35 @@ export default {
     },
 
     /**
+     * 音视频（0.10.2 起的独立应用，用户指南第 19 章）。功能区轮播每个场景都要一张演示镜像里的真实截图，
+     * 镜像还没有音视频剧本，所以单列一节，版式同 Agent 一节。B 站两句沿用宣传片 v6 字幕（口径表 §7）
+     */
+    media: {
+      title: '网课和讲座，\n它陪你一起学。',
+      lede: '导入本地音视频，或粘贴 B 站链接，即可得到带时间戳的字幕；提问、讲义与练习均以字幕为依据，并可跳回对应时刻。',
+      more: '了解音视频',
+      link: '/user-guide/media',
+      items: [
+        {
+          title: '转写为字幕',
+          desc: '本地音视频经语音识别模型转写为带时间戳的字幕，可搜索，点击任意一句即跳到对应位置；已有字幕文件可直接导入。'
+        },
+        {
+          title: '粘贴 B 站链接',
+          desc: '粘贴 B 站链接即导入字幕，不下载视频，直接在应用内播放；扫码登录 B 站为可选项，登录后可获取的 AI 字幕更全。'
+        },
+        {
+          title: '回答引用到时刻',
+          desc: '就这节课提问，回答中的时间戳引用可点开，播放器随即跳到那一刻；字幕随播放逐句高亮。'
+        },
+        {
+          title: '讲义与整门课',
+          desc: '字幕与关键画面可整理为图文讲义并存为笔记；多 P 合集可一次导入，按分组整理整门课。'
+        }
+      ]
+    },
+
+    /**
      * 全部应用（HomeApps.vue）：桌面端 Dock 和「全部应用」面板里的应用（教材阅读另列；AI 仪表盘在产品里和对话共用一枚图标，不单列），按「收、读、问、整理、练、记、计划、扩展」排；
      * icon 对应 docs/public/apps/<icon>.svg（产品插画图标），link 是用户指南那一章。extras 是没有独立应用的能力
      */
@@ -333,6 +362,7 @@ export default {
       lede: '以下应用均位于桌面端的 Dock 与「全部应用」中，可单独打开，也可在学习桌面上并排使用。点击任一应用可查看使用说明。',
       items: [
         { icon: 'files', name: '资源库', desc: '教材、笔记、题目、文档与音视频统一入库，自动建立 AI 检索索引。', link: '/user-guide/learning-hub' },
+        { icon: 'media', name: '音视频', desc: '网课与录音转写为带时间戳的字幕，或粘贴 B 站链接导入字幕；可边看边问，并生成图文讲义。', link: '/user-guide/media' },
         { icon: 'textbook', name: '教材阅读', desc: 'PDF、Word、EPUB 双页阅读与高亮批注，可勾选页面直接向 AI 提问。', link: '/user-guide/reading-translation' },
         { icon: 'translation', name: '翻译', desc: '全文翻译与逐段双语对照，7 种领域预设，选中文字即可翻译。', link: '/user-guide/reading-translation' },
         { icon: 'chat', name: '对话', desc: '围绕你的资料多轮提问，回答标注出处；支持课题分组、搜索与导出。', link: '/user-guide/chat' },
@@ -350,7 +380,6 @@ export default {
       ],
       more: '还有：',
       extras: [
-        { name: '音视频学习', link: '/user-guide/learning-hub' },
         { name: '论文搜索', link: '/user-guide/paper-search' },
         { name: '深度调研与智能记忆', link: '/user-guide/research-memory' },
         { name: '今日与学习周报', link: '/user-guide/productivity' },
