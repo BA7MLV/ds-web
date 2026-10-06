@@ -313,6 +313,35 @@ export default {
     },
 
     /**
+     * Media (its own app since 0.10.2, guide chapter 19). Every feature-carousel scene needs a real screenshot from the
+     * demo mirror, which has no media script yet, so it gets its own block laid out like the agent block
+     */
+    media: {
+      title: 'Lectures and talks,\nstudied with you.',
+      lede: 'Import local audio and video, or paste a Bilibili link, to get timestamped subtitles. Questions, handouts and practice all draw on them and lead back to the exact moment.',
+      more: 'Learn about Media',
+      link: '/user-guide/media',
+      items: [
+        {
+          title: 'Transcribed subtitles',
+          desc: 'A speech recognition model turns local audio and video into timestamped subtitles you can search; click any line to jump there. Existing subtitle files can be imported instead.'
+        },
+        {
+          title: 'Paste a Bilibili link',
+          desc: 'A Bilibili link brings in its subtitles without downloading the video, and the video plays right in the app. Signing in to Bilibili by QR code is optional and gives fuller AI subtitles.'
+        },
+        {
+          title: 'Answers cite the moment',
+          desc: 'Ask about the lecture and each timestamp in the answer opens the player at that moment; subtitles highlight line by line as it plays.'
+        },
+        {
+          title: 'Handouts and whole courses',
+          desc: 'Subtitles and key frames become an illustrated handout saved as a note; a multi-part collection imports in one go and stays grouped as one course.'
+        }
+      ]
+    },
+
+    /**
      * All apps (HomeApps.vue): the apps in the desktop Dock and All Apps panel, in the order you collect, read, ask, organise,
      * practise, remember, plan and extend. icon maps to docs/public/apps/<icon>.svg (the app's own illustrations),
      * link is its guide chapter (in Chinese). extras are capabilities without an app of their own
@@ -322,6 +351,7 @@ export default {
       lede: 'All of these live in the desktop app’s Dock and All Apps panel. Open one on its own or side by side on the Study Desktop. Each links to its guide (in Chinese).',
       items: [
         { icon: 'files', name: 'Files', desc: 'Keep textbooks, notes, question sets, documents, audio and video in one place, indexed for AI search.', link: '/user-guide/learning-hub' },
+        { icon: 'media', name: 'Media', desc: 'Transcribe lectures and recordings into timestamped subtitles or import them from a Bilibili link; ask as you watch and make illustrated handouts.', link: '/user-guide/media' },
         { icon: 'textbook', name: 'Textbook', desc: 'Read PDF, Word and EPUB in a two-page view, highlight and annotate, and ask AI about the pages you tick.', link: '/user-guide/reading-translation' },
         { icon: 'translation', name: 'Translation', desc: 'Full-text translation with side-by-side paragraphs, 7 domain presets, and quick translation of any selection.', link: '/user-guide/reading-translation' },
         { icon: 'chat', name: 'Chat', desc: 'Ask follow-up questions about your materials and get cited answers; group, search and export chats.', link: '/user-guide/chat' },
@@ -339,7 +369,6 @@ export default {
       ],
       more: 'Also:',
       extras: [
-        { name: 'Audio & video learning', link: '/user-guide/learning-hub' },
         { name: 'Paper search', link: '/user-guide/paper-search' },
         { name: 'Deep research & memory', link: '/user-guide/research-memory' },
         { name: 'Today & weekly report', link: '/user-guide/productivity' },
