@@ -7,6 +7,8 @@ editLink: false
 
 > 为 Deep Student 接入你自己的 AI 模型：保存一把 API 密钥，再告诉应用「哪个功能用哪个模型」，所有 AI 能力就都能用了。
 
+<GuideDemo />
+
 ## 功能概览
 
 Deep Student 本身不内置任何「免费云端 AI」，所有 AI 功能都通过你自己配置的模型服务运行。相关设置在「设置 → 模型与 AI」分类下：

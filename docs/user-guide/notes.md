@@ -7,6 +7,8 @@ editLink: false
 
 > 一个支持双链、标签、数学公式和 AI 协作编辑的 Markdown 笔记系统，你的所有笔记都保存在本地。
 
+<GuideDemo />
+
 ## 功能概览
 
 笔记是 Deep Student 学习资源体系的一部分，你可以用它来：
