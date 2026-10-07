@@ -3,6 +3,7 @@ import DefaultTheme from 'vitepress/theme-without-fonts'
 import { defineAsyncComponent, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import Layout from './Layout.vue'
 import HomePage from './components/HomePage.vue'
+import GuideDemo from './components/GuideDemo.vue'
 import { scheduleAnalytics } from './lib/analytics.js'
 import './custom.css'
 
@@ -22,7 +23,8 @@ export default {
   enhanceApp({ app }) {
     app.component('HomePage', HomePage)
     app.component('MermaidDiagram', defineAsyncComponent(() => import('./components/MermaidDiagram.vue')))
-    app.component('GuideDemo', defineAsyncComponent(() => import('./components/GuideDemo.vue')))
+    // 同步注册：海报在服务端渲染好，异步组件要等它的块下完才水合，网慢时点海报会没反应
+    app.component('GuideDemo', GuideDemo)
   },
   setup() {
     const route = useRoute()
