@@ -316,6 +316,29 @@ export default {
      * Media (its own app since 0.10.2, guide chapter 19). Every feature-carousel scene needs a real screenshot from the
      * demo mirror, which has no media script yet, so it gets its own block laid out like the agent block
      */
+    mobile: {
+      title: 'Organize on your computer,\nkeep going on your phone.',
+      lede: 'The Android app is the same app with a one-handed drawer layout, so you can ask questions, look things up and review flashcards between classes or on the go.',
+      more: 'Learn about the mobile app',
+      link: '/user-guide/mobile',
+      download: 'Download for Android',
+      downloadLink: '/download',
+      live: 'The phone on the right is a live demo — tap around.',
+      items: [
+        {
+          title: 'Drawer navigation',
+          desc: 'Swipe in from the left edge: the top of the drawer holds the current page, the bottom launches apps; the system Back button steps back one level at a time.'
+        },
+        {
+          title: 'Nearly everything is there',
+          desc: 'Chat, Files, Media, Todo, Skills and Flashcards all work; only a few computer-only features such as the Study Desktop are left out.'
+        },
+        {
+          title: 'In sync with your computer',
+          desc: 'Share data with the desktop app through WebDAV cloud sync (experimental), or move it with a backup file.'
+        }
+      ]
+    },
     media: {
       title: 'Lectures and talks,\nstudied with you.',
       lede: 'Import local audio and video, or paste a Bilibili link, to get timestamped subtitles. Questions, handouts and practice all draw on them and lead back to the exact moment.',
