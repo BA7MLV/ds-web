@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
+import { pinEntryRefs } from '../scripts/lib/demo-mirror.mjs'
 import { signatureOfManifest } from '../scripts/sync-demo.mjs'
 import { CHAPTERS, insertDemo } from '../scripts/sync-user-guide.mjs'
 
@@ -50,4 +51,23 @@ test('every chapter with a page has a demo once the mirror lists demos', () => {
   if (!apps.size) return
   const missing = CHAPTERS.filter((c) => c.slug && !apps.has(c.slug)).map((c) => c.slug)
   assert.deepEqual(missing, [])
+})
+
+test('pinEntryRefs strips the source root when the build is served from a sub-path', () => {
+  const html = '<script type="module" src="./assets/demo-app-x1.js"></script><link rel="icon" href="./app-icon.png">'
+  const base = 'https://download.deepstudent.cn/demo/v0.10.4'
+  const pinned = pinEntryRefs(html, `${base}/demo-app.html`, 'demo', `${base}/`)
+  assert.match(pinned, /src="\/demo\/assets\/demo-app-x1\.js"/)
+  assert.match(pinned, /href="\/demo\/app-icon\.png"/)
+})
+
+test('the committed mirror entries reference assets under /demo/ only', () => {
+  for (const entry of ['index.html', 'app.html']) {
+    const file = root(`docs/public/demo/${entry}`)
+    if (!existsSync(file)) continue
+    const html = readFileSync(file, 'utf-8')
+    for (const [, ref] of html.matchAll(/(?:src|href)="(\/demo\/[^"]+)"/g)) {
+      assert.ok(existsSync(root(`docs/public${ref.split('?')[0]}`)), `${entry} → ${ref}`)
+    }
+  }
 })

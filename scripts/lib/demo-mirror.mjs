@@ -114,9 +114,11 @@ const ATTR_REF = /\b(src|href)\s*=\s*(["'])([^"']*)\2/gi
  * 只改同源且属于镜像范围（MIRROR_EXT）的引用：外站 CDN、页内锚点、
  * 指向非资源页面的链接都原样保留。query 一并带上，避免丢掉带版本参数的资源。
  */
-export function pinEntryRefs(html, baseUrl, mountPath) {
+export function pinEntryRefs(html, baseUrl, mountPath, sourceRoot = new URL('/', baseUrl).href) {
   const mount = `/${mountPath.replace(/^\/+/, '').replace(/\/+$/, '')}`
   const origin = new URL(baseUrl).origin
+  // 源站可能挂在子路径下（R2 的 demo/<版本>/）：镜像里的路径要相对这个根，而不是相对域名根
+  const rootPath = new URL(sourceRoot).pathname.replace(/\/?$/, '/')
 
   return html.replace(ATTR_REF, (match, attr, quote, value) => {
     let url
@@ -125,8 +127,8 @@ export function pinEntryRefs(html, baseUrl, mountPath) {
     } catch {
       return match
     }
-    if (url.origin !== origin || !MIRROR_EXT.test(url.pathname)) return match
-    return `${attr}=${quote}${mount}${url.pathname}${url.search}${quote}`
+    if (url.origin !== origin || !MIRROR_EXT.test(url.pathname) || !url.pathname.startsWith(rootPath)) return match
+    return `${attr}=${quote}${mount}/${url.pathname.slice(rootPath.length)}${url.search}${quote}`
   })
 }
 

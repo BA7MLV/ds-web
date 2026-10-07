@@ -21,11 +21,13 @@ const props = defineProps({
 })
 
 const route = useRoute()
-const { isDark } = useData()
+const { isDark, page } = useData()
 
 const demoId = computed(() => props.id || route.path.replace(/\.html$/, '').replace(/\/$/, '').split('/').pop())
 const app = computed(() => (mirror.apps || []).find((entry) => entry.id === demoId.value) || null)
 const isPhone = computed(() => Boolean(app.value?.width))
+/** 用本页标题（章节名）称呼演示：manifest 的 title 是剧本包里写的，可能是某条示例数据的名字 */
+const title = computed(() => page.value?.title || app.value?.title || '')
 const theme = computed(() => (isDark.value ? 'dark' : 'light'))
 
 const poster = computed(() => {
@@ -57,12 +59,11 @@ let slowTimer = 0
 const onMessage = (event) => {
   if (event.origin !== window.location.origin || event.source !== frame.value?.contentWindow) return
   const type = event.data?.type
-  if (type === 'demo-app-ready' || type === 'demo-shell-ready') ready.value = true
-}
-
-/** 整壳演示被嵌入时等父页发 demo:activate 才开始自动播放 */
-const onFrameLoad = () => {
-  if (app.value?.entry) frame.value?.contentWindow?.postMessage({ type: 'demo:activate' }, window.location.origin)
+  if (type === 'demo-app-ready' || type === 'demo-shell-ready') {
+    ready.value = true
+    // 整壳演示被嵌入时等父页发 demo:activate 才开始自动播放；要等它就绪再发，早发的消息没人接
+    if (app.value?.entry) frame.value?.contentWindow?.postMessage({ type: 'demo:activate' }, window.location.origin)
+  }
 }
 
 const onKey = (event) => {
@@ -107,23 +108,23 @@ onUnmounted(closeDemo)
 
 <template>
   <figure v-if="app" class="gd" :class="{ 'gd--phone': isPhone }">
-    <button type="button" class="gd__poster" :aria-label="`打开「${app.title}」的实时演示`" @click="openDemo">
-      <img v-if="poster" :src="poster" :alt="`${app.title}的界面`" loading="lazy" decoding="async" />
-      <span v-else class="gd__blank">{{ app.title }}</span>
+    <button type="button" class="gd__poster" :aria-label="`打开「${title}」的实时演示`" @click="openDemo">
+      <img v-if="poster" :src="poster" :alt="`${title}的界面`" loading="lazy" decoding="async" />
+      <span v-else class="gd__blank">{{ title }}</span>
       <span class="gd__cta">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor" /></svg>
         试一试实时演示
       </span>
     </button>
     <figcaption class="gd__caption">
-      上图是「{{ app.title }}」的真实界面。点开可以直接操作：数据是示例，改动只留在这次浏览里。
+      上图是「{{ title }}」的真实界面。点开可以直接操作：数据是示例，改动只留在这次浏览里。
     </figcaption>
 
     <Teleport to="body">
-      <div v-if="open" class="gd-modal" role="dialog" aria-modal="true" :aria-label="`${app.title} 实时演示`" @click.self="closeDemo">
+      <div v-if="open" class="gd-modal" role="dialog" aria-modal="true" :aria-label="`${title} 实时演示`" @click.self="closeDemo">
         <div class="gd-modal__panel" :class="{ 'gd-modal__panel--phone': isPhone }">
           <div class="gd-modal__bar">
-            <span class="gd-modal__title">{{ app.title }} · 实时演示</span>
+            <span class="gd-modal__title">{{ title }} · 实时演示</span>
             <span class="gd-modal__hint">示例数据，刷新即还原</span>
             <button ref="closeButton" type="button" class="gd-modal__close" aria-label="关闭演示" @click="closeDemo">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
@@ -136,9 +137,8 @@ onUnmounted(closeDemo)
               class="gd-modal__frame"
               :class="{ 'gd-modal__frame--ready': ready }"
               :src="frameSrc"
-              :title="`${app.title} 实时演示`"
+              :title="`${title} 实时演示`"
               allow="clipboard-write; fullscreen"
-              @load="onFrameLoad"
             />
             <div v-if="!ready" class="gd-modal__loading" aria-live="polite">
               <img v-if="poster" :src="poster" alt="" class="gd-modal__loading-shot" />

@@ -116,7 +116,7 @@ async function download(base, remote) {
     let dest = file.path
     if (ENTRY_RENAMES[file.path]) {
       dest = ENTRY_RENAMES[file.path]
-      body = Buffer.from(pinEntryRefs(body.toString('utf-8'), `${base}/${file.path}`, MOUNT_PATH), 'utf-8')
+      body = Buffer.from(pinEntryRefs(body.toString('utf-8'), `${base}/${file.path}`, MOUNT_PATH, `${base}/`), 'utf-8')
     }
     const target = resolve(TMP_DIR, dest)
     if (!target.startsWith(TMP_DIR)) throw new Error(`镜像路径越界：${file.path}`)
