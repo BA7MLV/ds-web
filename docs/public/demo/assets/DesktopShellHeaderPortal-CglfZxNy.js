@@ -1,0 +1,1 @@
+import{f as r}from"./vendor-react-CK9Q3ZQe.js";const o=r.createContext(null),a=o.Provider;function l(e){const t=r.useContext(o);return!t||t.currentView!==e?null:t.target}function s(){const e=r.useContext(o);return!e||e.currentView!=="chat-v2"?null:e.chatHeaderTarget}export{a as D,l as a,s as u};

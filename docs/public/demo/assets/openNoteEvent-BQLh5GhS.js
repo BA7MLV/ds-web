@@ -1,0 +1,1 @@
+const t=["notes-editor","wikilink","mention"];function e(n){return typeof n=="string"&&t.includes(n)}function r(n){return!!n?.noteId&&typeof n?.source=="string"&&!e(n.source)}function u(n){return!!n?.noteId&&(n?.source==null||e(n.source))}function s(n,o){return n?.noteId?r(n)&&o==="chat-v2"?"chat":"learning-hub":null}export{u as a,s as r,r as s};

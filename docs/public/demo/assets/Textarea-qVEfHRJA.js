@@ -1,0 +1,1 @@
+import{f as s,j as t}from"./vendor-react-CK9Q3ZQe.js";import{c as o}from"./utils-BriMBuB0.js";import{i as m}from"./Input-BdMHNf1j.js";const x=s.forwardRef(({className:a,...r},e)=>t.jsx("textarea",{className:o(m,"flex w-full min-h-[80px] resize-y",a),ref:e,...r}));x.displayName="Textarea";export{x as T};

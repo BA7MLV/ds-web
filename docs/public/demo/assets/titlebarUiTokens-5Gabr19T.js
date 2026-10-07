@@ -1,1 +1,0 @@
-const e="truncate text-ui font-semibold text-foreground",t="!h-8 !min-h-0 gap-1.5 !px-2.5 !py-0 text-xs [@media(pointer:coarse)]:!h-10",o="!h-8 !w-8 !p-1.5 [@media(pointer:coarse)]:!h-10 [@media(pointer:coarse)]:!w-10",a="h-8 text-xs [@media(pointer:coarse)]:!h-10";export{t as T,o as a,a as b,e as c};

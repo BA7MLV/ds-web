@@ -1,0 +1,1 @@
+import{a as t}from"./vendor-react-CK9Q3ZQe.js";import{NotificationContainer as o}from"./NotificationContainer-bPFpPGMN.js";function c(i){return e=>t.createElement(t.Fragment,null,t.createElement(i,e),t.createElement(o))}export{c as withNotifications};

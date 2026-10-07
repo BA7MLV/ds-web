@@ -1,1 +1,0 @@
-import{f as t}from"./vendor-react-C80K2e6c.js";const s=t.createContext(null),f=s.Provider;function l(r,i,u){const e=t.useContext(s),o=t.useId(),n=t.useRef(r);return n.current=r,t.useLayoutEffect(()=>{e&&e.setSubviewChrome(o,u?n.current:null)},[...i,u,e,o]),t.useLayoutEffect(()=>()=>{e?.setSubviewChrome(o,null)},[e,o]),e!==null}export{f as M,l as u};

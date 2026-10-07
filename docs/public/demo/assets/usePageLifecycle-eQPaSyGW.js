@@ -1,0 +1,1 @@
+import{f as o}from"./vendor-react-CK9Q3ZQe.js";import{p as u}from"./pageLifecycleTracker-CJvPQ89c.js";function i(t,e){const[r,n]=o.useState(t);return o.useEffect(()=>{const c=setTimeout(()=>{n(t)},e);return()=>{clearTimeout(c)}},[t,e]),r}function m(t,e){o.useEffect(()=>(u.log(t,e,"mount"),()=>{u.log(t,e,"unmount")}),[t,e])}export{m as a,i as u};

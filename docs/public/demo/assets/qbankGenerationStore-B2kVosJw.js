@@ -1,1 +1,0 @@
-import{d as o}from"./index-BK77rGlj.js";const k=o(e=>({tasks:{},upsertTask:s=>e(r=>({tasks:{...r.tasks,[s.id]:s}})),upsertTasks:s=>e(r=>{if(s.length===0)return r;const t={...r.tasks};for(const n of s)t[n.id]=n;return{tasks:t}}),removeTask:s=>e(r=>{if(!(s in r.tasks))return r;const t={...r.tasks};return delete t[s],{tasks:t}})}));export{k as u};

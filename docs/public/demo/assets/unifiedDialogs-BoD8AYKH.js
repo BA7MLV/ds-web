@@ -1,0 +1,2 @@
+import{e as s}from"./UnifiedNotification-BF_OUoV1.js";import{t as f}from"./i18n-BT4Qe-1H.js";const i=new Map;function w(t,n="info"){s(n,t)}function d(t,n={}){const o=n.windowMs??8e3,r=Date.now(),e=n.key??t;if((i.get(e)??0)>r)return i.delete(e),!0;i.set(e,r+o);const a=n.hint??f("utils.dialogs.confirm_hint",{seconds:Math.max(1,Math.floor(o/1e3))});return s(n.level??"warning",`${t}
+${a}`),!1}export{d as a,w as u};

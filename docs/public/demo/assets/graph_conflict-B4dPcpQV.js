@@ -1,0 +1,1 @@
+const t="Conflict Detection",e="Conflict",o="Resolve",n="Ignore",c={create_failed:'Failed to create note "{{title}}"'},i={title:t,conflict:e,resolve:o,ignore:n,wikilink:c};export{e as conflict,i as default,n as ignore,o as resolve,t as title,c as wikilink};
