@@ -1,9 +1,9 @@
 {
-  "source": "https://download.deepstudent.cn/demo/v0.10.4",
-  "version": "v0.10.4",
-  "commit": "1bf0acb6ee4c52d0c4df06bed7c50bc4a511cb7c",
-  "builtAt": "2026-10-07T11:51:05.783Z",
-  "signature": "fb1f77be1ea8f6aa19e32f4ecb7ad33197bfee81e974eeeb37ff3c378570d17d",
+  "source": "https://download.deepstudent.cn/demo/v0.10.5",
+  "version": "v0.10.5",
+  "commit": "6af4e6e725c99ce039d9f03201a8c93ca5f6baf9",
+  "builtAt": "2026-10-07T22:39:00.758Z",
+  "signature": "5ad84179006bacc272eb8cae3a2e42c5851d77bacf381b6425ef96b184d7afe1",
   "apps": [
     {
       "id": "chat",
@@ -171,7 +171,7 @@
       ]
     }
   ],
-  "syncedAt": "2026-10-07T17:51:37.272Z",
+  "syncedAt": "2026-10-07T23:10:51.300Z",
   "files": 1773,
-  "bytes": 46970590
+  "bytes": 46984732
 }
