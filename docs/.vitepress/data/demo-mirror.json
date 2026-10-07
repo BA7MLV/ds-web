@@ -1,9 +1,9 @@
 {
-  "source": "https://download.deepstudent.cn/demo/main-849574275",
-  "version": "main-849574275",
-  "commit": "8495742755b747202a05bff7671ee8eb569a9ba9",
-  "builtAt": "2026-10-07T04:02:53.813Z",
-  "signature": "3b5d4c4922eaf6aad71e5360fcaf8ca8a3ba6ce762db4bd57d69fdc3a37c1b38",
+  "source": "https://download.deepstudent.cn/demo/v0.10.4",
+  "version": "v0.10.4",
+  "commit": "1bf0acb6ee4c52d0c4df06bed7c50bc4a511cb7c",
+  "builtAt": "2026-10-07T11:51:05.783Z",
+  "signature": "fb1f77be1ea8f6aa19e32f4ecb7ad33197bfee81e974eeeb37ff3c378570d17d",
   "apps": [
     {
       "id": "chat",
@@ -61,7 +61,7 @@
     },
     {
       "id": "notes",
-      "title": "特征值与特征向量",
+      "title": "笔记",
       "height": 660,
       "posters": [
         "light",
@@ -171,7 +171,7 @@
       ]
     }
   ],
-  "syncedAt": "2026-10-07T04:12:36.943Z",
+  "syncedAt": "2026-10-07T17:51:37.272Z",
   "files": 1773,
-  "bytes": 46968739
+  "bytes": 46970590
 }
