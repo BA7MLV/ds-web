@@ -22,6 +22,7 @@ export default {
   enhanceApp({ app }) {
     app.component('HomePage', HomePage)
     app.component('MermaidDiagram', defineAsyncComponent(() => import('./components/MermaidDiagram.vue')))
+    app.component('GuideDemo', defineAsyncComponent(() => import('./components/GuideDemo.vue')))
   },
   setup() {
     const route = useRoute()

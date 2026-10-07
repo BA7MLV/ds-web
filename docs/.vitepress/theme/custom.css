@@ -712,6 +712,20 @@ html.sn-menu-open body {
   align-items: start;
 }
 
+/* 「手机上」一节：左文右机，手机竖向居中；要点列表比 Agent / 音视频两节紧一点 */
+.lp-mobile {
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  align-items: center;
+}
+
+.lp-mobile .lp-mobile__points {
+  margin: 1.75rem 0 1.5rem;
+}
+
+.lp-mobile__phone {
+  justify-self: center;
+}
+
 .lp-eyebrow {
   margin: 0;
   font-size: 12px;

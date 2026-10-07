@@ -1,0 +1,41 @@
+# 网页演示跟着主仓库正式版走：主仓库每次发版后，Demo Publish 把演示传到 R2 并更新
+# https://download.deepstudent.cn/demo/latest.json。这里每小时看一眼，有新版就同步镜像、提交到 main，
+# Vercel 随这次推送重新部署（构建期的 sync-demo 见指纹一致会直接跳过）。
+name: Demo Sync
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: '忽略指纹强制重抓'
+        type: boolean
+        default: false
+concurrency:
+  group: demo-sync
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Sync demo mirror from latest.json
+        run: node scripts/sync-demo.mjs --strict ${{ inputs.force && '--force' || '' }}
+      - name: Commit if the demo changed
+        run: |
+          set -euo pipefail
+          git add -A docs/public/demo docs/.vitepress/data/demo-mirror.json
+          if git diff --cached --quiet; then
+            echo 'Demo mirror already up to date.'
+            exit 0
+          fi
+          VERSION=$(node -p "require('./docs/.vitepress/data/demo-mirror.json').version")
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit -m "chore(demo): 演示镜像同步到主仓库 ${VERSION}"
+          git push origin HEAD:main

@@ -7,6 +7,8 @@ editLink: false
 
 > 应用内置的间隔重复复习系统：卡片库统一管理你的所有记忆卡片，FSRS 算法安排每张卡的最佳复习时机，不装 Anki 也能坚持每天复习。
 
+<GuideDemo />
+
 ## 功能概览
 
 「闪卡」应用是 Deep Student 内置的复习中心，与制卡功能（见 [Anki 制卡与模板](/user-guide/anki)）无缝衔接：

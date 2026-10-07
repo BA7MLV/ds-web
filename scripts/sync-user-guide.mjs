@@ -111,6 +111,22 @@ function describe(body) {
     .slice(0, 150)
 }
 
+/** 标题下第一段引言（> 开头）结束处插入 <GuideDemo />；没有引言就放在标题后面 */
+export function insertDemo(body) {
+  const lines = body.split('\n')
+  const title = lines.findIndex((line) => /^#\s/.test(line))
+  if (title < 0) return body
+  let at = title + 1
+  while (at < lines.length && !lines[at].trim()) at += 1
+  if (lines[at]?.startsWith('>')) {
+    while (at < lines.length && lines[at].startsWith('>')) at += 1
+  } else {
+    at = title + 1
+  }
+  lines.splice(at, 0, '', '<GuideDemo />')
+  return lines.join('\n')
+}
+
 function transform(chapter, source) {
   const byFile = new Map(CHAPTERS.map((c) => [c.file, c]))
   let body = source
@@ -125,6 +141,8 @@ function transform(chapter, source) {
       return `](${new URL(target, `https://github.com/${REPO}/blob/main/${SOURCE_DIR}/`).href}${hash})`
     })
     .trimEnd()
+  // 章首引言之后放这一章的功能演示（GuideDemo 按网址找演示，没有演示的章节不显示任何东西）
+  if (chapter.slug) body = insertDemo(body)
   const description = describe(body).replaceAll('"', '\\"')
   const front = ['---', `description: "${description}"`, 'editLink: false', '---', ''].join('\n')
   const credit = [

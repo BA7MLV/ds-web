@@ -7,6 +7,8 @@ editLink: false
 
 > 在对话里用一句话把 PDF、图片、笔记变成高质量记忆卡片，配合可视化模板编辑器与任务看板，一键导出 APKG 或同步到 Anki。
 
+<GuideDemo />
+
 ## 功能概览
 
 Deep Student 的制卡体系由三部分组成：

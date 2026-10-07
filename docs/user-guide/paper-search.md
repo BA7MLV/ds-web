@@ -7,6 +7,8 @@ editLink: false
 
 > 在 AI 对话里直接搜索 arXiv 与 OpenAlex 学术论文，批量下载 PDF 存入资料库，并一键生成 BibTeX / GB/T 7714 / APA 引用。
 
+<GuideDemo />
+
 ## 功能概览
 
 论文搜索不是一个独立页面，而是 AI 对话内置的「学术搜索」技能。你用自然语言提出需求，AI 会自动调用搜索工具并把结果整理给你：

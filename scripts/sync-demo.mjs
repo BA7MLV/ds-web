@@ -1,46 +1,45 @@
 /**
- * 首页实时演示（hero 里的应用窗壳）的同源镜像同步。
+ * 网页演示的同源镜像同步（首页 hero、学习桌面一节、用户指南每章的功能演示）。
  *
- * 演示是另一个工程的构建产物。之前直接 iframe 远程地址（47.88.78.106:8010），
- * 带来三个问题：
- *   1. https 站点嵌 http 会被浏览器按混合内容拦掉，线上只能退回骨架；
- *   2. 对方服务器慢或挂，首页就白一块；
- *   3. 跨域 iframe 的 touch 事件在自己的文档里被吃掉，手指落在演示上滑不动页面。
- * 所以改成同源：把 demo 站的静态产物抓进 docs/public/demo/，iframe 走 /demo/。
+ * 演示是主仓库 deep-student 的构建产物（npm run build:demo）。主仓库每次发正式版，
+ * Demo Publish 工作流就用那一版的代码构建演示、逐章烟测，传到 R2：
+ *   https://download.deepstudent.cn/demo/<版本>/       整份构建 + manifest.json（文件清单、各章演示目录）
+ *   https://download.deepstudent.cn/demo/latest.json   指向最新一版
+ * 这里按 manifest 把整份构建抓进 docs/public/demo/（同源：https 页面嵌 http 会被拦、跨域 iframe
+ * 吃掉触摸滚动），各章演示目录写进 data/demo-mirror.json 给 GuideDemo 组件读。
  *
- * 增量策略：Vite 产物文件名带内容 hash，入口 HTML 引用的那一组 hash 不变就说明
- * 整站没变，秒级跳过；变了才全量重抓（临时目录 + 原子替换，失败不动现有镜像）。
+ * 增量：manifest 的文件清单（路径 + sha256）就是版本指纹，和本地一致就秒级跳过；
+ * 变了才全量重抓（临时目录 + 原子替换，任何一个文件抓不到或校验不过都不动现有镜像）。
  *
  * 用法：
- *   node scripts/sync-demo.mjs            # 增量同步，抓不到就保留现有镜像并 exit 0
- *   node scripts/sync-demo.mjs --strict   # 抓不到直接失败（用于人工确认发布内容）
- *   node scripts/sync-demo.mjs --force    # 忽略指纹，强制重抓
- *   DEMO_SOURCE=https://... node scripts/sync-demo.mjs
- *   DEMO_SOURCE=http://127.0.0.1:8011 DEMO_PIN="主仓库 <提交> 的本地构建" node scripts/sync-demo.mjs --force --strict
- *       # 从本地构建换镜像并钉住：之后的构建不再按演示服务器同步（服务器部署了同一版后删掉 manifest 的 pinned）
+ *   node scripts/sync-demo.mjs            # 跟 latest.json；源站不可用就保留现有镜像并 exit 0
+ *   node scripts/sync-demo.mjs --strict   # 抓不到直接失败
+ *   node scripts/sync-demo.mjs --force    # 忽略指纹强制重抓
+ *   DEMO_SOURCE=https://download.deepstudent.cn/demo/v0.10.4 node scripts/sync-demo.mjs
+ *   DEMO_SOURCE=http://127.0.0.1:4173 DEMO_PIN="主仓库 <提交> 的本地构建" node scripts/sync-demo.mjs --force --strict
+ *       # 本地构建（dist-demo 先跑 write-demo-manifest.mjs）换镜像并钉住：之后的构建不再跟 latest.json，
+ *       # 主仓库发布了同一版后删掉 manifest 的 pinned
  */
+import { createHash } from 'node:crypto'
 import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { extractRefs, isPinnedAgainstSync, pinEntryRefs, signatureOf, TEXT_EXT } from './lib/demo-mirror.mjs'
+import { isPinnedAgainstSync, pinEntryRefs } from './lib/demo-mirror.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DEST_DIR = resolve(__dirname, '../docs/public/demo')
 const TMP_DIR = resolve(__dirname, '../docs/.vitepress/tmp-demo-mirror')
 const MANIFEST_PATH = resolve(__dirname, '../docs/.vitepress/data/demo-mirror.json')
 
-const SOURCE = (process.env.DEMO_SOURCE || 'http://47.88.78.106:8010').replace(/\/+$/, '')
-const ENTRY_PATH = '/demo.html'
-/** 入口在镜像里改名叫 index.html，dev 下 VitePress 404 fallback 才抢不走 */
-const ENTRY_DEST = 'index.html'
+const LATEST_URL = process.env.DEMO_LATEST || 'https://download.deepstudent.cn/demo/latest.json'
 /** 镜像挂在 public/demo/，线上就是 /demo/ —— 入口资源引用要钉在这个前缀下 */
 const MOUNT_PATH = 'demo'
 /**
- * 入口写盘方式改了就把指纹算作变一次，逼着重抓一次把老镜像换掉；
- * 否则增量跳过会让改写前的镜像一直留在盘上。
+ * 入口改名：对话演示叫 index.html（dev 下 VitePress 的 404 fallback 才抢不走 /demo/），
+ * 单应用演示叫 app.html。两个入口的资源引用都钉成 /demo/ 下的绝对路径（见 pinEntryRefs）
  */
-const ENTRY_REVISION = 'entry-pinned-v1'
+const ENTRY_RENAMES = { 'demo.html': 'index.html', 'demo-app.html': 'app.html' }
 const CONCURRENCY = Number(process.env.DEMO_SYNC_CONCURRENCY || 16)
 const TIMEOUT_MS = Number(process.env.DEMO_SYNC_TIMEOUT || 30000)
 const USER_AGENT = 'ds-web-demo-sync'
@@ -51,39 +50,30 @@ const FORCE = flags.has('--force')
 
 const log = (...args) => console.log('[demo]', ...args)
 const warn = (...args) => console.warn('[demo]', ...args)
-
-async function fetchWithTimeout(url) {
-  return fetch(url, {
-    redirect: 'follow',
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-    headers: { 'user-agent': USER_AGENT }
-  })
-}
-
 const delay = (ms) => new Promise((r) => setTimeout(r, ms))
 
-/**
- * 抓一个资源，返回 { body } 或 { status }。
- * 超时与连接错误重试（对方服务器是台普通机器，偶尔顶不住并发），4xx 不重试。
- */
-async function fetchResource(pathname, retries = 2) {
+async function fetchBuffer(url, retries = 2) {
   let lastError
-
   for (let attempt = 0; attempt <= retries; attempt += 1) {
     try {
-      const response = await fetchWithTimeout(`${SOURCE}${pathname}`)
-      if (!response.ok) return { status: response.status }
-      return { body: Buffer.from(await response.arrayBuffer()) }
+      const response = await fetch(url, {
+        redirect: 'follow',
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+        headers: { 'user-agent': USER_AGENT }
+      })
+      if (!response.ok) throw new Error(`${url} 返回 ${response.status}`)
+      return Buffer.from(await response.arrayBuffer())
     } catch (error) {
       lastError = error
       if (attempt < retries) await delay(400 * (attempt + 1))
     }
   }
-
   throw lastError
 }
 
-async function readManifest() {
+const fetchJson = async (url) => JSON.parse((await fetchBuffer(url)).toString('utf-8'))
+
+async function readLocalManifest() {
   try {
     return JSON.parse(await readFile(MANIFEST_PATH, 'utf-8'))
   } catch {
@@ -91,192 +81,112 @@ async function readManifest() {
   }
 }
 
-async function fileSize(path) {
+async function exists(path) {
   try {
-    return (await stat(path)).size
+    await stat(path)
+    return true
   } catch {
-    return -1
+    return false
   }
 }
 
-async function readEntryHtml() {
-  const response = await fetchWithTimeout(`${SOURCE}${ENTRY_PATH}`)
-  if (!response.ok) {
-    throw new Error(`入口 ${ENTRY_PATH} 返回 ${response.status} ${response.statusText}`)
-  }
-  return response.text()
+/** 要同步的那份构建：DEMO_SOURCE 指定，或者 latest.json 指向的最新版 */
+async function resolveSource() {
+  if (process.env.DEMO_SOURCE) return process.env.DEMO_SOURCE.replace(/\/+$/, '')
+  const latest = await fetchJson(`${LATEST_URL}?t=${Date.now()}`)
+  if (!latest?.base) throw new Error(`${LATEST_URL} 没有 base`)
+  return String(latest.base).replace(/\/+$/, '')
 }
 
-/**
- * 指纹一致还不够，得确认镜像真的在盘上（首次 clone 后 manifest 可能先于目录存在）。
- */
-async function mirrorIntact(manifest, signature) {
-  if (!manifest || manifest.signature !== signature) return false
-  return (await fileSize(resolve(DEST_DIR, ENTRY_DEST))) >= 0
+/** 文件清单（路径 + sha256）的摘要就是这份构建的指纹 */
+export function signatureOfManifest(remote) {
+  const lines = remote.files.map((f) => `${f.path}\t${f.sha256}`).sort()
+  return createHash('sha256').update(lines.join('\n')).digest('hex')
 }
 
-/**
- * 按层展开引用：同一层并发抓，抓完解析出下一层再继续。
- * 用「层」而不是共享队列，是为了避免 worker 看到队列暂时为空就提前退出。
- */
-async function crawl(entryHtml) {
+async function download(base, remote) {
   await rm(TMP_DIR, { recursive: true, force: true })
   await mkdir(TMP_DIR, { recursive: true })
-
-  const seen = new Set()
-  const missing = []
   let bytes = 0
-  let files = 0
 
-  const writeFileSafe = async (pathname, body) => {
-    // 资源是 /assets/x 这种绝对路径，落盘要挂到临时目录下；入口的 index.html 不带斜杠
-    const relative = pathname.startsWith('/') ? `.${pathname}` : pathname
-    const dest = resolve(TMP_DIR, relative)
-    if (!dest.startsWith(TMP_DIR)) throw new Error(`镜像路径越界：${pathname}`)
-    await mkdir(dirname(dest), { recursive: true })
-    await writeFile(dest, body)
+  const one = async (file) => {
+    let body = await fetchBuffer(`${base}/${file.path.split('/').map(encodeURIComponent).join('/')}`)
+    const digest = createHash('sha256').update(body).digest('hex')
+    if (digest !== file.sha256) throw new Error(`${file.path} 校验不符（源站文件和清单对不上）`)
+    let dest = file.path
+    if (ENTRY_RENAMES[file.path]) {
+      dest = ENTRY_RENAMES[file.path]
+      body = Buffer.from(pinEntryRefs(body.toString('utf-8'), `${base}/${file.path}`, MOUNT_PATH, `${base}/`), 'utf-8')
+    }
+    const target = resolve(TMP_DIR, dest)
+    if (!target.startsWith(TMP_DIR)) throw new Error(`镜像路径越界：${file.path}`)
+    await mkdir(dirname(target), { recursive: true })
+    await writeFile(target, body)
     bytes += body.length
-    files += 1
   }
 
-  /** 抓一个资源，返回它里面发现的下一层引用 */
-  const readOne = async (pathname, strict) => {
-    let result
-    try {
-      result = await fetchResource(pathname)
-    } catch (error) {
-      missing.push({ pathname, strict, reason: error.message })
-      return []
-    }
-
-    if (result.status) {
-      missing.push({ pathname, strict, reason: String(result.status) })
-      return []
-    }
-
-    const body = result.body
-    let decoded = pathname
-    try {
-      decoded = decodeURIComponent(pathname)
-    } catch {
-      /* 保留编码形式写盘 */
-    }
-    await writeFileSafe(decoded, body)
-
-    if (!TEXT_EXT.test(pathname)) return []
-
-    const next = []
-    for (const [ref, meta] of extractRefs(body.toString('utf-8'), `${SOURCE}${pathname}`)) {
-      if (ref === pathname || seen.has(ref)) continue
-      seen.add(ref)
-      next.push([ref, meta.strict])
-    }
-    return next
+  const files = remote.files
+  for (let i = 0; i < files.length; i += CONCURRENCY) {
+    await Promise.all(files.slice(i, i + CONCURRENCY).map(one))
   }
-
-  // 入口先写盘（改名为 index.html，并把资源引用钉到 /demo/ 下），再展开它的引用。
-  // 抓取仍按源站的原始 HTML 走：pin 只改落盘形态，不该影响往哪抓。
-  await writeFileSafe(
-    ENTRY_DEST,
-    Buffer.from(pinEntryRefs(entryHtml, `${SOURCE}${ENTRY_PATH}`, MOUNT_PATH), 'utf-8')
-  )
-
-  let layer = []
-  for (const [ref, meta] of extractRefs(entryHtml, `${SOURCE}${ENTRY_PATH}`)) {
-    if (seen.has(ref)) continue
-    seen.add(ref)
-    layer.push([ref, meta.strict])
-  }
-
-  while (layer.length) {
-    const results = []
-    for (let i = 0; i < layer.length; i += CONCURRENCY) {
-      const slice = layer.slice(i, i + CONCURRENCY)
-      results.push(...(await Promise.all(slice.map(([ref, strict]) => readOne(ref, strict)))).flat())
-    }
-    layer = results
-  }
-
-  // 打包产物缺失说明源站自相矛盾（部署到一半、产物被清过），不能上线
-  const broken = missing.filter((item) => item.strict)
-  if (broken.length) {
-    const detail = broken.map((item) => `${item.pathname}（${item.reason}）`).join('\n  ')
-    throw new Error(`镜像不完整，缺失 ${broken.length} 个打包产物：\n  ${detail}`)
-  }
-
-  const skipped = missing.length
-  if (skipped) {
-    warn(`跳过 ${skipped} 个抓不到的资源（运行期拼接的假路径，源站同样 404）`)
-  }
-
-  return { files, bytes, missing: skipped }
+  return { files: files.length, bytes }
 }
 
-async function installMirror(stats, signature) {
+async function install(stats, info) {
   await rm(DEST_DIR, { recursive: true, force: true })
   await rename(TMP_DIR, DEST_DIR)
-
   await mkdir(dirname(MANIFEST_PATH), { recursive: true })
-  await writeFile(
-    MANIFEST_PATH,
-    `${JSON.stringify(
-      {
-        source: SOURCE,
-        entry: ENTRY_PATH,
-        signature,
-        syncedAt: new Date().toISOString(),
-        files: stats.files,
-        bytes: stats.bytes,
-        skipped: stats.missing,
-        ...(process.env.DEMO_PIN ? { pinned: process.env.DEMO_PIN } : {})
-      },
-      null,
-      2
-    )}\n`,
-    'utf-8'
-  )
+  const manifest = { ...info, syncedAt: new Date().toISOString(), ...stats }
+  await writeFile(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`, 'utf-8')
 }
 
 async function main() {
-  const manifest = await readManifest()
+  const local = await readLocalManifest()
+  const mib = (bytes) => ((bytes || 0) / 1048576).toFixed(1)
 
-  if (isPinnedAgainstSync(manifest, { force: FORCE, explicitSource: Boolean(process.env.DEMO_SOURCE) })) {
-    const size = ((manifest.bytes || 0) / 1024 / 1024).toFixed(1)
-    log(`镜像钉在「${manifest.pinned}」，不按演示服务器同步：${manifest.files} 个文件 / ${size} MiB`)
+  if (isPinnedAgainstSync(local, { force: FORCE, explicitSource: Boolean(process.env.DEMO_SOURCE) })) {
+    log(`镜像钉在「${local.pinned}」，不跟 latest.json：${local.files} 个文件 / ${mib(local.bytes)} MiB`)
     return
   }
 
-  let entryHtml
+  let base
+  let remote
   try {
-    entryHtml = await readEntryHtml()
+    base = await resolveSource()
+    remote = await fetchJson(`${base}/manifest.json`)
+    if (!Array.isArray(remote?.files) || remote.files.length === 0) {
+      throw new Error(`${base}/manifest.json 没有文件清单`)
+    }
   } catch (error) {
-    const installed = (await fileSize(resolve(DEST_DIR, ENTRY_DEST))) >= 0
-    const explain = installed
-      ? '沿用已提交的镜像继续构建'
-      : '本地还没有镜像，首页会退回界面截图'
     if (STRICT) throw error
-    warn(`源站不可用（${error.message}），${explain}`)
+    const installed = await exists(resolve(DEST_DIR, 'index.html'))
+    warn(`演示源不可用（${error.message}），${installed ? '沿用已提交的镜像继续构建' : '本地还没有镜像，演示位会退回截图'}`)
     return
   }
 
-  const entryRefs = [...extractRefs(entryHtml, `${SOURCE}${ENTRY_PATH}`).keys()]
-  const signature = signatureOf([...entryRefs, ENTRY_REVISION])
-
-  if (!FORCE && (await mirrorIntact(manifest, signature))) {
-    const size = ((manifest.bytes || 0) / 1024 / 1024).toFixed(1)
-    log(`镜像已是最新：${manifest.files} 个文件 / ${size} MiB（源站 ${SOURCE}）`)
+  const signature = signatureOfManifest(remote)
+  if (!FORCE && local?.signature === signature && (await exists(resolve(DEST_DIR, 'index.html')))) {
+    log(`镜像已是最新：演示 ${remote.version}，${local.files} 个文件 / ${mib(local.bytes)} MiB`)
     return
   }
 
-  log(`开始同步 ${SOURCE}${ENTRY_PATH} → docs/public/demo/`)
-  const stats = await crawl(entryHtml)
-  await installMirror(stats, signature)
-
-  const size = (stats.bytes / 1024 / 1024).toFixed(1)
-  log(`完成：${stats.files} 个文件 / ${size} MiB，指纹 ${signature.slice(0, 12)}`)
+  log(`开始同步演示 ${remote.version}（${base}）→ docs/public/demo/`)
+  const stats = await download(base, remote)
+  await install(stats, {
+    source: base,
+    version: remote.version,
+    commit: remote.commit ?? null,
+    builtAt: remote.builtAt ?? null,
+    signature,
+    apps: remote.apps ?? [],
+    ...(process.env.DEMO_PIN ? { pinned: process.env.DEMO_PIN } : {})
+  })
+  log(`完成：${stats.files} 个文件 / ${mib(stats.bytes)} MiB，指纹 ${signature.slice(0, 12)}`)
 }
 
-main().catch((error) => {
-  warn(error.message)
-  process.exit(1)
-})
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    warn(error.message)
+    process.exit(1)
+  })
+}

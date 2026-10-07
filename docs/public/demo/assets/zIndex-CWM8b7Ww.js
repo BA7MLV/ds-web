@@ -1,0 +1,1 @@
+const e={inputBar:100,inputBarPopover:150,inputBarInner:200,popover:1e3,desktopTitlebar:1100,composerPanel:1150,overlay:2e3,modal:3e3,sheet:4e3,toast:5e3,contextMenu:9050,tooltip:1e4,systemTitlebar:2147483e3};export{e as Z};

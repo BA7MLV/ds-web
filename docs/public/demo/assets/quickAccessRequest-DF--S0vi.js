@@ -1,0 +1,1 @@
+const t="learningHub:open-quick-access";let n=null;function s(e){n={type:e,requestedAt:Date.now()},window.dispatchEvent(new CustomEvent(t,{detail:{type:e}}))}function u(){const e=n;return n=null,e&&Date.now()-e.requestedAt<=15e3?e.type:null}export{t as L,s as r,u as t};

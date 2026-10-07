@@ -1,10 +1,177 @@
 {
-  "source": "http://47.88.78.106:8010",
-  "entry": "/demo.html",
-  "signature": "5938def6b852fdf6adb617edae3b836fdf6142abf2f76131dae5c15445965c1d",
-  "syncedAt": "2026-10-05T08:16:50.865Z",
-  "files": 1209,
-  "bytes": 37982170,
-  "skipped": 150,
-  "pinned": "主仓库 demo/site-1005 分支 f6689351b 的本地构建（8f9f164c0 + 演示文案按语言整包、英文界面 ?lang=en；今日待复习与知识库检索范围已随 v0.10.x 发布，不再藏；演示服务器还是旧版）"
+  "source": "https://download.deepstudent.cn/demo/main-849574275",
+  "version": "main-849574275",
+  "commit": "8495742755b747202a05bff7671ee8eb569a9ba9",
+  "builtAt": "2026-10-07T04:02:53.813Z",
+  "signature": "3b5d4c4922eaf6aad71e5360fcaf8ca8a3ba6ce762db4bd57d69fdc3a37c1b38",
+  "apps": [
+    {
+      "id": "chat",
+      "title": "AI 对话",
+      "height": 680,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "research-memory",
+      "title": "深度调研与智能记忆",
+      "height": 680,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "learning-hub",
+      "title": "资源库",
+      "height": 640,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "reading-translation",
+      "title": "文档阅读与翻译",
+      "height": 680,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "paper-search",
+      "title": "论文搜索",
+      "height": 680,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "media",
+      "title": "音视频",
+      "height": 660,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "notes",
+      "title": "特征值与特征向量",
+      "height": 660,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "mindmap",
+      "title": "思维导图",
+      "height": 640,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "essay",
+      "title": "作文批改",
+      "height": 680,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "productivity",
+      "title": "待办与番茄钟",
+      "height": 620,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "question-bank",
+      "title": "题目集与练习",
+      "height": 660,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "anki",
+      "title": "Anki 制卡与模板",
+      "height": 640,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "flashcards",
+      "title": "闪卡",
+      "height": 640,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "models",
+      "title": "模型与供应商配置",
+      "height": 660,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "skills-mcp",
+      "title": "技能与 MCP 扩展",
+      "height": 640,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "data-sync",
+      "title": "数据管理与云同步",
+      "height": 660,
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "workbench",
+      "title": "学习桌面",
+      "height": 700,
+      "entry": "demo.html?desktop=1",
+      "posters": [
+        "light",
+        "dark"
+      ]
+    },
+    {
+      "id": "mobile",
+      "title": "移动端",
+      "height": 780,
+      "width": 390,
+      "entry": "demo.html",
+      "posters": [
+        "light",
+        "dark"
+      ]
+    }
+  ],
+  "syncedAt": "2026-10-07T04:12:36.943Z",
+  "files": 1773,
+  "bytes": 46968739
 }

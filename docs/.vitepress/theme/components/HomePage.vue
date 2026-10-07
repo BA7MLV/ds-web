@@ -10,6 +10,7 @@ import FeatureShot from './FeatureShot.vue'
 import HomeApps from './HomeApps.vue'
 import HeroStarfield from './HeroStarfield.vue'
 import HomeDownload from './HomeDownload.vue'
+import HomePhoneDemo from './HomePhoneDemo.vue'
 import StepFlow from './StepFlow.vue'
 
 const { t, tm, locale } = useI18n()
@@ -146,6 +147,7 @@ const stepScene = (delta) => {
 const agent = computed(() => tm('home.agent.items'))
 const privacy = computed(() => tm('home.privacy.items'))
 const media = computed(() => tm('home.media.items'))
+const mobile = computed(() => tm('home.mobile.items'))
 
 /*
  * 用户评价：真实素材还没补齐，先整块隐藏 —— 把 SHOW_VOICES 改回 true 即可恢复。
@@ -399,6 +401,35 @@ onUnmounted(() => {
               <p class="lp-col__desc">{{ item.desc }}</p>
             </li>
           </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ④.5 手机上：Android 版的实时演示（同一份演示镜像落进移动端布局，见 HomePhoneDemo.vue） -->
+    <section id="mobile" class="lp-block">
+      <div class="lp-wrap">
+        <div class="lp-split lp-mobile">
+          <div>
+            <h2 class="lp-title">{{ t('home.mobile.title') }}</h2>
+            <p class="lp-lede">{{ t('home.mobile.lede') }}</p>
+            <ul class="lp-stack lp-mobile__points">
+              <li v-for="item in mobile" :key="item.title" class="lp-stack__item">
+                <h3 class="lp-col__title">{{ item.title }}</h3>
+                <p class="lp-col__desc">{{ item.desc }}</p>
+              </li>
+            </ul>
+            <a :href="t('home.mobile.link')" class="home-link lp-desk__link t-learn">
+              {{ t('home.mobile.more') }}
+              <span class="t-learn-chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path class="t-learn-arm t-learn-arm-top" d="M6 4L10 8" />
+                  <path class="t-learn-arm t-learn-arm-bot" d="M10 8L6 12" />
+                </svg>
+              </span>
+            </a>
+          </div>
+          <HomePhoneDemo class="lp-mobile__phone" />
         </div>
       </div>
     </section>

@@ -33,7 +33,9 @@
     - `theme/utils/`: 主题侧的无组件逻辑（图标标记串、下载数据整理、首页截图的地址与取景框尺寸等）。
   - `data/downloads.json`: 下载页数据，由 `scripts/sync-release-downloads.mjs` 在构建时从 GitHub Releases 同步。
 - `docs/public/`: 公共静态资源（图片、图标、`robots.txt`、`llms.txt`、favicon）。
-  - `demo/`: 首页实时演示的**同源镜像**（主仓库 `src/demo` 的构建产物），由 `scripts/sync-demo.mjs` 同步，勿手改。
+  - `demo/`: 网页演示的**同源镜像**（主仓库 `npm run build:demo` 的产物），由 `scripts/sync-demo.mjs` 同步，勿手改。
+    入口两个：`index.html`（主仓库 demo.html：对话演示 / 学习桌面 / 移动端）与 `app.html`（demo-app.html：用户指南每章
+    只含该功能的单应用演示，`?app=<章节 slug>`）；`posters/<id>-light|dark.webp` 是发布时按真实界面拍的海报。
     hero 用经典布局（`/demo/index.html?scene=…`），「学习桌面」一节（`theme/components/DesktopDemo.vue`）用同一份镜像带 `desktop=1`。
     英文页两处都多带 `lang=en`：演示界面换成英文（文案按语言整包打在 `zh-CN-*.js` / `en-US-*.js` 里，运行时不下语言包），剧本内容仍是中文。
   - `features/`: 首页「使用流程」两张卡（`flow-*`）和功能区六扇窗的真实界面截图（`<名>-light|dark.webp`，取景框的 2 倍图），**由生成器产出，勿手改**（见下）。
@@ -56,16 +58,18 @@
     （对话栏要比取景框窄）或取景位置，别放宽检查。
     **演示镜像更新后、或调了取景框，跑一次 `node scripts/gen-features-live.mjs`**
     （`--check` 只查切边，把框四周的上下文图放到系统临时目录，不写产物）。
-  - 注意：`npm run build` 会先跑 `sync-demo.mjs` / `sync-release-downloads.mjs`，按演示服务器把本地 `docs/public/demo`
-    整个同步成服务器上的版本、并改写 `data/demo-mirror.json`、`data/downloads.json`。本地镜像比服务器新时（新演示还没部署），
-    构建完要 `git checkout HEAD -- docs/public/demo docs/.vitepress/data/demo-mirror.json docs/.vitepress/data/downloads.json`
-    再 `git clean -fdq -- docs/public/demo` 恢复，别把旧镜像提交进去；
-    或者把新构建用静态服务供着、构建时带 `DEMO_SOURCE=<那个地址>`，指纹一致就不会重抓。
-  - 本地换演示镜像：主仓库 `NODE_OPTIONS=--max-old-space-size=8192 npm run build:demo`（默认 4 GB 堆会 OOM），
-    `dist-demo/` 用静态服务供着，`DEMO_SOURCE=http://127.0.0.1:<端口> DEMO_PIN="主仓库 <提交> 的本地构建" node scripts/sync-demo.mjs --force --strict`，
-    再把 `data/demo-mirror.json` 的 `source` 写回演示服务器。
-  - **镜像钉住**（`demo-mirror.json` 的 `pinned`）：现在的镜像是主仓库本地构建（带学习桌面模式），演示服务器还是旧版。
-    钉住时构建期的 `sync-demo.mjs` 直接跳过，不会把镜像抓回旧版；演示服务器部署了同一份 `dist-demo/` 之后删掉 `pinned`，恢复按服务器同步。
+  - **演示镜像跟随主仓库正式版**：主仓库每次发版，Demo Publish 工作流用该版本构建演示、逐章烟测，传到 R2
+    `https://download.deepstudent.cn/demo/<版本>/`（整份构建 + `manifest.json`：文件清单 sha256、各章演示 id / 标题 / 海报），
+    并更新 `demo/latest.json`。本仓库 `.github/workflows/demo-sync.yml` 每小时跑 `sync-demo.mjs`，有新版就提交镜像，推送触发 Vercel 部署；
+    构建期的 `sync-demo.mjs` 见指纹一致直接跳过，源站不可用时沿用已提交的镜像。
+    `data/demo-mirror.json` 的 `apps` 就是用户指南演示目录：`theme/components/GuideDemo.vue` 按当前页 slug 找演示，
+    `scripts/sync-user-guide.mjs` 在每章引言后插入 `<GuideDemo />`（没有演示的章节什么都不显示）。
+    正文里只放海报，点开才在浮层里载入实时演示（`/demo/app.html?app=…`，学习桌面 / 移动端两章载入 `/demo/index.html`）。
+  - 本地换演示镜像（主仓库还没发版、想先看效果）：主仓库 `NODE_OPTIONS=--max-old-space-size=8192 npm run build:demo`、
+    `node scripts/demo/write-demo-manifest.mjs --version <标签>`，`npx vite preview --config vite.demo.config.ts --port 4173` 供着，
+    这里 `DEMO_SOURCE=http://127.0.0.1:4173 DEMO_PIN="主仓库 <提交> 的本地构建" node scripts/sync-demo.mjs --force --strict`。
+    **镜像钉住**（`demo-mirror.json` 的 `pinned`）时构建期和 Demo Sync 都不跟 latest.json；主仓库发布了同一版后删掉 `pinned`。
+    也可以在主仓库手动跑 Demo Publish（ref 填 main）发一版到 R2，等 Demo Sync 自动同步。
 - `tests/`: Node 内置测试（`npm test`，即 `node --test` 自动发现），覆盖下载数据同步、演示镜像逻辑与 i18n 消息表结构校验。
 - 根目录：`package.json`（npm workspaces，命令代理到 `docs` workspace）、`vercel.json`（含 `/docs/*` → `/*` 301 重定向）。
   - `vercel.json` 的 `installCommand` 先把 Vercel 的浅克隆（深度 10、没配 remote）按仓库地址补全历史：
