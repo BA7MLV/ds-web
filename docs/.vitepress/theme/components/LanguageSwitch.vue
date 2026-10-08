@@ -53,6 +53,8 @@ const rootEl = ref(null)
 const menuEl = ref(null)
 /** Teleport 到 body 的菜单用 fixed 定位，坐标得自己算 */
 const menuStyle = ref({})
+/** 缩放原点，跟着上翻一起翻 */
+const menuOrigin = ref('top-left')
 /** 键盘高亮的选项下标（-1 表示没有高亮项） */
 const activeIndex = ref(-1)
 
@@ -83,6 +85,12 @@ const positionMenu = () => {
   const h = menuEl.value?.offsetHeight || 80
   const w = menuEl.value?.offsetWidth || 140
   const flipUp = r.bottom + gap + h > window.innerHeight - 8 && r.top - gap - h > 8
+
+  // 菜单左缘基本与控件左缘对齐（positionMenu 里是这么夹的），所以只用左半边两个原点。
+  // transform-origin 不参与过渡，必须在元素插入前定下来 —— 本函数在 openMenu()
+  // 里是先跑一遍再改 open 的，正好赶得上。
+  menuOrigin.value = flipUp ? 'bottom-left' : 'top-left'
+
   menuStyle.value = {
     top: `${flipUp ? r.top - gap - h : r.bottom + gap}px`,
     left: `${Math.max(8, Math.min(r.left, window.innerWidth - w - 8))}px`,
@@ -230,11 +238,12 @@ watch(
       代价是位置要自己按锚点的视口坐标算 —— 见 positionMenu()。
     -->
     <Teleport to="body">
-      <Transition name="lang-pop">
+      <Transition name="t-drop">
         <ul
           v-if="open"
           ref="menuEl"
-          class="LangSelect__menu"
+          class="LangSelect__menu t-dropdown"
+          :data-origin="menuOrigin"
           :style="menuStyle"
           role="listbox"
           :aria-label="ariaLabel"
@@ -399,24 +408,11 @@ watch(
   color: var(--sn-text);
 }
 
-/* ── 展开动画 ── */
-.lang-pop-enter-active {
-  transition: opacity 0.2s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.lang-pop-leave-active {
-  transition: opacity 0.14s ease, transform 0.16s ease;
-}
-
-.lang-pop-enter-from,
-.lang-pop-leave-to {
-  opacity: 0;
-  transform: translateY(-6px) scale(0.97);
-}
+/* ── 展开动画 ──
+ * 时间线与状态在 custom.css 的 `.t-drop-*`（transitions-dev menu dropdown），
+ * 这里只保留控件自身的 caret 翻转。 */
 
 @media (prefers-reduced-motion: reduce) {
-  .lang-pop-enter-active,
-  .lang-pop-leave-active,
   .LangSelect__caret {
     transition: none;
   }
