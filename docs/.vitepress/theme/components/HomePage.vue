@@ -4,6 +4,7 @@ import { useI18n } from '../i18n/index.js'
 import { track } from '../lib/analytics.js'
 import { afterPageLoad, observeNearViewport } from '../lib/deferred-work.js'
 import { warmFeatureShots } from '../utils/feature-shot.js'
+import { needsOpticalCenter } from '../utils/optical-center.js'
 import AppShell from './AppShell.vue'
 import DesktopDemo from './DesktopDemo.vue'
 import FeatureShot from './FeatureShot.vue'
@@ -19,6 +20,18 @@ const GITHUB_REPO = 'helixnow/deep-student'
 const GITHUB_URL = `https://github.com/${GITHUB_REPO}`
 const STARS_CACHE_KEY = 'ds-gh-stars'
 const STARS_CACHE_TTL = 30 * 60 * 1000
+
+/*
+ * 居中标题的视觉校正：以全角标点收尾时给标题挂 `.lp-optical`，
+ * CSS 那边用 `padding-left: 0.5em` 把它挪回正中（口径与算式见 custom.css）。
+ * 判定在 utils/optical-center.js —— CSS 取不到「最后一个可见字是什么」，
+ * 而文案在 i18n 表里，不能靠手写修饰类维护；短标题的断行还写在文案里（`\n`），
+ * 判定那边已经把换行剥掉了。
+ *
+ * 只用于**居中**的标题：左对齐的（agent / media / mobile / privacy 那几栏，
+ * 在 .lp-split 里）本来就贴着左边，末尾多一个标点不构成偏心。
+ */
+const optical = (text) => (needsOpticalCenter(text) ? 'lp-optical' : undefined)
 
 /** Hero section：星空底图的滚动进度基准 */
 const heroEl = ref(null)
@@ -217,7 +230,10 @@ onUnmounted(() => {
           </a>
         </div>
 
-        <h1 class="t-stagger-line t-stagger-line--2 lp-hero__title">
+        <h1
+          class="t-stagger-line t-stagger-line--2 lp-hero__title"
+          :class="optical(t('home.hero.title'))"
+        >
           {{ t('home.hero.title') }}
         </h1>
 
@@ -253,7 +269,7 @@ onUnmounted(() => {
     <section id="desktop" class="lp-block lp-desk">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
-          <h2 class="lp-title">{{ t('home.desktop.title') }}</h2>
+          <h2 class="lp-title" :class="optical(t('home.desktop.title'))">{{ t('home.desktop.title') }}</h2>
           <p class="lp-lede">{{ t('home.desktop.lede') }}</p>
           <a :href="t('home.desktop.link')" class="home-link lp-desk__link t-learn">
             {{ t('home.desktop.more') }}
@@ -295,7 +311,7 @@ onUnmounted(() => {
     <section id="features" ref="featuresEl" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
-          <h2 class="lp-title">{{ t('home.features.title') }}</h2>
+          <h2 class="lp-title" :class="optical(t('home.features.title'))">{{ t('home.features.title') }}</h2>
           <p class="lp-lede">{{ t('home.features.lede') }}</p>
         </div>
 
@@ -459,7 +475,7 @@ onUnmounted(() => {
     <section v-if="SHOW_VOICES" id="voices" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
-          <h2 class="lp-title">{{ t('home.voices.title') }}</h2>
+          <h2 class="lp-title" :class="optical(t('home.voices.title'))">{{ t('home.voices.title') }}</h2>
         </div>
         <div class="lp-quotes">
           <figure v-for="(quote, index) in quotes" :key="index" class="lp-quote">
@@ -477,7 +493,7 @@ onUnmounted(() => {
     <section id="faq" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-head lp-head--center">
-          <h2 class="lp-title">{{ t('home.faq.title') }}</h2>
+          <h2 class="lp-title" :class="optical(t('home.faq.title'))">{{ t('home.faq.title') }}</h2>
         </div>
         <div class="lp-cap">
           <div

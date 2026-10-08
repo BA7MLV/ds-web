@@ -84,8 +84,12 @@ export default {
     /** Alt text for the real-UI screenshot in the shell; it is the same interface the demo shows */
     posterAlt:
       'The DeepStudent app: navigation and conversations on the left, and on the right the chat “高数错题 → Anki 卡片”, where the agent has generated 5 cards.',
+    /**
+     * These three only surface when the picture will not move again: not started yet,
+     * timed out, or not embeddable. Loading is deliberately silent — the shell is
+     * already showing this screenshot; see AppShell.vue.
+     */
     waiting: 'The live demo loads automatically. Start it here instead.',
-    loading: 'Loading the interactive live demo…',
     delayed: 'The live demo is not ready yet. Retry or explore the features below.',
     unavailable: 'The live demo cannot be embedded here. This is a screenshot of the interface.',
     start: 'Try it now',
@@ -136,7 +140,6 @@ export default {
       /** On wide screens with a mouse the screenshot becomes a live, clickable desktop (DesktopDemo.vue) */
       live: {
         title: 'Live Study Desktop demo',
-        hint: 'This desktop is live: open apps from the Dock, drag and resize windows, start a flashcard review. The sample conversation and cards are in Chinese; the data stays on this page and resets when you reload.',
         narrow: 'Widen your browser window to at least 1024 pixels to try this desktop live, or tap the picture to see it full size.',
         touch: 'Tap the picture to see it full size and swipe across the desktop. Open this page on a computer to try it live, or scroll up to the demo at the top to try the app on your phone.',
         zoom: 'View full size',

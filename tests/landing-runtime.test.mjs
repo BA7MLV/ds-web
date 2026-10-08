@@ -287,7 +287,9 @@ test('caption speaks only while the demo is not live, and never swallows a retry
   assert.equal(env.api.previewStatus.value, 'appShell.waiting')
 
   env.api.startDemo()
-  assert.equal(env.api.previewStatus.value, 'appShell.loading')
+  // 正在载入：**不出声**。壳里铺的就是真实界面截图（不是骨架屏），
+  // 画面从头到尾没有一秒是空的，报一句「正在载入」只是把眼前已有的东西重复一遍。
+  assert.equal(env.api.previewStatus.value, '')
 
   // 真应用就绪 = 用户看得见点得着，再报一次「已载入」纯属噪音，整行消失
   const live = frame('live')

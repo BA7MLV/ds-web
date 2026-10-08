@@ -7,6 +7,7 @@ import { renderToString } from 'vue/server-renderer'
 import { compileTemplate, parse } from '@vue/compiler-sfc'
 
 import messages from '../docs/.vitepress/theme/i18n/messages/index.js'
+import { needsOpticalCenter } from '../docs/.vitepress/theme/utils/optical-center.js'
 
 const require = createRequire(import.meta.url)
 const template = (name) => {
@@ -71,6 +72,8 @@ for (const [locale, words] of Object.entries(messages)) {
         SHOW_VOICES: false,
         faqs: words.home.faq.items,
         openFaq: 0,
+        // 用真的判定，别在这里拿桩糊过去 —— SSR 输出里那个类就是它算出来的
+        optical: (text) => (needsOpticalCenter(text) ? 'lp-optical' : undefined),
       }),
     })
     app.component('AppShell', {
@@ -124,6 +127,11 @@ for (const [locale, words] of Object.entries(messages)) {
     assert.ok(html.includes(words.appShell.previewTitle))
     assert.ok(html.includes(words.appShell.previewDescription))
     assert.ok(html.includes(words.appShell.waiting))
+    // 居中标题若以全角标点收尾，SSR 里就得带上视觉校正的类（爬虫看到的与用户看到的一致）。
+    // 只查功能区那个标题：其它区块的标题要么左对齐、要么文案不带标点，判不准就不是漏。
+    if (needsOpticalCenter(words.home.features.title)) {
+      assert.match(html, /class="[^"]*\blp-optical\b[^"]*"/, '居中标题缺了视觉校正的类')
+    }
     // 壳内先铺真实界面截图，所以首屏 HTML 里有图，而不是等 JS 再画
     assert.match(html, /<img[^>]+src="\/demo-poster\.webp"[^>]+alt="[^"]+"/)
     assert.doesNotMatch(html, /<iframe\b/)
@@ -154,6 +162,58 @@ test('landing visibility does not depend on mounted state or transparent window 
   const styles = shell.descriptor.styles.map(({ content }) => content).join('\n')
   const rise = styles.match(/@keyframes sh-rise\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
   assert.doesNotMatch(rise, /opacity\s*:\s*0/)
+})
+
+/*
+ * 演示窗下方的图注：只在「画面不会再动」时开口。
+ * 删掉的是「正在载入…」那一档 —— 壳里铺的本来就是真实界面截图（不是骨架屏），
+ * 画面从头到尾没有一秒是空的，这句状态只是把眼前已有的东西重复一遍。
+ * 标题与说明那句要留着（并且居中）：那是对这张演示的一句话解释，
+ * 出问题的两种（超时 / 嵌不进来）与它们的「重新载入」出口也必须留着 ——
+ * 那两种情况画面会一直停在截图上，不给按钮用户就只能干看着。
+ */
+test('演示窗的图注只在画面不会再动时说话', () => {
+  assert.doesNotMatch(shell.descriptor.scriptSetup.content, /appShell\.loading/)
+  for (const state of ['appShell.delayed', 'appShell.unavailable', 'appShell.waiting']) {
+    assert.match(shell.descriptor.scriptSetup.content, new RegExp(state.replace('.', '\\.')))
+  }
+  // 手动开始 / 重试的按钮还在，图注的 flex 行才留得住
+  assert.match(shell.descriptor.template.content, /@click="startDemo/)
+  for (const words of Object.values(messages)) {
+    assert.equal('loading' in words.appShell, false, '「正在载入」的文案还留在消息表里')
+    // 说明那句不许被顺手删掉 —— 它是这张演示唯一的一句解释
+    assert.ok(words.appShell.previewDescription?.trim(), '图注说明的文案不在消息表里')
+  }
+})
+
+/*
+ * 居中标题的视觉校正（custom.css 的 .lp-optical）：只认末尾的全角标点。
+ * 判错方向很关键 —— 漏判只是校正没做，误判会把一句没有标点的标题也推歪。
+ */
+test('居中标题的视觉校正只认末尾的全角标点', () => {
+  for (const text of ['从读到记，装进同一个窗口。', '数据默认存在本机。', '来自用它的人。']) {
+    assert.equal(needsOpticalCenter(text), true, `漏判：${text}`)
+  }
+  // 逗号、顿号的墨迹同样偏左下，只要收尾就要校正 —— 「…就够了，」这种也认。
+  assert.equal(needsOpticalCenter('只专注学习本身就够了，'), true, '漏判（逗号收尾）')
+  // 断行写在文案里（`\n` + pre-line）：末行以标点收尾，字符串末尾却是换行符。
+  // 判定必须剥掉换行才认得出来 —— 首屏标题和手机/网课那两栏都靠这一条。
+  for (const text of ['电脑上整理，\n手机上接着学。', '只专注学习本身就够了，\n剩下的都交给我。']) {
+    assert.equal(needsOpticalCenter(text), true, `漏判（换行收尾）：${JSON.stringify(text)}`)
+  }
+  for (const text of [
+    '常见问题',
+    // 中间有换行、但末行没有标点：只剥末尾换行，不能顺手把首行也算进来
+    '开放的终身学习空间\n开源、本地优先',
+    // 英文收尾是半角句号，本身就窄，偏心量在半个像素以内
+    'From reading to remembering, in one window.',
+    // 数组（Hero 导语那种分行写法）末行不在最后一个元素里，判不准就不校正
+    ['第一行，', '第二行。'],
+    undefined,
+    null
+  ]) {
+    assert.equal(needsOpticalCenter(text), false, `误判：${JSON.stringify(text)}`)
+  }
 })
 
 test('both theme entry points keep unused bundled fonts out of the system-font site', () => {

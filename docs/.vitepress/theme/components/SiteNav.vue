@@ -159,7 +159,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="SNav" :class="{ 'is-scrolled': scrolled }">
+  <!--
+    `SNav--doc`：文档页的修饰类，窄屏整条不渲染（见 <style> 里 max-width: 859px）。
+    CSS 判断不了页面类型（<html> 上没有落地页/文档页的标记），所以由这里挂出来；
+    根元素是 SSR 出来的，class 随首屏 HTML 一起到，不会有「先渲染再消失」的一跳。
+  -->
+  <header class="SNav" :class="{ 'is-scrolled': scrolled, 'SNav--doc': !isLanding }">
     <div class="SNav__bar">
       <!-- 左：品牌（PC 端只留图形标，与 Notion 一致；窄屏没有导航可让，补上字标） -->
       <a class="SNav__brand" href="/" aria-label="DeepStudent">

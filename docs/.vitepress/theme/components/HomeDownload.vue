@@ -304,6 +304,9 @@ onUnmounted(() => {
   font-weight: 500;
   line-height: 1.5;
   text-decoration: none;
+  /* 「下载 Windows 版」是一整句主行动，不许从中间断开（Apple 那条「保护会被换行
+   * 打断的词语」，见 custom.css 的中文排版基线）。清单里的每一行本来就有这条。 */
+  white-space: nowrap;
 }
 
 /* 图标自带尺寸（见 DlIcon），这里只管它别被压扁 */

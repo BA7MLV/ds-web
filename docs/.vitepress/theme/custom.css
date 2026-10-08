@@ -331,10 +331,115 @@ html.home-no-search .VPNavBar .VPNavBarSearch {
   padding-bottom: 24px;
 }
 
+/* ══ 落地页中文排版基线 ═══════════════════════════════════════════════
+ * 口径来自《Apple 官网排版细节鉴赏》（skywt.cn/blog/apple-typography-details）。
+ * 那篇拆了六条，逐条对下来：
+ *
+ * 1. 定制的 Web 字体 —— **做不到，也不打算做**。Apple 私下为简体中文站定制了
+ *    一款网络字体（SF Pro SC），把汉字字型缩小、把全角标点压到 0.5～0.6 字宽，
+ *    专门用来和 SF Pro 混排。这两款字体都不公开，Web 平台也没有
+ *    「只缩汉字、拉丁不动」的开关。我们能守住的只有字体栈本身：SF 拉丁在前、
+ *    PingFang SC 紧随其后，不让 Noto Sans SC 顶上来 —— 换字族带来的中英失衡，
+ *    比少做一条校正更明显。
+ * 2. 换行控制 —— 部分做到，见下面 `text-wrap` 那三条。
+ * 3. 标题居中视觉校正 —— `.lp-optical`。
+ * 4. 中西文之间的空距 —— `text-autospace`。
+ * 5. 产品名不换行 —— 各处按钮 / 菜单项的 `white-space: nowrap`。
+ * 6. 文案本地化 —— 与排版无关，见 i18n 目录。
+ */
+
 /* 首页：Apple 风格字体栈（SF 拉丁 + PingFang 中文） */
 .home-apple {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro SC', 'PingFang SC',
     'Helvetica Neue', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+
+  /*
+   * 中西文之间的空距，也就是「盘古之白」。clreq 6.3.3 定的口径是：
+   * 汉字与西文字母、数字之间用不多于四分之一个汉字宽的字距。
+   *
+   * Apple 的做法是把它当文案规范，中英混排的地方人工加空格 —— 我们也这么做，
+   * i18n 两份消息表都按这个口径写了。
+   * 这条属性是**兜底**，不是叠加：css-text-4 规定 `text-autospace` 默认按 `insert`
+   * 生效 —— 「一个空格字符都没有时才补」。所以已经手写了空格的地方它不插手，
+   * 漏写空格的新文案会被它接住，不会把空距撑成两倍。
+   *
+   * Chrome 140+ / Safari 18.4+ / Edge 140+；Firefox 还不支持，
+   * 那边全靠手写空格 —— 也就是说文案规范才是主路径，这条只是保险。
+   */
+  text-autospace: normal;
+
+  /*
+   * 段落默认 `pretty`：尽量不让最后一行只剩一两个字（就是那篇说的「孤行」）。
+   * 不支持的浏览器当作 `wrap`，排版不变。
+   *
+   * 写在这一层而不是各段落的类上：`text-wrap` 是继承属性，
+   * 正文拿默认档、标题另开 `balance`（见下面），两处各写一次就够。
+   * 中文里「避头尾」由浏览器的断行规则自动处理（标点不会落到行首），
+   * 这里要管的只是末行那截留白 —— 那正是 `pretty` 的活。
+   */
+  text-wrap: pretty;
+}
+
+/*
+ * 标题改用 `balance`：把几行标题的字数摊匀，别出现「一行长一行短」。
+ * 浏览器只对不超过 6 行的短标题生效，正好是我们的用法（标题都只有一两句）。
+ * 中文没有词边界，`pretty` 在标题上帮不上忙 —— 断行点由容器宽度决定，
+ * 只能靠 `balance` 让浏览器多试几种断法再挑匀的那一种。
+ *
+ * 首屏标题不在名单里：它是两行口号，断行写在文案里（`\n` + `pre-line`，
+ * 见 HomePage.vue 的 .lp-hero__title）。那句注释说得很清楚 —— 中文可在任意字
+ * 间断开，`balance` 会把「就够了」拆到两行。它自己那条规则里已经带了 balance。
+ */
+.lp-title,
+.lp-fcard__title,
+.pair__title,
+.sheet__title,
+.lp-apps__title {
+  text-wrap: balance;
+}
+
+/*
+ * 居中标题的视觉校正（Apple「标题居中视觉校正」那一条）。
+ *
+ * 全角标点的墨迹重心偏左下：句号在字框左下角、逗号同理，右半边是空的。
+ * 所以一行以「。」收尾的居中标题，**视觉**中心比容器中心偏左，字号越大越明显。
+ *
+ * 偏多少可以算出来：以 N 字宽的一行收尾，首字墨迹约从 0.04em 起，
+ * 句号墨迹止于约 (N − 0.55)em（字框宽 1em，墨迹只占左下那一小块），
+ * 于是视觉中点落在 (0.04 + N − 0.55) / 2 ≈ N/2 − 0.26em 处 —— 偏左约 0.26em。
+ *
+ * 补多少：`padding-left: 0.5em` 把内容盒左边界推出去半角，居中文字的中点
+ * 随之右移 padding 的一半 —— 正好 0.25em，与上面算出的 0.26em 吻合。
+ * 这是 Apple 自己用的第二种方案（另两种是给行末标点套 `position: absolute`
+ * 或在标点后塞一个 `margin-right: -0.6rem` 的空 span；我们的文案在 i18n 表里，
+ * 拆字符串会连带影响多处引用，所以走这一种 —— 判定在 utils/optical-center.js）。
+ *
+ * **只挂在居中标题上**：判定在 HomePage.vue 的 optical() 里。
+ * · 左对齐的标题（agent / media / mobile / privacy 那几栏，在 .lp-split 里）
+ *   贴着左边，末尾多一个标点不构成偏心；
+ * · 多行正文也不能挂 —— 右移的是整个内容盒，首行会跟着歪，而偏心只发生在末行。
+ *   末行的精确修法是 `hanging-punctuation: allow-end`，但它目前只有 Safari 支持，
+ *   而且会让全角句号整个挂出字框、补过头，所以这里不引。
+ *
+ * 首屏标题虽然是两行，它挂这条不冲突：`.lp-hero__title` 是 `text-align: center`，
+ * 右移半角对两行是同向的（`pre-line` 的两行各自居中，都往右挪同样的量）。
+ */
+.lp-optical {
+  padding-left: 0.5em;
+}
+
+/*
+ * 一整句的行动按钮不许从中间断开 —— 「快速上手 →」的箭头落到下一行、
+ * 「了解更多」被拆成两行，都是纯粹的失误。
+ * Apple 把这条叫「保护会被换行打断的词语」，做法是给词组套 `nowrap`；
+ * 我们这里是短标签，直接整块 nowrap 就够了（真正的多词产品名在文案里
+ * 已经用空格分开，浏览器只在空格处断，不会把一个词拆成两半）。
+ */
+.lp-hero__more,
+.lp-fcard__link,
+.lp-desk__link,
+.home-link {
+  white-space: nowrap;
 }
 
 /*
@@ -637,6 +742,43 @@ html.home-no-search .VPNavBar .VPNavBarSearch {
 /* 移动端本地导航（Menu / 大纲）吸附在浮动胶囊导航之下 */
 html .VPLocalNav {
   top: var(--vp-nav-height) !important;
+}
+
+/*
+ * 窄屏文档页：整条顶栏不渲染。
+ *
+ * 紧跟着的 VitePress「菜单 / 大纲」条已经够用 —— 它自带侧边栏入口与页内目录，
+ * 上面再叠一条顶栏在 390px 宽的屏上只是白占一屏，还把正文往下推。
+ * 落地页不动：那边不渲染 VitePress 的本地导航条，顶栏是唯一的品牌与下载出口，
+ * 撤掉整页就没有任何出口了。
+ *
+ * 用 `:has()` 而不是让组件往 `<html>` 上加类：
+ *   · 顶栏是 SSR 出来的，`SNav--doc` 随首屏 HTML 一起到，不会闪一下再消失；
+ *   · `<html>` 上那个类要等水合才挂上，挂之前顶栏已占位、挂之后突然消失，
+ *     等于用一次布局抖动换一条选择器，不划算。
+ *
+ * 三条一起改，缺一条就会出问题：
+ *   1. 顶栏本身收掉；
+ *   2. `.VPNav` 仍占着 --vp-nav-height 的文档流高度（上面只用 visibility 隐藏，
+ *      是为了让搜索弹窗与 ⌘K 继续挂载可用），不收回的话正文顶部会空出一截；
+ *   3.「菜单 / 大纲」条跟着贴到视口顶端，不再往下让 nav-height。
+ *
+ * 落地的取舍：窄屏文档页因此**没有外观切换入口**了（主题按钮本来在
+ * `SNav__desktop` 里，860px 以下不渲染，撤掉顶栏后无处可去）。
+ * VitePress 的 ⌘K / Ctrl+K 与主题状态本身仍挂着，外接键盘仍能唤起搜索。
+ */
+@media (max-width: 859px) {
+  html:has(.SNav--doc) .SNav--doc {
+    display: none;
+  }
+
+  html:has(.SNav--doc) .VPNav {
+    display: none;
+  }
+
+  html:has(.SNav--doc) .VPLocalNav {
+    top: 0 !important;
+  }
 }
 
 /* 移动端展开菜单时锁定滚动 */
@@ -1280,6 +1422,12 @@ a.lp-quote__handle:hover {
   padding-bottom: 2.75rem;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro SC', 'SF Pro Text', 'PingFang SC',
     'Helvetica Neue', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  /*
+   * 页脚不在 .home-apple 里，所以「中文排版基线」那两条得自己接上，
+   * 否则版权行里的中英混排走的是另一套规则（见上面 .home-apple 那段）。
+   */
+  text-autospace: normal;
+  text-wrap: pretty;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
 }

@@ -128,16 +128,22 @@ const mounted = ref(false)
 const canEmbed = computed(() => mounted.value && embeddable())
 const showFrame = computed(() => canEmbed.value && started.value)
 /**
- * 图注右侧的状态，**只在非就绪时说话**。
+ * 图注右侧的状态，**只在真需要用户出手时说话**。
  *
- * 这一行存在的意义是解释「为什么还没动」和「出事了怎么办」：
- * 还没开始（waiting）、正在载入（loading）、超时可重试（delayed）、
- * 嵌不进来（unavailable）。一旦真应用就绪，「已载入，可以直接操作」是废话 ——
- * 用户看得到、能点，告诉他这件事不产生任何新信息，所以返回空串让整块消失。
+ * 这里原来还有第三种状态：「正在载入可交互的实时演示…」。已删 ——
+ * 载入期间壳里铺的是真实界面截图而不是骨架屏（见下面的 <picture>），
+ * 画面从头到尾没有一秒是空的，再挂一句「正在载入」只是把「还在动」重复一遍，
+ * 换成一句解释演示怎么玩的话更有价值，那句话也一并删了。
+ *
+ * 于是只剩两种情况会开口：超时（delayed）、嵌不进来（unavailable）。
+ * 这两种画面会**一直**停在截图上，不给出口用户就只能干看着；
+ * waiting 也留着，因为它同时挂着「立即体验」按钮。
+ * 真应用就绪后返回空串，连同按钮一起消失 —— 用户看得到、能点，
+ * 告诉他这件事不产生任何新信息。
  */
 const previewStatus = computed(() => {
   if (timedOut.value) return t('appShell.delayed')
-  if (showFrame.value) return loading.value ? t('appShell.loading') : ''
+  if (showFrame.value) return ''
   if (mounted.value && !canEmbed.value) return t('appShell.unavailable')
   return t('appShell.waiting')
 })
@@ -418,9 +424,12 @@ onUnmounted(() => {
     </div>
 
     <!--
-      说明与状态放在窗壳**下面**当图注：上面只留成品画面。
-      文案仍在 SSR HTML 里（爬虫和关掉 JS 的人要看得到），
+      图注：窗壳**下面**、居中的一行小字，上面只留成品画面。
+      标题与说明都在 SSR HTML 里（爬虫和关掉 JS 的人要看得到），
       只是不再压在截图上方抢视觉。
+      「正在载入…」那一档已删（见脚本里的 previewStatus）：壳里铺的就是这张截图，
+      画面没有一秒是空的，这句状态不产生任何新信息。出问题时这一行才会长出
+      状态与「重新载入」，所以它得留着当出口。
     -->
     <figcaption class="sh__caption">
       <p class="sh__caption-title">{{ t('appShell.previewTitle') }}</p>
@@ -618,14 +627,23 @@ onUnmounted(() => {
   opacity: 0;
 }
 
-/* 图注：窗壳下方的说明 + 状态 + 手动开始 */
+/* 图注：窗壳下方的标题 + 状态 / 手动开始 */
+/*
+ * 图注：窗壳下方**居中**的一行 —— 标题 + 说明，出问题时再长出状态与「重新载入」。
+ *
+ * 居中是为了跟上面那扇窗对齐：窗壳是 `margin-inline: auto` 居中的，
+ * 图注却左对齐，读下来会歪到一边去（原来就是这样）。所以这里 `justify-content`
+ * 与 `text-align` 两处都得居中 —— 前者管三块（标题 / 说明 / 状态）在行内怎么摆，
+ * 后者管说明那段多行时每行字怎么对。
+ */
 .sh__caption {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
+  justify-content: center;
   gap: 4px 18px;
   margin-top: 14px;
-  text-align: left;
+  text-align: center;
 }
 
 .sh__caption-title {
@@ -636,8 +654,16 @@ onUnmounted(() => {
   line-height: 1.6;
 }
 
+/*
+ * 说明那句不撑开（去掉原来的 `flex: 1 1 260px`）：那一撑会把状态与「重新载入」
+ * 顶到行末，居中就成了「标题靠左、说明撑满、按钮靠右」，跟要的效果正好相反。
+ * 现在三块都按内容宽排、再一起居中。
+ * `min-width: 0` 是给窄屏兜底：说明很长时它得能缩到容器宽度内再换行，
+ * 否则 flex 项的默认 min-width:auto 会顶着不缩、把整行撑出横向滚动条。
+ */
 .sh__caption-text {
-  flex: 1 1 260px;
+  flex: 0 1 auto;
+  min-width: 0;
   margin: 0;
   color: var(--vp-c-text-2);
   font-size: 13px;

@@ -382,8 +382,12 @@ onUnmounted(() => {
     </div>
 
     <figcaption class="dd__caption">
-      <!-- 三句都进 SSR，按设备只显示一句（CSS 媒体查询与 LIVE_QUERY 同一条件），首帧不跳 -->
-      <p class="dd__hint dd__hint--live">{{ t('home.desktop.live.hint') }}</p>
+      <!--
+        两句都进 SSR，按设备只显示一句（CSS 媒体查询与 LIVE_QUERY 同一条件），首帧不跳。
+        原来还有第三档 `--live`（「这张桌面可直接操作：…」，宽屏 + 鼠标时显示），已删：
+        那句与其说是说明，不如是把界面里已有的东西复述一遍。删掉后这一档在宽屏上
+        没有内容，对应的 14px 上边距也一并收掉（见 <style> 里那条媒体查询）。
+      -->
       <p class="dd__hint dd__hint--narrow">{{ t('home.desktop.live.narrow') }}</p>
       <p class="dd__hint dd__hint--touch">{{ t('home.desktop.live.touch') }}</p>
     </figcaption>
@@ -668,8 +672,7 @@ onUnmounted(() => {
   line-height: 1.6;
 }
 
-/* 触屏：去电脑上看；鼠标但窗口太窄：把窗口拉宽；宽屏 + 鼠标：怎么玩 */
-.dd__hint--live,
+/* 触屏：去电脑上看；鼠标但窗口太窄：把窗口拉宽 */
 .dd__hint--narrow {
   display: none;
 }
@@ -684,13 +687,14 @@ onUnmounted(() => {
   }
 }
 
+/*
+ * 宽屏 + 鼠标：原本这里显示「这张桌面可直接操作：…」那句，已删。
+ * 两档剩下的都被上面的规则关掉了，figcaption 里没有可见子元素 ——
+ * 只剩 14px 的上边距，在窗壳和下一段之间凭空留一道空档，所以收掉。
+ */
 @media (min-width: 1024px) and (pointer: fine) {
-  .dd__hint--narrow {
-    display: none;
-  }
-
-  .dd__hint--live {
-    display: block;
+  .dd__caption {
+    margin-top: 0;
   }
 }
 
