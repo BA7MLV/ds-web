@@ -48,20 +48,45 @@ test('browser and social titles share the same page title and VitePress template
   }
 })
 
-test('only the translated landing pages advertise reciprocal hreflang links', () => {
-  const expected = [
+test('only translated page pairs advertise reciprocal hreflang links', () => {
+  const landingAlternates = [
     ['zh-CN', SITE_URL], ['en-US', `${SITE_URL}en/`], ['x-default', SITE_URL]
   ]
   for (const relativePath of ['index.md', 'en/index.md']) {
     const items = head(makePage({ relativePath }))
     assert.deepEqual(items.filter(([, attrs]) => attrs?.hreflang)
-      .map(([, attrs]) => [attrs.hreflang, attrs.href]), expected)
+      .map(([, attrs]) => [attrs.hreflang, attrs.href]), landingAlternates)
     assert.equal(findMeta(items, 'og:type'), 'website')
     assert.ok(!getGraph(items).some((entity) => entity['@type'] === 'TechArticle'))
   }
-  const document = head(makePage())
-  assert.ok(!document.some(([, attrs]) => attrs?.hreflang))
-  assert.equal(findMeta(document, 'og:type'), 'article')
+
+  const startAlternates = [
+    ['zh-CN', `${SITE_URL}start`], ['en-US', `${SITE_URL}en/start`], ['x-default', `${SITE_URL}start`]
+  ]
+  for (const relativePath of ['start.md', 'en/start.md']) {
+    const items = head(makePage({
+      relativePath,
+      title: relativePath === 'en/start.md' ? 'Quick Start' : '快速上手'
+    }))
+    assert.deepEqual(items.filter(([, attrs]) => attrs?.hreflang)
+      .map(([, attrs]) => [attrs.hreflang, attrs.href]), startAlternates)
+    assert.equal(findMeta(items, 'og:type'), 'article')
+    assert.ok(getGraph(items).some((entity) => entity['@type'] === 'TechArticle'))
+    if (relativePath === 'en/start.md') {
+      const breadcrumb = getGraph(items).find((entity) => entity['@type'] === 'BreadcrumbList')
+      assert.deepEqual(
+        breadcrumb.itemListElement.map(({ name, position, item }) => [name, position, item]),
+        [
+          ['Home', 1, `${SITE_URL}en/`],
+          ['Quick Start', 2, `${SITE_URL}en/start`]
+        ]
+      )
+    }
+  }
+
+  const untranslated = head(makePage({ relativePath: 'user-guide/chat.md', title: 'AI 对话与会话管理' }))
+  assert.ok(!untranslated.some(([, attrs]) => attrs?.hreflang))
+  assert.equal(findMeta(untranslated, 'og:type'), 'article')
 })
 
 test('article graph connects real entities, dates and guide breadcrumbs without invented ratings', () => {

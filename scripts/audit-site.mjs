@@ -7,6 +7,11 @@ import { gzipSync, brotliCompressSync } from 'node:zlib'
 
 const DEFAULT_DIST = resolve('docs/.vitepress/dist')
 const DEFAULT_SITE = 'https://deepstudent.cn/'
+const TRANSLATED_HTML_PAIRS = [
+  ['index.html', 'en/index.html'],
+  ['start.html', 'en/start.html']
+]
+const TRANSLATED_HTML_FILES = new Set(TRANSLATED_HTML_PAIRS.flat())
 const MERMAID_CHUNK = /(?:mermaid|flowDiagram|flowchart|mindmap|timeline|gantt|sequenceDiagram|classDiagram|stateDiagram|erDiagram|pieDiagram|infoDiagram|journey|quadrant|sankey|xychart|blockDiagram|packet|c4Diagram|architecture|requirementDiagram|kanban|gitGraph|elk)/i
 
 export function isMermaidEnginePreload(url) {
@@ -41,6 +46,12 @@ async function filesBelow(directory) {
 /** Clean URLs are request paths; HTML filenames remain unchanged on disk. */
 export function pagePath(file) {
   return `/${file.replaceAll(sep, '/').replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '')}`
+}
+
+function expectedAlternates(zhFile, enFile, site) {
+  const zhUrl = new URL(pagePath(zhFile), site).href
+  const enUrl = new URL(pagePath(enFile), site).href
+  return { 'zh-CN': zhUrl, 'en-US': enUrl, 'x-default': zhUrl }
 }
 
 export function candidateFiles(pathname) {
@@ -150,8 +161,8 @@ export async function auditSite({ dist = DEFAULT_DIST, site = DEFAULT_SITE } = {
     if (/\.html(?:$|[?#])/.test(page.canonical || '')) fail('canonical-not-clean', file, page.canonical)
     if (!sitemapSet.has(expected)) fail('page-missing-from-sitemap', file, expected)
     if (!jsonLd.length) fail('jsonld-missing', file, 'Indexable pages require structured data.')
-    if (file !== 'index.html' && file !== 'en/index.html' && links.some((link) => link.hreflang)) {
-      fail('untranslated-hreflang', file, 'Only the two landing pages currently have translations.')
+    if (!TRANSLATED_HTML_FILES.has(file) && links.some((link) => link.hreflang)) {
+      fail('untranslated-hreflang', file, 'Only paired translated pages may declare hreflang.')
     }
   }
   const indexedUrls = new Set(pages.filter((page) => !page.noindex && page.file !== '404.html').map((page) => page.expected))
@@ -162,15 +173,28 @@ export async function auditSite({ dist = DEFAULT_DIST, site = DEFAULT_SITE } = {
   for (const file of ['index.html', 'en/index.html']) {
     const page = pageByFile.get(file)
     if (!page) { fail('landing-missing', file, 'Landing page missing.'); continue }
-    const expectedAlternates = { 'zh-CN': new URL('/', site).href, 'en-US': new URL('/en/', site).href, 'x-default': new URL('/', site).href }
-    const alternates = page.links.filter((link) => link.rel === 'alternate' && link.hreflang)
-    for (const [language, href] of Object.entries(expectedAlternates)) {
-      if (alternates.filter((link) => link.hreflang === language && link.href === href).length !== 1) {
-        fail('hreflang-mismatch', file, `${language} must point once to ${href}.`)
-      }
-    }
     for (const link of page.links.filter((link) => link.rel === 'modulepreload')) {
       if (isMermaidEnginePreload(link.href || '')) fail('homepage-mermaid-preload', file, link.href)
+    }
+  }
+  for (const [zhFile, enFile] of TRANSLATED_HTML_PAIRS) {
+    const zhPage = pageByFile.get(zhFile)
+    const enPage = pageByFile.get(enFile)
+    if (!zhPage && !enPage) continue
+    const expected = expectedAlternates(zhFile, enFile, site)
+    for (const [file, page] of [[zhFile, zhPage], [enFile, enPage]]) {
+      if (!page) {
+        if (file !== 'index.html' && file !== 'en/index.html') {
+          fail('translation-missing', file, `Missing reciprocal translation for ${file === zhFile ? enFile : zhFile}.`)
+        }
+        continue
+      }
+      const alternates = page.links.filter((link) => link.rel === 'alternate' && link.hreflang)
+      for (const [language, href] of Object.entries(expected)) {
+        if (alternates.filter((link) => link.hreflang === language && link.href === href).length !== 1) {
+          fail('hreflang-mismatch', file, `${language} must point once to ${href}.`)
+        }
+      }
     }
   }
   let checkedLinks = 0

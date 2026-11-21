@@ -6,7 +6,7 @@ import FeatureShot from './FeatureShot.vue'
 /**
  * 「想明白 / 记得住」—— Apple 产品页式的不对称双卡。
  *
- * 只取使用流程里的后两步（steps[1]、steps[2]）。左窄右宽，约 1:2。
+ * 两步流程（「想明白」「记得住」）。左窄右宽，约 1:2。
  * 每张卡：小标签 + 短标题钉在左上，画面从右下裁进来，右下角一个 +。
  *
  * 两条交互上的口径：
@@ -29,7 +29,7 @@ import FeatureShot from './FeatureShot.vue'
  */
 const { t, tm } = useI18n()
 
-const steps = computed(() => tm('home.flow.steps').slice(1))
+const steps = computed(() => tm('home.flow.steps'))
 
 /** 卡片圆角。浮层起点用 CARD_RADIUS / scale 抵消缩放，视觉上才和卡片对得上 */
 const CARD_RADIUS = 28

@@ -31,11 +31,13 @@ export default {
   },
 
   /**
-   * The download and support pages are Chinese-only, so English visitors go to places
-   * with an English UI instead: GitHub Releases lists every installer, Discussions takes
-   * questions. Docs have no English counterpart; those links say "(Chinese)" in their label.
+   * Home and Quick Start have English pages (`/en/`, `/en/start`). Download and support
+   * remain Chinese-only, so English visitors go to GitHub Releases and Discussions instead.
+   * User-guide chapters have no English counterpart yet and say "(Chinese)" in their labels.
    */
   links: {
+    home: '/en/',
+    quickStart: '/en/start',
     download: 'https://github.com/helixnow/deep-student/releases/latest',
     support: 'https://github.com/helixnow/deep-student/discussions'
   },
@@ -123,7 +125,8 @@ export default {
         'linux-rpm': 'Linux · rpm',
         'android-arm64': 'Android · ARM64'
       },
-      quickStart: 'Quick start (Chinese)'
+      quickStart: 'Quick start',
+      note: 'Free & open source (AGPL-3.0) · No sign-up · 1-minute API key setup or local Ollama · Data stays on your device'
     },
 
     /**
@@ -132,7 +135,7 @@ export default {
      */
     desktop: {
       title: 'One Study Desktop, apps side by side.',
-      lede: 'The desktop app opens to the Study Desktop: launch Chat, Files and your study apps from the Dock, arrange or tile windows side by side, and keep your agenda and AI study briefing on the desktop.',
+      lede: 'The desktop app opens straight into the Study Desktop: launch apps from the Dock, arrange windows freely or switch study-flow presets in one click; the status bar tracks today’s rhythm and AI desktop control (with an emergency kill switch), and Study Spaces restore their own window layouts.',
       more: 'About the Study Desktop (Chinese)',
       link: '/user-guide/workbench',
       art: 'workbench',
@@ -158,15 +161,15 @@ export default {
       items: [
         {
           title: 'It does the work',
-          desc: 'Notes, mind maps, exam sets, flashcards, todos, essays and translation all have agent tools, so results land directly in each app; it also renders interactive explanations right in chat.'
+          desc: 'Notes, mind maps, exam sets, flashcards, todos, essays and translation all have agent tools, so results land directly in each app; it also renders interactive explanations and sandbox demos right in chat.'
         },
         {
           title: 'Long tasks, handed off',
-          desc: 'Research, organizing and question writing keep moving: goal mode continues across turns, sub-agents and Super sessions work in parallel, and scheduled automations run on time.'
+          desc: 'Research, organizing and question writing keep moving: goal mode continues across turns, sub-agents and Super sessions (experimental) work in parallel, and scheduled automations run on time.'
         },
         {
           title: 'Every step under control',
-          desc: 'Actions are approved by execution tier and risk level before running; edits to notes and the Study Desktop support diff review and one-click undo.'
+          desc: 'Actions are approved by execution tier and risk level before running; supports a Study Desktop emergency kill switch, diff review for note edits and per-turn conversation rollback.'
         },
         {
           title: 'Knows you, grows with you',
@@ -176,73 +179,49 @@ export default {
     },
 
     /**
-     * How it works: the block has no heading at all — eyebrow, lede and `title`
-     * are gone. The three `label`s on the segmented control are the step headings
-     * (see StepFlow.vue), so `label` has no other consumer; don't render it again
-     * inside the panel. Step numbering is gone too, so the progress readout falls
-     * back to plain 1-based numbers — see progressLabel.
+     * Core learning loop pair (Think it through / Make it stick): StepFlow.vue renders
+     * both cards directly, each opening a sheet with its screenshot and three points.
      */
     flow: {
-      segLabel: 'How-it-works steps',
-      hint: 'Keep scrolling for the next step',
-      progress: '{current} / {total}',
       close: 'Close',
       steps: [
         {
-          label: 'Bring it in',
-          statement: 'Start by bringing your material in.',
-          items: [
-            {
-              title: 'One place for everything',
-              desc: 'Textbooks, exam papers, PDFs and notes are kept together in Files, instead of scattered across cloud drives and folders.'
-            },
-            {
-              title: 'Scans work too',
-              desc: 'Scanned PDFs are read automatically, so you can still search them, cite them and turn them into questions.'
-            },
-            {
-              title: 'The index stays local',
-              desc: 'The search index is built on your own machine and can be rebuilt or deleted whenever you want.'
-            }
-          ]
-        },
-        {
           label: 'Think it through',
-          statement: 'Converse around your own material.',
+          statement: 'Have it work through your own materials.',
           art: 'flow-think',
           alt: 'Screenshot of an answer: a short heading, a paragraph citing two entries from your learning profile, and an “AI generated” tag at the end',
           items: [
             {
-              title: 'Answers with sources',
-              desc: 'Every answer marks the passage it used, so one click takes you back to the original.'
+              title: 'Sources back to the original',
+              desc: 'PDF page backlinks and audio/video timestamps jump straight back to the source so you can verify every claim.'
             },
             {
-              title: 'Skills and memory',
-              desc: 'Save recurring workflows as skills and keep long-term preferences in memory; later answers take them into account.'
+              title: 'Interactive explanations',
+              desc: 'Streamed interactive cards, charts and isolated sandbox demos render right in chat so you can explore hard concepts hands-on.'
             },
             {
-              title: 'Reasoning mode',
-              desc: 'Switch to deep reasoning for hard derivations; the reasoning is shown alongside the conclusion.'
+              title: 'Study Spaces and memory',
+              desc: 'Isolate materials and long-term memory by subject space, and choose from five reasoning levels for tough derivations.'
             }
           ]
         },
         {
           label: 'Make it stick',
-          statement: 'Turn it into something you can review.',
+          statement: 'Turn understanding into scheduled review.',
           art: 'flow-review',
           alt: "Screenshot of today's flashcard review: a 90% progress ring, 2 due, 12 new, 4 learning, and a Start review button",
           items: [
             {
-              title: 'Mind maps',
-              desc: 'Generate a full knowledge structure from one sentence, edit it as you chat, and hide nodes to test yourself.'
+              title: 'FSRS-6 flashcard review',
+              desc: 'Due cards queue automatically into today’s progress ring and adjust intervals to how well you remember — no Anki required.'
             },
             {
-              title: 'Practice questions',
-              desc: 'Turn textbooks into exam sets you can drill, with automatic grading and mastery tracked per topic.'
+              title: 'Mistake book and daily sprint',
+              desc: 'Cross-set mistakes feed into your FSRS review schedule and merge with flashcards and weak mind-map nodes for pre-exam sprints.'
             },
             {
-              title: 'Anki cards',
-              desc: 'One request makes cards in bulk, and they sync to Anki in one click.'
+              title: 'Mind-map cloze recall',
+              desc: 'Hide key points on any mind map to quiz yourself, and turn any node you miss straight into a flashcard.'
             }
           ]
         }
@@ -315,38 +294,36 @@ export default {
       ]
     },
 
-    /**
-     * Media (its own app since 0.10.2, guide chapter 19). Every feature-carousel scene needs a real screenshot from the
-     * demo mirror, which has no media script yet, so it gets its own block laid out like the agent block
-     */
+    /** Mobile app: live Android demo and cross-device sync */
     mobile: {
       title: 'Organize on your computer,\nkeep going on your phone.',
       lede: 'The Android app is the same app with a one-handed drawer layout, so you can ask questions, look things up and review flashcards between classes or on the go.',
       more: 'Learn about the mobile app (Chinese)',
       link: '/user-guide/mobile',
-      download: 'Download for Android',
-      downloadLink: '/download',
-      live: 'The phone on the right is a live demo — tap around.',
+      frameTitle: 'Live demo of the DeepStudent Android interface',
       items: [
         {
           title: 'Drawer navigation',
           desc: 'Swipe in from the left edge: the top of the drawer holds the current page, the bottom launches apps; the system Back button steps back one level at a time.'
         },
         {
-          title: 'Nearly everything is there',
-          desc: 'Chat, Files, Media, Todo, Skills and Flashcards all work; only a few computer-only features such as the Study Desktop are left out.'
+          title: 'Full-featured, easy to share',
+          desc: 'Chat, Files, Media, Todo, Skills and Flashcards all work, with Android system “Share to DeepStudent” import and direct file export.'
         },
         {
-          title: 'In sync with your computer',
-          desc: 'Sync data with the desktop app via WebDAV cloud sync (experimental), QR-code pairing or encrypted backup files.'
+          title: 'Cross-device sync & iOS access',
+          desc: 'Sync with the desktop app via WebDAV cloud sync (experimental), QR-code pairing or encrypted backups; iPhone and iPad can connect via self-hosted WebUI & PWA.'
         }
       ]
     },
+
+    /** Media (standalone app, guide chapter 19), backed by real light and dark UI posters */
     media: {
       title: 'Lectures and talks,\nstudied with you.',
       lede: 'Import local audio and video, or paste a Bilibili link, to get timestamped subtitles. Questions, handouts and practice all draw on them and lead back to the exact moment.',
       more: 'Learn about Media (Chinese)',
       link: '/user-guide/media',
+      posterAlt: 'Screenshot of Media: course-grouped online lectures and local recordings with subtitle status, watch progress and linked flashcards and questions',
       items: [
         {
           title: 'Transcribed subtitles',
@@ -367,14 +344,38 @@ export default {
       ]
     },
 
+    /** Extensions and self-hosting: AI Plugin Workshop and WebUI / PWA */
+    extend: {
+      title: 'Need a custom study tool?\nBuild one in a sentence.',
+      lede: 'With the built-in AI Plugin Workshop and self-hosted WebUI, you can hot-load extensions tailored to your subjects and keep studying from any browser or phone home screen.',
+      more: 'Learn about AI Plugin Workshop (Chinese)',
+      link: '/user-guide/plugin-workshop',
+      secondaryMore: 'Learn about WebUI & PWA (Chinese)',
+      secondaryLink: '/user-guide/webui-pwa',
+      items: [
+        {
+          title: 'AI Plugin Workshop',
+          desc: 'Describe a mini app, selection button or AI tool in plain language; the system compiles, tests it in isolation and hot-loads it in one click, with rollback and export anytime.'
+        },
+        {
+          title: 'Clear permissions and safe mode',
+          desc: 'Every extension asks you to review permissions before enabling; repeated UI errors trigger automatic isolation, and safe mode restores a clean state in one click.'
+        },
+        {
+          title: 'Self-hosted WebUI & PWA',
+          desc: 'Run the server on any computer or host with Node.js 24+, and access your full study library from any browser or phone home-screen PWA.'
+        }
+      ]
+    },
+
     /**
-     * All apps (HomeApps.vue): the apps in the desktop Dock and All Apps panel, in the order you collect, read, ask, organise,
-     * practise, remember, plan and extend. icon maps to docs/public/apps/<icon>.svg (the app's own illustrations),
-     * link is its guide chapter (in Chinese). extras are capabilities without an app of their own
+     * All apps (HomeApps.vue): ordered by collect, read, ask, organise, practise, remember, plan and extend.
+     * icon maps to docs/public/apps/<icon>.svg (the app's own illustrations),
+     * link is its guide chapter (in Chinese). extras are capabilities without their own grid tile
      */
     apps: {
       title: 'An app for every step, from collecting to reviewing.',
-      lede: 'All of these live in the desktop app’s Dock and All Apps panel. Open one on its own or side by side on the Study Desktop. Each links to its guide (in Chinese).',
+      lede: 'Open any of these study apps on its own or side by side on the Study Desktop. Each links to its guide (in Chinese).',
       items: [
         { icon: 'files', name: 'Files', desc: 'Keep textbooks, notes, exam sets, documents, audio and video in one place, indexed for AI search.', link: '/user-guide/learning-hub' },
         { icon: 'media', name: 'Media', desc: 'Transcribe lectures and recordings into timestamped subtitles or import them from a Bilibili link; ask as you watch and make illustrated handouts.', link: '/user-guide/media' },
@@ -387,13 +388,13 @@ export default {
         { icon: 'essay', name: 'Essay Review', desc: 'Scores across several criteria, inline marks, sentence-by-sentence polishing and model essays.', link: '/user-guide/essay' },
         { icon: 'taskDashboard', name: 'Anki Cards', desc: 'Turn PDFs, images and notes into cards with one request; export APKG or sync to Anki.', link: '/user-guide/anki' },
         { icon: 'flashcards', name: 'Flashcards', desc: 'Review, card making and templates in one place, with built-in FSRS-6 spaced repetition so you can review daily without installing Anki.', link: '/user-guide/flashcards' },
-        { icon: 'templates', name: 'Templates', desc: 'Edit Anki card templates visually and reuse them when you generate cards.', link: '/user-guide/anki' },
+        { icon: 'pluginWorkshop', name: 'Plugin Workshop', desc: 'Generate mini apps, selection buttons or AI tools in plain language, test and hot-load automatically, and roll back or export anytime.', link: '/user-guide/plugin-workshop' },
         { icon: 'todo', name: 'Todo', desc: 'Add tasks in plain words; quadrants, subtasks, reminders and scheduled automations.', link: '/user-guide/productivity' },
         { icon: 'pomodoro', name: 'Pomodoro', desc: 'Strict mode, ambient sounds, a floating mini timer, and charts of your focus time and trends.', link: '/user-guide/productivity' },
         { icon: 'skills', name: 'Skills', desc: 'Manage built-in and custom skills, connect external tools over MCP, and extend capabilities with the AI Plugin Workshop.', link: '/user-guide/skills-mcp' },
         { icon: 'settings', name: 'Settings', desc: 'Connect 15 model providers or local models with one-click API key auto-setup, and pick which model each feature uses.', link: '/user-guide/models' }
       ],
-      more: 'Also:',
+      more: 'Also (Chinese guides):',
       extras: [
         { name: 'Paper search', link: '/user-guide/paper-search' },
         { name: 'Deep research & memory', link: '/user-guide/research-memory' },
@@ -401,7 +402,7 @@ export default {
         { name: 'Study Desktop', link: '/user-guide/workbench' },
         { name: 'Backup & sync', link: '/user-guide/data-sync' },
         { name: 'Android app', link: '/user-guide/mobile' },
-        { name: 'AI Plugin Workshop', link: '/user-guide/plugin-workshop' },
+        { name: 'Card templates', link: '/user-guide/anki' },
         { name: 'WebUI & PWA', link: '/user-guide/webui-pwa' }
       ]
     },
@@ -412,15 +413,15 @@ export default {
       items: [
         {
           title: 'Local storage',
-          desc: 'Materials, notes and chat history are stored on your machine by default. Use Settings → Data governance to back them up or move them to another device.'
+          desc: 'No sign-up required. Materials, notes and chat history are stored on your machine by default. Use Settings → Data & System → Data governance to back them up or move them to another device.'
         },
         {
           title: 'When data leaves your machine',
-          desc: 'Model calls, external search and MCP send relevant requests to the corresponding services. Enabling cloud sync or Sentry error reporting also sends the relevant data to those services.'
+          desc: 'Model calls, external search and MCP send relevant requests to the corresponding services. Cloud sync (with AES-256-GCM end-to-end encryption) and Sentry error reporting (off by default) only send data if you turn them on.'
         },
         {
           title: 'Open source, verifiable',
-          desc: 'AGPL-3.0 licensed. The privacy-related implementation lives in the source and can be checked by anyone.'
+          desc: 'AGPL-3.0-or-later licensed. The privacy-related implementation lives in the source and can be checked by anyone.'
         }
       ]
     },
@@ -442,26 +443,35 @@ export default {
       moreLink: 'Ask on GitHub Discussions',
       items: [
         {
-          q: 'Is DeepStudent free?',
-          a: 'The software is free and open source (AGPL-3.0). AI features use your own key, so you pay the model provider directly — or point it at a local model and pay nothing extra.'
+          q: 'Is DeepStudent free? How do I set up AI models?',
+          a: 'The software is free and open source (AGPL-3.0-or-later) with no sign-up required. Paste an API key in the welcome dialog for 1-minute auto-setup across 15 built-in providers (you pay the provider directly), or connect a local Ollama model with no key needed.'
         },
         {
           q: 'Does my data get uploaded to the cloud?',
-          a: 'Study materials are stored locally by default, but local-first does not mean every feature is offline. AI sends the necessary content to your configured model provider. External search, MCP, and cloud sync or error reporting that you enable may also send relevant requests or data. Desktop apps also check for updates according to your settings.'
+          a: 'Local-first does not mean every feature is offline: your files stay on your device by default, and network requests only happen for your configured model, external search, MCP, update checks, or opt-in encrypted sync and error reporting (off by default).'
         },
         {
           q: 'Where is my data stored?',
-          a: 'macOS: ~/Library/Application Support/com.deepstudent.app/, Windows: %APPDATA%\\com.deepstudent.app\\, Linux: ~/.local/share/com.deepstudent.app/. Export a backup from Settings → Data governance rather than copying the directory by hand.'
+          a: 'macOS: ~/Library/Application Support/com.deepstudent.app/, Windows: %APPDATA%\\com.deepstudent.app\\, Linux: ~/.local/share/com.deepstudent.app/. Export a backup from Settings → Data & System → Data governance rather than copying the directory by hand.'
         },
         {
           q: 'Which platforms are supported?',
-          a: 'Installers are available for macOS (Apple Silicon / Intel), Windows, Linux and Android. You can also self-host WebUI & PWA for browser or PWA access. iOS needs to be built from source with Xcode.'
+          a: 'Installers are available for macOS (Apple Silicon / Intel), Windows, Linux and Android. You can also self-host WebUI & PWA to study from any browser or phone home screen. iOS can be built from source with Xcode.'
+        },
+        {
+          q: 'Will upgrading from 0.11.x to 0.20.x lose my data?',
+          a: 'No. The new release mounts your existing SQLite and LanceDB data in place, migrates settings automatically and keeps installed plugins. Exporting a backup from Settings → Data & System → Data governance before a major upgrade is still recommended.'
         },
         {
           q: 'macOS says the app is damaged and cannot be opened. What now?',
-          a: "If you see this after installing an unnotarized build, it is macOS quarantining the app. Run sudo xattr -r -d com.apple.quarantine \"/Applications/Deep Student.app\" in Terminal. The app name contains a space, so keep the quotes; replace the path if you installed it elsewhere."
+          a: 'Official release builds are Apple-signed and notarized, so this warning normally does not appear. Only if you install an unnotarized preview or self-built app, run sudo xattr -r -d com.apple.quarantine "/Applications/Deep Student.app" in Terminal — keep the quotes for the space in the app name, and adjust the path if installed elsewhere.'
         }
       ]
+    },
+
+    cta: {
+      title: 'Ready to focus on learning?',
+      lede: 'Free, open source, no sign-up required — your study data stays on your device by default.'
     }
   }
 }

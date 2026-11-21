@@ -68,3 +68,27 @@ test('production audit accepts reciprocal clean URLs and detects real output reg
   assert.equal(invalid.passed, false)
   assert.deepEqual(invalid.errors.map((error) => error.code).sort(), ['broken-anchor', 'broken-internal-link', 'source-component-leak'])
 })
+
+test('production audit accepts reciprocal hreflang pairs for start and en/start', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'site-audit-start-fixture-'))
+  t.after(() => rm(root, { recursive: true, force: true }))
+  await mkdir(join(root, 'en'))
+  const base = 'https://deepstudent.cn'
+  const pairHead = (path, zhPath, enPath) => `<head><link rel="canonical" href="${base}${path}"><link rel="alternate" hreflang="zh-CN" href="${base}${zhPath}"><link rel="alternate" hreflang="en-US" href="${base}${enPath}"><link rel="alternate" hreflang="x-default" href="${base}${zhPath}"><script type="application/ld+json">{"@type":"WebPage"}</script></head>`
+  await Promise.all([
+    writeFile(join(root, 'index.html'), `${pairHead('/', '/', '/en/')}<body><a href="/start">快速上手</a></body>`),
+    writeFile(join(root, 'en/index.html'), `${pairHead('/en/', '/', '/en/')}<body><a href="/en/start">Quick start</a></body>`),
+    writeFile(join(root, 'start.html'), `${pairHead('/start', '/start', '/en/start')}<body><a href="/en/start">English</a></body>`),
+    writeFile(join(root, 'en/start.html'), `${pairHead('/en/start', '/start', '/en/start')}<body><a href="/start">中文</a></body>`),
+    writeFile(join(root, '404.html'), '<head><meta name="robots" content="noindex, follow"></head>'),
+    writeFile(
+      join(root, 'sitemap.xml'),
+      `<urlset><url><loc>${base}/</loc></url><url><loc>${base}/en/</loc></url><url><loc>${base}/start</loc></url><url><loc>${base}/en/start</loc></url></urlset>`
+    ),
+    ...['llms.txt', 'llms-full.txt'].map((file) => writeFile(join(root, file), '# Real product content\n')),
+  ])
+  const report = await auditSite({ dist: root })
+  assert.equal(report.passed, true, JSON.stringify(report.errors))
+  assert.equal(report.counts.indexablePages, 4)
+  assert.equal(report.counts.internalLinks, 4)
+})

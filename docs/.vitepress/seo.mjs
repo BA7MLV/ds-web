@@ -16,6 +16,10 @@ const DEFAULT_DESCRIPTION = {
     'DeepStudent is an open-source, local-first AI learning workbench whose study agent works in notes, mind maps, exam sets and flashcards.'
 }
 const LANDING_PATHS = new Set(['index.md', 'en/index.md'])
+const TRANSLATED_PAIRS = [
+  { zh: 'index.md', en: 'en/index.md' },
+  { zh: 'start.md', en: 'en/start.md' }
+]
 const GUIDE_INDEX = 'user-guide/index.md'
 
 /** Keep canonical URLs aligned with VitePress cleanUrls and directory index routes. */
@@ -69,12 +73,13 @@ function getModifiedDate(timestamp) {
 
 function isTechnicalArticle(relativePath) {
   return relativePath === 'start.md' ||
+    relativePath === 'en/start.md' ||
     relativePath === 'developers.md' ||
     relativePath.startsWith('user-guide/') && relativePath !== GUIDE_INDEX
 }
 
 function getBreadcrumbs(pageData, pageUrl, locale) {
-  const paths = [{ name: locale === 'en-US' ? 'Home' : '首页', item: SITE_URL }]
+  const paths = [{ name: locale === 'en-US' ? 'Home' : '首页', item: locale === 'en-US' ? `${SITE_URL}en/` : SITE_URL }]
   const relativePath = pageData.relativePath
   if (relativePath.startsWith('user-guide/') && relativePath !== GUIDE_INDEX) {
     paths.push({ name: '用户指南', item: getPageUrl(GUIDE_INDEX) })
@@ -189,10 +194,13 @@ export function applyPageSeo(pageData) {
   const description = pageData.frontmatter.description || pageData.description ||
     DEFAULT_DESCRIPTION[locale]
   pageData.description = description
-  const alternates = isLanding ? [
-    ['link', { rel: 'alternate', hreflang: 'zh-CN', href: SITE_URL }],
-    ['link', { rel: 'alternate', hreflang: 'en-US', href: `${SITE_URL}en/` }],
-    ['link', { rel: 'alternate', hreflang: 'x-default', href: SITE_URL }],
+  const translatedPair = TRANSLATED_PAIRS.find(
+    (pair) => pair.zh === pageData.relativePath || pair.en === pageData.relativePath
+  )
+  const alternates = translatedPair ? [
+    ['link', { rel: 'alternate', hreflang: 'zh-CN', href: getPageUrl(translatedPair.zh) }],
+    ['link', { rel: 'alternate', hreflang: 'en-US', href: getPageUrl(translatedPair.en) }],
+    ['link', { rel: 'alternate', hreflang: 'x-default', href: getPageUrl(translatedPair.zh) }],
     ['meta', { property: 'og:locale:alternate', content: locale === 'en-US' ? 'zh_CN' : 'en_US' }]
   ] : []
 

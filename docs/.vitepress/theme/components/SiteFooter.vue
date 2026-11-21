@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useData } from 'vitepress'
 import { useI18n } from '../i18n/index.js'
 import { SOCIAL_ICONS } from '../utils/social-icons.js'
@@ -114,12 +114,26 @@ const onItemLeave = (event) => {
   follow.style.setProperty('--dx', '0px')
   follow.style.setProperty('--dy', '0px')
 }
+
+const onKeydown = (event) => {
+  if (event.key === 'Escape' && openKey.value) {
+    openKey.value = null
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', onKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', onKeydown)
+})
 </script>
 
 <template>
   <footer class="lp-footer" :lang="lang">
     <div class="lp-wrap lp-footer__inner">
-      <a class="lp-footer__brand" href="/">DeepStudent</a>
+      <a class="lp-footer__brand" :href="t('links.home')">DeepStudent</a>
 
       <div class="lp-footer__bottom">
         <span>{{ t('footer.copyright') }}</span>
@@ -160,7 +174,15 @@ const onItemLeave = (event) => {
             <span v-if="item.qr" class="lp-qr">
               <span class="lp-qr__follow" :data-follow="item.key">
                 <span class="lp-qr__card">
-                  <img class="lp-qr__img" :src="item.qr" :alt="t(`footer.qrAlt.${item.key}`)" />
+                  <img
+                    class="lp-qr__img"
+                    :src="item.qr"
+                    :alt="t(`footer.qrAlt.${item.key}`)"
+                    width="160"
+                    height="160"
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <span class="lp-qr__hint">{{ t(`footer.qrHint.${item.key}`) }}</span>
                   <!--
                     触屏专用：拦下跳转后总得留个出口。

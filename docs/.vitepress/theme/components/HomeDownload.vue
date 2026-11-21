@@ -25,6 +25,10 @@ import { buildRows, formatSize, release } from '../utils/downloads.js'
 import { primaryUrl } from '../utils/download-channel.js'
 import { detectPlatform, recommendedDownloadKey } from '../utils/download-device.js'
 
+const props = defineProps({
+  from: { type: String, default: 'hero' }
+})
+
 const { t, locale } = useI18n()
 
 const options = [...buildRows('desktop'), ...buildRows('mobile')]
@@ -71,6 +75,7 @@ const href = computed(() =>
   selected.value ? primaryUrl(selected.value.asset, locale.value) : t('links.download')
 )
 const fileName = computed(() => selected.value?.asset?.name ?? '')
+const isExternalLink = (url, hasDownload) => !hasDownload && /^https?:\/\//.test(url)
 
 /* ── 清单的开合与键盘操作 ───────────────────────────────────── */
 
@@ -92,9 +97,16 @@ const placeMenu = () => {
   // 用 scrollHeight：这一步可能已经给它压过 max-height，offsetHeight 会变成压过之后的值
   const flip = panel.scrollHeight > below && above > below
 
-  menuStyle.value = flip
+  const style = flip
     ? { top: 'auto', bottom: `${box.height + GAP}px`, maxHeight: `${Math.max(above, 0)}px` }
     : { top: `${box.height + GAP}px`, bottom: 'auto', maxHeight: `${Math.max(below, 0)}px` }
+
+  if (panel.offsetWidth > 0 && box.left + panel.offsetWidth > window.innerWidth - EDGE) {
+    style.left = 'auto'
+    style.right = '0'
+  }
+
+  menuStyle.value = style
 }
 
 const setOpen = async (next) => {
@@ -164,8 +176,8 @@ const trackDownload = (packageKey, from) => {
 
 /** 主按钮：指着安装包就记一次下载；还在兜底（去下载页）就记一次「去下载页」，顺带看认不出的设备有多少 */
 const onMainClick = () => {
-  if (selected.value) trackDownload(selected.value.key, 'hero')
-  else track('download_page', { from: 'hero', platform: platform.value, locale: locale.value })
+  if (selected.value) trackDownload(selected.value.key, props.from)
+  else track('download_page', { from: props.from, platform: platform.value, locale: locale.value })
 }
 
 /** 点某一条：立刻开始下载（由链接自己完成），同时把选择留在按钮上 */
@@ -173,7 +185,7 @@ const pick = (item) => {
   manual.value = true
   key.value = item.key
   open.value = false
-  trackDownload(item.key, 'hero-menu')
+  trackDownload(item.key, `${props.from}-menu`)
 }
 
 const applyDevice = (hints) => {
@@ -228,7 +240,14 @@ onUnmounted(() => {
 
 <template>
   <div ref="rootEl" class="home-download home-btn-primary" @focusout="onFocusOut">
-    <a class="home-download__link" :href="href" :download="fileName || undefined" @click="onMainClick">
+    <a
+      class="home-download__link"
+      :href="href"
+      :download="fileName || undefined"
+      :target="isExternalLink(href, fileName) ? '_blank' : undefined"
+      :rel="isExternalLink(href, fileName) ? 'noopener noreferrer' : undefined"
+      @click="onMainClick"
+    >
       <DlIcon class="home-download__icon" :name="icon" />
       <span>{{ label }}</span>
     </a>

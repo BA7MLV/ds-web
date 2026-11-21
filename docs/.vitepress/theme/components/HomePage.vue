@@ -247,13 +247,14 @@ onUnmounted(() => {
           <div class="lp-hero__actions">
             <HomeDownload />
             <a
-              href="/start"
+              :href="t('links.quickStart')"
               class="home-link lp-hero__more"
               @click="track('quickstart', { from: 'hero', locale })"
             >
               {{ t('home.hero.quickStart') }}<span aria-hidden="true"> →</span>
             </a>
           </div>
+          <p class="lp-hero__note">{{ t('home.hero.note') }}</p>
         </div>
 
         <div class="t-stagger-line t-stagger-line--5">
@@ -321,6 +322,7 @@ onUnmounted(() => {
           :style="{ '--fc-dir': direction }"
           role="tabpanel"
           :aria-labelledby="`scene-tab-${activeScene}`"
+          aria-live="polite"
         >
           <!-- 切场景 = 整张卡飞出飞入（out-in）；卡片内部不再各自动 -->
           <Transition name="fcard">
@@ -352,7 +354,13 @@ onUnmounted(() => {
 
         <!-- 圆点即 tab：语义仍是 tablist / tabpanel，只是控件从文字胶囊换成了点 -->
         <div class="lp-fnav">
-          <div class="lp-fdots" role="tablist" :aria-label="t('home.features.tabsLabel')">
+          <div
+            class="lp-fdots"
+            role="tablist"
+            :aria-label="t('home.features.tabsLabel')"
+            @keydown.left.prevent="stepScene(-1)"
+            @keydown.right.prevent="stepScene(1)"
+          >
             <button
               v-for="(scene, index) in scenes"
               :id="`scene-tab-${index}`"
@@ -393,7 +401,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- ④½ 音视频：功能区轮播之外单独一节（演示镜像里还没有音视频剧本，没有真实界面截图），版式同 Agent 一节 -->
+    <!-- ④½ 音视频：左文右栈 + 16:10 真实双主题 2× 界面海报预览 -->
     <section id="media" class="lp-block">
       <div class="lp-wrap">
         <div class="lp-split">
@@ -413,6 +421,66 @@ onUnmounted(() => {
           </div>
           <ul class="lp-stack">
             <li v-for="item in media" :key="item.title" class="lp-stack__item">
+              <h3 class="lp-col__title">{{ item.title }}</h3>
+              <p class="lp-col__desc">{{ item.desc }}</p>
+            </li>
+          </ul>
+        </div>
+        <div class="lp-media__shot">
+          <img
+            class="lp-media__img lp-media__img--light"
+            src="/demo/posters/media-light.webp"
+            :alt="t('home.media.posterAlt')"
+            width="1120"
+            height="700"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            class="lp-media__img lp-media__img--dark"
+            src="/demo/posters/media-dark.webp"
+            :alt="t('home.media.posterAlt')"
+            width="1120"
+            height="700"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- ④¾ AI 插件工坊与自托管：扩展性与部署形态，版式同 Agent 一节 -->
+    <section id="extend" class="lp-block">
+      <div class="lp-wrap">
+        <div class="lp-split">
+          <div>
+            <h2 class="lp-title">{{ t('home.extend.title') }}</h2>
+            <p class="lp-lede">{{ t('home.extend.lede') }}</p>
+            <div class="lp-extend__links">
+              <a :href="t('home.extend.link')" class="home-link lp-desk__link t-learn">
+                {{ t('home.extend.more') }}
+                <span class="t-learn-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path class="t-learn-arm t-learn-arm-top" d="M6 4L10 8" />
+                    <path class="t-learn-arm t-learn-arm-bot" d="M10 8L6 12" />
+                  </svg>
+                </span>
+              </a>
+              <a :href="t('home.extend.secondaryLink')" class="home-link lp-desk__link t-learn">
+                {{ t('home.extend.secondaryMore') }}
+                <span class="t-learn-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path class="t-learn-arm t-learn-arm-top" d="M6 4L10 8" />
+                    <path class="t-learn-arm t-learn-arm-bot" d="M10 8L6 12" />
+                  </svg>
+                </span>
+              </a>
+            </div>
+          </div>
+          <ul class="lp-stack">
+            <li v-for="item in tm('home.extend.items')" :key="item.title" class="lp-stack__item">
               <h3 class="lp-col__title">{{ item.title }}</h3>
               <p class="lp-col__desc">{{ item.desc }}</p>
             </li>
@@ -507,6 +575,7 @@ onUnmounted(() => {
                 class="lp-cap__btn"
                 type="button"
                 :aria-expanded="openFaq === index"
+                :aria-controls="`home-faq-panel-${index}`"
                 @click="toggleFaq(index)"
               >
                 <span>{{ faq.q }}</span>
@@ -522,7 +591,7 @@ onUnmounted(() => {
                 </svg>
               </button>
             </h3>
-            <div class="lp-cap__panel">
+            <div :id="`home-faq-panel-${index}`" class="lp-cap__panel">
               <div class="lp-cap__inner">
                 <p class="lp-cap__answer">{{ faq.a }}</p>
               </div>
@@ -530,17 +599,82 @@ onUnmounted(() => {
           </div>
         </div>
         <p class="lp-faq__more">
-          {{ t('home.faq.more') }}<a :href="t('links.support')" class="home-link">{{ t('home.faq.moreLink') }}</a>
+          {{ t('home.faq.more') }}<a
+            :href="t('links.support')"
+            class="home-link"
+            :target="/^https?:\/\//.test(t('links.support')) ? '_blank' : undefined"
+            :rel="/^https?:\/\//.test(t('links.support')) ? 'noopener noreferrer' : undefined"
+          >{{ t('home.faq.moreLink') }}</a>
         </p>
+      </div>
+    </section>
+
+    <!-- ⑨ 底部收尾 CTA：呼应首屏行动入口 -->
+    <section id="cta" class="lp-block">
+      <div class="lp-wrap">
+        <div class="lp-rule">
+          <div class="lp-head lp-head--center">
+            <h2 class="lp-title" :class="optical(t('home.cta.title'))">{{ t('home.cta.title') }}</h2>
+            <p class="lp-lede">{{ t('home.cta.lede') }}</p>
+            <div class="lp-cta__actions">
+              <HomeDownload from="cta" />
+              <a
+                :href="t('links.quickStart')"
+                class="home-link lp-hero__more"
+                @click="track('quickstart', { from: 'cta', locale })"
+              >
+                {{ t('home.hero.quickStart') }}<span aria-hidden="true"> →</span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </div>
 </template>
 
 <style scoped>
-/* 音视频一节的标题固定在逗号处换行（文案里的 \n），否则宽屏上会把「一起学」拆成两半 */
-#media .lp-title {
+/* 音视频与扩展两节的标题按文案里的 \n 固定换行，避免宽屏上拆词失衡 */
+#media .lp-title,
+#extend .lp-title {
   white-space: pre-line;
+}
+
+.lp-media__shot {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--lp-hair);
+  border-radius: 20px;
+  background: var(--lp-surface);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 10px 28px rgba(0, 0, 0, 0.08);
+}
+
+.lp-media__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lp-media__img--dark,
+html.dark .lp-media__img--light {
+  display: none;
+}
+
+html.dark .lp-media__img--dark {
+  display: block;
+}
+
+.lp-extend__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.75rem;
+  margin-top: 1rem;
+}
+
+.lp-extend__links .lp-desk__link {
+  margin-top: 0;
 }
 
 /*
@@ -617,15 +751,13 @@ onUnmounted(() => {
   /*
    * 标题是两行口号，断行写在文案里（\n + pre-line），不交给 text-wrap 去猜：
    * 中文可在任意字间断开，balance 会把「就够了」拆到两行。
-   * 最长一行 11 个字（含逗号）：min(4.5rem, 7.4vw) 让它在 320px 以上都落在
-   * min(100% - 3rem, 1080px) 的容器里。
+   * clamp(2rem, 7.4vw, 4.5rem) 让窄屏可读且宽屏落进 1080px 容器。
    */
-  font-size: min(4.5rem, 7.4vw);
+  font-size: clamp(2rem, 7.4vw, 4.5rem);
   white-space: pre-line;
   font-weight: 600;
   line-height: 1.12;
   letter-spacing: -0.03em;
-  text-wrap: balance;
   color: var(--lp-text);
 }
 
@@ -637,14 +769,23 @@ onUnmounted(() => {
   color: var(--lp-text-2);
 }
 
-/* 主行动：整页只有 Hero 与底部收尾各一颗实心按钮，顶栏那颗已降到中性文字 */
-.lp-hero__actions {
+/* 主行动：Hero 与底部收尾 #cta 各一颗实心下载按钮（顶栏下载入口为中性文字），不设 overflow: hidden 以免裁切下拉菜单 */
+.lp-hero__actions,
+.lp-cta__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem 2rem;
   align-items: center;
   justify-content: center;
   margin-top: 2.25rem;
+}
+
+.lp-hero__note {
+  margin: 1rem auto 0;
+  max-width: 40em;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--lp-text-3);
 }
 
 /*

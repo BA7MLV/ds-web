@@ -115,14 +115,33 @@ const closeMenu = (refocus = false) => {
 
 const toggle = () => (open.value ? closeMenu() : openMenu())
 
+const TRANSLATED_ROUTE_MAP = {
+  '/': { root: '/', en: '/en/' },
+  '/en/': { root: '/', en: '/en/' },
+  '/start': { root: '/start', en: '/en/start' },
+  '/en/start': { root: '/start', en: '/en/start' },
+}
+
+const normalizeRoutePath = (p) => {
+  const clean = (p || '/').replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '')
+  if (clean === '/en') return '/en/'
+  if (clean !== '/' && clean !== '/en/' && clean.endsWith('/')) return clean.slice(0, -1)
+  return clean || '/'
+}
+
 const choose = async (locale) => {
   closeMenu()
   if (!locale?.link || locale.key === currentKey.value) return
 
-  // 保留 hash / 查询串：长文档页里切换语言不丢位置
+  const currentPath = normalizeRoutePath(route.path)
+  const mapped = TRANSLATED_ROUTE_MAP[currentPath]?.[locale.key]
+  const target = mapped || locale.link
+  const isDocSwitch = Boolean(mapped) && target !== '/' && target !== '/en/'
+
+  // 落地页保留 hash / 查询串；切文档页时去掉可能不匹配的 hash，保留 search
   const { hash, search } =
     typeof window !== 'undefined' ? window.location : { hash: '', search: '' }
-  await router.go(`${locale.link}${search}${hash}`)
+  await router.go(`${target}${search}${isDocSwitch ? '' : hash}`)
 }
 
 /**

@@ -61,7 +61,7 @@ const setup = (
   navigator,
   keys = ['mac-arm', 'mac-x64', 'win-x64', 'android-arm64'],
   viewport = 900,
-  { locale = 'zh-CN', mirror = false } = {}
+  { locale = 'zh-CN', mirror = false, from = 'hero' } = {}
 ) => {
   let mount
   let unmount
@@ -81,6 +81,7 @@ const setup = (
   }
   const context = vm.createContext({
     navigator, document, window, computed, nextTick, ref, detectPlatform, recommendedDownloadKey, primaryUrl,
+    defineProps: () => ({ from }),
     release: { version: 'v9.9.9' },
     track: (event, props) => tracked.push([event, props]),
     useI18n: () => ({ t: (key) => (key === 'links.download' ? '/download' : key), locale: { value: locale } }),
@@ -186,6 +187,20 @@ test('download clicks are tracked with package, channel and entry point', async 
   en.api.onMainClick()
   assert.deepEqual(plain(en.tracked), [
     ['download', { package: 'mac-arm', channel: 'github', from: 'hero', locale: 'en-US', version: 'v9.9.9' }],
+  ])
+})
+
+test('custom from prop (e.g. cta) is reported for fallback, main and menu download clicks', async () => {
+  const cta = setup(mac, undefined, 900, { mirror: true, from: 'cta' })
+  cta.api.onMainClick()
+  await cta.mount()
+  cta.api.onMainClick()
+  cta.api.pick({ key: 'win-x64' })
+  const plain = (value) => JSON.parse(JSON.stringify(value))
+  assert.deepEqual(plain(cta.tracked), [
+    ['download_page', { from: 'cta', platform: 'other', locale: 'zh-CN' }],
+    ['download', { package: 'mac-arm', channel: 'mirror', from: 'cta', locale: 'zh-CN', version: 'v9.9.9' }],
+    ['download', { package: 'win-x64', channel: 'mirror', from: 'cta-menu', locale: 'zh-CN', version: 'v9.9.9' }],
   ])
 })
 

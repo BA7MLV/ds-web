@@ -222,20 +222,44 @@ export default defineConfig({
       lang: 'en-US',
       link: '/en/',
       /*
-       * 英文站目前只有落地页（docs/en/index.md），文档正文仍只有中文。
+       * 英文站目前提供落地页（docs/en/index.md）与快速上手（docs/en/start.md），其余文档正文仍为简体中文。
        * 顶栏由 theme/components/SiteNav.vue 按 frontmatter.layout 选变体、文案走
-       * theme/i18n/messages/<lang>.js；这里的 nav 只喂给 VitePress 自带、被
-       * custom.css 视觉隐藏的 VPNavBar —— 不写的话它会回退到根语言的「文档 / 路线图 /
-       * 支持 / 下载」，英文页的 DOM 里就混进中文菜单。sidebar 同理，暂无英文文档页故省略。
+       * theme/i18n/messages/<lang>.js；这里的 nav 喂给 VitePress 自带、被
+       * custom.css 视觉隐藏的 VPNavBar，sidebar 则为 /en/start 等英文文档页提供侧边栏。
        */
       themeConfig: {
         nav: [
-          { text: 'Docs', link: '/what-is-deepstudent' },
-          { text: 'Roadmap', link: '/timeline' },
-          { text: 'QA', link: '/A-Q' },
-          { text: 'Support', link: '/support' },
-          { text: 'Download', link: '/download' },
+          { text: 'Quick Start', link: '/en/start' },
+          { text: 'Docs (Chinese)', link: '/what-is-deepstudent' },
+          { text: 'Support', link: 'https://github.com/helixnow/deep-student/discussions' },
+          { text: 'Download', link: 'https://github.com/helixnow/deep-student/releases/latest' },
         ],
+        sidebar: {
+          '/en/': [
+            {
+              text: 'Getting Started',
+              collapsed: false,
+              items: [
+                { text: 'Quick Start', link: '/en/start' },
+                { text: 'English Home', link: '/en/' },
+                { text: 'Download (GitHub Releases)', link: 'https://github.com/helixnow/deep-student/releases/latest' },
+                { text: 'Support (GitHub Discussions)', link: 'https://github.com/helixnow/deep-student/discussions' }
+              ]
+            },
+            {
+              text: 'Full Guides (Chinese)',
+              collapsed: false,
+              items: [
+                { text: 'User Guide Overview', link: '/user-guide/' },
+                { text: 'Study Desktop', link: '/user-guide/workbench' },
+                { text: 'Models & Providers', link: '/user-guide/models' },
+                { text: 'AI Plugin Workshop', link: '/user-guide/plugin-workshop' },
+                { text: 'WebUI & PWA Self-Hosting', link: '/user-guide/webui-pwa' },
+                { text: 'Architecture & Developers', link: '/developers' }
+              ]
+            }
+          ]
+        },
         outline: {
           level: [2, 3],
           label: 'On this page',

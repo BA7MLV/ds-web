@@ -57,7 +57,7 @@ for (const [locale, words] of Object.entries(messages)) {
     const app = createSSRApp({
       ssrRender: home.ssrRender,
       setup: () => ({
-        t, tm,
+        t, tm, locale,
         heroEl: null,
         demoEl: null,
         GITHUB_URL: 'https://github.com/helixnow/deep-student',
@@ -68,6 +68,9 @@ for (const [locale, words] of Object.entries(messages)) {
         scenes: words.home.features.scenes,
         currentScene: words.home.features.scenes[0],
         agent: words.home.agent.items,
+        media: words.home.media.items,
+        mobile: words.home.mobile.items,
+        extend: words.home.extend.items,
         privacy: words.home.privacy.items,
         SHOW_VOICES: false,
         faqs: words.home.faq.items,
@@ -102,16 +105,26 @@ for (const [locale, words] of Object.entries(messages)) {
         fileName: '',
         open: false,
         formatSize: (bytes) => `${bytes} B`,
+        isExternalLink: (url, hasDownload) => !hasDownload && /^https?:\/\//.test(url),
         toggle: () => {},
         pick: () => {},
       }),
     })
-    for (const component of ['HeroStarfield', 'StepFlow', 'DlIcon', 'FeatureAscii']) {
+    for (const component of [
+      'HeroStarfield',
+      'StepFlow',
+      'DlIcon',
+      'DesktopDemo',
+      'FeatureShot',
+      'HomeApps',
+      'HomePhoneDemo',
+    ]) {
       app.component(component, emptyDecoration)
     }
 
     // SSR runs without mount hooks: no browser frame can make the hero visible here.
     const html = await renderToString(app)
+    const escapeHtml = (text) => text.replaceAll('&', '&amp;')
     assert.match(html, /class="t-stagger is-shown [^"]*"/)
     assert.match(html, /<h1[^>]*>[^<]+<\/h1>/)
     assert.ok(html.includes(words.home.hero.title))
@@ -123,7 +136,10 @@ for (const [locale, words] of Object.entries(messages)) {
     assert.match(html, /<button[^>]*aria-expanded="false"/)
     assert.ok(html.includes(words.home.hero.switchDownload))
     assert.doesNotMatch(html, /home-download__menu/)
-    assert.match(html, /href="\/start"/)
+    assert.ok(html.includes(`href="${words.links.quickStart}"`), `缺少快速上手链接：${words.links.quickStart}`)
+    assert.ok(html.includes(escapeHtml(words.home.hero.note)), 'Hero 零顾虑提示未出现在 SSR 中')
+    assert.ok(html.includes(escapeHtml(words.home.cta.title)), '底部 CTA 标题未出现在 SSR 中')
+    assert.ok(html.includes(escapeHtml(words.home.cta.lede)), '底部 CTA 导语未出现在 SSR 中')
     assert.ok(html.includes(words.appShell.previewTitle))
     assert.ok(html.includes(words.appShell.previewDescription))
     assert.ok(html.includes(words.appShell.waiting))

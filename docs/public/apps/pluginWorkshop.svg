@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150">
+  <linearGradient id="pw_panel" x1="74" x2="74" y1="20" y2="132" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#F8FDFC" offset="0"/>
+    <stop stop-color="#D3E8E6" offset="1"/>
+  </linearGradient>
+  <rect x="18" y="20" width="112" height="112" rx="14" fill="url(#pw_panel)" stroke="#A6C4CB" stroke-width="3"/>
+  <circle cx="36" cy="38" r="4" fill="#14A5A0"/>
+  <path d="M46 38h28" stroke="#1D3F6E" stroke-width="6" stroke-linecap="round"/>
+  <linearGradient id="pw_main" x1="32" x2="88" y1="54" y2="116" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#2BB3A3" offset="0"/>
+    <stop stop-color="#1D3F6E" offset="1"/>
+  </linearGradient>
+  <path d="M40 64h6c0-13 18-13 18 0h6a8 8 0 0 1 8 8v9c13 0 13 18 0 18v9a8 8 0 0 1-8 8H40a8 8 0 0 1-8-8V72a8 8 0 0 1 8-8Z" fill="url(#pw_main)"/>
+  <path d="M44 83h20M44 97h14" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".88"/>
+  <linearGradient id="pw_sub" x1="99" x2="99" y1="64" y2="116" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#5FD0CB" offset="0"/>
+    <stop stop-color="#14A5A0" offset="1"/>
+  </linearGradient>
+  <path d="M88 64h20a8 8 0 0 1 8 8v36a8 8 0 0 1-8 8H88a6 6 0 0 1-6-6v-9c12 0 12-22 0-22v-9a6 6 0 0 1 6-6Z" fill="url(#pw_sub)"/>
+  <path d="M101 84v12" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".88"/>
+  <linearGradient id="pw_spark" x1="100" x2="128" y1="20" y2="52" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#F9AC33" offset="0"/>
+    <stop stop-color="#F0603C" offset="1"/>
+  </linearGradient>
+  <path d="M114 18c2.5 11 7 15.5 18 18-11 2.5-15.5 7-18 18-2.5-11-7-15.5-18-18 11-2.5 15.5-7 18-18Z" fill="url(#pw_spark)" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>
+</svg>

@@ -1,5 +1,6 @@
 <script setup>
 import { useI18n } from '../i18n/index.js'
+import { needsOpticalCenter } from '../utils/optical-center.js'
 
 /**
  * 首页「全部应用」：桌面端 Dock 和「全部应用」面板里的应用一屏摆全，每个一句话说清能做什么、点进去是用户指南那一章。
@@ -13,7 +14,9 @@ const { t, tm } = useI18n()
   <section id="apps" class="lp-block ha">
     <div class="lp-wrap lp-wrap--wide">
       <div class="lp-head lp-head--center">
-        <h2 class="lp-title">{{ t('home.apps.title') }}</h2>
+        <h2 class="lp-title" :class="needsOpticalCenter(t('home.apps.title')) ? 'lp-optical' : undefined">
+          {{ t('home.apps.title') }}
+        </h2>
         <p class="lp-lede">{{ t('home.apps.lede') }}</p>
       </div>
 
@@ -96,7 +99,7 @@ const { t, tm } = useI18n()
 }
 
 .ha__app:focus-visible {
-  outline: 2px solid #0066cc;
+  outline: 2px solid var(--lp-link);
   outline-offset: 2px;
 }
 
@@ -167,12 +170,8 @@ const { t, tm } = useI18n()
 }
 
 .ha__more a {
-  color: #0066cc;
+  color: var(--lp-link);
   text-decoration: none;
-}
-
-.dark .ha__more a {
-  color: #2997ff;
 }
 
 .ha__more a:hover {

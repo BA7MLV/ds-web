@@ -32,10 +32,12 @@ export default {
   },
 
   /**
-   * 下载与求助的去处。中文页都进站内页面；英文页换成有英文界面的地方（见 en-US.js）——
-   * 下载页和支持页只有中文，英文访客点进去就是死胡同。
+   * 站内与求助入口。中文页都进站内页面；英文页首页与快速上手进 `/en/`、`/en/start`，
+   * 下载与支持去 GitHub（见 en-US.js）——下载页和支持页只有中文，英文访客点进去就是死胡同。
    */
   links: {
+    home: '/',
+    quickStart: '/start',
     download: '/download',
     support: '/support'
   },
@@ -129,7 +131,8 @@ export default {
         'linux-rpm': 'Linux · rpm',
         'android-arm64': 'Android · ARM64'
       },
-      quickStart: '快速上手'
+      quickStart: '快速上手',
+      note: '免费开源（AGPL-3.0）· 无需注册 · 欢迎弹窗 1 分钟一键配好模型，也可免密钥用本机模型 · 数据存本机'
     },
 
     /**
@@ -138,7 +141,7 @@ export default {
      */
     desktop: {
       title: '一张学习桌面，应用并排摆开。',
-      lede: '桌面端启动后即进入学习桌面：从 Dock 打开对话、资源库与各个学习应用，窗口可自由摆放、平铺或并排对比，日程与 AI 学习简报常驻桌面。',
+      lede: '桌面端启动后即进入学习桌面：从 Dock 打开各学习应用，窗口可自由摆放或用学习流预设一键分屏；状态栏汇总今日节律与 AI 桌面操控（含紧急断电），切换学习空间自动恢复窗口布局。',
       more: '了解学习桌面',
       link: '/user-guide/workbench',
       art: 'workbench',
@@ -172,11 +175,11 @@ export default {
         },
         {
           title: '长任务可托付',
-          desc: '调研、整理、出题可交给它连续推进：目标模式跨轮续跑，子代理与 Super 会话并行处理，定时自动化按时执行。'
+          desc: '调研、整理、出题可交给它连续推进：目标模式跨轮续跑，子代理与 Super 会话（实验性）并行处理，定时自动化按时执行。'
         },
         {
           title: '每一步可控',
-          desc: '操作按执行档位与风险分级审批，关键步骤先确认再执行；笔记与学习桌面改动支持 Diff 审阅与一键撤销。'
+          desc: '操作按执行档位与风险分级审批，关键步骤先确认再执行；支持学习桌面紧急断电、笔记改动 Diff 审阅与对话回合回退。'
         },
         {
           title: '懂你，可扩展',
@@ -186,72 +189,49 @@ export default {
     },
 
     /**
-     * 使用流程：区块里没有任何标题 —— 眉标、导语、`title` 都已删掉。
-     * 分段控件上的三个 `label` 就是每一步的标题（见 StepFlow.vue），
-     * 所以 `label` 只有这一个用途，别再往面板里渲染一遍。
-     * 步骤编号同样去掉了，进度读数改用 1 起的普通序号，见 progressLabel。
+     * 核心闭环双卡（想明白 / 记得住）：StepFlow.vue 直接渲染全部 2 张卡，
+     * 点开浮层展示对应真实截图与 3 条说明。
      */
     flow: {
-      segLabel: '使用流程步骤',
-      hint: '继续滚动，进入下一步',
-      progress: '{current} / {total}',
       close: '关闭',
       steps: [
         {
-          label: '收进来',
-          statement: '先把材料收进来。',
-          items: [
-            {
-              title: '统一入库',
-              desc: '教材、试卷、PDF 与笔记统一收入资源库，无需在网盘和文件夹之间来回查找。'
-            },
-            {
-              title: '扫描件同样可用',
-              desc: '扫描版 PDF 自动识别文字，识别后同样可检索、引用和出题。'
-            },
-            {
-              title: '索引在本地',
-              desc: '检索索引建立在本机，可随时重建或删除。'
-            }
-          ]
-        },
-        {
           label: '想明白',
-          statement: '围绕你的材料对话。',
+          statement: '让它带着你的资料把问题讲透。',
           art: 'flow-think',
           alt: '回答界面截图：小标题「怎样接到自己的学习中」，正文引用学习档案里的两条记忆 [忆1] [忆2]，末尾是一条「AI 生成」标记',
           items: [
             {
-              title: '答案带出处',
-              desc: '每个回答均标注引用的段落，点击即可回到原文核对。'
+              title: '出处直达原文',
+              desc: 'PDF 页码反链与音视频时间戳一键跳回原处核对，关键结论有据可查。'
             },
             {
-              title: '技能与记忆',
-              desc: '常用流程可存为技能，长期偏好写入记忆，后续回答会参考这些偏好。'
+              title: '交互式讲解',
+              desc: '对话内直接呈现流式交互卡片、图表与隔离沙箱演示，边操作边理解难点。'
             },
             {
-              title: '推理模式',
-              desc: '复杂推导可切换到深度推理，过程与结论一并呈现。'
+              title: '学习空间与记忆',
+              desc: '按学科空间隔离资料范围与长期记忆，复杂推导可切换五档思考强度。'
             }
           ]
         },
         {
           label: '记得住',
-          statement: '变成能复习的东西。',
+          statement: '把理解变成按时排好的复习。',
           art: 'flow-review',
           alt: '闪卡今日复习页截图：今日进度环 90%，待复习 2、新卡 12、学习中 4，下面是开始复习按钮',
           items: [
             {
-              title: '思维导图',
-              desc: '一句话生成完整知识体系，可在对话中继续修改，并可遮住节点自测。'
+              title: 'FSRS-6 闪卡复习',
+              desc: '到期卡片自动排入今日进度环，按记忆程度动态调整间隔，无需安装 Anki。'
             },
             {
-              title: '题目练习',
-              desc: '把教材变成可练习的题目集，自动判分，掌握度按知识点追踪。'
+              title: '错题与今日冲刺',
+              desc: '跨题目集错题本接入 FSRS 复习计划，考前可与闪卡、导图难点合并冲刺。'
             },
             {
-              title: 'Anki 制卡',
-              desc: '一句话即可批量制卡，并可一键同步到 Anki。'
+              title: '导图背诵挖空',
+              desc: '一句话生成的思维导图可一键遮住要点自测，背不出的节点直接转成闪卡。'
             }
           ]
         }
@@ -325,38 +305,36 @@ export default {
       ]
     },
 
-    /**
-     * 音视频（0.10.2 起的独立应用，用户指南第 19 章）。功能区轮播每个场景都要一张演示镜像里的真实截图，
-     * 镜像还没有音视频剧本，所以单列一节，版式同 Agent 一节。B 站两句沿用宣传片 v6 字幕（口径表 §7）
-     */
+    /** 手机端：Android 版实时演示与多端同步 */
     mobile: {
       title: '电脑上整理，\n手机上接着学。',
       lede: 'Android 版是同一套应用，界面改为适合单手操作的抽屉导航。课间、通勤时照样能提问、翻资料、刷闪卡。',
       more: '了解移动端',
       link: '/user-guide/mobile',
-      download: '下载 Android 版',
-      downloadLink: '/download',
-      live: '右侧是手机界面的实时演示，可以直接点按操作。',
+      frameTitle: 'DeepStudent Android 界面实时演示',
       items: [
         {
           title: '抽屉导航',
           desc: '从屏幕左缘滑出抽屉：上半部分是当前页面的内容，下半部分是应用启动器；系统返回键逐级退回。'
         },
         {
-          title: '功能基本齐全',
-          desc: '对话、资源库、音视频、待办、技能与闪卡均可使用；学习桌面等少数依赖电脑的功能除外。'
+          title: '功能齐全，随手分享',
+          desc: '对话、资源库、音视频、待办、技能与闪卡均可使用，并支持从其他应用「分享到 DeepStudent」及导出学习文件。'
         },
         {
-          title: '与电脑同步',
-          desc: '可通过 WebDAV 云同步（实验性）、扫码配对或加密备份文件与电脑端互通数据。'
+          title: '多端同步与 iOS 访问',
+          desc: '可通过 WebDAV 云同步（实验性）、扫码配对或加密备份与电脑端互通；iPhone / iPad 可经自托管 WebUI 与 PWA 访问。'
         }
       ]
     },
+
+    /** 音视频（独立应用，用户指南第 19 章），配有真实深浅双主题界面海报 */
     media: {
       title: '网课和讲座，\n它陪你一起学。',
       lede: '导入本地音视频，或粘贴 B 站链接，即可得到带时间戳的字幕；提问、讲义与练习均以字幕为依据，并可跳回对应时刻。',
       more: '了解音视频',
       link: '/user-guide/media',
+      posterAlt: '音视频界面截图：按课程分组的 B 站分 P 网课与本地录音列表，标注字幕导入状态、观看进度与联动制卡出题数量',
       items: [
         {
           title: '转写为字幕',
@@ -377,14 +355,38 @@ export default {
       ]
     },
 
+    /** 扩展与自托管：AI 插件工坊与 WebUI / PWA */
+    extend: {
+      title: '缺趁手的小工具？\n一句话现场做一个。',
+      lede: '内建 AI 插件工坊与自托管 WebUI，既能按自己的学科习惯热加载扩展，也能在任意浏览器与手机主屏幕继续学习。',
+      more: '了解 AI 插件工坊',
+      link: '/user-guide/plugin-workshop',
+      secondaryMore: '了解 WebUI 与 PWA',
+      secondaryLink: '/user-guide/webui-pwa',
+      items: [
+        {
+          title: 'AI 插件工坊',
+          desc: '用自然语言描述想要的小应用、选区按钮或 AI 工具，系统自动编译、隔离试装并一键热加载，随时可回滚或导出分享。'
+        },
+        {
+          title: '透明权限与安全模式',
+          desc: '所有扩展按权限逐项确认后启用；界面连续报错自动熔断隔离，异常时可通过安全模式一键恢复。'
+        },
+        {
+          title: '自托管 WebUI 与 PWA',
+          desc: '在装有 Node.js 24+ 的电脑或服务器上即可启动服务，用任意浏览器或手机主屏幕 PWA 远程访问完整资料库。'
+        }
+      ]
+    },
+
     /**
-     * 全部应用（HomeApps.vue）：桌面端 Dock 和「全部应用」面板里的应用（教材阅读另列；AI 仪表盘在产品里和对话共用一枚图标，不单列），按「收、读、问、整理、练、记、计划、扩展」排；
-     * icon 对应 docs/public/apps/<icon>.svg（产品插画图标），link 是用户指南那一章。extras 是没有独立应用的能力
+     * 全部应用（HomeApps.vue）：按「收、读、问、整理、练、记、计划、扩展」排；
+     * icon 对应 docs/public/apps/<icon>.svg（产品插画图标），link 是用户指南那一章。extras 是没有独立入口卡片的能力
      */
     apps: {
       /** \n 是固定断行（HomeApps 标题 white-space: pre-line），否则 balance 会断在「每 / 一步」之间 */
       title: '从收资料到复习，\n每一步都有对应的应用。',
-      lede: '以下应用均位于桌面端的 Dock 与「全部应用」中，可单独打开，也可在学习桌面上并排使用。点击任一应用可查看使用说明。',
+      lede: '以下常用应用可单独打开，也可在学习桌面上并排使用。点击任一应用可查看使用说明。',
       items: [
         { icon: 'files', name: '资源库', desc: '教材、笔记、题目、文档与音视频统一入库，自动建立 AI 检索索引。', link: '/user-guide/learning-hub' },
         { icon: 'media', name: '音视频', desc: '网课与录音转写为带时间戳的字幕，或粘贴 B 站链接导入字幕；可边看边问，并生成图文讲义。', link: '/user-guide/media' },
@@ -397,7 +399,7 @@ export default {
         { icon: 'essay', name: '作文批改', desc: '高考、雅思、考研等作文多维评分，原文标注、逐句润色、参考范文。', link: '/user-guide/essay' },
         { icon: 'taskDashboard', name: 'Anki 制卡', desc: '一句话将 PDF、图片与笔记制成卡片，可导出 APKG 或同步到 Anki。', link: '/user-guide/anki' },
         { icon: 'flashcards', name: '闪卡', desc: '复习、制卡与模板集中在一处，内置 FSRS-6 间隔重复，无需安装 Anki 即可每日复习。', link: '/user-guide/flashcards' },
-        { icon: 'templates', name: '模板管理', desc: '可视化编辑 Anki 卡片模板，制卡时直接套用。', link: '/user-guide/anki' },
+        { icon: 'pluginWorkshop', name: '插件工坊', desc: '用自然语言生成小应用、选区按钮或 AI 新工具，自动试装热加载，随时回滚或导出。', link: '/user-guide/plugin-workshop' },
         { icon: 'todo', name: '待办', desc: '一句话添加任务，支持四象限、子任务、提醒与定时自动化。', link: '/user-guide/productivity' },
         { icon: 'pomodoro', name: '番茄钟', desc: '提供严格模式、环境音与置顶小窗，专注时长与趋势以图表呈现。', link: '/user-guide/productivity' },
         { icon: 'skills', name: '技能管理', desc: '管理内置与自定义技能，经 MCP 接入外部工具，并可衔接 AI 插件工坊扩展更多能力。', link: '/user-guide/skills-mcp' },
@@ -411,7 +413,7 @@ export default {
         { name: '学习桌面', link: '/user-guide/workbench' },
         { name: '数据备份与同步', link: '/user-guide/data-sync' },
         { name: '安卓端', link: '/user-guide/mobile' },
-        { name: 'AI 插件工坊', link: '/user-guide/plugin-workshop' },
+        { name: '模板管理', link: '/user-guide/anki' },
         { name: 'WebUI 与 PWA', link: '/user-guide/webui-pwa' }
       ]
     },
@@ -422,15 +424,15 @@ export default {
       items: [
         {
           title: '本机存储',
-          desc: '资料、笔记和聊天记录默认保存在本机，可通过「设置 → 数据治理」备份和迁移。'
+          desc: '无需注册账号，资料、笔记和聊天记录默认保存在本机，可通过「设置 → 数据与系统 → 数据治理」备份和迁移。'
         },
         {
           title: '数据离开本机',
-          desc: '调用模型、外部搜索或 MCP 时，相关请求会发给对应服务；启用云同步或 Sentry 错误报告后，相应数据也会发送到对应服务。'
+          desc: '调用模型、外部搜索或 MCP 时，相关请求会发给对应服务；主动开启云同步（支持 AES-256-GCM 端到端加密）或 Sentry 错误报告（默认关闭）后，相应数据才会发送到对应服务。'
         },
         {
           title: '开源可核对',
-          desc: 'AGPL-3.0 许可，与隐私相关的实现都在源码里，可自行核对。'
+          desc: 'AGPL-3.0-or-later 许可，与隐私相关的实现都在源码里，可自行核对。'
         }
       ]
     },
@@ -452,26 +454,35 @@ export default {
       moreLink: '前往支持中心',
       items: [
         {
-          q: 'DeepStudent 收费吗？',
-          a: '软件免费开源（AGPL-3.0）。AI 功能使用你自行配置的密钥，费用直接支付给模型服务商；接入本地模型则无需额外费用。'
+          q: 'DeepStudent 收费吗？怎么配 AI 模型？',
+          a: '软件免费开源（AGPL-3.0-or-later），无需注册账号。首次启动在欢迎弹窗填入 API Key 即可 1 分钟一键自动配置，内置 15 家模型服务商，费用直接支付给服务商；也可免密钥接入 Ollama 等本机模型。'
         },
         {
           q: '数据会上传到云端吗？',
-          a: '学习资料默认保存在本机，但本地优先不等于所有功能都离线。AI 会将所需内容发给你配置的模型服务；外部搜索、MCP、主动开启的云同步和错误报告也可能发送相关请求或数据。桌面端还会按设置检查更新。'
+          a: '本地优先不等于所有功能都离线：资料默认留在设备本地，只有调用你配置的模型、外部搜索、MCP，或主动开启加密云同步、错误报告（默认关闭）与更新检查时，才会产生对应网络请求。'
         },
         {
           q: '我的数据保存在哪里？',
-          a: 'macOS 在 ~/Library/Application Support/com.deepstudent.app/，Windows 在 %APPDATA%\\com.deepstudent.app\\，Linux 在 ~/.local/share/com.deepstudent.app/。备份建议走「设置 → 数据治理」导出，不要手动拷贝目录。'
+          a: 'macOS 在 ~/Library/Application Support/com.deepstudent.app/，Windows 在 %APPDATA%\\com.deepstudent.app\\，Linux 在 ~/.local/share/com.deepstudent.app/。备份建议走「设置 → 数据与系统 → 数据治理」导出，不要手动拷贝目录。'
         },
         {
           q: '支持哪些平台？',
-          a: 'macOS（Apple Silicon / Intel）、Windows、Linux 与 Android 均提供安装包；也支持自托管 WebUI & PWA，直接通过浏览器或 PWA 访问；iOS 需自行使用 Xcode 从源码构建。'
+          a: 'macOS（Apple Silicon / Intel）、Windows、Linux 与 Android 均提供安装包；也支持自托管 WebUI & PWA，直接在任意浏览器或手机主屏幕访问；iOS 需自行使用 Xcode 从源码构建。'
+        },
+        {
+          q: '从 0.11.x 升级到 0.20.x 数据会丢吗？',
+          a: '不会。新版本会原地挂载原有的 SQLite 与 LanceDB 数据、自动迁移配置并保留已装插件；不过跨大版本升级前仍建议先在「设置 → 数据与系统 → 数据治理」导出一份备份。'
         },
         {
           q: 'macOS 提示「已损坏，无法打开」怎么办？',
-          a: '如安装未公证构建包遇到此提示，这是 macOS 的应用隔离机制。在终端执行 sudo xattr -r -d com.apple.quarantine "/Applications/Deep Student.app" 即可；应用名包含空格，引号不可省略，若安装路径不同请替换为实际路径。'
+          a: '正式发布包已通过 Apple 签名与公证，通常不会触发拦截。仅安装未公证预览版或自构建包遇到此提示时，在终端执行 sudo xattr -r -d com.apple.quarantine "/Applications/Deep Student.app" 即可；应用名包含空格，引号不可省略，路径不同请替换为实际路径。'
         }
       ]
+    },
+
+    cta: {
+      title: '把精力还给学习本身。',
+      lede: '免费开源、无需注册，资料默认保存在你自己的设备上。'
     }
   }
 }

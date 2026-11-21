@@ -19,7 +19,7 @@ const LIVE_QUERY = '(min-width: 900px) and (pointer: fine)'
 const READY_TIMEOUT_MS = 20000
 
 const { isDark } = useData()
-const { locale } = useI18n()
+const { t, locale } = useI18n()
 
 const entry = computed(() => (mirror.apps || []).find((app) => app.id === 'mobile') || null)
 const theme = computed(() => (isDark.value ? 'dark' : 'light'))
@@ -97,7 +97,7 @@ onUnmounted(() => {
           :src="frameSrc"
           class="phone__frame"
           :class="{ 'phone__frame--ready': ready }"
-          title="Deep Student Android 界面实时演示"
+          :title="t('home.mobile.frameTitle')"
           tabindex="-1"
           loading="lazy"
         />

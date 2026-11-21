@@ -132,7 +132,8 @@ html.flow-locked {
   --lp-block: clamp(3.5rem, 6vw, 5rem);
   --lp-text: #1d1d1f;
   --lp-text-2: #6e6e73;
-  --lp-text-3: #86868b;
+  --lp-text-3: #6e6e73;
+  --lp-link: #0066cc;
   --lp-hair: rgba(0, 0, 0, 0.08);
   --lp-surface: #ffffff;
   --lp-soft: #f5f5f7;
@@ -218,6 +219,7 @@ html.flow-locked {
   --lp-text: #f5f5f7;
   --lp-text-2: #a1a1a6;
   --lp-text-3: #8e8e93;
+  --lp-link: #2997ff;
   --lp-hair: rgba(255, 255, 255, 0.1);
   --lp-surface: #1d1d1f;
   --lp-soft: #161617;
@@ -393,8 +395,7 @@ html.home-no-search .VPNavBar .VPNavBarSearch {
 .lp-title,
 .lp-fcard__title,
 .pair__title,
-.sheet__title,
-.lp-apps__title {
+.sheet__title {
   text-wrap: balance;
 }
 
@@ -1128,6 +1129,12 @@ a.lp-quote__handle:hover {
   cursor: pointer;
 }
 
+.lp-cap__btn:focus-visible {
+  outline: 2px solid var(--lp-text);
+  outline-offset: -2px;
+  border-radius: inherit;
+}
+
 .lp-cap__chev {
   flex: 0 0 auto;
   width: 16px;
@@ -1271,13 +1278,8 @@ a.lp-quote__handle:hover {
   margin-top: 1.85rem;
   font-size: 0.9375rem;
   font-weight: 500;
-  color: #0066cc;
+  color: var(--lp-link);
   text-decoration: none;
-}
-
-.dark .lp-fcard__link,
-.dark .lp-desk__link {
-  color: #2997ff;
 }
 
 .lp-fcard__link .t-learn-chevron svg,
@@ -1696,8 +1698,7 @@ a.lp-quote__handle:hover {
     padding-left: 0;
   }
 
-  .lp-faq__answer,
-  .lp-cap__answer {
+  .lp-faq__answer {
     padding-right: 1rem;
   }
 
@@ -2165,7 +2166,11 @@ a.lp-quote__handle:hover {
   .lp-faq__chev,
   .lp-cap__item,
   .lp-cap__panel,
-  .lp-cap__chev {
+  .lp-cap__chev,
+  .lp-qr__follow,
+  .lp-qr__card,
+  .lp-fdot,
+  .lp-farrow {
     transition: none;
   }
 

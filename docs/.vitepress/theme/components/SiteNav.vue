@@ -26,9 +26,9 @@ const { t } = useI18n()
  * 另外顶栏在页面顶端整条透明，滚动后右侧那一丛才浮成一颗胶囊
  * （品牌标始终不给底）—— 做法与取舍见 <style>。
  *
- * 语言开关只在落地页出现（两处引用都带 `v-if="isLanding"`）：文档只有中文，
- * 在文档页给一个会跳去 /en/ 落地页的开关，等于「切了语言但正在读的页没了」。
- * 将来文档有英文版时，去掉这两个 v-if 即可。
+ * 语言开关只在存在互译版本的页面出现（两处引用都带 `v-if="isTranslatedPage"`）：
+ * 目前落地页（`/` ↔ `/en/`）与快速上手（`/start` ↔ `/en/start`）有中英文互译，
+ * 其余文档页仍为中文，避免给一个「切了语言但正在读的页没了」的开关。
  *
  * 导航数据、工具栏是两个变体，改一边不会牵动另一边。
  * 文档搜索的 ⌘K / Ctrl+K 由 VitePress 全局注册，落地页没有搜索图标也不影响文档页。
@@ -39,15 +39,30 @@ const { t } = useI18n()
  */
 const isLanding = computed(() => frontmatter.value?.layout === 'home')
 
+const TRANSLATED_ROUTES = new Set(['/', '/en/', '/start', '/en/start'])
+
+const normalizeTranslatedPath = (p) => {
+  const clean = (p || '/').replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '')
+  if (clean === '/en') return '/en/'
+  if (clean !== '/' && clean !== '/en/' && clean.endsWith('/')) return clean.slice(0, -1)
+  return clean || '/'
+}
+
+const isTranslatedPage = computed(() => TRANSLATED_ROUTES.has(normalizeTranslatedPath(route.path)))
+
+const isExternal = (href) => /^https?:\/\//.test(href || '')
+
+const downloadHref = computed(() => t('links.download'))
+
 /**
  * 导航项结构（href / match 是路由信息，与语言无关），文案统一走 i18n 的 nav.*。
  * 新增语言不需要动这里，只要在 messages/<lang>.js 里补 nav.landing / nav.docPage。
  */
 const NAV_DOCS = [
-  { key: 'docs', href: '/what-is-deepstudent', match: ['/what-is-deepstudent', '/start', '/user-guide', '/guide', '/about', '/developers'] },
+  { key: 'docs', href: '/what-is-deepstudent', match: ['/what-is-deepstudent', '/start', '/en/start', '/user-guide', '/guide', '/about', '/developers'] },
   { key: 'roadmap', href: '/timeline', match: ['/timeline'] },
   { key: 'qa', href: '/A-Q', match: ['/A-Q'] },
-  { key: 'support', href: '/support', match: ['/support'] },
+  { key: 'support', hrefKey: 'links.support', match: ['/support'] },
 ]
 
 /**
@@ -167,7 +182,7 @@ onUnmounted(() => {
   <header class="SNav" :class="{ 'is-scrolled': scrolled, 'SNav--doc': !isLanding }">
     <div class="SNav__bar">
       <!-- 左：品牌（PC 端只留图形标，与 Notion 一致；窄屏没有导航可让，补上字标） -->
-      <a class="SNav__brand" href="/" aria-label="DeepStudent">
+      <a class="SNav__brand" :href="t('links.home')" aria-label="DeepStudent">
         <!--
           黑白标：路径数据取自主仓库 helixnow/deep-student 的 public/logo-black.svg。
           用 currentColor 而不是 <img>，颜色只由 --sn-mark 决定，
@@ -203,6 +218,8 @@ onUnmounted(() => {
             class="SNav__link"
             :class="{ 'is-active': isActive(link) }"
             :href="link.href"
+            :target="isExternal(link.href) ? '_blank' : undefined"
+            :rel="isExternal(link.href) ? 'noopener noreferrer' : undefined"
             @click="onNavClick"
           >{{ link.text }}</a>
         </nav>
@@ -249,13 +266,16 @@ onUnmounted(() => {
           </template>
 
           <!--
-            语言开关只属于落地页：文档目前只有中文，把开关放在文档页上，
-            用户点「English」会被丢到 /en/ 落地页 —— 语言变了、正在读的那页也没了。
-            与其给一个「切了但内容没变」的控件，不如不给；英文站仍可从直达链接 /
-            hreflang / sitemap 进入。将来文档有了英文版，把这个 v-if 去掉即可。
+            语言开关只在有互译版本的页面出现（`/` ↔ `/en/`、`/start` ↔ `/en/start`），
+            其余仍只有中文的文档页隐藏该控件，避免切语言后跳离当前阅读页。
           -->
-          <LanguageSwitch v-if="isLanding" bare />
-          <a class="SNav__cta" :href="t('links.download')">{{ t('nav.download') }}</a>
+          <LanguageSwitch v-if="isTranslatedPage" bare />
+          <a
+            class="SNav__cta"
+            :href="downloadHref"
+            :target="isExternal(downloadHref) ? '_blank' : undefined"
+            :rel="isExternal(downloadHref) ? 'noopener noreferrer' : undefined"
+          >{{ t('nav.download') }}</a>
         </div>
 
         <button
@@ -286,11 +306,13 @@ onUnmounted(() => {
             class="SNav__sheet-link"
             :class="{ 'is-active': isActive(link) }"
             :href="link.href"
+            :target="isExternal(link.href) ? '_blank' : undefined"
+            :rel="isExternal(link.href) ? 'noopener noreferrer' : undefined"
             @click="onNavClick"
           >{{ link.text }}</a>
         </nav>
         <div class="SNav__sheet-foot">
-          <LanguageSwitch v-if="isLanding" />
+          <LanguageSwitch v-if="isTranslatedPage" />
           <button
             class="SNav__icon"
             type="button"
@@ -310,7 +332,13 @@ onUnmounted(() => {
               </svg>
             </span>
           </button>
-          <a class="SNav__cta" :href="t('links.download')" @click="closeMenu">{{ t('nav.download') }}</a>
+          <a
+            class="SNav__cta"
+            :href="downloadHref"
+            :target="isExternal(downloadHref) ? '_blank' : undefined"
+            :rel="isExternal(downloadHref) ? 'noopener noreferrer' : undefined"
+            @click="closeMenu"
+          >{{ t('nav.download') }}</a>
         </div>
       </div>
     </Transition>
