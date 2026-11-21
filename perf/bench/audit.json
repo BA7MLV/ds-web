@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-21T06:59:05.137Z",
+  "generatedAt": "2026-11-21T08:10:42.884Z",
   "dist": "/Users/heli/code/ds-web/docs/.vitepress/dist",
   "site": "https://deepstudent.cn/",
   "passed": true,
@@ -14,18 +14,18 @@
     "scope": "Homepage head declarations only; icons excluded; dynamic imports, iframe and CSS imports are not included.",
     "initialLocalResourceCount": 6,
     "initialJavaScriptCount": 4,
-    "rawBytes": 542340,
-    "gzipBytes": 153092,
-    "brotliBytes": 130456,
+    "rawBytes": 542074,
+    "gzipBytes": 153058,
+    "brotliBytes": 130484,
     "largestInitialResources": [
       {
-        "url": "https://deepstudent.cn/assets/chunks/theme.3Dn2la5N.js",
+        "url": "https://deepstudent.cn/assets/chunks/theme.B9zXApa4.js",
         "kind": "modulepreload",
         "critical": true,
         "local": true,
-        "rawBytes": 185178,
-        "gzipBytes": 64541,
-        "brotliBytes": 53756
+        "rawBytes": 184912,
+        "gzipBytes": 64506,
+        "brotliBytes": 53786
       },
       {
         "url": "https://deepstudent.cn/assets/chunks/framework.DW1Qwr0A.js",
@@ -55,13 +55,13 @@
         "brotliBytes": 1194
       },
       {
-        "url": "https://deepstudent.cn/assets/app.DxZ2RLRA.js",
+        "url": "https://deepstudent.cn/assets/app.VPsqUcJb.js",
         "kind": "script",
         "critical": true,
         "local": true,
         "rawBytes": 1352,
-        "gzipBytes": 733,
-        "brotliBytes": 650
+        "gzipBytes": 734,
+        "brotliBytes": 648
       },
       {
         "url": "https://deepstudent.cn/vp-icons.css",
