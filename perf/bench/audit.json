@@ -1,23 +1,32 @@
 {
-  "generatedAt": "2026-09-27T04:42:04.610Z",
-  "dist": "/Users/ba7mlv/Documents/Coding/ds-web/docs/.vitepress/dist",
+  "generatedAt": "2026-11-21T06:40:52.695Z",
+  "dist": "/Users/heli/code/ds-web/docs/.vitepress/dist",
   "site": "https://deepstudent.cn/",
   "passed": true,
   "counts": {
-    "htmlPages": 25,
-    "indexablePages": 24,
-    "sitemapUrls": 24,
-    "internalLinks": 1248,
-    "machineFiles": 24
+    "htmlPages": 35,
+    "indexablePages": 34,
+    "sitemapUrls": 34,
+    "internalLinks": 2215,
+    "machineFiles": 37
   },
   "homepage": {
     "scope": "Homepage head declarations only; icons excluded; dynamic imports, iframe and CSS imports are not included.",
     "initialLocalResourceCount": 6,
     "initialJavaScriptCount": 4,
-    "rawBytes": 417502,
-    "gzipBytes": 120684,
-    "brotliBytes": 104836,
+    "rawBytes": 533154,
+    "gzipBytes": 150452,
+    "brotliBytes": 128341,
     "largestInitialResources": [
+      {
+        "url": "https://deepstudent.cn/assets/chunks/theme.NQmI_01-.js",
+        "kind": "modulepreload",
+        "critical": true,
+        "local": true,
+        "rawBytes": 176890,
+        "gzipBytes": 62053,
+        "brotliBytes": 51763
+      },
       {
         "url": "https://deepstudent.cn/assets/chunks/framework.DW1Qwr0A.js",
         "kind": "modulepreload",
@@ -28,40 +37,31 @@
         "brotliBytes": 38652
       },
       {
-        "url": "https://deepstudent.cn/assets/chunks/theme.DJhgrFaZ.js",
-        "kind": "modulepreload",
-        "critical": true,
-        "local": true,
-        "rawBytes": 123022,
-        "gzipBytes": 41948,
-        "brotliBytes": 35835
-      },
-      {
-        "url": "https://deepstudent.cn/assets/style.DYPs82l1.css",
+        "url": "https://deepstudent.cn/assets/style.Bsy_geuR.css",
         "kind": "stylesheet",
         "critical": true,
         "local": true,
-        "rawBytes": 179116,
-        "gzipBytes": 33173,
-        "brotliBytes": 28190
+        "rawBytes": 240341,
+        "gzipBytes": 42665,
+        "brotliBytes": 35614
       },
       {
-        "url": "https://deepstudent.cn/assets/index.md.DtcsSvYb.lean.js",
+        "url": "https://deepstudent.cn/assets/index.md.Cz8bdBGs.lean.js",
         "kind": "modulepreload",
         "critical": true,
         "local": true,
-        "rawBytes": 4395,
-        "gzipBytes": 1316,
-        "brotliBytes": 1037
+        "rawBytes": 4954,
+        "gzipBytes": 1486,
+        "brotliBytes": 1189
       },
       {
-        "url": "https://deepstudent.cn/assets/app.Bms2TZeC.js",
+        "url": "https://deepstudent.cn/assets/app.CjNGGvnb.js",
         "kind": "script",
         "critical": true,
         "local": true,
         "rawBytes": 1352,
-        "gzipBytes": 733,
-        "brotliBytes": 648
+        "gzipBytes": 734,
+        "brotliBytes": 649
       },
       {
         "url": "https://deepstudent.cn/vp-icons.css",

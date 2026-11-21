@@ -37,6 +37,7 @@ const guideSidebar = [
     items: [
       { text: '常见问题', link: '/A-Q.md' },
       { text: '项目历程', link: '/timeline.md' },
+      { text: '架构与开发者文档', link: '/developers.md' },
       { text: '支持', link: '/support.md' },
       { text: '关于我们', link: '/about.md' },
     ]
@@ -123,9 +124,9 @@ export default defineConfig({
         injectLLMHint: false,
         title: 'DeepStudent Documentation',
         description:
-          'DeepStudent is an open-source, local-first AI learning workbench (AGPL-3.0) with a study agent that works directly in its apps. Official documentation in Simplified Chinese.',
+          'DeepStudent is an open-source, local-first AI learning workbench (AGPL-3.0) built on Electron 45, Capacitor 8.6, WebUI & PWA, and Cordis 4, with a study agent that works directly in its apps. Official documentation in Simplified Chinese.',
         details:
-          'Chat with your study materials (RAG with citations), notes, mind maps, question banks, translation & essay grading, and one-click Anki card generation — all data stored locally by default.'
+          'Study Agent, Generative UI, RAG with citations, notes, mind maps, audio/video learning, exam sets, FSRS-6 flashcards, AI Plugin Workshop (.dstuplugin), Sync V5, and self-hosted WebUI/PWA — all data stored locally by default.'
       })
     ]
   },

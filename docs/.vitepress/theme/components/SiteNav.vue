@@ -44,7 +44,7 @@ const isLanding = computed(() => frontmatter.value?.layout === 'home')
  * 新增语言不需要动这里，只要在 messages/<lang>.js 里补 nav.landing / nav.docPage。
  */
 const NAV_DOCS = [
-  { key: 'docs', href: '/what-is-deepstudent', match: ['/what-is-deepstudent', '/start', '/user-guide', '/guide', '/about'] },
+  { key: 'docs', href: '/what-is-deepstudent', match: ['/what-is-deepstudent', '/start', '/user-guide', '/guide', '/about', '/developers'] },
   { key: 'roadmap', href: '/timeline', match: ['/timeline'] },
   { key: 'qa', href: '/A-Q', match: ['/A-Q'] },
   { key: 'support', href: '/support', match: ['/support'] },

@@ -168,19 +168,19 @@ export default {
       items: [
         {
           title: '直接动手',
-          desc: '笔记、思维导图、题目集、闪卡、待办、作文与翻译都有对应的 Agent 工具，结果直接写进应用。'
+          desc: '笔记、思维导图、题目集、闪卡、待办、作文与翻译都有对应的 Agent 工具，结果直接写进应用；也可在对话里直接呈现交互式讲解与沙箱演示。'
         },
         {
           title: '长任务可托付',
-          desc: '调研、整理、出题可交给它连续推进：目标模式跨轮续跑，子代理并行处理，定时任务按时执行。'
+          desc: '调研、整理、出题可交给它连续推进：目标模式跨轮续跑，子代理与 Super 会话并行处理，定时自动化按时执行。'
         },
         {
           title: '每一步可控',
-          desc: '操作按风险分级审批，Ask / Plan / Craft 三种权限模式可选；笔记与学习桌面上的改动可撤销。'
+          desc: '操作按执行档位与风险分级审批，关键步骤先确认再执行；笔记与学习桌面改动支持 Diff 审阅与一键撤销。'
         },
         {
           title: '懂你，可扩展',
-          desc: '记住你的薄弱点与学习习惯；内置 56 个技能，支持 MCP 与 13 家模型服务。'
+          desc: '记住你的薄弱点与学习习惯；内置 58 个技能与 15 家模型服务，支持 MCP，并可在 AI 插件工坊热加载专属扩展。'
         }
       ]
     },
@@ -272,7 +272,7 @@ export default {
           tab: '资料对话',
           title: '资料学习与智能对话',
           lead: '回答以你自己的资料为依据。',
-          desc: '支持图片、语音与文件输入；回答标注原文页码；复杂问题可切换深度推理。',
+          desc: '支持图片、语音与文件输入，答案标注原文页码并可文档优先阅读；支持交互式可视化与生成式卡片，复杂问题可切换深度推理。',
           link: '/user-guide/chat',
           art: 'chat',
           alt: '对话界面截图：按教材页码作答，段末标着第 45、47、52 页'
@@ -308,7 +308,7 @@ export default {
           tab: '闪卡复习',
           title: '闪卡复习',
           lead: '复习在同一个应用内完成。',
-          desc: '内置 FSRS 间隔重复：到期卡片自动进入今日复习，按记忆程度评分，下一次复习时间随之调整。',
+          desc: '内置 FSRS-6 间隔重复：到期卡片自动进入今日复习，按记忆程度评分，下一次复习时间随之调整。',
           link: '/user-guide/flashcards',
           art: 'review',
           alt: '复习界面截图：卡片背面的答案，下面是重来、困难、良好、简单四个评分和对应间隔'
@@ -348,7 +348,7 @@ export default {
         },
         {
           title: '与电脑同步',
-          desc: '经 WebDAV 云同步（实验性）与电脑端互通数据，也可以用备份文件迁移。'
+          desc: '可通过 WebDAV 云同步（实验性）、扫码配对或加密备份文件与电脑端互通数据。'
         }
       ]
     },
@@ -372,7 +372,7 @@ export default {
         },
         {
           title: '讲义与整门课',
-          desc: '字幕与关键画面可整理为图文讲义并存为笔记；多 P 合集可一次导入，按分组整理整门课。'
+          desc: '支持课中检查点自测，字幕与关键画面可沉淀为单课台账与图文讲义；多 P 合集一次导入，按分组整理整门课。'
         }
       ]
     },
@@ -390,18 +390,18 @@ export default {
         { icon: 'media', name: '音视频', desc: '网课与录音转写为带时间戳的字幕，或粘贴 B 站链接导入字幕；可边看边问，并生成图文讲义。', link: '/user-guide/media' },
         { icon: 'textbook', name: '教材阅读', desc: 'PDF、Word、EPUB 双页阅读与高亮批注，可勾选页面直接向 AI 提问。', link: '/user-guide/reading-translation' },
         { icon: 'translation', name: '翻译', desc: '全文翻译与逐段双语对照，7 种领域预设，选中文字即可翻译。', link: '/user-guide/reading-translation' },
-        { icon: 'chat', name: '对话', desc: '围绕你的资料多轮提问，回答标注出处；支持课题分组、搜索与导出。', link: '/user-guide/chat' },
+        { icon: 'chat', name: '对话', desc: '围绕你的资料多轮提问，回答标注出处；支持学习空间、搜索与导出。', link: '/user-guide/chat' },
         { icon: 'notes', name: '笔记', desc: '支持双链、标签与公式的 Markdown 笔记，可与 AI 协同修改，并可生成卡片与导图。', link: '/user-guide/notes' },
         { icon: 'mindmap', name: '思维导图', desc: '一句话生成知识体系导图，提供大纲与画布两种视图，背诵模式可用于自测。', link: '/user-guide/mindmap' },
         { icon: 'exam', name: '题目集', desc: '教材、试卷与错题可转为题目集：AI 录题、九种练习模式、自动判分与解析。', link: '/user-guide/question-bank' },
         { icon: 'essay', name: '作文批改', desc: '高考、雅思、考研等作文多维评分，原文标注、逐句润色、参考范文。', link: '/user-guide/essay' },
         { icon: 'taskDashboard', name: 'Anki 制卡', desc: '一句话将 PDF、图片与笔记制成卡片，可导出 APKG 或同步到 Anki。', link: '/user-guide/anki' },
-        { icon: 'flashcards', name: '闪卡', desc: '复习、制卡与模板集中在一处，内置 FSRS 间隔重复，无需安装 Anki 即可每日复习。', link: '/user-guide/flashcards' },
+        { icon: 'flashcards', name: '闪卡', desc: '复习、制卡与模板集中在一处，内置 FSRS-6 间隔重复，无需安装 Anki 即可每日复习。', link: '/user-guide/flashcards' },
         { icon: 'templates', name: '模板管理', desc: '可视化编辑 Anki 卡片模板，制卡时直接套用。', link: '/user-guide/anki' },
         { icon: 'todo', name: '待办', desc: '一句话添加任务，支持四象限、子任务、提醒与定时自动化。', link: '/user-guide/productivity' },
         { icon: 'pomodoro', name: '番茄钟', desc: '提供严格模式、环境音与置顶小窗，专注时长与趋势以图表呈现。', link: '/user-guide/productivity' },
-        { icon: 'skills', name: '技能管理', desc: 'AI 按需加载技能，经 MCP 接入外部工具；技能可安装，也可自行编写。', link: '/user-guide/skills-mcp' },
-        { icon: 'settings', name: '设置', desc: '接入 13 家模型服务或本地模型，可按功能分别指定模型。', link: '/user-guide/models' }
+        { icon: 'skills', name: '技能管理', desc: '管理内置与自定义技能，经 MCP 接入外部工具，并可衔接 AI 插件工坊扩展更多能力。', link: '/user-guide/skills-mcp' },
+        { icon: 'settings', name: '设置', desc: '接入 15 家模型服务或本地模型，支持一键 API Key 自动配置，并可按功能分别指定模型。', link: '/user-guide/models' }
       ],
       more: '还有：',
       extras: [
@@ -410,7 +410,9 @@ export default {
         { name: '今日与学习周报', link: '/user-guide/productivity' },
         { name: '学习桌面', link: '/user-guide/workbench' },
         { name: '数据备份与同步', link: '/user-guide/data-sync' },
-        { name: '安卓端', link: '/user-guide/mobile' }
+        { name: '安卓端', link: '/user-guide/mobile' },
+        { name: 'AI 插件工坊', link: '/user-guide/plugin-workshop' },
+        { name: 'WebUI 与 PWA', link: '/user-guide/webui-pwa' }
       ]
     },
 
@@ -463,11 +465,11 @@ export default {
         },
         {
           q: '支持哪些平台？',
-          a: 'macOS（Apple Silicon / Intel）、Windows、Linux 与 Android 均提供安装包；iOS 需自行使用 Xcode 从源码构建。'
+          a: 'macOS（Apple Silicon / Intel）、Windows、Linux 与 Android 均提供安装包；也支持自托管 WebUI & PWA，直接通过浏览器或 PWA 访问；iOS 需自行使用 Xcode 从源码构建。'
         },
         {
           q: 'macOS 提示「已损坏，无法打开」怎么办？',
-          a: '这是 macOS 对非 App Store 应用的隔离机制。在终端执行 sudo xattr -r -d com.apple.quarantine "/Applications/Deep Student.app" 即可。应用名包含空格，引号不可省略；若安装路径不同，请替换为实际路径。'
+          a: '如安装未公证构建包遇到此提示，这是 macOS 的应用隔离机制。在终端执行 sudo xattr -r -d com.apple.quarantine "/Applications/Deep Student.app" 即可；应用名包含空格，引号不可省略，若安装路径不同请替换为实际路径。'
         }
       ]
     }

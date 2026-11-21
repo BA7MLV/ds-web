@@ -11,15 +11,15 @@ import { ref } from 'vue'
 const items = [
   {
     q: '下载完 macOS 提示「已损坏」或「无法验证开发者」，打不开。',
-    a: '这是系统对未签名应用的标准拦截，不是文件真的坏了。按上面「安装说明 → macOS」的第 3 步执行一次 xattr 命令，再打开就正常了。'
+    a: '正式发布包已通过 Apple 签名与公证；如果你下载的是未公证的预览版或自构建包，这是系统对未公证应用的标准拦截，不是文件坏了。按上面「安装说明 → macOS」的第 3 步执行一次 xattr 命令，再打开就正常了。'
   },
   {
     q: '该下 Apple Silicon 版还是 Intel 版？',
     a: '打开「关于本机」看「芯片」那一行：写着 Apple 芯片或 M1 / M2 / M3 这类型号就下 Apple Silicon，写着 Intel 就下 Intel 版。下错了装不上，但两个包都在这里，换一个重下就行。'
   },
   {
-    q: 'Linux 该下 AppImage、deb 还是 rpm？',
-    a: 'Debian、Ubuntu 及其衍生版选 deb，Fedora、openSUSE 选 rpm，装好后会出现在应用菜单里、卸载也走包管理器。其它发行版，或者只想先试试，就用 AppImage：一个文件，加上执行权限就能运行。三个包都只支持 x86_64。'
+    q: 'Linux 该下 AppImage 还是 deb？',
+    a: 'Debian、Ubuntu 及其衍生版推荐 deb，装好后会出现在应用菜单里、卸载也走包管理器。其它发行版、想免安装体验或需要应用内原地更新，就用 AppImage：一个文件，加上执行权限即可运行（缺少 FUSE 时安装 libfuse2 / libfuse2t64 或加上 --appimage-extract-and-run）。两种格式均为 x86_64；v0.20 起不再提供 rpm 包，旧版 0.11.x 的 rpm 仍可在 GitHub Releases 找到。'
   },
   {
     q: '下载很慢，或者中途断了。',

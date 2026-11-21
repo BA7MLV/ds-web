@@ -158,19 +158,19 @@ export default {
       items: [
         {
           title: 'It does the work',
-          desc: 'Notes, mind maps, exam sets, flashcards, todos, essays and translation all have agent tools, so results land directly in the app.'
+          desc: 'Notes, mind maps, exam sets, flashcards, todos, essays and translation all have agent tools, so results land directly in each app; it also renders interactive explanations right in chat.'
         },
         {
           title: 'Long tasks, handed off',
-          desc: 'Research, organizing and question writing keep moving: goal mode continues across turns, sub-agents work in parallel, scheduled tasks run on time.'
+          desc: 'Research, organizing and question writing keep moving: goal mode continues across turns, sub-agents and Super sessions work in parallel, and scheduled automations run on time.'
         },
         {
           title: 'Every step under control',
-          desc: 'Actions are approved by risk level, with Ask / Plan / Craft permission modes; edits to notes and the Study Desktop can be undone.'
+          desc: 'Actions are approved by execution tier and risk level before running; edits to notes and the Study Desktop support diff review and one-click undo.'
         },
         {
           title: 'Knows you, grows with you',
-          desc: 'Remembers your weak spots and study habits; 56 built-in skills, MCP support and 13 model providers.'
+          desc: 'Remembers your weak spots and study habits; 58 built-in skills, 15 model providers, MCP support and the AI Plugin Workshop for hot-loadable extensions.'
         }
       ]
     },
@@ -262,7 +262,7 @@ export default {
           tab: 'Material chat',
           title: 'Learning from your own material',
           lead: 'Answers grounded in your own materials.',
-          desc: 'Images, voice and files in; answers cite your sources down to the page; deep reasoning for hard questions.',
+          desc: 'Images, voice and files in; answers cite page numbers with document-first reading, render interactive visuals and generative cards, and support deep reasoning.',
           link: '/user-guide/chat',
           art: 'chat',
           alt: 'Screenshot of the chat view: an answer citing textbook pages 45, 47 and 52'
@@ -280,7 +280,7 @@ export default {
           tab: 'Practice',
           title: 'Exam sets and practice',
           lead: 'Turn textbooks and exam papers into exam sets you can drill.',
-          desc: 'Questions are generated per topic with answers and explanations, and the ones you tick go into a question set; practice is graded automatically and mastery is tracked per topic.',
+          desc: 'Questions are generated per topic with answers and explanations, and the ones you tick go into an exam set; practice is graded automatically and mastery is tracked per topic.',
           link: '/user-guide/question-bank',
           art: 'quiz',
           alt: 'Screenshot of AI-generated questions: two tagged multiple-choice drafts with options and answers'
@@ -298,7 +298,7 @@ export default {
           tab: 'Flashcard review',
           title: 'Flashcard review',
           lead: 'Reviews happen in the same app.',
-          desc: 'Built-in FSRS spaced repetition queues the cards due today; rate how well you remembered and the next review is rescheduled to match.',
+          desc: 'Built-in FSRS-6 spaced repetition queues the cards due today; rate how well you remembered and the next review is rescheduled to match.',
           link: '/user-guide/flashcards',
           art: 'review',
           alt: 'Screenshot of a review session: the answer side of a card above Again, Hard, Good and Easy with their intervals'
@@ -322,7 +322,7 @@ export default {
     mobile: {
       title: 'Organize on your computer,\nkeep going on your phone.',
       lede: 'The Android app is the same app with a one-handed drawer layout, so you can ask questions, look things up and review flashcards between classes or on the go.',
-      more: 'Learn about the mobile app',
+      more: 'Learn about the mobile app (Chinese)',
       link: '/user-guide/mobile',
       download: 'Download for Android',
       downloadLink: '/download',
@@ -338,14 +338,14 @@ export default {
         },
         {
           title: 'In sync with your computer',
-          desc: 'Share data with the desktop app through WebDAV cloud sync (experimental), or move it with a backup file.'
+          desc: 'Sync data with the desktop app via WebDAV cloud sync (experimental), QR-code pairing or encrypted backup files.'
         }
       ]
     },
     media: {
       title: 'Lectures and talks,\nstudied with you.',
       lede: 'Import local audio and video, or paste a Bilibili link, to get timestamped subtitles. Questions, handouts and practice all draw on them and lead back to the exact moment.',
-      more: 'Learn about Media',
+      more: 'Learn about Media (Chinese)',
       link: '/user-guide/media',
       items: [
         {
@@ -362,7 +362,7 @@ export default {
         },
         {
           title: 'Handouts and whole courses',
-          desc: 'Subtitles and key frames become an illustrated handout saved as a note; a multi-part collection imports in one go and stays grouped as one course.'
+          desc: 'Check understanding with in-lesson checkpoints, turn subtitles and key frames into lesson ledgers and illustrated handouts, and import multi-part series as grouped courses.'
         }
       ]
     },
@@ -376,7 +376,7 @@ export default {
       title: 'An app for every step, from collecting to reviewing.',
       lede: 'All of these live in the desktop app’s Dock and All Apps panel. Open one on its own or side by side on the Study Desktop. Each links to its guide (in Chinese).',
       items: [
-        { icon: 'files', name: 'Files', desc: 'Keep textbooks, notes, question sets, documents, audio and video in one place, indexed for AI search.', link: '/user-guide/learning-hub' },
+        { icon: 'files', name: 'Files', desc: 'Keep textbooks, notes, exam sets, documents, audio and video in one place, indexed for AI search.', link: '/user-guide/learning-hub' },
         { icon: 'media', name: 'Media', desc: 'Transcribe lectures and recordings into timestamped subtitles or import them from a Bilibili link; ask as you watch and make illustrated handouts.', link: '/user-guide/media' },
         { icon: 'textbook', name: 'Textbook', desc: 'Read PDF, Word and EPUB in a two-page view, highlight and annotate, and ask AI about the pages you tick.', link: '/user-guide/reading-translation' },
         { icon: 'translation', name: 'Translation', desc: 'Full-text translation with side-by-side paragraphs, 7 domain presets, and quick translation of any selection.', link: '/user-guide/reading-translation' },
@@ -386,12 +386,12 @@ export default {
         { icon: 'exam', name: 'Exam Sets', desc: 'Turn textbooks, exams and mistakes into exam sets with AI entry, nine practice modes and auto grading.', link: '/user-guide/question-bank' },
         { icon: 'essay', name: 'Essay Review', desc: 'Scores across several criteria, inline marks, sentence-by-sentence polishing and model essays.', link: '/user-guide/essay' },
         { icon: 'taskDashboard', name: 'Anki Cards', desc: 'Turn PDFs, images and notes into cards with one request; export APKG or sync to Anki.', link: '/user-guide/anki' },
-        { icon: 'flashcards', name: 'Flashcards', desc: 'Review, card making and templates in one place, with built-in FSRS so you can review daily without installing Anki.', link: '/user-guide/flashcards' },
+        { icon: 'flashcards', name: 'Flashcards', desc: 'Review, card making and templates in one place, with built-in FSRS-6 spaced repetition so you can review daily without installing Anki.', link: '/user-guide/flashcards' },
         { icon: 'templates', name: 'Templates', desc: 'Edit Anki card templates visually and reuse them when you generate cards.', link: '/user-guide/anki' },
         { icon: 'todo', name: 'Todo', desc: 'Add tasks in plain words; quadrants, subtasks, reminders and scheduled automations.', link: '/user-guide/productivity' },
         { icon: 'pomodoro', name: 'Pomodoro', desc: 'Strict mode, ambient sounds, a floating mini timer, and charts of your focus time and trends.', link: '/user-guide/productivity' },
-        { icon: 'skills', name: 'Skills', desc: 'Let the AI load skills on demand and reach external tools over MCP. Install them or write your own.', link: '/user-guide/skills-mcp' },
-        { icon: 'settings', name: 'Settings', desc: 'Connect 13 model providers or local models, and pick which model each feature uses.', link: '/user-guide/models' }
+        { icon: 'skills', name: 'Skills', desc: 'Manage built-in and custom skills, connect external tools over MCP, and extend capabilities with the AI Plugin Workshop.', link: '/user-guide/skills-mcp' },
+        { icon: 'settings', name: 'Settings', desc: 'Connect 15 model providers or local models with one-click API key auto-setup, and pick which model each feature uses.', link: '/user-guide/models' }
       ],
       more: 'Also:',
       extras: [
@@ -400,7 +400,9 @@ export default {
         { name: 'Today & weekly report', link: '/user-guide/productivity' },
         { name: 'Study Desktop', link: '/user-guide/workbench' },
         { name: 'Backup & sync', link: '/user-guide/data-sync' },
-        { name: 'Android app', link: '/user-guide/mobile' }
+        { name: 'Android app', link: '/user-guide/mobile' },
+        { name: 'AI Plugin Workshop', link: '/user-guide/plugin-workshop' },
+        { name: 'WebUI & PWA', link: '/user-guide/webui-pwa' }
       ]
     },
 
@@ -453,11 +455,11 @@ export default {
         },
         {
           q: 'Which platforms are supported?',
-          a: 'Installers are available for macOS (Apple Silicon / Intel), Windows, Linux and Android. iOS needs to be built from source with Xcode.'
+          a: 'Installers are available for macOS (Apple Silicon / Intel), Windows, Linux and Android. You can also self-host WebUI & PWA for browser or PWA access. iOS needs to be built from source with Xcode.'
         },
         {
           q: 'macOS says the app is damaged and cannot be opened. What now?',
-          a: "That is macOS quarantining an app that didn't come from the App Store. Run sudo xattr -r -d com.apple.quarantine \"/Applications/Deep Student.app\" in Terminal. The app name contains a space, so keep the quotes; replace the path if you installed it elsewhere."
+          a: "If you see this after installing an unnotarized build, it is macOS quarantining the app. Run sudo xattr -r -d com.apple.quarantine \"/Applications/Deep Student.app\" in Terminal. The app name contains a space, so keep the quotes; replace the path if you installed it elsewhere."
         }
       ]
     }

@@ -69,6 +69,7 @@ function getModifiedDate(timestamp) {
 
 function isTechnicalArticle(relativePath) {
   return relativePath === 'start.md' ||
+    relativePath === 'developers.md' ||
     relativePath.startsWith('user-guide/') && relativePath !== GUIDE_INDEX
 }
 
@@ -120,7 +121,7 @@ function createGraph(pageData, { pageUrl, pageTitle, description, locale, isLand
       name: SITE_NAME,
       url: SITE_URL,
       applicationCategory: 'EducationalApplication',
-      operatingSystem: 'macOS, Windows, Linux, Android',
+      operatingSystem: 'macOS, Windows, Linux, Android, Web',
       // 和首页「全部应用」同一份清单，搜索引擎和 AI 摘要能直接读到有哪些模块
       featureList: messages[locale].home.apps.items.map((app) => app.name),
       license: `${REPOSITORY_URL}/blob/main/LICENSE`,

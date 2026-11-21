@@ -30,6 +30,7 @@ const GUIDE_DIR = join(DOCS, 'user-guide')
 const DATA_FILE = join(DOCS, '.vitepress/data/user-guide.json')
 const REPO = 'helixnow/deep-student'
 const SOURCE_DIR = 'docs/user-guide'
+const IGNORED_FILES = new Set(['question-authoring-v2-en.md'])
 
 /** 源文件 → 网址与侧栏位置。顺序就是侧栏顺序；group 为空的不进分组（快速上手、学习桌面由 config.js 放进「开始」） */
 export const CHAPTERS = [
@@ -52,7 +53,9 @@ export const CHAPTERS = [
   { file: '14-模型与供应商配置.md', slug: 'models', title: '模型与供应商配置', group: '配置与数据' },
   { file: '15-技能与MCP扩展.md', slug: 'skills-mcp', title: '技能与 MCP 扩展', group: '配置与数据' },
   { file: '16-数据管理与云同步.md', slug: 'data-sync', title: '数据管理与云同步', group: '配置与数据' },
-  { file: '17-移动端指南.md', slug: 'mobile', title: '移动端指南', group: '移动端' }
+  { file: '20-AI插件工坊与插件管理.md', slug: 'plugin-workshop', title: 'AI 插件工坊与插件管理', group: '配置与数据', demo: false },
+  { file: '17-移动端指南.md', slug: 'mobile', title: '移动端指南', group: '多端与自托管' },
+  { file: '21-WebUI与PWA自托管.md', slug: 'webui-pwa', title: 'WebUI 与 PWA 自托管', group: '多端与自托管', demo: false }
 ].map((chapter) => chapter.slug
   ? { ...chapter, path: `/user-guide/${chapter.slug}`, out: `user-guide/${chapter.slug}.md` }
   : chapter)
@@ -141,8 +144,8 @@ function transform(chapter, source) {
       return `](${new URL(target, `https://github.com/${REPO}/blob/main/${SOURCE_DIR}/`).href}${hash})`
     })
     .trimEnd()
-  // 章首引言之后放这一章的功能演示（GuideDemo 按网址找演示，没有演示的章节不显示任何东西）
-  if (chapter.slug) body = insertDemo(body)
+  // 章首引言之后放这一章的功能演示（GuideDemo 按网址找演示，显式关闭 demo 的章节不插入）
+  if (chapter.slug && chapter.demo !== false) body = insertDemo(body)
   const description = describe(body).replaceAll('"', '\\"')
   const front = ['---', `description: "${description}"`, 'editLink: false', '---', ''].join('\n')
   const credit = [
@@ -163,7 +166,7 @@ async function main() {
 
   const missing = CHAPTERS.filter((c) => !files.has(c.file)).map((c) => c.file)
   if (missing.length) throw new Error(`主仓库里找不到：${missing.join('、')}（CHAPTERS 要跟着改）`)
-  const unmapped = [...files.keys()].filter((name) => !CHAPTERS.some((c) => c.file === name))
+  const unmapped = [...files.keys()].filter((name) => !IGNORED_FILES.has(name) && !CHAPTERS.some((c) => c.file === name))
   if (unmapped.length) throw new Error(`主仓库新增了章节，还没配网址：${unmapped.join('、')}`)
 
   await rm(GUIDE_DIR, { recursive: true, force: true })

@@ -2,9 +2,9 @@
   "source": {
     "repo": "helixnow/deep-student",
     "path": "docs/user-guide",
-    "commit": "d66f9511c34f454e92d9661f9a585fcef4e0e728",
+    "commit": "a87c7527a7825d6b1b91c62cbf4707fa3776fada",
     "dirty": false,
-    "syncedAt": "2026-10-07T02:53:32.106Z"
+    "syncedAt": "2026-11-21T06:40:40.600Z"
   },
   "pages": [
     {
@@ -103,9 +103,19 @@
       "title": "数据管理与云同步"
     },
     {
+      "file": "20-AI插件工坊与插件管理.md",
+      "path": "/user-guide/plugin-workshop",
+      "title": "AI 插件工坊与插件管理"
+    },
+    {
       "file": "17-移动端指南.md",
       "path": "/user-guide/mobile",
       "title": "移动端指南"
+    },
+    {
+      "file": "21-WebUI与PWA自托管.md",
+      "path": "/user-guide/webui-pwa",
+      "title": "WebUI 与 PWA 自托管"
     }
   ],
   "groups": [
@@ -195,15 +205,23 @@
         {
           "text": "数据管理与云同步",
           "link": "/user-guide/data-sync"
+        },
+        {
+          "text": "AI 插件工坊与插件管理",
+          "link": "/user-guide/plugin-workshop"
         }
       ]
     },
     {
-      "text": "移动端",
+      "text": "多端与自托管",
       "items": [
         {
           "text": "移动端指南",
           "link": "/user-guide/mobile"
+        },
+        {
+          "text": "WebUI 与 PWA 自托管",
+          "link": "/user-guide/webui-pwa"
         }
       ]
     }
