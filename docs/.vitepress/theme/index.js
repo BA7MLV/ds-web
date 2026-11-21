@@ -49,7 +49,8 @@ export default {
       const zoomTargets = [
         '.vp-doc p > img:not(.no-zoom):not([data-no-zoom])',
         '.vp-doc li > img:not(.no-zoom):not([data-no-zoom])',
-        '.vp-doc td > img:not(.no-zoom):not([data-no-zoom])'
+        '.vp-doc td > img:not(.no-zoom):not([data-no-zoom])',
+        '.vp-doc .gd__img:not(.no-zoom):not([data-no-zoom])'
       ].join(', ')
       const hasTargets = document.querySelector(zoomTargets)
 
@@ -76,8 +77,13 @@ export default {
       }
     }
 
+    const onZoomRefresh = () => {
+      nextTick(() => initZoom())
+    }
+
     onMounted(() => {
       scheduleAnalytics(import.meta.env.VITE_LA_CONFIG)
+      window.addEventListener('ds-docs-zoom-refresh', onZoomRefresh)
       nextTick(() => {
         initZoom()
         updateThemeColor()
@@ -96,6 +102,9 @@ export default {
     })
 
     onUnmounted(() => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('ds-docs-zoom-refresh', onZoomRefresh)
+      }
       zoomInstance?.detach()
       zoomInstance = null
 

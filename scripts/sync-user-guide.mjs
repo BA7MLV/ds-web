@@ -29,6 +29,7 @@ const DOCS = join(ROOT, 'docs')
 const GUIDE_DIR = join(DOCS, 'user-guide')
 const GUIDE_IMG_DIR = join(DOCS, 'public/img/user-guide')
 const DATA_FILE = join(DOCS, '.vitepress/data/user-guide.json')
+const SHOTS_FILE = join(DOCS, '.vitepress/data/guide-shots.json')
 const REPO = 'helixnow/deep-student'
 const SOURCE_DIR = 'docs/user-guide'
 const SOURCE_IMG_DIR = `${SOURCE_DIR}/images`
@@ -56,9 +57,9 @@ export const CHAPTERS = [
   { file: '14-模型与供应商配置.md', slug: 'models', title: '模型与供应商配置', group: '配置与数据' },
   { file: '15-技能与MCP扩展.md', slug: 'skills-mcp', title: '技能与 MCP 扩展', group: '配置与数据' },
   { file: '16-数据管理与云同步.md', slug: 'data-sync', title: '数据管理与云同步', group: '配置与数据' },
-  { file: '20-AI插件工坊与插件管理.md', slug: 'plugin-workshop', title: 'AI 插件工坊与插件管理', group: '配置与数据', demo: false },
+  { file: '20-AI插件工坊与插件管理.md', slug: 'plugin-workshop', title: 'AI 插件工坊与插件管理', group: '配置与数据' },
   { file: '17-移动端指南.md', slug: 'mobile', title: '移动端指南', group: '多端与自托管' },
-  { file: '21-WebUI与PWA自托管.md', slug: 'webui-pwa', title: 'WebUI 与 PWA 自托管', group: '多端与自托管', demo: false }
+  { file: '21-WebUI与PWA自托管.md', slug: 'webui-pwa', title: 'WebUI 与 PWA 自托管', group: '多端与自托管' }
 ].map((chapter) => chapter.slug
   ? { ...chapter, path: `/user-guide/${chapter.slug}`, out: `user-guide/${chapter.slug}.md` }
   : chapter)
@@ -76,16 +77,18 @@ async function readLocal(dir) {
     if (name.endsWith('.md')) files.set(name, await readFile(join(root, SOURCE_DIR, name), 'utf-8'))
   }
   const images = new Map()
+  let shotsManifest = null
   try {
     for (const name of await readdir(join(root, SOURCE_IMG_DIR))) {
       if (IMAGE_EXT.test(name)) images.set(name, await readFile(join(root, SOURCE_IMG_DIR, name)))
+      else if (name === 'manifest.json') shotsManifest = JSON.parse(await readFile(join(root, SOURCE_IMG_DIR, name), 'utf-8'))
     }
   } catch {
     // 主仓库尚未创建 images 目录时跳过
   }
   const commit = execFileSync('git', ['-C', root, 'log', '-1', '--format=%H', '--', SOURCE_DIR], { encoding: 'utf-8' }).trim()
   const dirty = execFileSync('git', ['-C', root, 'status', '--porcelain', '--', SOURCE_DIR], { encoding: 'utf-8' }).trim()
-  return { files, images, commit, dirty: Boolean(dirty) }
+  return { files, images, shotsManifest, commit, dirty: Boolean(dirty) }
 }
 
 async function readRemote(ref) {
@@ -104,17 +107,24 @@ async function readRemote(ref) {
     files.set(entry.name, await response.text())
   }
   const images = new Map()
+  let shotsManifest = null
   if (listing.some((entry) => entry.type === 'dir' && entry.name === 'images')) {
     const imgListing = await api(`contents/${SOURCE_IMG_DIR}?ref=${encodeURIComponent(ref)}`)
     for (const entry of imgListing) {
-      if (entry.type !== 'file' || !IMAGE_EXT.test(entry.name)) continue
-      const response = await fetch(entry.download_url)
-      if (!response.ok) throw new Error(`images/${entry.name} → ${response.status}`)
-      images.set(entry.name, Buffer.from(await response.arrayBuffer()))
+      if (entry.type !== 'file') continue
+      if (IMAGE_EXT.test(entry.name)) {
+        const response = await fetch(entry.download_url)
+        if (!response.ok) throw new Error(`images/${entry.name} → ${response.status}`)
+        images.set(entry.name, Buffer.from(await response.arrayBuffer()))
+      } else if (entry.name === 'manifest.json') {
+        const response = await fetch(entry.download_url)
+        if (!response.ok) throw new Error('images/manifest.json → ' + response.status)
+        shotsManifest = await response.json()
+      }
     }
   }
   const [latest] = await api(`commits?path=${SOURCE_DIR}&sha=${encodeURIComponent(ref)}&per_page=1`)
-  return { files, images, commit: latest?.sha ?? '', dirty: false }
+  return { files, images, shotsManifest, commit: latest?.sha ?? '', dirty: false }
 }
 
 /** 出处链到 main 上的源文件（要改就去那儿改）；同步自哪个提交记在 data/user-guide.json */
@@ -185,7 +195,7 @@ function transform(chapter, source) {
 async function main() {
   const from = option('--from')
   const ref = option('--ref') || 'main'
-  const { files, images, commit, dirty } = from ? await readLocal(from) : await readRemote(ref)
+  const { files, images, shotsManifest, commit, dirty } = from ? await readLocal(from) : await readRemote(ref)
 
   const missing = CHAPTERS.filter((c) => !files.has(c.file)).map((c) => c.file)
   if (missing.length) throw new Error(`主仓库里找不到：${missing.join('、')}（CHAPTERS 要跟着改）`)
@@ -204,6 +214,10 @@ async function main() {
     for (const [name, buf] of images) {
       await writeFile(join(GUIDE_IMG_DIR, name), buf)
     }
+  }
+  if (shotsManifest) {
+    await mkdir(dirname(SHOTS_FILE), { recursive: true })
+    await writeFile(SHOTS_FILE, `${JSON.stringify(shotsManifest, null, 2)}\n`)
   }
 
   const groups = []

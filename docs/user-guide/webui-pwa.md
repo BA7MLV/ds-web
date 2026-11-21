@@ -7,6 +7,8 @@ editLink: false
 
 > 在自己的电脑或服务器上运行 Deep Student Host，用任意现代浏览器或手机主屏幕 PWA 随时访问完整学习工作台，数据依然完全掌握在你自己手里。
 
+<GuideDemo />
+
 ## 功能概览
 
 除了安装桌面客户端和 Android APK，Deep Student 还支持以 **WebUI + PWA** 形态自托管运行：后端在 Node.js 中运行与桌面端一致的完整 Host，前端零删减地运行在浏览器里，通过加密会话与 WebSocket 与后端通信。

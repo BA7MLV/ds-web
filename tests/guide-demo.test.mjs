@@ -46,11 +46,25 @@ test('every demo in the mirror has its entry and posters on disk', () => {
   }
 })
 
-test('every chapter with a page has a demo once the mirror lists demos', () => {
-  const apps = new Set((mirror.apps ?? []).map((app) => app.id))
-  if (!apps.size) return
-  const missing = CHAPTERS.filter((c) => c.slug && c.demo !== false && !apps.has(c.slug)).map((c) => c.slug)
-  assert.deepEqual(missing, [])
+test('every chapter with a page has static desktop/mobile screenshots on disk', () => {
+  const shots = JSON.parse(readFileSync(root('docs/.vitepress/data/guide-shots.json'), 'utf-8'))
+  const chapters = shots.chapters ?? {}
+  const missingChapters = CHAPTERS.filter((c) => c.slug && c.demo !== false && !chapters[c.slug]).map((c) => c.slug)
+  assert.deepEqual(missingChapters, [])
+
+  const missingFiles = []
+  for (const [slug, entry] of Object.entries(chapters)) {
+    for (const form of ['desktop', 'mobile']) {
+      if (!entry[form]) continue
+      for (const theme of ['light', 'dark']) {
+        const file = entry[form][theme]
+        if (!file || !existsSync(root(`docs/public/img/user-guide/${file}`))) {
+          missingFiles.push(`${slug}/${form}/${theme} → ${file}`)
+        }
+      }
+    }
+  }
+  assert.deepEqual(missingFiles, [])
 })
 
 test('pinEntryRefs strips the source root when the build is served from a sub-path', () => {

@@ -7,6 +7,8 @@ editLink: false
 
 > 用自然语言让学习 Agent 为 Deep Student 现场制作小应用、选区按钮或新本事，并在「插件管理」里统一查看权限、回滚版本与管理内置和渠道扩展。
 
+<GuideDemo />
+
 > **适用平台**：AI 插件工坊与插件管理器目前仅支持**桌面端（Windows / macOS / Linux）与自托管 WebUI**；Android 原生客户端暂不可用。
 
 ## 功能概览

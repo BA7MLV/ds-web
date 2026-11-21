@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-21T09:04:18.164Z",
+  "generatedAt": "2026-11-21T09:50:18.568Z",
   "dist": "/Users/heli/code/ds-web/docs/.vitepress/dist",
   "site": "https://deepstudent.cn/",
   "passed": true,
@@ -14,18 +14,18 @@
     "scope": "Homepage head declarations only; icons excluded; dynamic imports, iframe and CSS imports are not included.",
     "initialLocalResourceCount": 6,
     "initialJavaScriptCount": 4,
-    "rawBytes": 542247,
-    "gzipBytes": 153112,
-    "brotliBytes": 130671,
+    "rawBytes": 545030,
+    "gzipBytes": 154414,
+    "brotliBytes": 131299,
     "largestInitialResources": [
       {
-        "url": "https://deepstudent.cn/assets/chunks/theme.BESvYTMk.js",
+        "url": "https://deepstudent.cn/assets/chunks/theme.6jIuLxrZ.js",
         "kind": "modulepreload",
         "critical": true,
         "local": true,
-        "rawBytes": 184912,
-        "gzipBytes": 64507,
-        "brotliBytes": 53891
+        "rawBytes": 190056,
+        "gzipBytes": 66189,
+        "brotliBytes": 54897
       },
       {
         "url": "https://deepstudent.cn/assets/chunks/framework.DW1Qwr0A.js",
@@ -37,13 +37,13 @@
         "brotliBytes": 38652
       },
       {
-        "url": "https://deepstudent.cn/assets/style.DTgHKfaD.css",
+        "url": "https://deepstudent.cn/assets/style.EAAuzUAs.css",
         "kind": "stylesheet",
         "critical": true,
         "local": true,
-        "rawBytes": 241412,
-        "gzipBytes": 42864,
-        "brotliBytes": 35811
+        "rawBytes": 239051,
+        "gzipBytes": 42485,
+        "brotliBytes": 35434
       },
       {
         "url": "https://deepstudent.cn/assets/index.md.CbVxP8kR.lean.js",
@@ -55,13 +55,13 @@
         "brotliBytes": 1194
       },
       {
-        "url": "https://deepstudent.cn/assets/app.D47abtdD.js",
+        "url": "https://deepstudent.cn/assets/app.qVl19gNA.js",
         "kind": "script",
         "critical": true,
         "local": true,
         "rawBytes": 1352,
-        "gzipBytes": 735,
-        "brotliBytes": 649
+        "gzipBytes": 734,
+        "brotliBytes": 648
       },
       {
         "url": "https://deepstudent.cn/vp-icons.css",
