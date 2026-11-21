@@ -4,7 +4,7 @@ description: 了解 DeepStudent 的学习桌面、学习 Agent、生成式 UI、
 
 # 什么是 DeepStudent
 
-![主图](/img/example/软件主页图-1280.webp)
+![DeepStudent 学习桌面主界面：AI 对话与思维导图、题目集与 FSRS-6 闪卡多窗口并排协作](/img/guide/study-desktop-hero.webp)
 
 ::: tip 一句话介绍
 DeepStudent 是开源、本地优先的 AI 学习工作台。它的主角是能直接操作学习桌面各个应用的学习 Agent——说一句话，它就会替你读资料、记笔记、画导图、出题、制卡与安排复习，数据默认保存在你自己的设备上。

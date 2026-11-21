@@ -59,6 +59,19 @@ test('links into the guide resolve to real pages', () => {
   assert.deepEqual(broken, [])
 })
 
+/** 文档正文引用的站内配图必须真实落在 docs/public/ 下 */
+test('every local image referenced in documentation exists on disk', () => {
+  const missing = []
+  for (const file of markdownFiles('')) {
+    const source = readFileSync(new URL(file, DOCS), 'utf8')
+    for (const [, target] of source.matchAll(/!\[[^\]]*\]\((\/img\/[^)\s]+)\)/g)) {
+      const clean = target.split(/[?#]/)[0].replace(/^\//, '')
+      if (!existsSync(new URL(`public/${clean}`, DOCS))) missing.push(`${file} → ${target}`)
+    }
+  }
+  assert.deepEqual(missing, [])
+})
+
 /** 旧版用户指南的网址被外链和搜索引擎收录过，全部 301 到新页，落点必须存在 */
 test('every retired guide URL redirects to a page that exists', () => {
   const retired = [

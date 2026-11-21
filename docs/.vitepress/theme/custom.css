@@ -282,8 +282,16 @@ body {
   max-width: 960px;
   height: auto;
   margin: 1.25rem auto;
+  border: 1px solid var(--vp-c-divider);
   border-radius: 12px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
   cursor: zoom-in;
+}
+
+.vp-doc p > img[src*="mobile-drawer"],
+.vp-doc li > img[src*="mobile-drawer"] {
+  max-width: 320px;
+  border-radius: 22px;
 }
 
 .vp-doc p > img.no-zoom,

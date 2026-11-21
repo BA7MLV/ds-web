@@ -30,11 +30,15 @@ On first launch, you will see a brief two-step onboarding:
 1. **Terms & Privacy Policy**: Review and accept to continue.
 2. **Welcome Dialog**: Pick your interface language, then paste any supported API key into the **One-Click API Key Auto-Setup** card to detect the provider, probe available models, and fill capability slots automatically. You can also skip to **Advanced Settings** or explore the app first.
 
+![Welcome dialog with 1-Key Auto-Provisioner on first launch](/img/guide/start-welcome-setup-en.webp)
+
 No DeepStudent account is required — your study materials, notes, and chat history stay on your device by default.
 
 ## Meet the Study Desktop
 
 On desktop, DeepStudent opens directly into the **Study Desktop**:
+
+![DeepStudent Study Desktop with Chat, Mind Map, Exam Set, and Flashcards side by side](/img/guide/study-desktop-hero-en.webp)
 
 - **Bottom Dock**: Pins **Chat**, **Files**, **Settings**, and **Todo** by default. Click **All Apps** on the right to open Flashcards, Media, Anki Cards, Mind Map, Exam Sets, Plugin Workshop, Pomodoro, and more.
 - **Side-by-Side Tiling Windows**: Every app and document opens in its own window. Drag a window to the left or right edge of the screen to snap it into a split view — ideal for reading a textbook alongside Chat.
@@ -53,6 +57,8 @@ DeepStudent does not bundle a hosted cloud model; you bring your own API key or 
 | Want fine-grained model control | **Manual per-feature assignment** | Save keys for any preset or custom provider, then assign specific models under **Settings → Model Assignment** |
 
 - **15 Preset Providers**: Includes **OpenAI**, **Anthropic**, **Google Gemini**, **DeepSeek**, **Mistral**, **OpenCode Go**, **Codex** (sign in with a ChatGPT account via browser or device code), **SiliconFlow**, **NVIDIA**, **Qwen**, **Zhipu AI**, **Doubao**, **MiniMax**, **Moonshot**, and **Xiaomi MiMo**.
+
+![Settings → Models & AI → Model Service with 1-Key Auto-Provisioner and 15 preset providers](/img/guide/models-providers-en.webp)
 - **Per-Feature Slots**: Under **Settings → Model Assignment**, you can assign dedicated models for chat, flashcards, OCR, embeddings (with embedding dimension management), reranking, translation, and speech recognition. If a provider does not expose an embeddings endpoint, DeepStudent automatically falls back to keyword retrieval without overwriting existing vector settings.
 
 ## Step 2: Import Your First Study Material

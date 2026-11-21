@@ -27,10 +27,13 @@ import { fileURLToPath } from 'node:url'
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const DOCS = join(ROOT, 'docs')
 const GUIDE_DIR = join(DOCS, 'user-guide')
+const GUIDE_IMG_DIR = join(DOCS, 'public/img/user-guide')
 const DATA_FILE = join(DOCS, '.vitepress/data/user-guide.json')
 const REPO = 'helixnow/deep-student'
 const SOURCE_DIR = 'docs/user-guide'
+const SOURCE_IMG_DIR = `${SOURCE_DIR}/images`
 const IGNORED_FILES = new Set(['question-authoring-v2-en.md'])
+const IMAGE_EXT = /\.(?:webp|png|jpe?g|gif|svg)$/i
 
 /** 源文件 → 网址与侧栏位置。顺序就是侧栏顺序；group 为空的不进分组（快速上手、学习桌面由 config.js 放进「开始」） */
 export const CHAPTERS = [
@@ -72,9 +75,17 @@ async function readLocal(dir) {
   for (const name of await readdir(join(root, SOURCE_DIR))) {
     if (name.endsWith('.md')) files.set(name, await readFile(join(root, SOURCE_DIR, name), 'utf-8'))
   }
+  const images = new Map()
+  try {
+    for (const name of await readdir(join(root, SOURCE_IMG_DIR))) {
+      if (IMAGE_EXT.test(name)) images.set(name, await readFile(join(root, SOURCE_IMG_DIR, name)))
+    }
+  } catch {
+    // 主仓库尚未创建 images 目录时跳过
+  }
   const commit = execFileSync('git', ['-C', root, 'log', '-1', '--format=%H', '--', SOURCE_DIR], { encoding: 'utf-8' }).trim()
   const dirty = execFileSync('git', ['-C', root, 'status', '--porcelain', '--', SOURCE_DIR], { encoding: 'utf-8' }).trim()
-  return { files, commit, dirty: Boolean(dirty) }
+  return { files, images, commit, dirty: Boolean(dirty) }
 }
 
 async function readRemote(ref) {
@@ -92,8 +103,18 @@ async function readRemote(ref) {
     if (!response.ok) throw new Error(`${entry.name} → ${response.status}`)
     files.set(entry.name, await response.text())
   }
+  const images = new Map()
+  if (listing.some((entry) => entry.type === 'dir' && entry.name === 'images')) {
+    const imgListing = await api(`contents/${SOURCE_IMG_DIR}?ref=${encodeURIComponent(ref)}`)
+    for (const entry of imgListing) {
+      if (entry.type !== 'file' || !IMAGE_EXT.test(entry.name)) continue
+      const response = await fetch(entry.download_url)
+      if (!response.ok) throw new Error(`images/${entry.name} → ${response.status}`)
+      images.set(entry.name, Buffer.from(await response.arrayBuffer()))
+    }
+  }
   const [latest] = await api(`commits?path=${SOURCE_DIR}&sha=${encodeURIComponent(ref)}&per_page=1`)
-  return { files, commit: latest?.sha ?? '', dirty: false }
+  return { files, images, commit: latest?.sha ?? '', dirty: false }
 }
 
 /** 出处链到 main 上的源文件（要改就去那儿改）；同步自哪个提交记在 data/user-guide.json */
@@ -136,6 +157,8 @@ function transform(chapter, source) {
     .replace(/\r\n/g, '\n')
     // 章末给维护者看的注释（调研基线、对齐记录）
     .replace(/\n*<!--[\s\S]*?-->\s*$/g, '\n')
+    // ](./images/xxx.webp) → ](/img/user-guide/xxx.webp)
+    .replace(/\]\((\.\/)?images\/([^)\s]+)\)/g, '](/img/user-guide/$2)')
     // ](./02-AI对话与会话管理.md#锚点) → ](/user-guide/chat#锚点)；主仓库别的文件 → GitHub
     .replace(/\]\((\.\/)?([^)\s#]+\.md)(#[^)\s]*)?\)/g, (match, _dot, target, hash = '') => {
       if (/^[a-z]+:/i.test(target)) return match
@@ -162,7 +185,7 @@ function transform(chapter, source) {
 async function main() {
   const from = option('--from')
   const ref = option('--ref') || 'main'
-  const { files, commit, dirty } = from ? await readLocal(from) : await readRemote(ref)
+  const { files, images, commit, dirty } = from ? await readLocal(from) : await readRemote(ref)
 
   const missing = CHAPTERS.filter((c) => !files.has(c.file)).map((c) => c.file)
   if (missing.length) throw new Error(`主仓库里找不到：${missing.join('、')}（CHAPTERS 要跟着改）`)
@@ -173,6 +196,14 @@ async function main() {
   await mkdir(GUIDE_DIR, { recursive: true })
   for (const chapter of CHAPTERS) {
     await writeFile(join(DOCS, chapter.out), transform(chapter, files.get(chapter.file)))
+  }
+
+  await rm(GUIDE_IMG_DIR, { recursive: true, force: true })
+  if (images.size > 0) {
+    await mkdir(GUIDE_IMG_DIR, { recursive: true })
+    for (const [name, buf] of images) {
+      await writeFile(join(GUIDE_IMG_DIR, name), buf)
+    }
   }
 
   const groups = []
@@ -188,7 +219,7 @@ async function main() {
     groups
   }, null, 2)}\n`)
 
-  console.log(`[user-guide] ${CHAPTERS.length} 页，来源 ${REPO}@${commit.slice(0, 9)}${dirty ? '（含未提交改动）' : ''}`)
+  console.log(`[user-guide] ${CHAPTERS.length} 页 + ${images.size} 张配图，来源 ${REPO}@${commit.slice(0, 9)}${dirty ? '（含未提交改动）' : ''}`)
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
