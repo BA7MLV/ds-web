@@ -118,7 +118,7 @@ const warmSceneShots = () => {
   if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '')) return
   cancelShotWarmup = afterPageLoad(() => {
     const others = scenes.value.map((scene) => scene.art).filter((art) => art !== currentScene.value.art)
-    warmFeatureShots(others, document.documentElement.classList.contains('dark'))
+    warmFeatureShots(others, document.documentElement.classList.contains('dark'), locale.value)
   })
 }
 
@@ -429,7 +429,7 @@ onUnmounted(() => {
         <div class="lp-media__shot">
           <img
             class="lp-media__img lp-media__img--light"
-            src="/demo/posters/media-light.webp"
+            :src="locale === 'en-US' ? '/demo-media-poster-en-light.webp' : '/demo/posters/media-light.webp'"
             :alt="t('home.media.posterAlt')"
             width="1120"
             height="700"
@@ -438,7 +438,7 @@ onUnmounted(() => {
           />
           <img
             class="lp-media__img lp-media__img--dark"
-            src="/demo/posters/media-dark.webp"
+            :src="locale === 'en-US' ? '/demo-media-poster-en-dark.webp' : '/demo/posters/media-dark.webp'"
             :alt="t('home.media.posterAlt')"
             width="1120"
             height="700"

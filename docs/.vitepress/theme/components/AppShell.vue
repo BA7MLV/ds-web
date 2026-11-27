@@ -69,6 +69,17 @@ const props = defineProps({
 const { isDark } = useData()
 const { t, locale } = useI18n()
 
+/** 按页面语言选对应的真实界面海报，英文页首屏与载入前不再先露中文界面。 */
+const posters = computed(() => {
+  const prefix = locale.value === 'en-US' ? '/demo-poster-en' : '/demo-poster'
+  return {
+    desktopLight: `${prefix}.webp`,
+    desktopDark: `${prefix}-dark.webp`,
+    mobileLight: `${prefix}-mobile@3x.webp`,
+    mobileDark: `${prefix}-mobile-dark@3x.webp`,
+  }
+})
+
 const resolvedSrc = computed(
   () => props.src || import.meta.env.VITE_DEMO_URL || MIRROR_SRC
 )
@@ -375,16 +386,16 @@ onUnmounted(() => {
               <picture>
                 <source
                   media="(max-width: 639px) and (prefers-color-scheme: dark)"
-                  srcset="/demo-poster-mobile-dark@3x.webp"
+                  :srcset="posters.mobileDark"
                 />
-                <source media="(prefers-color-scheme: dark)" srcset="/demo-poster-dark.webp" />
+                <source media="(prefers-color-scheme: dark)" :srcset="posters.desktopDark" />
                 <source
                   media="(max-width: 639px)"
-                  :srcset="isDark ? '/demo-poster-mobile-dark@3x.webp' : '/demo-poster-mobile@3x.webp'"
+                  :srcset="isDark ? posters.mobileDark : posters.mobileLight"
                 />
                 <img
                   class="sh__poster-img"
-                  :src="isDark ? '/demo-poster-dark.webp' : '/demo-poster.webp'"
+                  :src="isDark ? posters.desktopDark : posters.desktopLight"
                   :alt="t('appShell.posterAlt')"
                   width="1112"
                   height="773"

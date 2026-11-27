@@ -26,7 +26,9 @@ const theme = computed(() => (isDark.value ? 'dark' : 'light'))
 const poster = computed(() => {
   const posters = entry.value?.posters || []
   if (!posters.length) return ''
-  return `/demo/posters/mobile-${posters.includes(theme.value) ? theme.value : posters[0]}.webp`
+  const variant = posters.includes(theme.value) ? theme.value : posters[0]
+  if (locale.value === 'en-US') return `/demo-phone-poster-en-${variant}.webp`
+  return `/demo/posters/mobile-${variant}.webp`
 })
 const frameSrc = computed(() => {
   const params = new URLSearchParams({ theme: theme.value })

@@ -8,14 +8,21 @@ import { shotSize } from '../docs/.vitepress/theme/utils/feature-shot.js'
 const FEATURES = new URL('../docs/public/features/', import.meta.url)
 
 /**
- * 首页的真实界面截图都是 scripts/gen-features-live.mjs 从演示里截的：同一取景框深浅各一张。
- * 文案里点到的场景缺一张，那扇窗就是空白，或者切到深色主题时空白。
+ * 首页的真实界面截图都是从演示里截的：中英各一套，同一取景框深浅各一张。
+ * 文案里点到的场景缺一张，那扇窗就是空白，或者切到深色/英文时空白。
  */
 /** 学习桌面那一整屏 + 功能区六扇窗 + 「使用流程」带画面的那几步（steps[].art） */
 const allShots = (words) => [
   words.home.desktop.art,
   ...words.home.features.scenes.map((scene) => scene.art),
   ...words.home.flow.steps.filter((step) => 'art' in step).map((step) => step.art)
+]
+
+const shotFiles = (art) => [
+  `${art}-light.webp`,
+  `${art}-dark.webp`,
+  `${art}-en-light.webp`,
+  `${art}-en-dark.webp`,
 ]
 
 /** WebP 的画布尺寸：有损（VP8）、无损（VP8L）、扩展（VP8X）三种文件头 */
@@ -32,7 +39,7 @@ const webpSize = (buffer) => {
   throw new Error(`未知的 WebP 块 ${chunk}`)
 }
 
-test('every feature scene ships both real screenshots', () => {
+test('every feature scene ships light and dark screenshots in both zh and en', () => {
   const shots = new Set()
   for (const [locale, words] of Object.entries(messages)) {
     for (const scene of words.home.features.scenes) {
@@ -41,8 +48,8 @@ test('every feature scene ships both real screenshots', () => {
     for (const art of allShots(words)) shots.add(art)
   }
   for (const art of shots) {
-    for (const file of [`${art}-light.webp`, `${art}-dark.webp`]) {
-      assert.ok(existsSync(new URL(file, FEATURES)), `缺少 features/${file}，重跑 node scripts/gen-features-live.mjs`)
+    for (const file of shotFiles(art)) {
+      assert.ok(existsSync(new URL(file, FEATURES)), `缺少 features/${file}`)
     }
   }
 })
@@ -54,22 +61,22 @@ test('both locales show the same scenes in the same order', () => {
 
 /**
  * 截图是取景框的 2 倍图，首页组件按 shotSize 写 width / height 占宽高比：
- * 尺寸对不上就会被拉伸或留白；深浅两张不一样大，切主题时版面会跳
+ * 尺寸对不上就会被拉伸或留白；深浅与中英四张不一样大，切主题或切语言时版面会跳
  */
-test('screenshots match their declared frame size in both themes', () => {
+test('screenshots match their declared frame size in both themes and locales', () => {
   for (const art of new Set(allShots(messages['zh-CN']))) {
     const { width, height } = shotSize(art)
-    for (const theme of ['light', 'dark']) {
-      const size = webpSize(readFileSync(new URL(`${art}-${theme}.webp`, FEATURES)))
+    for (const file of shotFiles(art)) {
+      const size = webpSize(readFileSync(new URL(file, FEATURES)))
       assert.deepEqual(size, { width: width * 2, height: height * 2 },
-        `features/${art}-${theme}.webp 是 ${size.width}×${size.height}，取景框 ${width}×${height} 应出 ${width * 2}×${height * 2}`)
+        `features/${file} 是 ${size.width}×${size.height}，取景框 ${width}×${height} 应出 ${width * 2}×${height * 2}`)
     }
   }
 })
 
 /** 目录里只放首页用得到的截图：换掉的场景、旧的字符画网格（*.json）不该留着跟着部署 */
 test('features directory holds only screenshots in use', () => {
-  const used = new Set([...new Set(allShots(messages['zh-CN']))].flatMap((art) => [`${art}-light.webp`, `${art}-dark.webp`]))
+  const used = new Set([...new Set(allShots(messages['zh-CN']))].flatMap(shotFiles))
   const orphans = readdirSync(FEATURES).filter((file) => !used.has(file))
   assert.deepEqual(orphans, [], `features/ 里有没人用的文件：${orphans.join('、')}`)
 })

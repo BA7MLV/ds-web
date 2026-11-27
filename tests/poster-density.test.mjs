@@ -22,7 +22,15 @@ const POSTERS = [
   { file: 'demo-poster.webp', css: 1112, ratio: 773 / 1112, minPpi: 2, maxKb: 96 },
   { file: 'demo-poster-dark.webp', css: 1112, ratio: 773 / 1112, minPpi: 2, maxKb: 96 },
   { file: 'demo-poster-mobile@3x.webp', css: 296, ratio: 569 / 296, minPpi: 3, maxKb: 60 },
-  { file: 'demo-poster-mobile-dark@3x.webp', css: 296, ratio: 569 / 296, minPpi: 3, maxKb: 60 }
+  { file: 'demo-poster-mobile-dark@3x.webp', css: 296, ratio: 569 / 296, minPpi: 3, maxKb: 60 },
+  { file: 'demo-poster-en.webp', css: 1112, ratio: 773 / 1112, minPpi: 2, maxKb: 96 },
+  { file: 'demo-poster-en-dark.webp', css: 1112, ratio: 773 / 1112, minPpi: 2, maxKb: 96 },
+  { file: 'demo-poster-en-mobile@3x.webp', css: 296, ratio: 569 / 296, minPpi: 3, maxKb: 60 },
+  { file: 'demo-poster-en-mobile-dark@3x.webp', css: 296, ratio: 569 / 296, minPpi: 3, maxKb: 60 },
+  { file: 'demo-phone-poster-en-light.webp', css: 390, ratio: 780 / 390, minPpi: 2, maxKb: 72 },
+  { file: 'demo-phone-poster-en-dark.webp', css: 390, ratio: 780 / 390, minPpi: 2, maxKb: 72 },
+  { file: 'demo-media-poster-en-light.webp', css: 1120, ratio: 700 / 1120, minPpi: 2, maxKb: 120 },
+  { file: 'demo-media-poster-en-dark.webp', css: 1120, ratio: 700 / 1120, minPpi: 2, maxKb: 120 }
 ]
 
 test('hero posters are dense enough for the screens that will show them', async () => {

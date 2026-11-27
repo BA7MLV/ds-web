@@ -79,8 +79,8 @@ const demoOrigin = computed(() => {
 
 /** 海报四周的柔光底：同一张截图放大模糊，舞台比截图宽时两边不留硬边 */
 const posterVars = computed(() => ({
-  '--dd-shot-light': `url(${featureShot(props.art, false)})`,
-  '--dd-shot-dark': `url(${featureShot(props.art, true)})`
+  '--dd-shot-light': `url(${featureShot(props.art, false, locale.value)})`,
+  '--dd-shot-dark': `url(${featureShot(props.art, true, locale.value)})`
 }))
 
 const stageEl = ref(null)
@@ -118,7 +118,7 @@ const screenStyle = computed(() => {
  */
 const viewerOpen = ref(false)
 const viewerClose = ref(null)
-const viewerSrc = computed(() => featureShot(props.art, isDark.value))
+const viewerSrc = computed(() => featureShot(props.art, isDark.value, locale.value))
 let viewerOpener = null
 
 const openViewer = () => {

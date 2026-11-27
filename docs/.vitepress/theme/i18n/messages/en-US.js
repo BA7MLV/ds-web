@@ -85,7 +85,7 @@ export default {
     previewDescription: 'The study agent reads your materials in chat and produces mind maps, practice questions and Anki cards directly.',
     /** Alt text for the real-UI screenshot in the shell; it is the same interface the demo shows */
     posterAlt:
-      'The DeepStudent app: navigation and conversations on the left, and on the right the chat “高数错题 → Anki 卡片”, where the agent has generated 5 cards.',
+      'The DeepStudent app: navigation and conversations on the left, and on the right the chat “Calculus Mistakes → Anki Cards”, where the agent has generated 5 cards.',
     /**
      * These three only surface when the picture will not move again: not started yet,
      * timed out, or not embeddable. Loading is deliberately silent — the shell is
@@ -189,7 +189,7 @@ export default {
           label: 'Think it through',
           statement: 'Have it work through your own materials.',
           art: 'flow-think',
-          alt: 'Screenshot of an answer: a short heading, a paragraph citing two entries from your learning profile, and an “AI generated” tag at the end',
+          alt: 'Screenshot of the agent research trace: memory search, web search, academic search, unified search, note creation and a completed 5/5 task checklist',
           items: [
             {
               title: 'Sources back to the original',
@@ -244,7 +244,7 @@ export default {
           desc: 'Images, voice and files in; answers cite page numbers with document-first reading, render interactive visuals and generative cards, and support deep reasoning.',
           link: '/user-guide/chat',
           art: 'chat',
-          alt: 'Screenshot of the chat view: an answer citing textbook pages 45, 47 and 52'
+          alt: 'Screenshot of material chat: a question with an attached textbook PDF, reasoning time, unified search trace and a grounded answer citing pages 45 and 47'
         },
         {
           tab: 'Mind maps',
@@ -271,7 +271,7 @@ export default {
           desc: 'One request makes cards in bulk; flip to check and edit them, then add them to your card library or sync to Anki in one click.',
           link: '/user-guide/anki',
           art: 'anki',
-          alt: 'Screenshot of card generation: a Q&A card with page dots, above “5 cards generated” and the route, generate and done steps'
+          alt: 'Screenshot of the Anki card studio: total cards, job status donut chart, per-document card ranking and batch generation task list'
         },
         {
           tab: 'Flashcard review',
@@ -289,7 +289,7 @@ export default {
           desc: 'Open PDF, Word and EPUB files; select text to explain, translate, save as a note or make a card; turn a passage into a sentence-by-sentence bilingual table.',
           link: '/user-guide/reading-translation',
           art: 'reading',
-          alt: 'Screenshot of bilingual reading: an English source table aligned sentence by sentence with its Chinese translation'
+          alt: 'Screenshot of PDF reading and annotations: color-coded highlights and Export to note in the left sidebar beside the highlighted textbook page and bottom page toolbar'
         }
       ]
     },

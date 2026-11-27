@@ -45,7 +45,7 @@ const component = (t, name, exports, { props = {}, demoUrl = '', media = false }
     console, URL, URLSearchParams, computed, ref, watch, nextTick,
     window, document, DEMO_URL: demoUrl,
     track: (event, props) => tracked.push([event, props]),
-    featureShot: (shot, dark) => `/features/${shot}-${dark ? 'dark' : 'light'}.webp`,
+    featureShot: (shot, dark, loc) => `/features/${shot}${loc === 'en-US' ? '-en' : ''}-${dark ? 'dark' : 'light'}.webp`,
     performance: { now: () => now },
     defineProps: () => ({ src: '', anchor: null, blocker: null, ...props }),
     useData: () => ({ isDark }),
@@ -102,7 +102,7 @@ const component = (t, name, exports, { props = {}, demoUrl = '', media = false }
 }
 
 const shell = (t, options) => component(t, 'AppShell', [
-  'frameSrc', 'frameKey', 'frameEl', 'setFrame', 'startDemo', 'onMessage', 'onFrameLoad',
+  'frameSrc', 'posters', 'frameKey', 'frameEl', 'setFrame', 'startDemo', 'onMessage', 'onFrameLoad',
   'loading', 'timedOut', 'showFrame', 'previewStatus',
 ], options)
 
@@ -146,13 +146,19 @@ test('demo opens the poster scene unless the override already names one', (t) =>
   assert.deepEqual(new URL(pinned.api.frameSrc.value).searchParams.getAll('scene'), ['demo-pdf-deepread'])
 })
 
-test('demo interface follows the page language', async (t) => {
+test('demo interface and pre-load posters follow the page language', async (t) => {
   const env = shell(t, { demoUrl: 'https://demo.test/demo.html?lang=en' })
   env.mount()
   assert.equal(new URL(env.api.frameSrc.value).searchParams.get('lang'), null)
+  assert.equal(env.api.posters.value.desktopLight, '/demo-poster.webp')
+  assert.equal(env.api.posters.value.mobileDark, '/demo-poster-mobile-dark@3x.webp')
   env.locale.value = 'en-US'
   await nextTick()
   assert.deepEqual(new URL(env.api.frameSrc.value).searchParams.getAll('lang'), ['en'])
+  assert.equal(env.api.posters.value.desktopLight, '/demo-poster-en.webp')
+  assert.equal(env.api.posters.value.desktopDark, '/demo-poster-en-dark.webp')
+  assert.equal(env.api.posters.value.mobileLight, '/demo-poster-en-mobile@3x.webp')
+  assert.equal(env.api.posters.value.mobileDark, '/demo-poster-en-mobile-dark@3x.webp')
 })
 
 test('ready starts playback only in the frame that reported it', async (t) => {
@@ -320,7 +326,7 @@ test('caption speaks only while the demo is not live, and never swallows a retry
 
 /** 学习桌面那一节：media 是 LIVE_QUERY（宽屏 + 鼠标）的结果 */
 const desktop = (t, options = {}) => component(t, 'DesktopDemo', [
-  'frameSrc', 'setFrame', 'startDemo', 'onMessage', 'loading', 'showFrame', 'status', 'stageSize', 'screenStyle',
+  'frameSrc', 'posterVars', 'viewerSrc', 'setFrame', 'startDemo', 'onMessage', 'loading', 'showFrame', 'status', 'stageSize', 'screenStyle',
 ], { media: true, props: { art: 'workbench', alt: '' }, ...options })
 
 test('desktop demo opens the study desktop in the current theme', async (t) => {
@@ -337,13 +343,18 @@ test('desktop demo opens the study desktop in the current theme', async (t) => {
   }
 })
 
-test('desktop demo opens the English interface on English pages', async (t) => {
+test('desktop demo opens the English interface and poster on English pages', async (t) => {
   const env = desktop(t)
   env.mount()
   assert.equal(new URL(env.api.frameSrc.value, 'https://site.test').searchParams.get('lang'), null)
+  assert.equal(env.api.posterVars.value['--dd-shot-light'], 'url(/features/workbench-light.webp)')
+  assert.equal(env.api.viewerSrc.value, '/features/workbench-light.webp')
   env.locale.value = 'en-US'
   await nextTick()
   assert.equal(new URL(env.api.frameSrc.value, 'https://site.test').searchParams.get('lang'), 'en')
+  assert.equal(env.api.posterVars.value['--dd-shot-light'], 'url(/features/workbench-en-light.webp)')
+  assert.equal(env.api.posterVars.value['--dd-shot-dark'], 'url(/features/workbench-en-dark.webp)')
+  assert.equal(env.api.viewerSrc.value, '/features/workbench-en-light.webp')
 })
 
 test('desktop demo stays a screenshot on touch and narrow screens', (t) => {
