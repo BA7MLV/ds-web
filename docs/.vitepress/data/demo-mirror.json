@@ -1,9 +1,9 @@
 {
-  "source": "https://download.deepstudent.cn/demo/v0.11.0",
-  "version": "v0.11.0",
-  "commit": "099130be5c91072d87e05401bb46393d070c452d",
-  "builtAt": "2026-11-02T11:45:55.147Z",
-  "signature": "7be30c3fc015ea3a54498d886da001e894b80900ce628732de1d0ab32203219c",
+  "source": "http://127.0.0.1:4173",
+  "version": "v0.20.10-en-demo",
+  "commit": "7471319b25c25f823ba866a1bcaee88e23e0ad82",
+  "builtAt": "2026-11-27T05:17:38.112Z",
+  "signature": "f346e995cd0ae446d68eb32a7032a8fecd757811c820ed7c725e9da801d6cb8a",
   "apps": [
     {
       "id": "chat",
@@ -150,6 +150,12 @@
       ]
     },
     {
+      "id": "plugin-workshop",
+      "title": "AI 插件工坊与插件管理",
+      "height": 680,
+      "posters": []
+    },
+    {
       "id": "workbench",
       "title": "学习桌面",
       "height": 700,
@@ -171,7 +177,8 @@
       ]
     }
   ],
-  "syncedAt": "2026-11-02T21:46:42.236Z",
-  "files": 1800,
-  "bytes": 69411865
+  "pinned": "deep-student v0.20.10 English demo localization",
+  "syncedAt": "2026-11-27T05:17:50.952Z",
+  "files": 1124,
+  "bytes": 65838392
 }

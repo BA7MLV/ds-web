@@ -1,0 +1,1 @@
+let r=null,t=0;function u(n,e){typeof window>"u"||window.dispatchEvent(new CustomEvent(n,{detail:e}))}function i(){return t>0}function a(n,e){if(i()){r=null,u(n,e);return}r={type:n,detail:e,requestedAt:Date.now()}}function o(){t+=1;const n=r;r=null,n&&Date.now()-n.requestedAt<=15e3&&u(n.type,n.detail);let e=!1;return()=>{e||(e=!0,t=Math.max(0,t-1))}}export{o as m,a as r};

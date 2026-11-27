@@ -1,0 +1,1 @@
+function a(t){const e=t.replace(/\\/g,"/"),n=e.match(/(?:^|\/)(?:locales\/)?[a-z]{2}(?:-[A-Za-z]{2,4})?\/(.+?)\.json$/);return n?.[1]?n[1]:(e.split("/").pop()??e).replace(/\.json$/,"")}function r(t){return Object.fromEntries(Object.entries(t).map(([e,n])=>[a(e),n]))}export{r as t};

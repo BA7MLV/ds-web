@@ -1,0 +1,1 @@
+let t;const n=new Set;function o(e){if(t=e,!e)return;const r=[...n];n.clear();for(const i of r)i(e)}function p(e){return t?(e(t),()=>{}):(n.add(e),()=>void n.delete(e))}export{o as provideAppUiKernel,p as whenAppUiKernel};

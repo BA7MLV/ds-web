@@ -1,0 +1,1 @@
+import{j as o}from"./vendor-react-CK9Q3ZQe.js";import t from"./SkillsAppWindow-BRvSCENi.js";import{NotificationContainer as r}from"./NotificationContainer-CkM7d3Ya.js";const p=i=>o.jsxs(o.Fragment,{children:[o.jsx(t,{...i}),o.jsx(r,{})]});export{p as default};

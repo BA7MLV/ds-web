@@ -1,0 +1,1 @@
+import{j as e}from"./vendor-react-CK9Q3ZQe.js";import{T as s}from"./vendor-lobehub-icons-DrfzLqnA.js";import{bn as o}from"./ui-boot-Cr8X9_oz.js";const l=({className:i,alt:r="SiliconFlow"})=>e.jsx("span",{className:o("inline-flex aspect-square shrink-0 items-center justify-center",i),role:"img","aria-label":r,children:e.jsx(s,{size:"100%","aria-hidden":"true"})});export{l as S};

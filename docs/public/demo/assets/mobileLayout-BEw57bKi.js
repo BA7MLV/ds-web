@@ -1,0 +1,1 @@
+const E={LANDSCAPE_HEADER_HEIGHT:40,PROGRESSIVE_BLUR_TAIL_PX:14,SELECTION_SETTLE_DELAY_MS:140,SELECTION_RELEASE_DELAY_MS:30,mobileHeader:{height:56},inputBar:{placeholderHeight:112,heightChangeThreshold:4}};export{E as M};
