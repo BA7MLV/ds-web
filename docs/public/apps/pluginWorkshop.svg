@@ -1,26 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150">
-  <linearGradient id="pw_panel" x1="74" x2="74" y1="20" y2="132" gradientUnits="userSpaceOnUse">
-    <stop stop-color="#F8FDFC" offset="0"/>
-    <stop stop-color="#D3E8E6" offset="1"/>
-  </linearGradient>
-  <rect x="18" y="20" width="112" height="112" rx="14" fill="url(#pw_panel)" stroke="#A6C4CB" stroke-width="3"/>
-  <circle cx="36" cy="38" r="4" fill="#14A5A0"/>
-  <path d="M46 38h28" stroke="#1D3F6E" stroke-width="6" stroke-linecap="round"/>
-  <linearGradient id="pw_main" x1="32" x2="88" y1="54" y2="116" gradientUnits="userSpaceOnUse">
-    <stop stop-color="#2BB3A3" offset="0"/>
-    <stop stop-color="#1D3F6E" offset="1"/>
-  </linearGradient>
-  <path d="M40 64h6c0-13 18-13 18 0h6a8 8 0 0 1 8 8v9c13 0 13 18 0 18v9a8 8 0 0 1-8 8H40a8 8 0 0 1-8-8V72a8 8 0 0 1 8-8Z" fill="url(#pw_main)"/>
-  <path d="M44 83h20M44 97h14" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".88"/>
-  <linearGradient id="pw_sub" x1="99" x2="99" y1="64" y2="116" gradientUnits="userSpaceOnUse">
-    <stop stop-color="#5FD0CB" offset="0"/>
-    <stop stop-color="#14A5A0" offset="1"/>
-  </linearGradient>
-  <path d="M88 64h20a8 8 0 0 1 8 8v36a8 8 0 0 1-8 8H88a6 6 0 0 1-6-6v-9c12 0 12-22 0-22v-9a6 6 0 0 1 6-6Z" fill="url(#pw_sub)"/>
-  <path d="M101 84v12" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".88"/>
-  <linearGradient id="pw_spark" x1="100" x2="128" y1="20" y2="52" gradientUnits="userSpaceOnUse">
-    <stop stop-color="#F9AC33" offset="0"/>
-    <stop stop-color="#F0603C" offset="1"/>
-  </linearGradient>
-  <path d="M114 18c2.5 11 7 15.5 18 18-11 2.5-15.5 7-18 18-2.5-11-7-15.5-18-18 11-2.5 15.5-7 18-18Z" fill="url(#pw_spark)" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>
-</svg>
+<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="wb-pluginWorkshop-c"><path d="M 21 3 H 43 C 51.8 3 56.2 3 58.6 5.4 C 61 7.8 61 12.2 61 21 V 43 C 61 51.8 61 56.2 58.6 58.6 C 56.2 61 51.8 61 43 61 H 21 C 12.2 61 7.8 61 5.4 58.6 C 3 56.2 3 51.8 3 43 V 21 C 3 12.2 3 7.8 5.4 5.4 C 7.8 3 12.2 3 21 3 Z"/></clipPath></defs>
+  <g clip-path="url(#wb-pluginWorkshop-c)">
+  <rect x="2" y="2" width="60" height="60" fill="#663826"/>
+  <path d="M 21 3 H 43 C 51.8 3 56.2 3 58.6 5.4 C 61 7.8 61 12.2 61 21 V 43 C 61 51.8 61 56.2 58.6 58.6 C 56.2 61 51.8 61 43 61 H 21 C 12.2 61 7.8 61 5.4 58.6 C 3 56.2 3 51.8 3 43 V 21 C 3 12.2 3 7.8 5.4 5.4 C 7.8 3 12.2 3 21 3 Z" transform="translate(0, -2.2)" fill="#96563E"/>
+  <path d="M 21 3 H 43 C 51.8 3 56.2 3 58.6 5.4 C 61 7.8 61 12.2 61 21 V 43 C 61 51.8 61 56.2 58.6 58.6 C 56.2 61 51.8 61 43 61 H 21 C 12.2 61 7.8 61 5.4 58.6 C 3 56.2 3 51.8 3 43 V 21 C 3 12.2 3 7.8 5.4 5.4 C 7.8 3 12.2 3 21 3 Z" transform="translate(0, 0.9)" fill="none" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="1.05"/>
+  </g>
+  <path d="M 21 3 H 43 C 51.8 3 56.2 3 58.6 5.4 C 61 7.8 61 12.2 61 21 V 43 C 61 51.8 61 56.2 58.6 58.6 C 56.2 61 51.8 61 43 61 H 21 C 12.2 61 7.8 61 5.4 58.6 C 3 56.2 3 51.8 3 43 V 21 C 3 12.2 3 7.8 5.4 5.4 C 7.8 3 12.2 3 21 3 Z" fill="none" stroke="#0F172A" stroke-opacity="0.22" stroke-width="0.9"/>
+  <g transform="rotate(-8 32 32)">
+  <path transform="translate(0, 3.6)" d="M 18 20 H 26.2 C 25.4 17.2 26.8 13.2 30.5 13.2 C 34.2 13.2 35.6 17.2 34.8 20 H 43 A 3.5 3.5 0 0 1 46.5 23.5 V 30.2 C 49.3 29.4 53.3 30.8 53.3 34.5 C 53.3 38.2 49.3 39.6 46.5 38.8 V 46.5 A 3.5 3.5 0 0 1 43 50 H 35.2 C 35.8 47.4 34.2 44.2 30.5 44.2 C 26.8 44.2 25.2 47.4 25.8 50 H 18 A 3.5 3.5 0 0 1 14.5 46.5 V 38.8 C 17.1 39.4 20.3 37.8 20.3 34.5 C 20.3 31.2 17.1 29.6 14.5 30.2 V 23.5 A 3.5 3.5 0 0 1 18 20 Z" fill="#522A1B" fill-opacity="0.42"/>
+  <path transform="translate(0, 2.1)" d="M 18 20 H 26.2 C 25.4 17.2 26.8 13.2 30.5 13.2 C 34.2 13.2 35.6 17.2 34.8 20 H 43 A 3.5 3.5 0 0 1 46.5 23.5 V 30.2 C 49.3 29.4 53.3 30.8 53.3 34.5 C 53.3 38.2 49.3 39.6 46.5 38.8 V 46.5 A 3.5 3.5 0 0 1 43 50 H 35.2 C 35.8 47.4 34.2 44.2 30.5 44.2 C 26.8 44.2 25.2 47.4 25.8 50 H 18 A 3.5 3.5 0 0 1 14.5 46.5 V 38.8 C 17.1 39.4 20.3 37.8 20.3 34.5 C 20.3 31.2 17.1 29.6 14.5 30.2 V 23.5 A 3.5 3.5 0 0 1 18 20 Z" fill="#CEC4B8"/>
+  <path d="M 18 20 H 26.2 C 25.4 17.2 26.8 13.2 30.5 13.2 C 34.2 13.2 35.6 17.2 34.8 20 H 43 A 3.5 3.5 0 0 1 46.5 23.5 V 30.2 C 49.3 29.4 53.3 30.8 53.3 34.5 C 53.3 38.2 49.3 39.6 46.5 38.8 V 46.5 A 3.5 3.5 0 0 1 43 50 H 35.2 C 35.8 47.4 34.2 44.2 30.5 44.2 C 26.8 44.2 25.2 47.4 25.8 50 H 18 A 3.5 3.5 0 0 1 14.5 46.5 V 38.8 C 17.1 39.4 20.3 37.8 20.3 34.5 C 20.3 31.2 17.1 29.6 14.5 30.2 V 23.5 A 3.5 3.5 0 0 1 18 20 Z" fill="#FAF8F4"/>
+  </g></svg>
