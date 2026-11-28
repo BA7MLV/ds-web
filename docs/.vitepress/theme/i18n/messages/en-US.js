@@ -85,7 +85,7 @@ export default {
     previewDescription: 'The study agent reads your materials in chat and produces mind maps, practice questions and Anki cards directly.',
     /** Alt text for the real-UI screenshot in the shell; it is the same interface the demo shows */
     posterAlt:
-      'The DeepStudent app: navigation and conversations on the left, and on the right the chat “高数错题 → Anki 卡片”, where the agent has generated 5 cards.',
+      'The DeepStudent app: navigation and conversations on the left, and on the right the chat “Calculus Mistakes → Anki Cards”, where the agent has generated 5 cards.',
     /**
      * These three only surface when the picture will not move again: not started yet,
      * timed out, or not embeddable. Loading is deliberately silent — the shell is
