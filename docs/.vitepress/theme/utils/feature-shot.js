@@ -1,7 +1,10 @@
 /**
- * 首页真实界面截图（scripts/gen-features-live.mjs 产出的 docs/public/features/<name>-light|dark.webp）。
+ * 首页真实界面截图（scripts/gen-features-live.mjs 产出的 docs/public/features/[en/]<name>-light|dark.webp）。
  */
-export const featureShot = (name, dark) => `/features/${name}-${dark ? 'dark' : 'light'}.webp`
+export const featureShot = (name, dark, locale) => {
+  const prefix = locale === 'en-US' ? '/features/en' : '/features'
+  return `${prefix}/${name}-${dark ? 'dark' : 'light'}.webp`
+}
 
 /**
  * 每张截图取景框的 CSS 尺寸，截出来是它的 2 倍图。功能区六扇窗都是 592 × 416；
@@ -16,11 +19,11 @@ const SIZES = {
 }
 export const shotSize = (name) => SIZES[name] || { width: 592, height: 416 }
 
-/** 轮播切到别的场景前先把截图拉进缓存，切过去时不用等网络；只取当前主题那一套 */
-export const warmFeatureShots = (names, dark) => {
+/** 轮播切到别的场景前先把截图拉进缓存，切过去时不用等网络；只取当前主题与语言那一套 */
+export const warmFeatureShots = (names, dark, locale) => {
   for (const name of names) {
     const image = new Image()
     image.decoding = 'async'
-    image.src = featureShot(name, dark)
+    image.src = featureShot(name, dark, locale)
   }
 }

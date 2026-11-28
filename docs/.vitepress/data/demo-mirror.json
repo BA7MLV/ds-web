@@ -1,163 +1,118 @@
 {
-  "source": "https://download.deepstudent.cn/demo/v0.11.0",
-  "version": "v0.11.0",
-  "commit": "099130be5c91072d87e05401bb46393d070c452d",
-  "builtAt": "2026-11-02T11:45:55.147Z",
-  "signature": "7be30c3fc015ea3a54498d886da001e894b80900ce628732de1d0ab32203219c",
+  "source": "http://127.0.0.1:49674",
+  "version": "v0.20.12",
+  "commit": "0e6961eb7ff7c79aa1c06e19e88c33556033cb2c",
+  "builtAt": "2026-11-28T02:45:47.155Z",
+  "signature": "6fb46ae46d8074dee12fb8bb581931cf90d26bc1e5d68836a3fd4c2d7b03ee55",
   "apps": [
     {
       "id": "chat",
       "title": "AI 对话",
       "height": 680,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "research-memory",
       "title": "深度调研与智能记忆",
       "height": 680,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "learning-hub",
       "title": "资源库",
       "height": 640,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "reading-translation",
       "title": "文档阅读与翻译",
       "height": 680,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "paper-search",
       "title": "论文搜索",
       "height": 680,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "media",
       "title": "音视频",
       "height": 660,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "notes",
       "title": "笔记",
       "height": 660,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "mindmap",
       "title": "思维导图",
       "height": 640,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "essay",
       "title": "作文批改",
       "height": 680,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "productivity",
       "title": "待办与番茄钟",
       "height": 620,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "question-bank",
       "title": "题目集与练习",
       "height": 660,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "anki",
       "title": "Anki 制卡与模板",
       "height": 640,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "flashcards",
       "title": "闪卡",
       "height": 640,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "models",
       "title": "模型与供应商配置",
       "height": 660,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "skills-mcp",
       "title": "技能与 MCP 扩展",
       "height": 640,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "data-sync",
       "title": "数据管理与云同步",
       "height": 660,
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
+    },
+    {
+      "id": "plugin-workshop",
+      "title": "AI 插件工坊与插件管理",
+      "height": 680,
+      "posters": []
     },
     {
       "id": "workbench",
       "title": "学习桌面",
       "height": 700,
       "entry": "demo.html?desktop=1",
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     },
     {
       "id": "mobile",
@@ -165,13 +120,11 @@
       "height": 780,
       "width": 390,
       "entry": "demo.html",
-      "posters": [
-        "light",
-        "dark"
-      ]
+      "posters": []
     }
   ],
-  "syncedAt": "2026-11-02T21:46:42.236Z",
-  "files": 1800,
-  "bytes": 69411865
+  "pinned": "v0.20.12 (0e6961eb7) local build",
+  "syncedAt": "2026-11-28T02:45:47.608Z",
+  "files": 1096,
+  "bytes": 63230124
 }

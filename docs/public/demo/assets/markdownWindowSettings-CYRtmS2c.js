@@ -1,0 +1,1 @@
+import{invoke as a}from"./core-DhEqZVGG.js";import{c as t}from"./markdownWindow-Ct-NExrK.js";const o="notes.editor.initial_line_window";async function c(i=a){try{const n=await i("get_setting",{key:o});return t(n)}catch{return t(void 0)}}async function l(i,n=a){const e=t(i);return await n("save_setting",{key:o,value:String(e)}),e}export{o as M,c as l,l as s};

@@ -22,7 +22,11 @@ const POSTERS = [
   { file: 'demo-poster.webp', css: 1112, ratio: 773 / 1112, minPpi: 2, maxKb: 96 },
   { file: 'demo-poster-dark.webp', css: 1112, ratio: 773 / 1112, minPpi: 2, maxKb: 96 },
   { file: 'demo-poster-mobile@3x.webp', css: 296, ratio: 569 / 296, minPpi: 3, maxKb: 60 },
-  { file: 'demo-poster-mobile-dark@3x.webp', css: 296, ratio: 569 / 296, minPpi: 3, maxKb: 60 }
+  { file: 'demo-poster-mobile-dark@3x.webp', css: 296, ratio: 569 / 296, minPpi: 3, maxKb: 60 },
+  { file: 'demo-poster-en.webp', css: 1112, ratio: 773 / 1112, minPpi: 2, maxKb: 96 },
+  { file: 'demo-poster-en-dark.webp', css: 1112, ratio: 773 / 1112, minPpi: 2, maxKb: 96 },
+  { file: 'demo-poster-en-mobile@3x.webp', css: 296, ratio: 569 / 296, minPpi: 3, maxKb: 60 },
+  { file: 'demo-poster-en-mobile-dark@3x.webp', css: 296, ratio: 569 / 296, minPpi: 3, maxKb: 60 }
 ]
 
 test('hero posters are dense enough for the screens that will show them', async () => {

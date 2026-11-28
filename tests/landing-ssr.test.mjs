@@ -31,16 +31,18 @@ const shell = template('AppShell')
 const download = template('HomeDownload')
 const emptyDecoration = { render: () => null }
 
-/** 只渲染 AppShell（默认语言），用来单独检查壳本身的 SSR 输出。 */
-const shellOnly = () => {
+/** 只渲染 AppShell，用来单独检查壳本身的 SSR 输出。 */
+const shellOnly = (locale = 'zh-CN') => {
   const t = (path, params = {}) => {
-    const value = path.split('.').reduce((acc, key) => acc[key], messages['zh-CN'])
+    const value = path.split('.').reduce((acc, key) => acc[key], messages[locale])
     return String(value).replace(/\{(\w+)\}/g, (_, key) => params[key] ?? '')
   }
   return createSSRApp({
     ssrRender: shell.ssrRender,
     setup: () => ({
       t,
+      locale,
+      isDark: false,
       measured: false,
       showFrame: false,
       loading: true,
@@ -83,6 +85,8 @@ for (const [locale, words] of Object.entries(messages)) {
       ssrRender: shell.ssrRender,
       setup: () => ({
         t,
+        locale,
+        isDark: false,
         measured: false,
         showFrame: false,
         loading: true,
@@ -149,28 +153,31 @@ for (const [locale, words] of Object.entries(messages)) {
       assert.match(html, /class="[^"]*\blp-optical\b[^"]*"/, '居中标题缺了视觉校正的类')
     }
     // 壳内先铺真实界面截图，所以首屏 HTML 里有图，而不是等 JS 再画
-    assert.match(html, /<img[^>]+src="\/demo-poster\.webp"[^>]+alt="[^"]+"/)
+    const expectedPoster = locale === 'en-US' ? '/demo-poster-en.webp' : '/demo-poster.webp'
+    assert.match(html, new RegExp(`<img[^>]+src="${expectedPoster.replace('.', '\\.')}"[^>]+alt="[^"]+"`))
     assert.doesNotMatch(html, /<iframe\b/)
   })
 }
 
 test('hero ships every poster variant so no layout is left without a real screenshot', async () => {
-  const html = await renderToString(shellOnly())
-  for (const src of [
-    '/demo-poster.webp',
-    '/demo-poster-dark.webp',
-    '/demo-poster-mobile@3x.webp',
-    '/demo-poster-mobile-dark@3x.webp'
-  ]) {
-    assert.ok(html.includes(src), `缺少截图：${src}`)
+  for (const [locale, prefix] of [['zh-CN', '/demo-poster'], ['en-US', '/demo-poster-en']]) {
+    const html = await renderToString(shellOnly(locale))
+    for (const src of [
+      `${prefix}.webp`,
+      `${prefix}-dark.webp`,
+      `${prefix}-mobile@3x.webp`,
+      `${prefix}-mobile-dark@3x.webp`
+    ]) {
+      assert.ok(html.includes(src), `[${locale}] 缺少截图：${src}`)
+    }
+    // 深浅色各配一张，靠 prefers-color-scheme 选，不额外发请求
+    assert.match(html, /media="\(prefers-color-scheme: dark\)"/)
+    assert.match(html, /media="\(max-width: 639px\) and \(prefers-color-scheme: dark\)"/)
+    // 截图铺在 iframe 那一块上，铺满内屏
+    assert.match(html, /class="sh__poster"/)
+    // 替代文字要说清这张图是什么（截图与实时演示是同一个界面）
+    assert.ok(html.includes(messages[locale].appShell.posterAlt))
   }
-  // 深浅色各配一张，靠 prefers-color-scheme 选，不额外发请求
-  assert.match(html, /media="\(prefers-color-scheme: dark\)"/)
-  assert.match(html, /media="\(max-width: 639px\) and \(prefers-color-scheme: dark\)"/)
-  // 截图铺在 iframe 那一块上，铺满内屏
-  assert.match(html, /class="sh__poster"/)
-  // 替代文字要说清这张图是什么（截图与实时演示是同一个界面）
-  assert.ok(html.includes(messages['zh-CN'].appShell.posterAlt))
 })
 
 test('landing visibility does not depend on mounted state or transparent window animation', () => {

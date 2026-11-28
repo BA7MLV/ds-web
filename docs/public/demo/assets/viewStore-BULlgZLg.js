@@ -1,1 +1,0 @@
-import{c as u}from"./react-BO0PA1Rj.js";const o=u()((t,i)=>({currentView:"chat-v2",previousView:null,setCurrentView:e=>{const r=i().currentView;r!==e&&t({currentView:e,previousView:r})}}));export{o as u};

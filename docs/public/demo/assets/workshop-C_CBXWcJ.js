@@ -1,0 +1,1 @@
+import{f as s}from"./vendor-react-CK9Q3ZQe.js";let e;const t=new Set,u=r=>(t.add(r),()=>{t.delete(r)}),o=()=>e;function c(r){e=r;for(const n of t)n();return()=>{if(e===r){e=void 0;for(const n of t)n()}}}function i(){return s.useSyncExternalStore(u,o,o)}export{c as r,i as u};

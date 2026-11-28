@@ -24,9 +24,8 @@ const { t, locale } = useI18n()
 const entry = computed(() => (mirror.apps || []).find((app) => app.id === 'mobile') || null)
 const theme = computed(() => (isDark.value ? 'dark' : 'light'))
 const poster = computed(() => {
-  const posters = entry.value?.posters || []
-  if (!posters.length) return ''
-  return `/demo/posters/mobile-${posters.includes(theme.value) ? theme.value : posters[0]}.webp`
+  const dir = locale.value === 'en-US' ? '/img/user-guide/en' : '/img/user-guide'
+  return `${dir}/mobile-mobile-${theme.value}.webp`
 })
 const frameSrc = computed(() => {
   const params = new URLSearchParams({ theme: theme.value })

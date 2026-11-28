@@ -28,11 +28,15 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const DOCS = join(ROOT, 'docs')
 const GUIDE_DIR = join(DOCS, 'user-guide')
 const GUIDE_IMG_DIR = join(DOCS, 'public/img/user-guide')
+const GUIDE_IMG_EN_DIR = join(DOCS, 'public/img/user-guide/en')
+const PUBLIC_GUIDE_DIR = join(DOCS, 'public/img/guide')
 const DATA_FILE = join(DOCS, '.vitepress/data/user-guide.json')
 const SHOTS_FILE = join(DOCS, '.vitepress/data/guide-shots.json')
+const SHOTS_EN_FILE = join(DOCS, '.vitepress/data/guide-shots-en.json')
 const REPO = 'helixnow/deep-student'
 const SOURCE_DIR = 'docs/user-guide'
 const SOURCE_IMG_DIR = `${SOURCE_DIR}/images`
+const SOURCE_IMG_EN_DIR = `${SOURCE_IMG_DIR}/en`
 const IGNORED_FILES = new Set(['question-authoring-v2-en.md'])
 const IMAGE_EXT = /\.(?:webp|png|jpe?g|gif|svg)$/i
 
@@ -77,7 +81,9 @@ async function readLocal(dir) {
     if (name.endsWith('.md')) files.set(name, await readFile(join(root, SOURCE_DIR, name), 'utf-8'))
   }
   const images = new Map()
+  const enImages = new Map()
   let shotsManifest = null
+  let enShotsManifest = null
   try {
     for (const name of await readdir(join(root, SOURCE_IMG_DIR))) {
       if (IMAGE_EXT.test(name)) images.set(name, await readFile(join(root, SOURCE_IMG_DIR, name)))
@@ -86,9 +92,17 @@ async function readLocal(dir) {
   } catch {
     // 主仓库尚未创建 images 目录时跳过
   }
+  try {
+    for (const name of await readdir(join(root, SOURCE_IMG_EN_DIR))) {
+      if (IMAGE_EXT.test(name)) enImages.set(name, await readFile(join(root, SOURCE_IMG_EN_DIR, name)))
+      else if (name === 'manifest.json') enShotsManifest = JSON.parse(await readFile(join(root, SOURCE_IMG_EN_DIR, name), 'utf-8'))
+    }
+  } catch {
+    // 英文目录尚未创建时跳过
+  }
   const commit = execFileSync('git', ['-C', root, 'log', '-1', '--format=%H', '--', SOURCE_DIR], { encoding: 'utf-8' }).trim()
   const dirty = execFileSync('git', ['-C', root, 'status', '--porcelain', '--', SOURCE_DIR], { encoding: 'utf-8' }).trim()
-  return { files, images, shotsManifest, commit, dirty: Boolean(dirty) }
+  return { files, images, enImages, shotsManifest, enShotsManifest, commit, dirty: Boolean(dirty) }
 }
 
 async function readRemote(ref) {
@@ -107,10 +121,28 @@ async function readRemote(ref) {
     files.set(entry.name, await response.text())
   }
   const images = new Map()
+  const enImages = new Map()
   let shotsManifest = null
+  let enShotsManifest = null
   if (listing.some((entry) => entry.type === 'dir' && entry.name === 'images')) {
     const imgListing = await api(`contents/${SOURCE_IMG_DIR}?ref=${encodeURIComponent(ref)}`)
     for (const entry of imgListing) {
+      if (entry.type === 'dir' && entry.name === 'en') {
+        const enListing = await api(`contents/${SOURCE_IMG_EN_DIR}?ref=${encodeURIComponent(ref)}`)
+        for (const enEntry of enListing) {
+          if (enEntry.type !== 'file') continue
+          if (IMAGE_EXT.test(enEntry.name)) {
+            const response = await fetch(enEntry.download_url)
+            if (!response.ok) throw new Error(`images/en/${enEntry.name} → ${response.status}`)
+            enImages.set(enEntry.name, Buffer.from(await response.arrayBuffer()))
+          } else if (enEntry.name === 'manifest.json') {
+            const response = await fetch(enEntry.download_url)
+            if (!response.ok) throw new Error('images/en/manifest.json → ' + response.status)
+            enShotsManifest = await response.json()
+          }
+        }
+        continue
+      }
       if (entry.type !== 'file') continue
       if (IMAGE_EXT.test(entry.name)) {
         const response = await fetch(entry.download_url)
@@ -124,7 +156,7 @@ async function readRemote(ref) {
     }
   }
   const [latest] = await api(`commits?path=${SOURCE_DIR}&sha=${encodeURIComponent(ref)}&per_page=1`)
-  return { files, images, shotsManifest, commit: latest?.sha ?? '', dirty: false }
+  return { files, images, enImages, shotsManifest, enShotsManifest, commit: latest?.sha ?? '', dirty: false }
 }
 
 /** 出处链到 main 上的源文件（要改就去那儿改）；同步自哪个提交记在 data/user-guide.json */
@@ -176,6 +208,10 @@ function transform(chapter, source) {
       if (linked) return `](${linked.path}${hash})`
       return `](${new URL(target, `https://github.com/${REPO}/blob/main/${SOURCE_DIR}/`).href}${hash})`
     })
+    // 防止 Anki/Cloze 的 `{{c1::...}}` / `{{#字段}}` 被 VitePress 当作 Vue 插值编译报错
+    .replace(/`([^`\n]*\{\{[^`\n]*\}\}[^`\n]*)`/g, (_m, code) =>
+      `<code v-pre>${code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code>`
+    )
     .trimEnd()
   // 章首引言之后放这一章的功能演示（GuideDemo 按网址找演示，显式关闭 demo 的章节不插入）
   if (chapter.slug && chapter.demo !== false) body = insertDemo(body)
@@ -195,7 +231,7 @@ function transform(chapter, source) {
 async function main() {
   const from = option('--from')
   const ref = option('--ref') || 'main'
-  const { files, images, shotsManifest, commit, dirty } = from ? await readLocal(from) : await readRemote(ref)
+  const { files, images, enImages, shotsManifest, enShotsManifest, commit, dirty } = from ? await readLocal(from) : await readRemote(ref)
 
   const missing = CHAPTERS.filter((c) => !files.has(c.file)).map((c) => c.file)
   if (missing.length) throw new Error(`主仓库里找不到：${missing.join('、')}（CHAPTERS 要跟着改）`)
@@ -215,9 +251,32 @@ async function main() {
       await writeFile(join(GUIDE_IMG_DIR, name), buf)
     }
   }
+  if (enImages.size > 0) {
+    await mkdir(GUIDE_IMG_EN_DIR, { recursive: true })
+    for (const [name, buf] of enImages) {
+      await writeFile(join(GUIDE_IMG_EN_DIR, name), buf)
+    }
+  }
+  // 同步中英文快速上手页引用的 /img/guide/*.webp
+  const guideSpotlightCopies = [
+    [images.get('start-desktop-overview.webp') || images.get('workbench-desktop-light.webp'), 'study-desktop-hero.webp'],
+    [enImages.get('start-desktop-overview.webp') || enImages.get('workbench-desktop-light.webp'), 'study-desktop-hero-en.webp'],
+    [enImages.get('models-providers.webp'), 'models-providers-en.webp'],
+    [enImages.get('start-welcome-setup.webp'), 'start-welcome-setup-en.webp']
+  ]
+  if (guideSpotlightCopies.some(([buf]) => Boolean(buf))) {
+    await mkdir(PUBLIC_GUIDE_DIR, { recursive: true })
+    for (const [buf, destName] of guideSpotlightCopies) {
+      if (buf) await writeFile(join(PUBLIC_GUIDE_DIR, destName), buf)
+    }
+  }
   if (shotsManifest) {
     await mkdir(dirname(SHOTS_FILE), { recursive: true })
     await writeFile(SHOTS_FILE, `${JSON.stringify(shotsManifest, null, 2)}\n`)
+  }
+  if (enShotsManifest) {
+    await mkdir(dirname(SHOTS_EN_FILE), { recursive: true })
+    await writeFile(SHOTS_EN_FILE, `${JSON.stringify(enShotsManifest, null, 2)}\n`)
   }
 
   const groups = []
@@ -233,7 +292,7 @@ async function main() {
     groups
   }, null, 2)}\n`)
 
-  console.log(`[user-guide] ${CHAPTERS.length} 页 + ${images.size} 张配图，来源 ${REPO}@${commit.slice(0, 9)}${dirty ? '（含未提交改动）' : ''}`)
+  console.log(`[user-guide] ${CHAPTERS.length} 页 + 中文 ${images.size} 张 / 英文 ${enImages.size} 张配图，来源 ${REPO}@${commit.slice(0, 9)}${dirty ? '（含未提交改动）' : ''}`)
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from '../i18n/index.js'
 import { featureShot, shotSize } from '../utils/feature-shot.js'
 
 /**
@@ -15,6 +16,7 @@ const props = defineProps({
   alt: { type: String, default: '' }
 })
 
+const { locale } = useI18n()
 const size = computed(() => shotSize(props.name))
 </script>
 
@@ -22,10 +24,10 @@ const size = computed(() => shotSize(props.name))
   <span class="fs">
     <img
       v-for="dark in [false, true]"
-      :key="String(dark)"
+      :key="`${locale}-${dark}`"
       :class="['fs__img', dark ? 'fs__img--dark' : 'fs__img--light']"
-      :src="featureShot(name, dark)"
-      :srcset="`${featureShot(name, dark)} 2x`"
+      :src="featureShot(name, dark, locale)"
+      :srcset="`${featureShot(name, dark, locale)} 2x`"
       :alt="alt"
       :width="size.width"
       :height="size.height"

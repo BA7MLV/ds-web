@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
 import { useData, useRoute } from 'vitepress'
+import { useI18n } from '../i18n/index.js'
 import shotsData from '../../data/guide-shots.json'
 
 /**
@@ -21,6 +22,8 @@ const props = defineProps({
 
 const route = useRoute()
 const { isDark, page } = useData()
+const { locale } = useI18n()
+const isEn = computed(() => locale.value === 'en-US')
 
 const chapterId = computed(() => props.id || route.path.replace(/\.html$/, '').replace(/\/$/, '').split('/').pop())
 const entry = computed(() => shotsData?.chapters?.[chapterId.value] || null)
@@ -55,7 +58,8 @@ const imageSrc = computed(() => {
   const bucket = entry.value?.[activeMode.value]
   if (!bucket) return ''
   const file = bucket[theme.value] || bucket.light || bucket.dark || ''
-  return file ? `/img/user-guide/${file}` : ''
+  if (!file) return ''
+  return isEn.value ? `/img/user-guide/en/${file}` : `/img/user-guide/${file}`
 })
 
 const imageAlt = computed(() => {

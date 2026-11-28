@@ -1,0 +1,1 @@
+import{bB as n}from"./ui-boot-D3Jplikg.js";import{appRegistry as t}from"./appRegistry-i2F00zBb.js";const o=n("workbench.apps",r=>(t.register(r),()=>{t.unregister(r.typeId,r)}));function p(r){o.announce(r)}export{p as c,o as w};

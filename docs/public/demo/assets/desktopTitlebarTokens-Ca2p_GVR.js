@@ -1,0 +1,1 @@
+import{a as t}from"./coarseHit-BzqAfrso.js";const o="truncate text-base font-medium text-foreground",s="whitespace-nowrap text-xs font-normal tabular-nums text-muted-foreground/60",a=`desktop-shell-action-button gap-1.5 text-ui ${t}`,n=`desktop-shell-action-icon ${t}`,T="desktop-shell-header-search-input text-ui";export{a as T,n as a,T as b,s as c,o as d};

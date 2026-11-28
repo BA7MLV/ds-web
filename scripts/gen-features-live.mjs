@@ -38,100 +38,111 @@ const CWEBP = process.env.CWEBP || 'cwebp'
  * block 时再往上找到带边框的容器；取景框左上角 = 锚点左上角 + offset，
  * center 时改成让取景框中心对准锚点中心。
  */
-const SCENES = [
-  // 对话、题库、Anki、双语四扇窗口都开 940 宽：侧栏 320 之后、左右各留 28，对话栏 564 宽，
-  // 取景框 592 宽、两边各让 14px 正好框住一整栏 —— 开 1280 宽时对话栏比取景框宽，每行字、每张卡片的右半截都被切掉
-  { name: 'chat', scene: 'demo-pdf-deepread', viewport: { width: 940, height: 1000 }, anchor: { text: '沿着页码理解章节' }, offset: { x: -14, y: -12 } },
-  // 导图默认左右两侧展开，扁长一条（约 6 : 1），放进 592 × 416 的取景框上下全是空白、两头的叶子还被切掉。
-  // 切到应用自带的「单侧布局」再「回中」：根节点在左，三个分支竖着排，宽高比和取景框差不多。
-  // 取景框对准整张图的外框居中
-  {
-    name: 'mindmap',
-    scene: 'demo-pdf-deepread',
-    ready: { selector: '.react-flow__node', text: '数据并行训练' },
-    prepare: prepareMindmap,
-    anchor: { selector: '.react-flow__node', union: true, center: true },
-    offset: { x: 0, y: 0 }
-  },
-  { name: 'quiz', scene: 'demo-qbank', viewport: { width: 940, height: 1000 }, anchor: { text: 'AI 出题结果', block: true }, offset: { x: -14, y: -12 } },
-  // 取景框上沿压在正中那张卡空着的上半截（卡片和底色同色、没有边，看不出被压），
-  // 底下才装得下收起后的「路由 → 生成 → 完成」整栏
-  {
-    name: 'anki',
-    scene: 'demo-anki-cards',
-    viewport: { width: 940, height: 1000 },
-    prepare: prepareAnki,
-    anchor: { text: '共 5 张卡片' },
-    offset: { x: -14, y: -241 }
-  },
-  // 复习页的四个评分键横跨整个主区：窗口收到 920 × 470，主区 600 宽，卡片也跟着矮下来，
-  // 取景框一屏装下「退出 / 复习 2 / 已评 0 / 计时」那一栏、翻过来的答案和四个评分键
-  {
-    name: 'review',
-    scene: 'demo-weekly-report',
-    ready: { text: '本周学习看板' },
-    init: unlockViews,
-    prepare: prepareReview,
-    viewport: { width: 920, height: 470 },
-    anchor: { text: '保留到三阶', center: true },
-    offset: { x: 0, y: 0 }
-  },
-  { name: 'reading', scene: 'demo-bilingual', viewport: { width: 940, height: 1000 }, anchor: { text: '英文原文', block: true }, offset: { x: -14, y: -12 } },
-  // 「使用流程」两张卡（StepFlow.vue）：窄卡 320 宽、宽卡 592 宽，高度按卡片标题下面剩的地方定。
-  // 窄卡用手机宽度打开，回答在 320 宽里自然折行，取景框里不会有被拦腰截断的句子。
-  // 取景从「怎样接到自己的学习中」起：正文引的是学习档案里的记忆 [忆1] [忆2]，
-  // 下面接着 AI 生成的研究路径对照卡 —— 正好是这张卡讲的「答案带出处、记得你的偏好」
-  {
-    name: 'flow-think',
-    scene: 'demo-spaced-repetition',
-    viewport: { width: 344, height: 900 },
-    anchor: { text: '怎样接到自己的学习中' },
-    // 正文栏 16–328，取景框 320 宽左右各让 4px：「AI 生成」那条框差不多和栏一样宽，偏一边就贴到框边
-    offset: { x: -4, y: -12 }
-  },
-  // 学习桌面（桌面端的默认界面）：演示入口带 desktop=1 自己就开学习桌面、摆好对话和闪卡两扇窗，
-  // 和首页「学习桌面」一节载入前的海报、载入后的实时桌面是同一个画面（主仓库 src/demo/desktop.tsx）。
-  // 标题栏换成会话名说明窗口摆好了；取景框就是整个窗口：桌面本来就是一整屏
-  {
-    name: 'workbench',
-    scene: 'demo-anki-cards',
-    query: 'desktop=1',
-    ready: { text: '高数错题 → Anki 卡片' },
-    prepare: prepareWorkbench,
-    viewport: { width: 1440, height: 900 },
-    anchor: { viewport: true }
-  },
-  {
-    name: 'flow-review',
-    scene: 'demo-weekly-report',
-    ready: { text: '本周学习看板' },
-    init: unlockViews,
-    prepare: prepareToday,
-    viewport: { width: 920, height: 640 },
-    anchor: { text: '今日复习' },
-    // 往左多让 8px：取景框右缘正好压着滚动区的边线
-    offset: { x: -16, y: -12 }
-  }
-]
+function buildScenes(lang) {
+  const en = lang === 'en'
+  return [
+    {
+      name: 'chat',
+      scene: 'demo-pdf-deepread',
+      viewport: { width: 940, height: 1000 },
+      anchor: { text: en ? 'Page-Anchored Chapter Walkthrough' : '沿着页码理解章节' },
+      offset: { x: -14, y: -12 }
+    },
+    {
+      name: 'mindmap',
+      scene: 'demo-pdf-deepread',
+      ready: { selector: '.react-flow__node', text: en ? 'Data-Parallel Training' : '数据并行训练' },
+      prepare: (page) => prepareMindmap(page, lang),
+      anchor: { selector: '.react-flow__node', union: true, center: true },
+      offset: { x: 0, y: 0 }
+    },
+    {
+      name: 'quiz',
+      scene: 'demo-qbank',
+      viewport: { width: 940, height: 1000 },
+      anchor: { text: en ? 'AI generation result' : 'AI 出题结果', block: true },
+      offset: { x: -14, y: -6 }
+    },
+    {
+      name: 'anki',
+      scene: 'demo-anki-cards',
+      viewport: { width: 940, height: 1000 },
+      prepare: (page) => prepareAnki(page, lang),
+      anchor: { text: en ? '5 cards' : '共 5 张卡片' },
+      offset: { x: -14, y: -241 }
+    },
+    {
+      name: 'review',
+      scene: 'demo-weekly-report',
+      ready: { text: en ? 'Weekly Study Dashboard' : '本周学习看板' },
+      init: unlockViews,
+      prepare: (page) => prepareReview(page, lang),
+      viewport: { width: 920, height: 470 },
+      anchor: { text: en ? 'third order' : '保留到三阶', center: true },
+      offset: { x: 0, y: 0 }
+    },
+    {
+      name: 'reading',
+      scene: 'demo-bilingual',
+      viewport: { width: 940, height: 1000 },
+      anchor: { text: en ? 'English Original' : '英文原文', block: true },
+      offset: { x: -14, y: -12 }
+    },
+    {
+      name: 'flow-think',
+      scene: 'demo-spaced-repetition',
+      viewport: { width: 344, height: 900 },
+      anchor: { text: en ? 'Applying This to Your Routine' : '怎样接到自己的学习中' },
+      offset: { x: -4, y: -12 }
+    },
+    {
+      name: 'workbench',
+      scene: 'demo-anki-cards',
+      query: 'desktop=1',
+      ready: { text: en ? 'Calculus Mistakes → Anki Cards' : '高数错题 → Anki 卡片' },
+      prepare: prepareWorkbench,
+      viewport: { width: 1440, height: 900 },
+      anchor: { viewport: true }
+    },
+    {
+      name: 'flow-review',
+      scene: 'demo-weekly-report',
+      ready: { text: en ? 'Weekly Study Dashboard' : '本周学习看板' },
+      init: unlockViews,
+      prepare: (page) => prepareToday(page, lang),
+      viewport: { width: 920, height: 640 },
+      anchor: { selector: '.wb-fc-today' },
+      offset: { x: 4, y: 4 }
+    }
+  ]
+}
 
-/**
- * 闪卡复习不在聊天页里：演示壳只放行聊天页（主仓库 App.tsx 的 isDemoShell 守卫），
- * 演示的 mock IPC 也没有 FSRS 那一套。所以借演示把应用拉起来之后：
- *   · 页面脚本执行前把 __DS_DEMO_SHELL__ 钉成 false，放开视图切换；
- *   · 在 mock IPC 外再包一层，给 fsrs_* 等几条命令返回固定数据 ——
- *     卡片正文取自演示「高数错题 → Anki 卡片」，间隔是一张复习卡的典型值；
- *   · 切到闪卡 → 开始复习 → 显示答案，停在评分那一步。
- */
-const REVIEW_CARDS = [
-  {
-    front: '求 lim(x→0) (sin x − x) / x³ 时，泰勒展开应保留到哪一阶？',
-    back: '保留到三阶。\n展开 sin x = x − x³/6 + o(x³)，相减后首个非零项是 −x³/6，除以 x³ 得极限 −1/6。'
-  },
-  {
-    front: '∫₀^π sin²x dx 用换元 u = cos x 时，上下限和微分怎样变化？',
-    back: 'x = 0 对应 u = 1，x = π 对应 u = −1，du = −sin x dx。\n在 [0, π] 上 sin x ≥ 0，原式转为 ∫₋₁¹ √(1 − u²) du = π/2。'
-  }
-]
+const REVIEW_CARDS_BY_LANG = {
+  zh: [
+    {
+      front: '求 lim(x→0) (sin x − x) / x³ 时，泰勒展开应保留到哪一阶？',
+      back: '保留到三阶。\n展开 sin x = x − x³/6 + o(x³)，相减后首个非零项是 −x³/6，除以 x³ 得极限 −1/6。',
+      tag: '高等数学'
+    },
+    {
+      front: '∫₀^π sin²x dx 用换元 u = cos x 时，上下限和微分怎样变化？',
+      back: 'x = 0 对应 u = 1，x = π 对应 u = −1，du = −sin x dx。\n在 [0, π] 上 sin x ≥ 0，原式转为 ∫₋₁¹ √(1 − u²) du = π/2。',
+      tag: '高等数学'
+    }
+  ],
+  en: [
+    {
+      front: 'When evaluating lim(x→0) (sin x − x) / x³, to what order should the Taylor expansion be kept?',
+      back: 'Keep up to the third order.\nExpanding sin x = x − x³/6 + o(x³), the first non-zero term after subtraction is −x³/6, giving the limit −1/6.',
+      tag: 'Calculus'
+    },
+    {
+      front: 'Under substitution u = cos x for ∫₀^π sin²x dx, how do the limits and differential transform?',
+      back: 'x = 0 maps to u = 1, x = π maps to u = −1, and du = −sin x dx.\nSince sin x ≥ 0 on [0, π], the integral becomes ∫₋₁¹ √(1 − u²) du = π/2.',
+      tag: 'Calculus'
+    }
+  ]
+}
 
 function unlockViews() {
   Object.defineProperty(window, '__DS_DEMO_SHELL__', { configurable: true, get: () => false, set: () => {} })
@@ -148,7 +159,7 @@ function mockFsrs(cards) {
       ankiCardId: `anki-demo-${i + 1}`,
       front: card.front,
       back: card.back,
-      tags: ['高等数学'],
+      tags: [card.tag || '高等数学'],
       images: [],
       templateId: null,
       extraFields: {},
@@ -172,37 +183,32 @@ function mockFsrs(cards) {
  * 而网格里的中文一个两格（16px）比界面上的字宽，右边的叶子会排出框外。
  * 左下角的工具条只是画布控件，藏起来；鼠标也挪开，免得留下提示气泡
  */
-async function prepareMindmap(page) {
+async function prepareMindmap(page, lang) {
   const card = page.locator('.mindmap-container').first()
-  await card.locator('button[aria-label="切换为单侧布局"]').click()
+  const singleLabel = lang === 'en' ? 'Switch to single-side layout' : '切换为单侧布局'
+  const fitLabel = lang === 'en' ? 'Fit view' : '回中'
+  const zoomOutLabel = lang === 'en' ? 'Zoom out' : '缩小'
+  await card.locator(`button[aria-label="${singleLabel}"]`).click()
   await page.waitForTimeout(1200)
-  await card.locator('button[aria-label="回中"]').click()
+  await card.locator(`button[aria-label="${fitLabel}"]`).click()
   await page.waitForTimeout(1200)
-  await card.locator('button[aria-label="缩小"]').click()
+  await card.locator(`button[aria-label="${zoomOutLabel}"]`).click()
   await page.waitForTimeout(1200)
   await page.mouse.move(0, 0)
   await page.addStyleTag({ content: '.mindmap-container button{visibility:hidden!important}' })
 }
 
-/**
- * Anki 卡片轮播：后面四张卡斜着叠在正中那张后头，被它挡住半边，截出来是一列列半截字，
- * 只留最上面那张（z-index 最大）。「路由 → 生成 → 完成」那一栏收起详情：
- * 展开时底下的进度条和卡片数伸出取景框，收起后整栏正好留在框里
- */
-async function prepareAnki(page) {
+async function prepareAnki(page, lang) {
   await page.evaluate(() => {
     const cards = [...document.querySelectorAll('.card-3d')]
     const z = (el) => Number(getComputedStyle(el).zIndex) || 0
     const front = cards.reduce((top, card) => (z(card) > z(top) ? card : top), cards[0])
     for (const card of cards) if (card !== front) card.style.visibility = 'hidden'
   })
-  await page.getByRole('button', { name: '收起详情' }).first().click()
+  const collapseName = lang === 'en' ? /Hide details|Collapse/i : '收起详情'
+  await page.getByRole('button', { name: collapseName }).first().click()
 }
 
-/**
- * 对话窗口里的卡片轮播和 Anki 那扇一样只留正中那张：后面那张从右边露出半截，静态图里像被截断的字。
- * 只动截图，实时桌面里轮播照常
- */
 async function prepareWorkbench(page) {
   await page.evaluate(() => {
     const slides = [...document.querySelectorAll('.wb-window .card-3d')]
@@ -212,18 +218,17 @@ async function prepareWorkbench(page) {
   })
 }
 
-/** 「记得住」那张卡停在闪卡的「今日」页：进度环、待复习 / 新卡 / 学习中，不点开始复习 */
-async function prepareToday(page) {
-  await page.evaluate(mockFsrs, REVIEW_CARDS)
+async function prepareToday(page, lang) {
+  await page.evaluate(mockFsrs, REVIEW_CARDS_BY_LANG[lang] || REVIEW_CARDS_BY_LANG.zh)
   await page.evaluate(() => window.dispatchEvent(new CustomEvent('NAVIGATE_TO_VIEW', { detail: { view: 'flashcards' } })))
-  await page.getByText('今日复习', { exact: true }).first().waitFor({ timeout: 20000 })
+  await page.locator('[data-testid="fc-today-start-review"]').first().waitFor({ timeout: 20000 })
 }
 
-async function prepareReview(page) {
-  await page.evaluate(mockFsrs, REVIEW_CARDS)
+async function prepareReview(page, lang) {
+  await page.evaluate(mockFsrs, REVIEW_CARDS_BY_LANG[lang] || REVIEW_CARDS_BY_LANG.zh)
   await page.evaluate(() => window.dispatchEvent(new CustomEvent('NAVIGATE_TO_VIEW', { detail: { view: 'flashcards' } })))
-  await page.getByRole('button', { name: '开始复习' }).first().click({ timeout: 20000 })
-  await page.getByText('显示答案', { exact: true }).first().click({ timeout: 20000 })
+  await page.getByRole('button', { name: lang === 'en' ? 'Start review' : '开始复习' }).first().click({ timeout: 20000 })
+  await page.getByText(lang === 'en' ? 'Show answer' : '显示答案', { exact: true }).first().click({ timeout: 20000 })
 }
 
 const MIME = {
@@ -647,92 +652,116 @@ async function snapContext(page, win, cuts, file) {
   await page.evaluate(() => document.getElementById('fa-check').remove())
 }
 
+function readOpt(args, name, fallback) {
+  for (let i = 0; i < args.length; i += 1) {
+    if (args[i] === `--${name}`) return args[i + 1]
+    if (args[i]?.startsWith(`--${name}=`)) return args[i].slice(name.length + 3)
+  }
+  return fallback
+}
+
 async function main() {
   const args = process.argv.slice(2)
   // --check：只看取景框有没有切开东西，上下文图放临时目录，不写产物
   const check = args.includes('--check')
-  const only = new Set(args.filter((a) => !a.startsWith('--')))
-  const scenes = SCENES.filter((s) => !only.size || only.has(s.name))
-  if (!scenes.length) throw new Error(`没有这个场景：${[...only].join(', ')}`)
+  const langOpt = (readOpt(args, 'lang', 'all') || 'all').toLowerCase()
+  const langs = langOpt === 'zh' ? ['zh'] : langOpt === 'en' ? ['en'] : ['zh', 'en']
+  const positional = []
+  for (let i = 0; i < args.length; i += 1) {
+    const a = args[i]
+    if (a === '--lang') { i += 1; continue }
+    if (a.startsWith('--')) continue
+    positional.push(a)
+  }
+  const only = new Set(positional)
 
-  await mkdir(OUT, { recursive: true })
   const tmp = await mkdtemp(join(tmpdir(), 'features-live-'))
   const checkDir = join(tmpdir(), 'features-check')
   if (check) await mkdir(checkDir, { recursive: true })
   const server = await serve(PUBLIC)
   const browser = await chromium.launch({ executablePath: CHROME })
   try {
-    for (const spec of scenes) {
-      const shots = {}
-      const trims = {}
-      // 取景框尺寸和首页组件共用一份（utils/feature-shot.js）
-      const size = shotSize(spec.name)
-      for (const theme of ['light', 'dark']) {
-        const context = await browser.newContext({
-          viewport: spec.viewport || { width: 1280, height: 1100 },
-          deviceScaleFactor: 2,
-          locale: 'zh-CN',
-          colorScheme: theme
-        })
-        if (spec.init) await context.addInitScript(spec.init)
-        const page = await context.newPage()
-        const query = `theme=${theme}&scene=${spec.scene}${spec.query ? `&${spec.query}` : ''}`
-        await page.goto(`${server.origin}/demo/index.html?${query}`, { waitUntil: 'load' })
-        await waitUntilSettled(page, spec.ready || spec.anchor)
-        if (spec.prepare) {
-          await spec.prepare(page)
-          await waitUntilSettled(page, spec.anchor)
-        }
-        // 浮在会话上的「回到底部」按钮不是界面内容
-        await page.addStyleTag({ content: 'button[aria-label="回到底部"]{visibility:hidden!important}' })
-        const locate = { anchor: spec.anchor, offset: spec.offset, size }
-        await page.evaluate(locateWindow, locate)
-        await page.waitForTimeout(1000)
-        const win = await page.evaluate(locateWindow, { ...locate, settled: true })
-        const where = `${spec.name}（${theme}）`
-        if (check) {
-          const { cuts, items } = await page.evaluate(frameCuts, { win, trim: false })
-          await writeFile(join(checkDir, `${spec.name}-${theme}-items.json`), JSON.stringify(items, null, 1))
-          await snapContext(page, win, cuts, join(checkDir, `${spec.name}-${theme}-context.png`))
+    for (const lang of langs) {
+      const scenes = buildScenes(lang).filter((s) => !only.size || only.has(s.name))
+      if (!scenes.length) throw new Error(`没有这个场景：${[...only].join(', ')}`)
+      const outDir = lang === 'en' ? join(OUT, 'en') : OUT
+      await mkdir(outDir, { recursive: true })
+
+      for (const spec of scenes) {
+        const shots = {}
+        const trims = {}
+        // 取景框尺寸和首页组件共用一份（utils/feature-shot.js）
+        const size = shotSize(spec.name)
+        for (const theme of ['light', 'dark']) {
+          const context = await browser.newContext({
+            viewport: spec.viewport || { width: 1280, height: 1100 },
+            deviceScaleFactor: 2,
+            locale: lang === 'en' ? 'en-US' : 'zh-CN',
+            colorScheme: theme
+          })
+          if (spec.init) await context.addInitScript(spec.init)
+          const page = await context.newPage()
+          const langPart = lang === 'en' ? 'lang=en&' : ''
+          const query = `${langPart}theme=${theme}&scene=${spec.scene}${spec.query ? `&${spec.query}` : ''}`
+          await page.goto(`${server.origin}/demo/index.html?${query}`, { waitUntil: 'load' })
+          await waitUntilSettled(page, spec.ready || spec.anchor)
+          if (spec.prepare) {
+            await spec.prepare(page)
+            await waitUntilSettled(page, spec.anchor)
+          }
+          // 浮在会话上的「回到底部」按钮不是界面内容
+          await page.addStyleTag({
+            content: 'button[aria-label="回到底部"],button[aria-label="Scroll to bottom"]{visibility:hidden!important}'
+          })
+          const locate = { anchor: spec.anchor, offset: spec.offset, size }
+          await page.evaluate(locateWindow, locate)
+          await page.waitForTimeout(1000)
+          const win = await page.evaluate(locateWindow, { ...locate, settled: true })
+          const where = `[${lang}] ${spec.name}（${theme}）`
+          if (check) {
+            const { cuts, items } = await page.evaluate(frameCuts, { win, trim: false })
+            await writeFile(join(checkDir, `${lang}-${spec.name}-${theme}-items.json`), JSON.stringify(items, null, 1))
+            await snapContext(page, win, cuts, join(checkDir, `${lang}-${spec.name}-${theme}-context.png`))
+            const view = page.viewportSize()
+            console.log(`[check] ${where} 窗口 ${view.width}×${view.height}，取景框 (${Math.round(win.x)}, ${Math.round(win.y)}) ${win.width}×${win.height}，切开 ${cuts.length} 处`)
+            for (const cut of cuts) console.log(`  ${cut.edges} ${cut.kind} ${cut.label} ${JSON.stringify(cut.rect)}`)
+          }
+          // 框边切开的：上下两边的藏掉、框里留白；左右两边切开的（或者藏掉一大片）说明框没对准，这一扇不出
+          const { trimmed, remaining } = await page.evaluate(frameCuts, { win, trim: true })
+          trims[theme] = trimmed
+          if (trimmed.count) console.log(`[features] ${where} 藏掉框边切开的 ${trimmed.count} 块，框顶留白 ${trimmed.top}px、框底留白 ${trimmed.bottom}px`)
+          const problems = [...remaining, ...(await iframeCuts(page, win))].map((cut) => `${cut.edges}边切开 ${cut.kind} ${cut.label}`)
+          // 截窗口外面那截时 Chrome 会临时把页面撑大重排，截出来的就不是量过的这一版了
           const view = page.viewportSize()
-          console.log(`[check] ${where} 窗口 ${view.width}×${view.height}，取景框 (${Math.round(win.x)}, ${Math.round(win.y)}) ${win.width}×${win.height}，切开 ${cuts.length} 处`)
-          for (const cut of cuts) console.log(`  ${cut.edges} ${cut.kind} ${cut.label} ${JSON.stringify(cut.rect)}`)
-        }
-        // 框边切开的：上下两边的藏掉、框里留白；左右两边切开的（或者藏掉一大片）说明框没对准，这一扇不出
-        const { trimmed, remaining } = await page.evaluate(frameCuts, { win, trim: true })
-        trims[theme] = trimmed
-        if (trimmed.count) console.log(`[features] ${where} 藏掉框边切开的 ${trimmed.count} 块，框顶留白 ${trimmed.top}px、框底留白 ${trimmed.bottom}px`)
-        const problems = [...remaining, ...(await iframeCuts(page, win))].map((cut) => `${cut.edges}边切开 ${cut.kind} ${cut.label}`)
-        // 截窗口外面那截时 Chrome 会临时把页面撑大重排，截出来的就不是量过的这一版了
-        const view = page.viewportSize()
-        if (win.x < 0 || win.y < 0 || win.x + win.width > view.width || win.y + win.height > view.height) {
-          problems.push(`取景框越出了 ${view.width}×${view.height} 的窗口`)
-        }
-        if (trimmed.top + trimmed.bottom > win.height * 0.4) {
-          problems.push(`藏掉的高度占了取景框的 ${Math.round(((trimmed.top + trimmed.bottom) / win.height) * 100)}%，框没对准完整的一块`)
-        }
-        // 深浅两张截图是同一个取景框，主题一换内容就变了说不过去：两边藏掉的必须一样
-        const light = trims.light
-        if (theme === 'dark' && light && ['count', 'top', 'bottom'].some((key) => light[key] !== trimmed[key])) {
-          problems.push(`深浅两色藏掉的不一样（浅色 ${light.count} 块 / 顶 ${light.top} / 底 ${light.bottom}，深色 ${trimmed.count} 块 / 顶 ${trimmed.top} / 底 ${trimmed.bottom}））`)
-        }
-        if (check) {
-          for (const problem of problems) console.log(`  ✗ ${problem}`)
-          await page.screenshot({ path: join(checkDir, `${spec.name}-${theme}-frame.png`), clip: win })
+          if (win.x < 0 || win.y < 0 || win.x + win.width > view.width || win.y + win.height > view.height) {
+            problems.push(`取景框越出了 ${view.width}×${view.height} 的窗口`)
+          }
+          if (trimmed.top + trimmed.bottom > win.height * 0.4) {
+            problems.push(`藏掉的高度占了取景框的 ${Math.round(((trimmed.top + trimmed.bottom) / win.height) * 100)}%，框没对准完整的一块`)
+          }
+          // 深浅两张截图是同一个取景框，主题一换内容就变了说不过去：两边藏掉的必须一样
+          const light = trims.light
+          if (theme === 'dark' && light && ['count', 'top', 'bottom'].some((key) => light[key] !== trimmed[key])) {
+            problems.push(`深浅两色藏掉的不一样（浅色 ${light.count} 块 / 顶 ${light.top} / 底 ${light.bottom}，深色 ${trimmed.count} 块 / 顶 ${trimmed.top} / 底 ${trimmed.bottom}））`)
+          }
+          if (check) {
+            for (const problem of problems) console.log(`  ✗ ${problem}`)
+            await page.screenshot({ path: join(checkDir, `${lang}-${spec.name}-${theme}-frame.png`), clip: win })
+            await context.close()
+            continue
+          }
+          if (problems.length) throw new Error(`${where} 取景框切开了界面：\n  ${problems.join('\n  ')}`)
+          const png = join(tmp, `${lang}-${spec.name}-${theme}.png`)
+          await page.screenshot({ path: png, clip: win })
+          shots[theme] = png
           await context.close()
-          continue
         }
-        if (problems.length) throw new Error(`${where} 取景框切开了界面：\n  ${problems.join('\n  ')}`)
-        const png = join(tmp, `${spec.name}-${theme}.png`)
-        await page.screenshot({ path: png, clip: win })
-        shots[theme] = png
-        await context.close()
+        if (check) continue
+        for (const [theme, png] of Object.entries(shots)) {
+          execFileSync(CWEBP, ['-quiet', '-q', '80', '-m', '6', png, '-o', join(outDir, `${spec.name}-${theme}.webp`)])
+        }
+        console.log(`[features] [${lang}] ${spec.name}（${spec.scene}）`)
       }
-      if (check) continue
-      for (const [theme, png] of Object.entries(shots)) {
-        execFileSync(CWEBP, ['-quiet', '-q', '80', '-m', '6', png, '-o', join(OUT, `${spec.name}-${theme}.webp`)])
-      }
-      console.log(`[features] ${spec.name}（${spec.scene}）`)
     }
   } finally {
     await browser.close()

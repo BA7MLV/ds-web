@@ -1,0 +1,1 @@
+import{A as t}from"./builtinMcpServer-Dxehsf5_.js";import{bL as r}from"./ui-boot-D3Jplikg.js";let e=[],a=0;const s=300*1e3;function o(i){e=i.filter(n=>t.includes(n)),a=Date.now(),r.log("[SearchEngineAvailability] Updated cache:",e)}function g(){return a>0&&Date.now()-a<s?e:["bing_rss"]}export{g,o as s};

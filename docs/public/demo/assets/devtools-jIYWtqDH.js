@@ -1,0 +1,1 @@
+import{invoke as t}from"./core-DhEqZVGG.js";async function r(){try{return await t("toggle_devtools")}catch(o){return console.warn("[devtools] toggle failed（当前构建未启用 devtools？）:",o),null}}export{r as t};

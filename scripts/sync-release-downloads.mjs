@@ -24,10 +24,12 @@ async function writeDownloadsFile(filePath, data) {
 }
 
 async function fetchLatestRelease() {
+  const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN
   const response = await fetch(RELEASE_API_URL, {
     headers: {
       Accept: 'application/vnd.github+json',
-      'User-Agent': 'ds-web-release-sync'
+      'User-Agent': 'ds-web-release-sync',
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
     }
   })
 

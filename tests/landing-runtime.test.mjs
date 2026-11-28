@@ -45,7 +45,7 @@ const component = (t, name, exports, { props = {}, demoUrl = '', media = false }
     console, URL, URLSearchParams, computed, ref, watch, nextTick,
     window, document, DEMO_URL: demoUrl,
     track: (event, props) => tracked.push([event, props]),
-    featureShot: (shot, dark) => `/features/${shot}-${dark ? 'dark' : 'light'}.webp`,
+    featureShot: (shot, dark, loc) => `${loc === 'en-US' ? '/features/en' : '/features'}/${shot}-${dark ? 'dark' : 'light'}.webp`,
     performance: { now: () => now },
     defineProps: () => ({ src: '', anchor: null, blocker: null, ...props }),
     useData: () => ({ isDark }),

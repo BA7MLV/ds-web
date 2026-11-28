@@ -1,0 +1,1 @@
+import{f as t}from"./vendor-react-CK9Q3ZQe.js";import{a4 as r}from"./workbenchBus-CBXpzlTB.js";const s=({workbenchActive:e})=>(t.useLayoutEffect(()=>(r.setEnabled(!!e),()=>r.setEnabled(!1)),[e]),null);export{s as AgentBridge};

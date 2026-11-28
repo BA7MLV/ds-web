@@ -375,16 +375,27 @@ onUnmounted(() => {
               <picture>
                 <source
                   media="(max-width: 639px) and (prefers-color-scheme: dark)"
-                  srcset="/demo-poster-mobile-dark@3x.webp"
+                  :srcset="locale === 'en-US' ? '/demo-poster-en-mobile-dark@3x.webp' : '/demo-poster-mobile-dark@3x.webp'"
                 />
-                <source media="(prefers-color-scheme: dark)" srcset="/demo-poster-dark.webp" />
+                <source
+                  media="(prefers-color-scheme: dark)"
+                  :srcset="locale === 'en-US' ? '/demo-poster-en-dark.webp' : '/demo-poster-dark.webp'"
+                />
                 <source
                   media="(max-width: 639px)"
-                  :srcset="isDark ? '/demo-poster-mobile-dark@3x.webp' : '/demo-poster-mobile@3x.webp'"
+                  :srcset="
+                    locale === 'en-US'
+                      ? (isDark ? '/demo-poster-en-mobile-dark@3x.webp' : '/demo-poster-en-mobile@3x.webp')
+                      : (isDark ? '/demo-poster-mobile-dark@3x.webp' : '/demo-poster-mobile@3x.webp')
+                  "
                 />
                 <img
                   class="sh__poster-img"
-                  :src="isDark ? '/demo-poster-dark.webp' : '/demo-poster.webp'"
+                  :src="
+                    locale === 'en-US'
+                      ? (isDark ? '/demo-poster-en-dark.webp' : '/demo-poster-en.webp')
+                      : (isDark ? '/demo-poster-dark.webp' : '/demo-poster.webp')
+                  "
                   :alt="t('appShell.posterAlt')"
                   width="1112"
                   height="773"

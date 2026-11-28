@@ -41,7 +41,7 @@ test('every feature scene ships both real screenshots', () => {
     for (const art of allShots(words)) shots.add(art)
   }
   for (const art of shots) {
-    for (const file of [`${art}-light.webp`, `${art}-dark.webp`]) {
+    for (const file of [`${art}-light.webp`, `${art}-dark.webp`, `en/${art}-light.webp`, `en/${art}-dark.webp`]) {
       assert.ok(existsSync(new URL(file, FEATURES)), `缺少 features/${file}，重跑 node scripts/gen-features-live.mjs`)
     }
   }
@@ -59,10 +59,12 @@ test('both locales show the same scenes in the same order', () => {
 test('screenshots match their declared frame size in both themes', () => {
   for (const art of new Set(allShots(messages['zh-CN']))) {
     const { width, height } = shotSize(art)
-    for (const theme of ['light', 'dark']) {
-      const size = webpSize(readFileSync(new URL(`${art}-${theme}.webp`, FEATURES)))
-      assert.deepEqual(size, { width: width * 2, height: height * 2 },
-        `features/${art}-${theme}.webp 是 ${size.width}×${size.height}，取景框 ${width}×${height} 应出 ${width * 2}×${height * 2}`)
+    for (const prefix of ['', 'en/']) {
+      for (const theme of ['light', 'dark']) {
+        const size = webpSize(readFileSync(new URL(`${prefix}${art}-${theme}.webp`, FEATURES)))
+        assert.deepEqual(size, { width: width * 2, height: height * 2 },
+          `features/${prefix}${art}-${theme}.webp 是 ${size.width}×${size.height}，取景框 ${width}×${height} 应出 ${width * 2}×${height * 2}`)
+      }
     }
   }
 })
@@ -70,6 +72,8 @@ test('screenshots match their declared frame size in both themes', () => {
 /** 目录里只放首页用得到的截图：换掉的场景、旧的字符画网格（*.json）不该留着跟着部署 */
 test('features directory holds only screenshots in use', () => {
   const used = new Set([...new Set(allShots(messages['zh-CN']))].flatMap((art) => [`${art}-light.webp`, `${art}-dark.webp`]))
-  const orphans = readdirSync(FEATURES).filter((file) => !used.has(file))
+  const orphans = readdirSync(FEATURES).filter((file) => file !== 'en' && !used.has(file))
   assert.deepEqual(orphans, [], `features/ 里有没人用的文件：${orphans.join('、')}`)
+  const enOrphans = readdirSync(new URL('en/', FEATURES)).filter((file) => !used.has(file))
+  assert.deepEqual(enOrphans, [], `features/en/ 里有没人用的文件：${enOrphans.join('、')}`)
 })
